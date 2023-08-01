@@ -1,4 +1,4 @@
-# SalesSparrow
+# Sales Sparrow API
 
 This repository contains salessparrow apis.
 
