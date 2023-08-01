@@ -1,0 +1,39 @@
+version: '3'
+services:
+  # App server provisioning
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    ports:
+      - '8080:8080'
+    networks:
+      - localdev
+    volumes:
+      - './:/app'
+    command: bash -c 'sh start_local.sh'
+
+  # Memcached provisioning
+  memcached:
+    image: memcached
+    ports:
+      - '11211:11211'
+    networks:
+      - localdev
+
+  # Postgres provisioning
+  postgres:
+    image: postgres
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=rootPassword
+    networks:
+      - localdev
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+
+networks:
+  localdev:
+    driver: bridge

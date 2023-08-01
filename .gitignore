@@ -33,6 +33,7 @@ build/
 
 ### VS Code ###
 .vscode/
+*.hprof
 
 ### env
 .env
