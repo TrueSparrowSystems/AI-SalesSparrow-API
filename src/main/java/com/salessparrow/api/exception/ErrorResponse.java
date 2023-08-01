@@ -20,7 +20,7 @@ public class ErrorResponse {
    */
   protected Map<String, String> getErrorResponse(String apiIdentifier, String internalErrorIdentifier, String message) {
     InputStream inputStream = GlobalExceptionHandler.class
-        .getResourceAsStream("/com/example/userservice/config/ApiErrorConfig.json");
+        .getResourceAsStream("/com/salessparrow/api/config/ApiErrorConfig.json");
 
     ObjectMapper objectMapper = new ObjectMapper();
 
