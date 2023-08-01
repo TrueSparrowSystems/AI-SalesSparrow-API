@@ -27,12 +27,12 @@ $ docker-compose up
 ```
 ### License
 
-This project is licensed under the MIT License. See the [LICENSE] (https://github.com/TrueSparrowSystems/AI-SalesBridge-API/LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE] (https://github.com/TrueSparrowSystems/AI-SalesBridge-API/blob/init/LICENSE) file for details.
 
 ### Contributing
 
-Contributions to the project are welcome! If you would like to contribute, please follow the guidelines in the [CONTRIBUTING] (https://github.com/TrueSparrowSystems/AI-SalesBridge-API/CONTRIBUTING.md) file.
+Contributions to the project are welcome! If you would like to contribute, please follow the guidelines in the [CONTRIBUTING] (https://github.com/TrueSparrowSystems/AI-SalesBridge-API/blob/init/CONNTRIBUTING.md) file.
 
 ### Code of Conduct
 
-This project has a code of conduct that outlines expected behavior for contributors and users. Please read the [CODE_OF_CONDUCT] (https://github.com/TrueSparrowSystems/AI-SalesBridge-API/CODE_OF_CONDUCT.md) file before getting involved.
+This project has a code of conduct that outlines expected behavior for contributors and users. Please read the [CODE_OF_CONDUCT] (https://github.com/TrueSparrowSystems/AI-SalesBridge-API/blob/init/CODE_OF_CONDUCT.md) file before getting involved.
