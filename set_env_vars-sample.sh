@@ -17,3 +17,6 @@ export AWS_ACCESS_KEY_ID=''
 export AWS_SECRET_ACCESS_KEY=''
 export AWS_REGION=''
 export CACHE_CLUSTER_ID=''
+
+# Dynamo DB
+export DYNAMO_DB_URL=''
