@@ -40,3 +40,4 @@ build/
 set_env_vars.sh
 
 postgres-data/
+dynamodb-data/

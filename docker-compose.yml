@@ -33,6 +33,18 @@ services:
       - localdev
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
+  
+  # DynamoDB provisioning
+  dynamodb-local:
+    image: amazon/dynamodb-local:latest
+    ports:
+      - '8000:8000'
+    networks:
+      - localdev
+    volumes:
+     - "./docker/dynamodb:/home/dynamodblocal/data"
+    working_dir: /home/dynamodblocal
+    command: '-jar DynamoDBLocal.jar -sharedDb -dbPath ./data'
 
 networks:
   localdev:
