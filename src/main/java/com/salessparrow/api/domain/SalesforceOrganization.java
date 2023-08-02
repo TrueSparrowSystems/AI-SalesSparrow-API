@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@DynamoDBTable(tableName = "salesforce_organization")
+@DynamoDBTable(tableName = "salesforce_organizations")
 public class SalesforceOrganization {
 
     @DynamoDBHashKey

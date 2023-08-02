@@ -31,7 +31,8 @@ public class DynamoDBConfiguration {
         return new DynamoDBMapper(buildAmazonDynamoDB());
     }
 
-    private AmazonDynamoDB buildAmazonDynamoDB() {
+    @Bean
+    public AmazonDynamoDB buildAmazonDynamoDB() {
         return AmazonDynamoDBClientBuilder
                 .standard()
                 .withEndpointConfiguration(
