@@ -10,19 +10,19 @@ public class CoreConstants {
   @Autowired
   private Environment env;
 
-  public String encryptionKey(){
+  public String encryptionKey() {
     return env.getProperty("ENCRYPTION_KEY");
   }
 
-  public String apiCookieSecret(){
+  public String apiCookieSecret() {
     return env.getProperty("API_COOKIE_SECRET");
   }
 
-  public String environment(){
+  public String environment() {
     return env.getProperty("ENVIRONMENT");
   }
 
-  public Boolean isDevEnvironment(){
+  public Boolean isDevEnvironment() {
     return environment().equals("development");
   }
 
@@ -41,8 +41,12 @@ public class CoreConstants {
   public String cacheClusterId() {
     return env.getProperty("CACHE_CLUSTER_ID");
   }
-  
+
   public String dbName() {
     return env.getProperty("SPRING_BOOT_BE_DB_NAME");
+  }
+
+  public String kmsKeyId() {
+    return env.getProperty("KMS_KEY_ID");
   }
 }
