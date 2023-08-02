@@ -26,7 +26,7 @@
 	</appender>
 
 	<!-- Send logs to both console and file audit -->
-	<logger name="com.salessparrow.api" level="debug"
+	<logger name="com.salessparrow.api" level="info"
 		additivity="false">
 		<appender-ref ref="STDOUT" />
 	</logger>

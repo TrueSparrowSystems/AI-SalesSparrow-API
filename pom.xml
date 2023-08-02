@@ -154,6 +154,24 @@
 			<version>7.4</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-dynamodb</artifactId>
+			<version>1.11.857</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.dynamobee</groupId>
+			<artifactId>dynamobee</artifactId>
+			<version>0.6</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
