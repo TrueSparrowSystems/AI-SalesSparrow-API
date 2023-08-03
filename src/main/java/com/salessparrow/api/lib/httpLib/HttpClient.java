@@ -70,7 +70,7 @@ public class HttpClient {
     return new HttpResponse(statusCode, responseBody, responseHeaders, contentType);
   }
 
-  public static HttpResponse makePostRequest(String url, Map<String, String> headers, Object requestBody, int timeoutMillis, String authBearerToken) {
+  public static HttpResponse makePostRequest(String url, Map<String, String> headers, Object requestBody, int timeoutMillis) {
     WebClient webClient = WebClient.builder().build();
 
     WebClient.RequestHeadersSpec<?> request = webClient.post()
