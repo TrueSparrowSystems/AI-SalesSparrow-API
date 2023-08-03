@@ -4,13 +4,16 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
+
 import com.salessparrow.api.lib.ErrorConfig;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@Component
 public class ErrorResponse {
 
-    /**
+  /**
    * Get error response
    * 
    * @param apiIdentifier
@@ -63,5 +66,5 @@ public class ErrorResponse {
     System.out.println("Error code: " + httpCode);
     System.out.println("Internal error identifier: " + internal_error_identifier);
   }
-    
+
 }

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -17,8 +18,9 @@ import com.salessparrow.api.lib.ErrorObject;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-  private Logger logger= org.slf4j.LoggerFactory.getLogger(GlobalExceptionHandler.class);
-  
+  private Logger logger = org.slf4j.LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+  @Autowired
   private ErrorResponse er;
 
   /**
@@ -71,16 +73,14 @@ public class GlobalExceptionHandler {
     Map<String, String> errorMap = new HashMap<>();
 
     for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-        errorMap.put(error.getField(), error.getDefaultMessage());
+      errorMap.put(error.getField(), error.getDefaultMessage());
     }
 
     CustomException ce = new CustomException(
-      new ErrorObject(
-        "b_2",
-        "invalid_params",
-        errorMap.toString()
-      )
-    );
+        new ErrorObject(
+            "b_2",
+            "invalid_params",
+            errorMap.toString()));
 
     return handleCustomException(ce);
   }
