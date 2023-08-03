@@ -40,6 +40,11 @@ public class AwsKms {
    * @return The encrypted token.
    */
   public String encryptToken(String token) {
+    System.out.println("Encrypting token: " + token);
+
+    if (token == null) {
+      return null;
+    }
     EncryptRequest request = new EncryptRequest()
         .withKeyId(CoreConstants.kmsKeyId())
         .withPlaintext(ByteBuffer.wrap(token.getBytes()));
@@ -63,6 +68,11 @@ public class AwsKms {
         .withKeyId(CoreConstants.kmsKeyId());
 
     DecryptResult result = kmsClient.decrypt(request);
+
+    if (result == null || result.getPlaintext() == null) {
+      return null;
+    }
+
     return new String(result.getPlaintext().array());
   }
 }
