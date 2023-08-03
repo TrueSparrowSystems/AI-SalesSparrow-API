@@ -1,7 +1,9 @@
 package com.salessparrow.api.lib.httpLib;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.reactive.function.client.WebClient;
+
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
@@ -42,17 +44,21 @@ public class HttpClient {
   }
 
   public static HttpResponse makeGetRequest(String url, Map<String, String> headers, int timeoutMillis) {
-    WebClient client = WebClient.builder().build();
 
-    Mono<ResponseEntity<String>> responseMono = client.get()
-          .uri(url)
-          .headers(httpHeaders -> {
-            if (headers != null) {
-                headers.forEach(httpHeaders::set);
-            }
-          })
-          .retrieve()
-          .toEntity(String.class);
+    WebClient webClient = WebClient.builder().build();
+
+    WebClient.RequestHeadersSpec<?> request = webClient.post()
+      .uri(url);
+
+    if (headers != null) {
+      request.headers(httpHeaders -> {
+        headers.forEach(httpHeaders::set);
+      });
+    }
+
+    Mono<ResponseEntity<String>> responseMono = request
+      .retrieve()
+      .toEntity(String.class);
 
     ResponseEntity<String> responseEntity = responseMono.block(Duration.ofMillis(timeoutMillis));
 
@@ -64,19 +70,23 @@ public class HttpClient {
     return new HttpResponse(statusCode, responseBody, responseHeaders, contentType);
   }
 
-  public static HttpResponse makePostRequest(String url, Map<String, String> headers, String requestBody, int timeoutMillis) {
-    WebClient client = WebClient.builder().build();
+  public static HttpResponse makePostRequest(String url, Map<String, String> headers, Object requestBody, int timeoutMillis, String authBearerToken) {
+    WebClient webClient = WebClient.builder().build();
 
-    Mono<ResponseEntity<String>> responseMono = client.post()
-          .uri(url)
-          .headers(httpHeaders -> {
-            if (headers != null) {
-                headers.forEach(httpHeaders::set);
-            }
-          })
-          .bodyValue(requestBody)
-          .retrieve()
-          .toEntity(String.class);
+    WebClient.RequestHeadersSpec<?> request = webClient.post()
+      .uri(url)
+      .contentType(MediaType.APPLICATION_JSON)
+      .bodyValue(requestBody);
+
+    if (headers != null) {
+      request.headers(httpHeaders -> {
+        headers.forEach(httpHeaders::set);
+      });
+    }
+
+    Mono<ResponseEntity<String>> responseMono = request
+      .retrieve()
+      .toEntity(String.class);
 
     ResponseEntity<String> responseEntity = responseMono.block(Duration.ofMillis(timeoutMillis));
 

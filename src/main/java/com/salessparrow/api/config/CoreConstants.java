@@ -54,7 +54,19 @@ public class CoreConstants {
     return env.getProperty("SALESFORCE_LOGIN_URL");
   }
 
+  public String salesforceBaseUrl() {
+    return env.getProperty("SALESFORCE_BASE_URL");
+  }
+
   public String salesforceClientId() {
     return env.getProperty("SALESFORCE_CLIENT_ID");
+  }
+
+  public String salesforceClientSecret() {
+    return env.getProperty("SALESFORCE_CLIENT_SECRET");
+  }
+
+  public String salesforceClientBaseUrl() {
+    return env.getProperty("SALESFORCE_CLIENT_BASE_URL");
   }
 }
