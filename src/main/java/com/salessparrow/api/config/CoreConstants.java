@@ -49,4 +49,12 @@ public class CoreConstants {
   public String kmsKeyId() {
     return env.getProperty("KMS_KEY_ID");
   }
+
+  public String salesforceLoginUrl() {
+    return env.getProperty("SALESFORCE_LOGIN_URL");
+  }
+
+  public String salesforceClientId() {
+    return env.getProperty("SALESFORCE_CLIENT_ID");
+  }
 }

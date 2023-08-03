@@ -20,3 +20,7 @@ export CACHE_CLUSTER_ID=''
 
 # Dynamo DB
 export DYNAMO_DB_URL=''
+
+# Salesforce
+export SALESFORCE_LOGIN_URL=''
+export SALESFORCE_CLIENT_ID=''
