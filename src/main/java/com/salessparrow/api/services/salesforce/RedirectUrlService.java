@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.salessparrow.api.config.CoreConstants;
-import com.salessparrow.api.controllers.UserController;
 import com.salessparrow.api.dto.SalesforceRedirectUrlDto;
 
 @Service
@@ -15,19 +14,19 @@ public class RedirectUrlService {
   @Autowired
   private CoreConstants coreConstants;
 
-  Logger logger = LoggerFactory.getLogger(UserController.class);
-  
+  Logger logger = LoggerFactory.getLogger(RedirectUrlService.class);
+
   public RedirectUrlServiceDto getSalesforceOauthUrl(SalesforceRedirectUrlDto salesforceRedirectUrlDto) {
 
     String redirectUri = salesforceRedirectUrlDto.getRedirectUri();
     String state = salesforceRedirectUrlDto.getState();
 
-    String salesforceLoginUrl = coreConstants.salesforceLoginUrl();
+    String salesforceLoginUrl = coreConstants.salesforceAuthUrl();
     String salesforceClientId = coreConstants.salesforceClientId();
 
-    String salesforceOauthUrl = salesforceLoginUrl + "?response_type=code" + 
-    "&client_id=" + salesforceClientId + 
-    "&redirect_uri=" + redirectUri;
+    String salesforceOauthUrl = salesforceLoginUrl + "?response_type=code" +
+        "&client_id=" + salesforceClientId +
+        "&redirect_uri=" + redirectUri;
 
     if (state != null && !state.isEmpty()) {
       salesforceOauthUrl += "&state=" + state;
@@ -35,7 +34,7 @@ public class RedirectUrlService {
 
     RedirectUrlServiceDto salesforceOauthServiceDto = new RedirectUrlServiceDto();
     salesforceOauthServiceDto.setUrl(salesforceOauthUrl);
-    
+
     return salesforceOauthServiceDto;
   }
 

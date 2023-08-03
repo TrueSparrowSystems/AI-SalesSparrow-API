@@ -21,7 +21,6 @@ public class SalesforceClient {
   @Autowired
   private CoreConstants coreConstants;
 
-
   public <T> T makeRequest(String userId, SalesforceRequest<T> request) throws Exception {
     String decryptedAccessToken = fetchAccessToken(userId);
 
@@ -34,10 +33,10 @@ public class SalesforceClient {
         return request.execute(decryptedAccessToken);
       } catch (Exception e1) {
         throw new CustomException(
-        new ErrorObject(
-          "l_s_sc_1",
-          "something_went_wrong",
-          e.getMessage()));
+            new ErrorObject(
+                "l_s_sc_1",
+                "something_went_wrong",
+                e.getMessage()));
       }
     }
   }
@@ -55,7 +54,7 @@ public class SalesforceClient {
     String encryptedRefreshToken = "encryptedRefreshToken";
     String decryptedRefreshToken = awsKms.decryptToken(encryptedRefreshToken);
 
-    String url = coreConstants.salesforceBaseUrl() + "/services/oauth2/token";
+    String url = coreConstants.salesforceAuthUrl() + "/services/oauth2/token";
     Map<String, String> requestBody = new HashMap<>();
     requestBody.put("grant_type", "refresh_token");
     requestBody.put("client_id", coreConstants.salesforceClientId());
