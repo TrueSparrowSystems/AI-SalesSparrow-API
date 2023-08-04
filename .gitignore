@@ -38,6 +38,7 @@ build/
 ### env
 .env
 set_env_vars.sh
+set_testing_env_vars.sh
 
 postgres-data/
 dynamodb-data/
