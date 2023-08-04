@@ -42,10 +42,6 @@ public class CoreConstants {
     return env.getProperty("CACHE_CLUSTER_ID");
   }
 
-  public String dbName() {
-    return env.getProperty("SPRING_BOOT_BE_DB_NAME");
-  }
-
   public String kmsKeyId() {
     return env.getProperty("KMS_KEY_ID");
   }
