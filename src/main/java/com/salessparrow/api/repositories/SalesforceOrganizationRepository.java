@@ -16,4 +16,8 @@ public class SalesforceOrganizationRepository {
         dynamoDBMapper.save(sfo);
         return sfo;
     }
+
+    public SalesforceOrganization getById(String id) {
+        return dynamoDBMapper.load(SalesforceOrganization.class, id);
+    }
 }
