@@ -38,10 +38,9 @@ public class LocalCipher {
       encryptedBytes = encrypt.doFinal(string.getBytes(StandardCharsets.UTF_8));   
     } catch (Exception e) {
       throw new CustomException(
-        new ErrorObject(
           "l_lc_e_1",
           "something_went_wrong",
-          e.getMessage()));
+          e.getMessage());
     }
     return Base64.getEncoder().encodeToString(encryptedBytes);
   }
@@ -63,10 +62,9 @@ public class LocalCipher {
       decryptedBytes = decrypt.doFinal(decodedBytes);
     } catch (Exception e) {
       throw new CustomException(
-        new ErrorObject(
           "l_lc_d_1",
           "something_went_wrong",
-          e.getMessage()));
+          e.getMessage());
     }
 
     return new String(decryptedBytes, StandardCharsets.UTF_8);

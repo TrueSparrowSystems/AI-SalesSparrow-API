@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import com.salessparrow.api.config.CoreConstants;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.AwsKms;
-import com.salessparrow.api.lib.ErrorObject;
 import com.salessparrow.api.lib.httpLib.HttpClient;
 
 @Component
@@ -33,10 +32,9 @@ public class SalesforceClient {
         return request.execute(decryptedAccessToken);
       } catch (Exception e1) {
         throw new CustomException(
-            new ErrorObject(
                 "l_s_sc_1",
                 "something_went_wrong",
-                e.getMessage()));
+                e.getMessage());
       }
     }
   }

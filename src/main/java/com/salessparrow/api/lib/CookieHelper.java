@@ -25,10 +25,9 @@ public class CookieHelper {
 
     if (user.getId() == null) {
       throw new CustomException(
-          new ErrorObject(
               "l_ch_gcv_1",
               "internal_server_error",
-              "User is null"));
+              "User is null");
     }
 
     return CookieConstants.LATEST_VERSION + ':' + user.getId() + ':' + userKind + ':' + timestamp + ':' + cookieToken;

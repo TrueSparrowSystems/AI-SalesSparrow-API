@@ -1,12 +1,17 @@
 package com.salessparrow.api.exception;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 
 import org.springframework.stereotype.Component;
 
-import com.salessparrow.api.lib.ErrorConfig;
+import com.salessparrow.api.lib.errorLib.ErrorConfig;
+import com.salessparrow.api.lib.errorLib.ErrorResponseObject;
+import com.salessparrow.api.lib.errorLib.ParamErrorConfig;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -21,7 +26,7 @@ public class ErrorResponse {
    * 
    * @return Map<String, String>
    */
-  protected Map<String, String> getErrorResponse(String apiIdentifier, String internalErrorIdentifier, String message) {
+  protected ErrorResponseObject getErrorResponse(String apiIdentifier, String internalErrorIdentifier, String message) {
     InputStream inputStream = GlobalExceptionHandler.class
         .getResourceAsStream("/com/salessparrow/api/config/ApiErrorConfig.json");
 
@@ -29,7 +34,7 @@ public class ErrorResponse {
 
     TypeReference<HashMap<String, ErrorConfig>> typeReference = new TypeReference<>() {
     };
-    Map<String, ErrorConfig> errorDataMap = null;
+    Map<String, ErrorConfig> errorDataMap = new HashMap<>();
     try {
       errorDataMap = objectMapper.readValue(inputStream, typeReference);
     } catch (Exception e) {
@@ -43,14 +48,55 @@ public class ErrorResponse {
     }
 
     logError(message, Integer.parseInt(errorInfo.getHttp_code()), internalErrorIdentifier);
+    
 
-    Map<String, String> errorResponse = new HashMap<>();
-    errorResponse.put("http_code", errorInfo.getHttp_code());
-    errorResponse.put("code", errorInfo.getCode());
-    errorResponse.put("message", errorInfo.getMessage());
-    errorResponse.put("internal_error_identifier", internalErrorIdentifier);
-    return errorResponse;
+    ErrorResponseObject errorResponseObject = new ErrorResponseObject(
+        Integer.parseInt(errorInfo.getHttp_code()), 
+        errorInfo.getCode(), 
+        errorInfo.getMessage(),
+        internalErrorIdentifier,
+        new ArrayList<ParamErrorConfig>());
+
+    return errorResponseObject;
   }
+
+  protected ErrorResponseObject getParamErrorResponse(String internalErrorIdentifier, String message,
+      List<String> params) {
+    InputStream inputStream = GlobalExceptionHandler.class
+        .getResourceAsStream("/com/salessparrow/api/config/ParamErrorConfig.json");
+
+    ObjectMapper objectMapper = new ObjectMapper();
+
+    TypeReference<HashMap<String, ParamErrorConfig>> typeReference = new TypeReference<>() {
+    };
+    Map<String, ParamErrorConfig> paramErrorDataMap = new HashMap<>();
+    try {
+      paramErrorDataMap = objectMapper.readValue(inputStream, typeReference);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    List<ParamErrorConfig> paramErrorConfigList = new ArrayList<ParamErrorConfig>();
+    if(params.size() > 0){
+      for(String param : params){
+        ParamErrorConfig paramErrorConfig = paramErrorDataMap.get(param);
+        if(paramErrorConfig != null){
+          paramErrorConfigList.add(paramErrorConfig);
+        }
+      }
+    }
+
+    logError(message,400, internalErrorIdentifier);
+
+    ErrorResponseObject errorResponseObject = new ErrorResponseObject(
+        400, 
+        "At least one parameter is invalid or missing.", 
+        "INVALID_PARAMS",
+        internalErrorIdentifier,
+        paramErrorConfigList);
+
+    return errorResponseObject;
+  }
+
 
   /**
    * Log error

@@ -1,9 +1,5 @@
 package com.salessparrow.api.exception;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import java.util.*;
 
 import org.junit.jupiter.api.Assertions;
@@ -13,11 +9,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import com.salessparrow.api.lib.ErrorObject;
+import com.salessparrow.api.lib.errorLib.ErrorResponseObject;
+import com.salessparrow.api.lib.errorLib.ParamErrorConfig;
 
 public class GlobalExceptionHandlerTest {
     @InjectMocks
@@ -34,70 +28,57 @@ public class GlobalExceptionHandlerTest {
     @Test
     void testHandleCustomException() {
         // Arrange
-        CustomException ex = new CustomException(
-                new ErrorObject("s_uss_cu_1", "user_already_exists", "User already exists")
+        CustomException ex = new CustomException("b_1", "unauthorized_api_request", "Error test");
+
+        List<ParamErrorConfig> paramErrorConfigList = new ArrayList<>();
+
+        ErrorResponseObject errorResponseObject = new ErrorResponseObject(
+            401,
+            "Unauthorized API request. Please check your API key.",
+            "UNAUTHORIZED",
+            "b_1",
+            paramErrorConfigList
         );
 
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("http_code", "403");
-        errorResponse.put("code", "USER_ALREADY_EXISTS");
-        errorResponse.put("message", "User with the provided email already exists.");
-
-        when(er.getErrorResponse(any(), any(), any())).thenReturn(errorResponse);
+        System.out.println("Error response object" + errorResponseObject.toString());
 
         // Act
-        ResponseEntity<Map<String, String>> responseEntity = globalExceptionHandler.handleCustomException(ex);
+        ResponseEntity<ErrorResponseObject> result = globalExceptionHandler.handleCustomException(ex);
 
         // Assert
-        Assertions.assertEquals(403, responseEntity.getStatusCodeValue());
-        Assertions.assertEquals(errorResponse, responseEntity.getBody());
+        Assertions.assertEquals(errorResponseObject.getHttpCode(), result.getStatusCodeValue());
+        Assertions.assertEquals(errorResponseObject.getMessage(), result.getBody().getMessage());
+        Assertions.assertEquals(errorResponseObject.getCode(), result.getBody().getCode());
+        Assertions.assertEquals(errorResponseObject.getInternalErrorIdentifier(), result.getBody().getInternalErrorIdentifier());
+        Assertions.assertEquals(errorResponseObject.getErrorData(), result.getBody().getErrorData());
     }
 
     @Test
     void testHandleRuntimeException() {
         // Arrange
-        RuntimeException ex = new RuntimeException("Test runtime exception");
+        RuntimeException ex = new RuntimeException("Error test");
 
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("http_code", "500");
-        errorResponse.put("code", "something_went_wrong");
-        errorResponse.put("message", "Test runtime exception");
-        errorResponse.put("internal_error_identifier", "b_1");
 
-        when(er.getErrorResponse(any(), any(), any())).thenReturn(errorResponse);
+        List<ParamErrorConfig> paramErrorConfigList = new ArrayList<>();
 
-        // Act
-        ResponseEntity<Map<String, String>> responseEntity = globalExceptionHandler.handleRuntimeException(ex);
-
-        // Assert
-        Assertions.assertEquals(500, responseEntity.getStatusCodeValue());
-        Assertions.assertEquals(errorResponse, responseEntity.getBody());
-    }
-
-    @Test
-    void testHandleValidationException() {
-        // Arrange
-        MethodArgumentNotValidException ex = mock(MethodArgumentNotValidException.class);
-        FieldError fieldError = new FieldError("testObject", "testField", "Test validation error");
-        when(ex.getBindingResult()).thenReturn(mock(BindingResult.class));
-        when(ex.getBindingResult().getFieldErrors()).thenReturn(List.of(fieldError));
-
-        Map<String, String> errorMap = new HashMap<>();
-        errorMap.put("testField", "Test validation error");
-
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("http_code", "400");
-        errorResponse.put("code", "invalid_params");
-        errorResponse.put("message", errorMap.toString());
-        errorResponse.put("internal_error_identifier", "b_2");
-
-        when(er.getErrorResponse(any(), any(), any())).thenReturn(errorResponse);
+        ErrorResponseObject errorResponseObject = new ErrorResponseObject(
+            500,
+            "Internal Server Error",
+            "INTERNAL_SERVER_ERROR",
+            "b_1",
+            paramErrorConfigList
+        );
 
         // Act
-        ResponseEntity<Map<String, String>> responseEntity = globalExceptionHandler.handleValidationException(ex);
+        ResponseEntity<ErrorResponseObject> result = globalExceptionHandler.handleRuntimeException(ex);
 
         // Assert
-        Assertions.assertEquals(400, responseEntity.getStatusCodeValue());
-        Assertions.assertEquals(errorResponse, responseEntity.getBody());
+        Assertions.assertEquals(errorResponseObject.getHttpCode(), result.getStatusCodeValue());
+        Assertions.assertEquals(errorResponseObject.getMessage(), result.getBody().getMessage());
+        Assertions.assertEquals(errorResponseObject.getCode(), result.getBody().getCode());
+        Assertions.assertEquals(errorResponseObject.getInternalErrorIdentifier(), result.getBody().getInternalErrorIdentifier());
+        Assertions.assertEquals(errorResponseObject.getErrorData(), result.getBody().getErrorData());
+
     }
+
 }
