@@ -1,0 +1,28 @@
+[
+  {
+    "description": "Should return the correct url for redirect_uri", 
+    "input": {
+      "redirect_uri": "http://localhost:3000"
+    },
+    "output": {
+      "url": "https://test.salesforce.com/services/oauth2/authorize?response_type=code&client_id=12345&redirect_uri=http://localhost:3000"
+    }
+  },
+  {
+    "description": "Should return the correct url for redirect_uri and state",
+    "input": {
+      "redirect_uri": "http://localhost:3000",
+      "state": "12345"
+    },
+    "output": {
+      "url": "https://test.salesforce.com/services/oauth2/authorize?response_type=code&client_id=12345&redirect_uri=http://localhost:3000&state=12345"}
+  },
+  {
+    "description": "Should return 400 if redirect_uri is not provided",
+    "input": {
+    },
+    "output": {
+      "status": 400
+    }
+  }
+]

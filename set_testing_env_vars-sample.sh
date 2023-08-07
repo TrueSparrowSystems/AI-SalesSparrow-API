@@ -18,3 +18,4 @@ export DYNAMO_DB_URL='http://localhost:8000'
 # Salesforce
 export SALESFORCE_CLIENT_ID=''
 export SALESFORCE_CLIENT_SECRET=''
+export SALESFORCE_AUTH_URL=''
