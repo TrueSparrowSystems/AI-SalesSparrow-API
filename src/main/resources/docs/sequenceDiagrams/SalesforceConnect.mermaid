@@ -1,0 +1,60 @@
+sequenceDiagram
+  title Salesforce connect 
+    participant ui as SalesSparrow App
+    participant api as SalesSparrow API
+    participant salesforce as Salesforce 
+    participant dynamoDb as AWS DynamoDb
+    participant kms as AWS KMS
+
+    ui->>api:  Send request 
+    note right of ui: Request: POST {api_base_url}/v1/auth/salesforce/connect<br><br>Body params: <br>code [mandatory] <br>redirect_uri [mandatory] 
+
+    note over api: Validate and sanitize the request body
+    alt If mandatory params not present in the body
+        api-->>ui: Mandatory param missing error
+    end
+
+    note over api: Call Salesforce oauth token API using salesforce client library 
+    api->>salesforce: Send request
+    note right of api: Request: POST {salesforce_base_url}/services/oauth2/token<br><br>Body params: <br>grant_type [mandatory] <br>client_id [mandatory]<br>client_secret [mandatory] <br>code [mandatory] <br> redirect_uri [mandatory]
+    alt If any error from salesforce server
+        salesforce-->>api: Error 
+        api-->>ui: Error Response 
+    end
+    salesforce-->>api: Success 200
+
+    note over api: Encrypt access and refresh token
+    api->>kms: Encrypt (Token)
+    kms-->>api: Response (Encrypted token)
+
+    note over api: Check for user data in database
+    api->>dynamoDb: Get user data using user_id
+    note over api: If new user
+    alt 
+        api->>dynamoDb: Insert tokens data in salesforce_user_oauth_tokens
+        note over api: Call Salesforce identity/user info API using salesforce client library
+        api->>salesforce: Send request
+        note right of api: GET {instance_url}/services/oauth2/userinfo<br><br>access_token [request header] [mandatory] 
+        alt 
+            salesforce-->>api: Response 401 
+            note over api: Salesforce client library will fetch new tokens using refresh token and retry the identity API 
+        else 
+            salesforce-->>api: Error other than 401
+            api-->>ui: Error Response 
+        else 
+            salesforce-->>api: Response 200
+            api->>dynamoDb: Create entry in salesforce_users
+            alt 
+            note over api: If organization data not present in the salesforce_organizations 
+            api->>dynamoDb: Create entry in salesforce_organizations
+            end
+        end 
+    end
+    note over api: If user already present in db
+    alt 
+    api-->>dynamoDb: Upsert tokens data in salesforce_user_oauth_tokens
+    end
+    
+    note over api: Create user login cookie
+    api-->>ui: Response 
+    note right of ui: Response body: <br>current_user<br><br>Response headers:<br> cookie 
