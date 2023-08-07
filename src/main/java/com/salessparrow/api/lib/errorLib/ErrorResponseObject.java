@@ -2,6 +2,10 @@ package com.salessparrow.api.lib.errorLib;
 
 import java.util.List;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ErrorResponseObject {
     int http_code;
     String message;
