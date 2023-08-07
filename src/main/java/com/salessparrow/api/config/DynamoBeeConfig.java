@@ -8,6 +8,9 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.github.dynamobee.Dynamobee;
 import com.salessparrow.api.lib.globalConstants.config.dynamoBeeConfigConstants;
 
+/**
+ * This class is used to configure the dynamobee.
+ */
 @Configuration
 public class DynamoBeeConfig {
   @Autowired
@@ -18,10 +21,8 @@ public class DynamoBeeConfig {
 
   @Bean
   public Dynamobee dynamobee(){
-  Dynamobee runner = new Dynamobee(db);
-  
-  runner.setChangeLogsScanPackage(dynamoBeeConfigConstants.getChangeLogScanPackage()).setChangelogTableName(dynamoBeeConfigConstants.getChangelogTableName());
-  
-  return runner;
-}
+    Dynamobee runner = new Dynamobee(db);
+    runner.setChangeLogsScanPackage(dynamoBeeConfigConstants.getChangeLogScanPackage()).setChangelogTableName(dynamoBeeConfigConstants.getChangelogTableName());
+    return runner;
+  }
 }
