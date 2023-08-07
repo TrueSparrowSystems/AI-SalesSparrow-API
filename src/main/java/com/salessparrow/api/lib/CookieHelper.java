@@ -5,7 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 import com.salessparrow.api.config.CoreConstants;
-import com.salessparrow.api.domain.SalesforceUser;
+import com.salessparrow.api.domain.User;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.globalConstants.CookieConstants;
 
@@ -19,7 +19,7 @@ public class CookieHelper {
   @Autowired
   private CoreConstants coreConstants;
 
-  public String getCookieValue(SalesforceUser user, String userKind, String decryptedSalt, Long timestamp) {
+  public String getCookieValue(User user, String userKind, String decryptedSalt, Long timestamp) {
 
     String cookieToken = getCookieToken(user, decryptedSalt, timestamp);
 
@@ -34,7 +34,7 @@ public class CookieHelper {
     return CookieConstants.LATEST_VERSION + ':' + user.getId() + ':' + userKind + ':' + timestamp + ':' + cookieToken;
   }
 
-  public String getCookieToken(SalesforceUser user, String decryptedSalt, Long timestamp) {
+  public String getCookieToken(User user, String decryptedSalt, Long timestamp) {
 
     String decryptedCookieToken = localCipher.decrypt(decryptedSalt, user.getCookieToken());
     String strSecret = coreConstants.apiCookieSecret();
