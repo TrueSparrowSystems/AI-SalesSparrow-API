@@ -67,8 +67,8 @@ public class GetRedirectUrlTest {
         .contentType(MediaType.APPLICATION_JSON));
 
       if(resultActions.andReturn().getResponse().getStatus() == 200) {
-        String result = resultActions.andReturn().getResponse().getContentAsString();
-        assertEquals(expectedOutput, result);
+        String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
+        assertEquals(expectedOutput, actualOutput);
       } else {
         assertEquals(testDataItem.getOutput().get("status"), resultActions.andReturn().getResponse().getStatus());
       }
