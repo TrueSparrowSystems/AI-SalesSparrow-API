@@ -30,14 +30,25 @@ paths:
                       type: string
                       example:
                         - 'abc123abc'
+                        - 'xyz999jjj'
                   account_map_by_id:
                     type: object
-                    additionalProperties:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          example: 'abc123abc'
-                        name:
-                          type: string
-                          example: 'xyz'
+                    properties:
+                      abc123abc:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: "abc123abc"
+                          name:
+                            type: string
+                            example: "name1"
+                      xyz999jjj:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: "xyz999jjj"
+                          name:
+                            type: string
+                            example: "name2"
