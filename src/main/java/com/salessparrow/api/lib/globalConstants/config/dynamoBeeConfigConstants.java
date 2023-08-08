@@ -17,4 +17,8 @@ public class dynamoBeeConfigConstants {
   public String getChangelogTableName() {
     return coreConstants.environment() +  "_changelog";
   }
+
+  public String authorName() {
+    return coreConstants.environment() + "_salessparrow_api";
+  }
 }

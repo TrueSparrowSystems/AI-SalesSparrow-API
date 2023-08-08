@@ -25,6 +25,7 @@ public class DatabaseChangelog {
 
 
   // TODO: read table names from constants
+  // TODO: use author name from constants
   @ChangeSet(order = "001", id = "001", author = "testAuthor")
   public void createSalesforceOrganizationsTable(AmazonDynamoDB db) {
     String tableName = "salesforce_organizations";
