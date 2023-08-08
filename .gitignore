@@ -35,10 +35,14 @@ build/
 .vscode/
 *.hprof
 
-### env
+### Environment Variables ###
 .env
-set_env_vars.sh
+set*_env_vars.sh
 
+### Logs files ###
+*.log
+
+### Maven ###
 postgres-data/
 dynamodb-data/
 docker/

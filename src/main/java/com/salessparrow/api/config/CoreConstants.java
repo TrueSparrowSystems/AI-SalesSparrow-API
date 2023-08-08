@@ -61,4 +61,18 @@ public class CoreConstants {
   public String salesforceClientBaseUrl() {
     return env.getProperty("SALESFORCE_CLIENT_BASE_URL");
   }
+
+  public String tableNamePrefix() {
+    if (environment().equals("test")) {
+      return "test_";
+    } else if (environment().equals("development")) {
+      return "dev_";
+    } else if (environment().equals("staging")) {
+      return "staging_";
+    } else if (environment().equals("production")) {
+      return "prod_";
+    }
+
+    return "";
+  }
 }
