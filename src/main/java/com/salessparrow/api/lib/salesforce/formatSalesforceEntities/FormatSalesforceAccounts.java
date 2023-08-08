@@ -15,7 +15,6 @@ public class FormatSalesforceAccounts {
   public GetAccountsFormatterDto formatAccounts(String responseBody) {
     
     List<String> accountIds = new ArrayList<String>();
-    AccountEntity accountEntity = new AccountEntity();
     Map<String, AccountEntity> accountEntities = new HashMap<>();
 
     Util util = new Util();
@@ -28,6 +27,7 @@ public class FormatSalesforceAccounts {
 
       accountIds.add(accountId);
 
+      AccountEntity accountEntity = new AccountEntity();
       accountEntity.setId(accountId);
       accountEntity.setName(accountName);
       accountEntities.put(accountId, accountEntity);

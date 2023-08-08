@@ -34,7 +34,7 @@ public class AccountController {
     return ResponseEntity.ok("Note added to Account");
   }
 
-  @GetMapping("/")
+  @GetMapping("")
   public GetAccountsFormatterDto getAccounts(HttpServletRequest request, @RequestParam String q) {
 
     return getAccountListService.getAccounts(request, q);
