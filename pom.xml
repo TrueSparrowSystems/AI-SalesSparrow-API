@@ -52,13 +52,11 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Must for hibernate validator-->
 		<dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
 
-    <!-- dependency for automatic reloads or live reload of applications -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
@@ -66,11 +64,11 @@
       <optional>true</optional>
     </dependency>
 
-    <dependency>
-      <groupId>com.amazonaws</groupId>
-      <artifactId>aws-java-sdk</artifactId>
-      <version>1.11.1000</version>
-    </dependency>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-kms</artifactId>
+			<version>1.12.523</version>
+		</dependency>
 
     <dependency>
       <groupId>com.amazonaws</groupId>
