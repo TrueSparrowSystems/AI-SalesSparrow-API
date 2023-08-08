@@ -17,6 +17,11 @@ public class GetAccountListService {
   public GetAccountsFormatterDto getAccounts(HttpServletRequest request, String q) {
     SalesforceUser user = (SalesforceUser) request.getAttribute("user");
 
-    return getAccountsFactory.getAccounts(user, q);
-  } 
+    String formattedSearchString = formatSearchString(q);
+    return getAccountsFactory.getAccounts(user, formattedSearchString);
+  }
+
+  private String formatSearchString(String q) {
+    return q.trim();
+  }
 }
