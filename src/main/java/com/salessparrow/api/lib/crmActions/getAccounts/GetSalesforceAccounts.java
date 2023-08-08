@@ -12,7 +12,7 @@ import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.lib.salesforce.CompositeRequest;
 import com.salessparrow.api.lib.salesforce.MakeCompositeRequest;
-import com.salessparrow.api.lib.salesforce.SalesforceLib;
+import com.salessparrow.api.lib.salesforce.SalesforceQueries;
 import com.salessparrow.api.lib.salesforce.formatSalesforceEntities.FormatSalesforceAccounts;
 
 @Component
@@ -26,8 +26,8 @@ public class GetSalesforceAccounts implements GetAccounts{
   public GetAccountsFormatterDto getAccounts(SalesforceUser user, String searchTerm) {
     String salesforceUserId = user.getExternalUserId();
 
-    SalesforceLib salesforceLib = new SalesforceLib();
-    String query = salesforceLib.getAccountsQuery(searchTerm);
+    SalesforceQueries salesforceQueries = new SalesforceQueries();
+    String query = salesforceQueries.getAccountsQuery(searchTerm);
 
     String url = salesforceConstants.queryUrlPath() + query;
 
