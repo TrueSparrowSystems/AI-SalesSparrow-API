@@ -29,6 +29,9 @@ public class SalesforceOAuthAccessToken {
   private SalesforceOauthTokenRepository sfOauthTokenRepository;
   @Autowired
   private Util util;
+  @Autowired
+  private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
+  
 
   public String fetchAccessToken(String salesforceUserId) {
     SalesforceOauthToken sfOAuthToken = sfOauthTokenRepository.getSalesforceOauthTokenBySalesforceUserId(salesforceUserId);
@@ -44,7 +47,6 @@ public class SalesforceOAuthAccessToken {
     String decryptedRefreshToken = awsKms.decryptToken(encryptedRefreshToken);
 
     String url = salesforceConstants.oauth2Url();
-    System.out.println(salesforceConstants.oauth2Url());
 
     String requestBody = "grant_type=" + salesforceConstants.refreshTokenGrantType() + "&client_id="
         + coreConstants.salesforceClientId()
@@ -56,8 +58,21 @@ public class SalesforceOAuthAccessToken {
     headers.put("content-type", "application/x-www-form-urlencoded");
 
     HttpClient.HttpResponse response = HttpClient.makePostRequest(url, headers, requestBody, 5000);
-    JsonNode rootNode = util.getJsonNode(response.getResponseBody());
+    String decryptedAccessToken = updateAccessTokenInDatabase(response.getResponseBody(), sfOAuthToken.getId());
+
+    return decryptedAccessToken;
+  }
+
+  private String updateAccessTokenInDatabase(String responseBody, String sfOAuthTokenId) {
+    JsonNode rootNode = util.getJsonNode(responseBody);
     String decryptedAccessToken = rootNode.get("access_token").asText();
+
+    SalesforceOauthToken salesforceOauthToken = new SalesforceOauthToken();
+    String encryptedAccessToken = awsKms.encryptToken(decryptedAccessToken);
+
+    salesforceOauthToken.setId(sfOAuthTokenId);
+    salesforceOauthToken.setAccessToken(encryptedAccessToken);
+    salesforceOauthTokenRepository.upsertSalesforceOauthToken(salesforceOauthToken);
 
     return decryptedAccessToken;
   }
