@@ -15,84 +15,97 @@ import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
 import com.github.dynamobee.changeset.ChangeLog;
 import com.github.dynamobee.changeset.ChangeSet;
+import com.salessparrow.api.lib.globalConstants.DynamoDbTableNameConstants;
 
 @ChangeLog
 public class DatabaseChangelog {
-  Logger logger = LoggerFactory.getLogger(DatabaseChangelog.class);
+	Logger logger = LoggerFactory.getLogger(DatabaseChangelog.class);
 
-  // TODO: read table names from constants
-  // TODO: use author name from constants
-  @ChangeSet(order = "001", id = "001", author = "testAuthor")
-  public void createSalesforceOrganizationsTable(AmazonDynamoDB db) {
-    String tableName = "salesforce_organizations";
-    logger.info("Creating table: " + tableName);
+	@ChangeSet(order = "001", id = "001", author = "testAuthor")
+	public void createSalesforceOrganizationsTable(AmazonDynamoDB db) {
+		String tableName = DynamoDbTableNameConstants.salesforceOrganizationsTableName();
+		logger.info("Creating table: " + tableName);
 
-        CreateTableRequest request = new CreateTableRequest()
-                .withTableName(tableName)
-                .withAttributeDefinitions(
-                        new AttributeDefinition("id", ScalarAttributeType.S),
-                        new AttributeDefinition("external_organization_id", ScalarAttributeType.S))
-                .withKeySchema(
-                        new KeySchemaElement("id", KeyType.HASH))
-                .withProvisionedThroughput(new ProvisionedThroughput(1L, 1L))
-                .withGlobalSecondaryIndexes(
-                        new GlobalSecondaryIndex()
-                                .withIndexName("external_organization_id_index")
-                                .withKeySchema(
-                                        new KeySchemaElement("external_organization_id", KeyType.HASH))
-                                .withProjection(new Projection().withProjectionType(ProjectionType.ALL))
-                                .withProvisionedThroughput(new ProvisionedThroughput(1L, 1L)));
+		CreateTableRequest request = new CreateTableRequest()
+				.withTableName(tableName)
+				.withAttributeDefinitions(
+						new AttributeDefinition("id", ScalarAttributeType.S),
+						new AttributeDefinition("external_organization_id",
+								ScalarAttributeType.S))
+				.withKeySchema(
+						new KeySchemaElement("id", KeyType.HASH))
+				.withProvisionedThroughput(new ProvisionedThroughput(1L, 1L))
+				.withGlobalSecondaryIndexes(
+						new GlobalSecondaryIndex()
+								.withIndexName("external_organization_id_index")
+								.withKeySchema(
+										new KeySchemaElement(
+												"external_organization_id",
+												KeyType.HASH))
+								.withProjection(new Projection()
+										.withProjectionType(ProjectionType.ALL))
+								.withProvisionedThroughput(
+										new ProvisionedThroughput(1L, 1L)));
 
-        db.createTable(request);
-        System.out.println("Done creating table: salesforce_organizations");
-    }
+		db.createTable(request);
+		System.out.println("Done creating table: " + tableName);
+	}
 
-  @ChangeSet(order = "002", id = "002", author = "testAuthor")
-  public void createSalesforceOAuthTokensTable(AmazonDynamoDB db) {
-    logger.info("Creating table: salesforce_oauth_tokens");
+	@ChangeSet(order = "002", id = "002", author = "testAuthor")
+	public void createSalesforceOAuthTokensTable(AmazonDynamoDB db) {
+		String tableName = DynamoDbTableNameConstants.salesforceOauthTokensTableName();
+		logger.info("Creating table:" + tableName);
 
-        CreateTableRequest request = new CreateTableRequest()
-                .withTableName("salesforce_oauth_tokens")
-                .withAttributeDefinitions(
-                        new AttributeDefinition("id", ScalarAttributeType.S),
-                        new AttributeDefinition("salesforce_user_id", ScalarAttributeType.S))
-                .withKeySchema(
-                        new KeySchemaElement("id", KeyType.HASH))
-                .withProvisionedThroughput(new ProvisionedThroughput(1L, 1L))
-                .withGlobalSecondaryIndexes(
-                        new GlobalSecondaryIndex()
-                                .withIndexName("salesforce_user_id_index")
-                                .withKeySchema(
-                                        new KeySchemaElement("salesforce_user_id", KeyType.HASH))
-                                .withProjection(new Projection().withProjectionType(ProjectionType.ALL))
-                                .withProvisionedThroughput(new ProvisionedThroughput(1L, 1L)));
-        db.createTable(request);
+		CreateTableRequest request = new CreateTableRequest()
+				.withTableName(tableName)
+				.withAttributeDefinitions(
+						new AttributeDefinition("id", ScalarAttributeType.S),
+						new AttributeDefinition("salesforce_user_id", ScalarAttributeType.S))
+				.withKeySchema(
+						new KeySchemaElement("id", KeyType.HASH))
+				.withProvisionedThroughput(new ProvisionedThroughput(1L, 1L))
+				.withGlobalSecondaryIndexes(
+						new GlobalSecondaryIndex()
+								.withIndexName("salesforce_user_id_index")
+								.withKeySchema(
+										new KeySchemaElement(
+												"salesforce_user_id",
+												KeyType.HASH))
+								.withProjection(new Projection()
+										.withProjectionType(ProjectionType.ALL))
+								.withProvisionedThroughput(
+										new ProvisionedThroughput(1L, 1L)));
+		db.createTable(request);
 
-    logger.info("Done creating table: salesforce_oauth_tokens");
-  }
+		logger.info("Done creating table: " + tableName);
+	}
 
-  @ChangeSet(order = "003", id = "003", author = "testAuthor")
-  public void createSalesforceUsersTable(AmazonDynamoDB db) {
-    logger.info("Creating table: salesforce_users");
+	@ChangeSet(order = "003", id = "003", author = "testAuthor")
+	public void createSalesforceUsersTable(AmazonDynamoDB db) {
+		String tableName = DynamoDbTableNameConstants.salesforceUsersTableName();
+		logger.info("Creating table:" + tableName);
 
-        CreateTableRequest request = new CreateTableRequest()
-                .withTableName("salesforce_users")
-                .withAttributeDefinitions(
-                        new AttributeDefinition("id", ScalarAttributeType.S),
-                        new AttributeDefinition("external_user_id", ScalarAttributeType.S))
-                .withKeySchema(
-                        new KeySchemaElement("id", KeyType.HASH))
-                .withProvisionedThroughput(new ProvisionedThroughput(1L, 1L))
-                .withGlobalSecondaryIndexes(
-                        new GlobalSecondaryIndex()
-                                .withIndexName("external_user_id_index")
-                                .withKeySchema(
-                                        new KeySchemaElement("external_user_id", KeyType.HASH))
-                                .withProjection(new Projection().withProjectionType(ProjectionType.ALL))
-                                .withProvisionedThroughput(new ProvisionedThroughput(1L, 1L)));
+		CreateTableRequest request = new CreateTableRequest()
+				.withTableName(tableName)
+				.withAttributeDefinitions(
+						new AttributeDefinition("id", ScalarAttributeType.S),
+						new AttributeDefinition("external_user_id", ScalarAttributeType.S))
+				.withKeySchema(
+						new KeySchemaElement("id", KeyType.HASH))
+				.withProvisionedThroughput(new ProvisionedThroughput(1L, 1L))
+				.withGlobalSecondaryIndexes(
+						new GlobalSecondaryIndex()
+								.withIndexName("external_user_id_index")
+								.withKeySchema(
+										new KeySchemaElement("external_user_id",
+												KeyType.HASH))
+								.withProjection(new Projection()
+										.withProjectionType(ProjectionType.ALL))
+								.withProvisionedThroughput(
+										new ProvisionedThroughput(1L, 1L)));
 
-        db.createTable(request);
+		db.createTable(request);
 
-    logger.info("Done creating table: salesforce_users");
-  }
+		logger.info("Done creating table: " + tableName);
+	}
 }
