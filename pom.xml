@@ -52,12 +52,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>net.logstash.logback</groupId>
-			<artifactId>logstash-logback-encoder</artifactId>
-			<version>7.0.1</version>
-		</dependency>
-
 		<!-- Must for hibernate validator-->
 		<dependency>
       <groupId>org.springframework.boot</groupId>
@@ -88,12 +82,6 @@
         <groupId>org.hibernate.validator</groupId>
         <artifactId>hibernate-validator</artifactId>
         <version>8.0.1.Final</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -148,27 +136,6 @@
 			<artifactId>dynamobee</artifactId>
 			<version>0.6</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.testcontainers</groupId>
-			<artifactId>testcontainers</artifactId>
-			<version>1.18.3</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-				<groupId>org.testcontainers</groupId>
-				<artifactId>localstack</artifactId>
-				<version>1.18.3</version>
-				<scope>test</scope>
-		</dependency>
-
-		<dependency>
-      <groupId>org.testcontainers</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <scope>test</scope>
-    </dependency>
-
 
 	</dependencies>
 

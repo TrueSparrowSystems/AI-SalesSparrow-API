@@ -1,5 +1,8 @@
 package com.salessparrow.api.changelogs;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.model.AttributeDefinition;
 import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
@@ -15,11 +18,14 @@ import com.github.dynamobee.changeset.ChangeSet;
 
 @ChangeLog
 public class DatabaseChangelog {
+  Logger logger = LoggerFactory.getLogger(DatabaseChangelog.class);
 
-    @ChangeSet(order = "001", id = "001", author = "testAuthor")
-    public void createSalesforceOrganizationsTable(AmazonDynamoDB db) {
-        System.out.println("Creating table: salesforce_organizations");
-        String tableName = "salesforce_organizations";
+  // TODO: read table names from constants
+  // TODO: use author name from constants
+  @ChangeSet(order = "001", id = "001", author = "testAuthor")
+  public void createSalesforceOrganizationsTable(AmazonDynamoDB db) {
+    String tableName = "salesforce_organizations";
+    logger.info("Creating table: " + tableName);
 
         CreateTableRequest request = new CreateTableRequest()
                 .withTableName(tableName)
@@ -41,9 +47,9 @@ public class DatabaseChangelog {
         System.out.println("Done creating table: salesforce_organizations");
     }
 
-    @ChangeSet(order = "002", id = "002", author = "testAuthor")
-    public void createSalesforceOAuthTokensTable(AmazonDynamoDB db) {
-        System.out.println("Creating table: salesforce_oauth_tokens");
+  @ChangeSet(order = "002", id = "002", author = "testAuthor")
+  public void createSalesforceOAuthTokensTable(AmazonDynamoDB db) {
+    logger.info("Creating table: salesforce_oauth_tokens");
 
         CreateTableRequest request = new CreateTableRequest()
                 .withTableName("salesforce_oauth_tokens")
@@ -62,12 +68,12 @@ public class DatabaseChangelog {
                                 .withProvisionedThroughput(new ProvisionedThroughput(1L, 1L)));
         db.createTable(request);
 
-        System.out.println("Done creating table: salesforce_oauth_tokens");
-    }
+    logger.info("Done creating table: salesforce_oauth_tokens");
+  }
 
-    @ChangeSet(order = "003", id = "003", author = "testAuthor")
-    public void createSalesforceUsersTable(AmazonDynamoDB db) {
-        System.out.println("Creating table: salesforce_users");
+  @ChangeSet(order = "003", id = "003", author = "testAuthor")
+  public void createSalesforceUsersTable(AmazonDynamoDB db) {
+    logger.info("Creating table: salesforce_users");
 
         CreateTableRequest request = new CreateTableRequest()
                 .withTableName("salesforce_users")
@@ -87,6 +93,6 @@ public class DatabaseChangelog {
 
         db.createTable(request);
 
-        System.out.println("Done creating table: salesforce_users");
-    }
+    logger.info("Done creating table: salesforce_users");
+  }
 }
