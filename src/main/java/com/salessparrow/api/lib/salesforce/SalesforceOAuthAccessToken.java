@@ -58,21 +58,19 @@ public class SalesforceOAuthAccessToken {
     headers.put("content-type", "application/x-www-form-urlencoded");
 
     HttpClient.HttpResponse response = HttpClient.makePostRequest(url, headers, requestBody, 5000);
-    String decryptedAccessToken = updateAccessTokenInDatabase(response.getResponseBody(), sfOAuthToken.getId());
+    String decryptedAccessToken = updateAccessTokenInDatabase(response.getResponseBody(), sfOAuthToken);
 
     return decryptedAccessToken;
   }
 
-  private String updateAccessTokenInDatabase(String responseBody, String sfOAuthTokenId) {
+  private String updateAccessTokenInDatabase(String responseBody, SalesforceOauthToken sfOAuthToken) {
     JsonNode rootNode = util.getJsonNode(responseBody);
     String decryptedAccessToken = rootNode.get("access_token").asText();
 
-    SalesforceOauthToken salesforceOauthToken = new SalesforceOauthToken();
     String encryptedAccessToken = awsKms.encryptToken(decryptedAccessToken);
 
-    salesforceOauthToken.setId(sfOAuthTokenId);
-    salesforceOauthToken.setAccessToken(encryptedAccessToken);
-    salesforceOauthTokenRepository.upsertSalesforceOauthToken(salesforceOauthToken);
+    sfOAuthToken.setAccessToken(encryptedAccessToken);
+    salesforceOauthTokenRepository.upsertSalesforceOauthToken(sfOAuthToken);
 
     return decryptedAccessToken;
   }

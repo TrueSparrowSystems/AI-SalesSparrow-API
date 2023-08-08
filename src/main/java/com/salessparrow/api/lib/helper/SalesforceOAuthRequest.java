@@ -24,10 +24,10 @@ public class SalesforceOAuthRequest {
         return request.execute(decryptedAccessToken);
       } catch (Exception e1) {
         throw new CustomException(
-            new ErrorObject(
-                "l_s_sc_1",
-                "something_went_wrong",
-                e.getMessage()));
+          new ErrorObject(
+            "l_h_soar_mr_1",
+            "something_went_wrong",
+            e.getMessage()));
       }
     }
   }
