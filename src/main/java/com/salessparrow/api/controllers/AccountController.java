@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.salessparrow.api.dto.NoteDto;
 import com.salessparrow.api.dto.formatter.GetAccountsFormatterDto;
-import com.salessparrow.api.services.accounts.List;
+import com.salessparrow.api.services.accounts.GetAccountListService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -24,7 +24,7 @@ import jakarta.validation.Valid;
 public class AccountController {
 
   @Autowired
-  private List list;
+  private GetAccountListService getAccountListService;
 
   @PostMapping("/{account_id}/notes")
   public ResponseEntity<String> addNoteToAccount(
@@ -34,9 +34,9 @@ public class AccountController {
     return ResponseEntity.ok("Note added to Account");
   }
 
-  @GetMapping("")
+  @GetMapping("/")
   public GetAccountsFormatterDto getAccounts(HttpServletRequest request, @RequestParam String q) {
 
-    return list.getAccounts(request, q);
+    return getAccountListService.getAccounts(request, q);
   }
 }

@@ -10,7 +10,7 @@ import com.salessparrow.api.lib.crmActions.getAccounts.GetAccountsFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Service
-public class List {
+public class GetAccountListService {
   @Autowired
   private GetAccountsFactory getAccountsFactory;
   
