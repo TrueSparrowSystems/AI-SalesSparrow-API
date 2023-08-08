@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.salessparrow.api.lib.ErrorObject;
+import com.salessparrow.api.lib.errorLib.ErrorObject;
+import com.salessparrow.api.lib.errorLib.ErrorResponseObject;
+import com.salessparrow.api.lib.errorLib.ParamErrorObject;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -31,20 +33,32 @@ public class GlobalExceptionHandler {
    * @return ResponseEntity<Map<String, String>>
    */
   @ExceptionHandler(CustomException.class)
-  public ResponseEntity<Map<String, String>> handleCustomException(CustomException ex) {
-    Map<String, String> errorResponse = null;
+  public ResponseEntity<ErrorResponseObject> handleCustomException(CustomException ex) {
+    ErrorResponseObject errorResponse = null;
 
-    if (ex.getErrorObject() == null || ex.getErrorObject().getApiErrorIdentifier() == null) {
-      errorResponse = er.getErrorResponse("something_went_wrong",
-          "b_1", ex.getMessage());
+    if(ex.getParamErrorObject() != null){
+      ParamErrorObject paramErrorObject = ex.getParamErrorObject();
+      errorResponse = er.getParamErrorResponse(
+          paramErrorObject.getInternalErrorIdentifier(), 
+          paramErrorObject.getMessage(),
+          paramErrorObject.getParamErrorIdentifiers());
+    }
+    else if (ex.getErrorObject() == null || ex.getErrorObject().getApiErrorIdentifier() == null) {
+      errorResponse = er.getErrorResponse(
+        "something_went_wrong",
+          "b_1", 
+          ex.getMessage());
     } else {
-      errorResponse = er.getErrorResponse(ex.getErrorObject().getApiErrorIdentifier(),
-          ex.getErrorObject().getInternalErrorIdentifier(), ex.getMessage());
+      ErrorObject errorObject = ex.getErrorObject();
+      errorResponse = er.getErrorResponse(
+          errorObject.getApiErrorIdentifier(),
+          errorObject.getInternalErrorIdentifier(), 
+          errorObject.getMessage());
     }
 
     logger.error("Error response: {}", errorResponse);
 
-    return ResponseEntity.status(Integer.parseInt(errorResponse.get("http_code")))
+    return ResponseEntity.status(errorResponse.getHttpCode())
         .body(errorResponse);
   }
 
@@ -53,14 +67,14 @@ public class GlobalExceptionHandler {
    * 
    * @param ex
    * 
-   * @return ResponseEntity<Map<String, String>>
+   * @return ResponseEntity<ErrorResponseObject>
    */
   @ExceptionHandler(RuntimeException.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException ex) {
+  public ResponseEntity<ErrorResponseObject> handleRuntimeException(RuntimeException ex) {
     ex.printStackTrace();
 
-    Map<String, String> errorResponse = er.getErrorResponse("something_went_wrong",
+    ErrorResponseObject errorResponse = er.getErrorResponse("something_went_wrong",
         "b_1", ex.getMessage());
 
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -69,7 +83,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException ex) {
+  public ResponseEntity<ErrorResponseObject> handleValidationException(MethodArgumentNotValidException ex) {
     Map<String, String> errorMap = new HashMap<>();
 
     for (FieldError error : ex.getBindingResult().getFieldErrors()) {

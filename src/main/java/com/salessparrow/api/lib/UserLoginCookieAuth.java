@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import com.salessparrow.api.config.CoreConstants;
 import com.salessparrow.api.domain.User;
 import com.salessparrow.api.exception.CustomException;
+import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.globalConstants.CookieConstants;
 import com.salessparrow.api.lib.globalConstants.UserConstants;
 import com.salessparrow.api.repositories.SalesforceUserRepository;

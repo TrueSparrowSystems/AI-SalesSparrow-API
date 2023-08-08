@@ -1,4 +1,4 @@
-package com.salessparrow.api.lib;
+package com.salessparrow.api.lib.errorLib;
 
 public class ErrorObject {
 

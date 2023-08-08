@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import com.salessparrow.api.config.CoreConstants;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.AwsKms;
-import com.salessparrow.api.lib.ErrorObject;
+import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.httpLib.HttpClient;
 
 @Component
