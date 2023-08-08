@@ -40,8 +40,6 @@ public class AwsKms {
    * @return The encrypted token.
    */
   public String encryptToken(String token) {
-    System.out.println("Encrypting token: " + token);
-
     if (token == null) {
       return null;
     }

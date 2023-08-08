@@ -7,8 +7,13 @@ import com.salessparrow.api.config.CoreConstants;
 
 @Component
 public class SalesforceConstants {
+
   @Autowired
-  private CoreConstants coreConstants;
+  public SalesforceConstants(CoreConstants coreConstants) {
+    this.coreConstants = coreConstants;
+  }
+
+  public CoreConstants coreConstants;
 
   public String compositeUrlPath() {
     return "/services/data/v58.0/composite";
@@ -22,8 +27,8 @@ public class SalesforceConstants {
     return "/services/data/v58.0/sobjects";
   }
 
-  public String salesforceCompositeUrl() {
-    return coreConstants.salesforceClientBaseUrl() + compositeUrlPath();
+  public String salesforceCompositeUrl(String urlPrefix) {
+    return urlPrefix + compositeUrlPath();
   }
 
   public String oauth2Url() {
@@ -36,6 +41,10 @@ public class SalesforceConstants {
 
   public String authorizationCodeGrantType() {
     return "authorization_code";
+  }
+
+  public String refreshTokenGrantType() {
+    return "refresh_token";
   }
 
   public Integer timeoutMillis() {

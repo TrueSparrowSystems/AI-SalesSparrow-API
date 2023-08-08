@@ -165,11 +165,14 @@ public class AuthService {
       SalesforceOauthToken exsitingOauthTokenData = salesforceOauthTokenRepository
           .getSalesforceOauthTokenBySalesforceUserId(salesforceUserId);
       salesforceOauthToken.setId(exsitingOauthTokenData.getId());
-      logger.info("Salesforce OAuth Token already exists");
-    }
 
-    this.salesforceOauthToken = salesforceOauthTokenRepository
+      this.salesforceOauthToken = salesforceOauthTokenRepository
         .upsertSalesforceOauthToken(salesforceOauthToken);
+
+      logger.info("Salesforce OAuth Token already exists");
+    } else {
+      this.salesforceOauthToken = salesforceOauthTokenRepository.saveSalesforceOauthToken(salesforceOauthToken);
+    }
 
     if (this.salesforceOauthToken == null) {
       throw new CustomException(
