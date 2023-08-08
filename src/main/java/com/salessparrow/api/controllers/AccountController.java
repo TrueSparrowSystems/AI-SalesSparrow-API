@@ -13,7 +13,7 @@ import com.salessparrow.api.dto.NoteDto;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v1/accounts/")
+@RequestMapping("/api/v1/accounts")
 @Validated
 public class AccountController {
 
