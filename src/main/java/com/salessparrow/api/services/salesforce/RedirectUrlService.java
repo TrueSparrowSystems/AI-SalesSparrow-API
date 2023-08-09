@@ -16,9 +16,6 @@ import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 public class RedirectUrlService {
 
   @Autowired
-  private CoreConstants coreConstants;
-
-  @Autowired
   private SalesforceConstants salesforceConstants;
 
   Logger logger = LoggerFactory.getLogger(RedirectUrlService.class);
@@ -35,7 +32,7 @@ public class RedirectUrlService {
     String state = salesforceRedirectUrlDto.getState();
 
     String salesforceLoginUrl = salesforceConstants.oauth2AuthorizeUrl();
-    String salesforceClientId = coreConstants.salesforceClientId();
+    String salesforceClientId = CoreConstants.salesforceClientId();
 
     String salesforceOauthUrl = salesforceLoginUrl + "?response_type=code" +
         "&client_id=" + salesforceClientId +

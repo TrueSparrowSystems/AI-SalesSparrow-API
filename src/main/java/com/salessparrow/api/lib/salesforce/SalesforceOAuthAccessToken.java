@@ -22,16 +22,16 @@ public class SalesforceOAuthAccessToken {
   private AwsKms awsKms;
 
   @Autowired
-  private CoreConstants coreConstants;
-  @Autowired
   private SalesforceConstants salesforceConstants;
+
   @Autowired
   private SalesforceOauthTokenRepository sfOauthTokenRepository;
+
   @Autowired
   private Util util;
+
   @Autowired
   private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
-  
 
   public String fetchAccessToken(String salesforceUserId) {
     SalesforceOauthToken sfOAuthToken = sfOauthTokenRepository.getSalesforceOauthTokenBySalesforceUserId(salesforceUserId);
@@ -49,9 +49,9 @@ public class SalesforceOAuthAccessToken {
     String url = salesforceConstants.oauth2Url();
 
     String requestBody = "grant_type=" + salesforceConstants.refreshTokenGrantType() + "&client_id="
-        + coreConstants.salesforceClientId()
+        + CoreConstants.salesforceClientId()
         + "&client_secret="
-        + coreConstants.salesforceClientSecret() +
+        + CoreConstants.salesforceClientSecret() +
         "&refresh_token=" + decryptedRefreshToken;
 
     Map<String, String> headers = new HashMap<>();

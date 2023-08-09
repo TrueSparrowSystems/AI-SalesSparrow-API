@@ -22,19 +22,16 @@ public class DropTables {
   @Autowired
   private AmazonDynamoDB dynamoDB;
 
-  @Autowired
-  private CoreConstants coreConstants;
-
   /**
    * This method is used to drop the tables.
    */
   public void perform() {
-    if (!coreConstants.environment().equals("test")) {
+    if (!CoreConstants.environment().equals("test")) {
       throw new RuntimeException("Cannot drop tables in non test environment");
     }
 
     List<String> tableList = getAllTableList();
-    String envPrefix = coreConstants.environment() + "_";
+    String envPrefix = CoreConstants.environment() + "_";
 
     for (String tableName : tableList) {
       if (tableName.startsWith(envPrefix)) {

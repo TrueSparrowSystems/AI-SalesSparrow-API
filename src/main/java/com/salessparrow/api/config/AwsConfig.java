@@ -5,7 +5,6 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.kms.AWSKMS;
 import com.amazonaws.services.kms.AWSKMSClientBuilder;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,9 +14,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class AwsConfig {
-
-  @Autowired
-  private CoreConstants CoreConstants;
 
   /**
    * Creates and configures an AWS KMS (Key Management Service) client.

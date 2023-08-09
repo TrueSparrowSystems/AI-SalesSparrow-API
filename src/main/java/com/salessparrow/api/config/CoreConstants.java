@@ -1,68 +1,63 @@
 package com.salessparrow.api.config;
 
-import org.springframework.stereotype.Component;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-
-@Component
+/**
+ * Class to get the environment variables.
+ */
 public class CoreConstants {
-  @Autowired
-  private Environment env;
 
-  public String encryptionKey() {
-    return env.getProperty("ENCRYPTION_KEY");
+  public static String encryptionKey() {
+    return System.getenv("ENCRYPTION_KEY");
   }
 
-  public String apiCookieSecret() {
-    return env.getProperty("API_COOKIE_SECRET");
+  public static String apiCookieSecret() {
+    return System.getenv("API_COOKIE_SECRET");
   }
 
-  public String environment() {
-    return env.getProperty("ENVIRONMENT");
+  public static String environment() {
+    return System.getenv("ENVIRONMENT");
   }
 
-  public Boolean isDevEnvironment() {
+  public static Boolean isDevEnvironment() {
     return environment().equals("development");
   }
 
-  public String awsAccessKeyId() {
-    return env.getProperty("SALESSPARROW_ACCESS_KEY_ID");
+  public static String awsAccessKeyId() {
+    return System.getenv("SALESSPARROW_ACCESS_KEY_ID");
   }
 
-  public String awsSecretAccessKey() {
-    return env.getProperty("SALESSPARROW_SECRET_ACCESS_KEY");
+  public static String awsSecretAccessKey() {
+    return System.getenv("SALESSPARROW_SECRET_ACCESS_KEY");
   }
 
-  public String awsRegion() {
-    return env.getProperty("SALESSPARROW_REGION");
+  public static String awsRegion() {
+    return System.getenv("SALESSPARROW_REGION");
   }
 
-  public String cacheClusterId() {
-    return env.getProperty("CACHE_CLUSTER_ID");
+  public static String cacheClusterId() {
+    return System.getenv("CACHE_CLUSTER_ID");
   }
 
-  public String kmsKeyId() {
-    return env.getProperty("KMS_KEY_ID");
+  public static String kmsKeyId() {
+    return System.getenv("KMS_KEY_ID");
   }
 
-  public String salesforceAuthUrl() {
-    return env.getProperty("SALESFORCE_AUTH_URL");
+  public static String salesforceAuthUrl() {
+    return System.getenv("SALESFORCE_AUTH_URL");
   }
 
-  public String salesforceClientId() {
-    return env.getProperty("SALESFORCE_CLIENT_ID");
+  public static String salesforceClientId() {
+    return System.getenv("SALESFORCE_CLIENT_ID");
   }
 
-  public String salesforceClientSecret() {
-    return env.getProperty("SALESFORCE_CLIENT_SECRET");
+  public static String salesforceClientSecret() {
+    return System.getenv("SALESFORCE_CLIENT_SECRET");
   }
 
-  public String salesforceClientBaseUrl() {
-    return env.getProperty("SALESFORCE_CLIENT_BASE_URL");
+  public static String salesforceClientBaseUrl() {
+    return System.getenv("SALESFORCE_CLIENT_BASE_URL");
   }
 
-  public String tableNamePrefix() {
+  public static String tableNamePrefix() {
     if (environment().equals("test")) {
       return "test_";
     } else if (environment().equals("development")) {

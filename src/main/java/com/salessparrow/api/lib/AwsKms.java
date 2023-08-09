@@ -23,9 +23,6 @@ public class AwsKms {
   @Autowired
   private AWSKMS kmsClient;
 
-  @Autowired
-  private CoreConstants CoreConstants;
-
   /**
    * Creates a new instance of AwsKms.
    */
