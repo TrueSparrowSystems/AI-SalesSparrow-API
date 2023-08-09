@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
     else if (ex.getErrorObject() == null || ex.getErrorObject().getApiErrorIdentifier() == null) {
       errorResponse = er.getErrorResponse(
         "something_went_wrong",
-          "b_1", 
+          "e_geh_hce_1", 
           ex.getMessage());
     } else {
       ErrorObject errorObject = ex.getErrorObject();
@@ -75,7 +75,7 @@ public class GlobalExceptionHandler {
     ex.printStackTrace();
 
     ErrorResponseObject errorResponse = er.getErrorResponse("something_went_wrong",
-        "b_1", ex.getMessage());
+        "e_geh_hre_1", ex.getMessage());
 
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body(errorResponse);
