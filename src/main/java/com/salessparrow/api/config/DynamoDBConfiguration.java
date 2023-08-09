@@ -8,15 +8,12 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class DynamoDBConfiguration {
-    @Autowired
-    private CoreConstants coreConstants;
 
     @Value("${aws.dynamodb.endpoint}")
     private String dynamodbEndpoint;
@@ -49,7 +46,7 @@ public class DynamoDBConfiguration {
 
     @Bean
     DynamoDBMapperConfig dynamoDBMapperConfig() {
-        String prefix = coreConstants.environment() + "_";
+        String prefix = CoreConstants.environment() + "_";
         return new DynamoDBMapperConfig.Builder()
                 .withTableNameOverride(DynamoDBMapperConfig.TableNameOverride.withTableNamePrefix(prefix))
                 .build();

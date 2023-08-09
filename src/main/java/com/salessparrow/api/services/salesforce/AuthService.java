@@ -45,21 +45,26 @@ public class AuthService {
   Logger logger = LoggerFactory.getLogger(AuthService.class);
 
   @Autowired
-  private CoreConstants coreConstants;
-  @Autowired
   private AwsKms awsKms;
+
   @Autowired
   private Util util;
+
   @Autowired
   private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
+
   @Autowired
   private SalesforceUserRepository salesforceUserRepository;
+
   @Autowired
   private SalesforceOrganizationRepository salesforceOrganizationRepository;
+
   @Autowired
   private LocalCipher localCipher;
+
   @Autowired
   private CookieHelper cookieHelper;
+
   @Autowired
   private SalesforceConstants salesforceConstants;
 
@@ -104,9 +109,9 @@ public class AuthService {
     String salesforceOAuthEndpoint = salesforceConstants.oauth2Url();
 
     String requestBody = "grant_type=" + salesforceConstants.authorizationCodeGrantType() + "&client_id="
-        + coreConstants.salesforceClientId()
+        + CoreConstants.salesforceClientId()
         + "&client_secret="
-        + coreConstants.salesforceClientSecret() +
+        + CoreConstants.salesforceClientSecret() +
         "&code=" + this.code + "&redirect_uri=" + this.redirectUri;
 
     Map<String, String> headers = new HashMap<>();
@@ -160,7 +165,7 @@ public class AuthService {
       this.salesforceUser = salesforceUser;
       this.isNewUser = false;
 
-      this.decryptedSalt = localCipher.decrypt(coreConstants.encryptionKey(), salesforceUser.getEncryptionSalt());
+      this.decryptedSalt = localCipher.decrypt(CoreConstants.encryptionKey(), salesforceUser.getEncryptionSalt());
 
       SalesforceOauthToken exsitingOauthTokenData = salesforceOauthTokenRepository
           .getSalesforceOauthTokenBySalesforceUserId(salesforceUserId);
@@ -225,7 +230,7 @@ public class AuthService {
     String decryptedSalt = localCipher.generateRandomSalt();
     String cookieToken = localCipher.generateRandomIv(32);
 
-    String encryptedSalt = localCipher.encrypt(coreConstants.encryptionKey(), decryptedSalt);
+    String encryptedSalt = localCipher.encrypt(CoreConstants.encryptionKey(), decryptedSalt);
     String encryptedCookieToken = localCipher.encrypt(decryptedSalt, cookieToken);
 
     SalesforceUser salesforceUser = new SalesforceUser();

@@ -30,10 +30,10 @@ public class UserLoginCookieAuth {
 
   @Autowired
   private LocalCipher localCipher;
-  @Autowired
-  private CoreConstants coreConstants;
+
   @Autowired
   private CookieHelper cookieHelper;
+
   @Autowired
   private SalesforceUserRepository salesforceUserRepository;
 
@@ -167,7 +167,7 @@ public class UserLoginCookieAuth {
    */
   private void validateCookieToken() {
     String encryptionSalt = user.getEncryptionSalt();
-    decryptedEncryptionSalt = localCipher.decrypt(coreConstants.encryptionKey(),
+    decryptedEncryptionSalt = localCipher.decrypt(CoreConstants.encryptionKey(),
         encryptionSalt);
 
     String generatedToken = cookieHelper.getCookieToken(user,

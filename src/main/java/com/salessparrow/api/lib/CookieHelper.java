@@ -17,8 +17,6 @@ public class CookieHelper {
 
   @Autowired
   private LocalCipher localCipher;
-  @Autowired
-  private CoreConstants coreConstants;
 
   public String getCookieValue(User user, String userKind, String decryptedSalt, Long timestamp) {
 
@@ -38,7 +36,7 @@ public class CookieHelper {
   public String getCookieToken(User user, String decryptedSalt, Long timestamp) {
 
     String decryptedCookieToken = localCipher.decrypt(decryptedSalt, user.getCookieToken());
-    String strSecret = coreConstants.apiCookieSecret();
+    String strSecret = CoreConstants.apiCookieSecret();
     String stringToSign = user.getId() + ':' + timestamp + ':' + strSecret + ':'
         + decryptedCookieToken.substring(0, 16);
     String salt = user.getId() + ':' + decryptedCookieToken.substring(decryptedCookieToken.length() - 16) + ':'

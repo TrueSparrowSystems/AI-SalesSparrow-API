@@ -1,19 +1,10 @@
 package com.salessparrow.api.lib.globalConstants;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.salessparrow.api.config.CoreConstants;
 
 @Component
 public class SalesforceConstants {
-
-  @Autowired
-  public SalesforceConstants(CoreConstants coreConstants) {
-    this.coreConstants = coreConstants;
-  }
-
-  public CoreConstants coreConstants;
 
   public String compositeUrlPath() {
     return "/services/data/v58.0/composite";
@@ -31,8 +22,12 @@ public class SalesforceConstants {
     return urlPrefix + compositeUrlPath();
   }
 
+  public String oauth2AuthorizeUrl() {
+    return CoreConstants.salesforceAuthUrl() + "/services/oauth2/authorize";
+  }
+
   public String oauth2Url() {
-    return coreConstants.salesforceAuthUrl() + "/services/oauth2/token";
+    return CoreConstants.salesforceAuthUrl() + "/services/oauth2/token";
   }
 
   public String identityUrl() {
