@@ -19,8 +19,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @DynamoDBTable(tableName = "salesforce_users")
-public class SalesforceUser
-    implements User {
+public class SalesforceUser implements User {
 
   public enum Status {
     ACTIVE(1),
