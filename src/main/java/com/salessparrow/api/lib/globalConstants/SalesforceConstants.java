@@ -23,7 +23,7 @@ public class SalesforceConstants {
   }
 
   public String oauth2AuthorizeUrl() {
-    return coreConstants.salesforceAuthUrl() + "/services/oauth2/authorize";
+    return CoreConstants.salesforceAuthUrl() + "/services/oauth2/authorize";
   }
 
   public String oauth2Url() {
