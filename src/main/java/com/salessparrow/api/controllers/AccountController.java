@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.salessparrow.api.dto.NoteDto;
 import com.salessparrow.api.dto.formatter.GetAccountsFormatterDto;
+import com.salessparrow.api.dto.formatter.GetNoteDetailsFormatterDto;
 import com.salessparrow.api.dto.formatter.GetNotesListFormatterDto;
 import com.salessparrow.api.services.accounts.GetAccountListService;
+import com.salessparrow.api.services.accounts.GetNoteDetailsService;
 import com.salessparrow.api.services.accounts.GetNotesListService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,6 +32,9 @@ public class AccountController {
 
   @Autowired
   private GetNotesListService getNotesListService;
+
+  @Autowired
+  private GetNoteDetailsService getNoteDetailsService;
 
   @PostMapping("/{account_id}/notes")
   public ResponseEntity<String> addNoteToAccount(
@@ -52,10 +57,12 @@ public class AccountController {
   }
   
   @GetMapping("/{account_id}/notes/{note_id}")
-  public ResponseEntity<String> getNoteFromAccount(
+  public GetNoteDetailsFormatterDto getNoteFromAccount(
+    HttpServletRequest request,
     @PathVariable("account_id") String accountId, 
     @PathVariable("note_id") String noteId
   ) {
-    return ResponseEntity.ok("Note from Account");
+    
+    return getNoteDetailsService.getNoteDetails(request, noteId);
   }
 }

@@ -11,6 +11,8 @@ public class NoteListEntity {
     private String textPreview;
     private Date lastModifiedTime;
 
+    public NoteListEntity() {
+    }
 
     public NoteListEntity(String id, String creator, String text_preview, Date last_modified_time) {
         this.id = id;

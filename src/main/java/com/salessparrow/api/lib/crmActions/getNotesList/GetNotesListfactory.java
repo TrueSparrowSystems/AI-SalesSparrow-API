@@ -10,7 +10,7 @@ import com.salessparrow.api.dto.formatter.GetNotesListFormatterDto;
  * GetNotesListfactory is a factory class for the GetNotesList action for the CRM.
  */
 @Component
-public class GetNotesListfactory {
+public class GetNotesListFactory {
     @Autowired
     private GetSalesforceNotesList getSalesforceNotesList;
 
