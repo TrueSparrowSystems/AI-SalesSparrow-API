@@ -1,0 +1,3 @@
+[submodule "docs"]
+	path = docs
+	url = https://github.com/TrueSparrowSystems/AI-SalesSparrow-Docs.git
