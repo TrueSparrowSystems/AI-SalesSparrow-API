@@ -23,6 +23,9 @@ public class GetSalesforceAccounts implements GetAccounts{
   @Autowired
   private MakeCompositeRequest makeCompositeRequest;
 
+  @Autowired
+  private FormatSalesforceAccounts formatSalesforceAccounts;
+
   public GetAccountsFormatterDto getAccounts(SalesforceUser user, String searchTerm) {
     String salesforceUserId = user.getExternalUserId();
 
@@ -38,7 +41,6 @@ public class GetSalesforceAccounts implements GetAccounts{
 
     HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId );
 
-    FormatSalesforceAccounts formatSalesforceAccounts = new FormatSalesforceAccounts();
     return formatSalesforceAccounts.formatAccounts(response.getResponseBody());
   }
 }
