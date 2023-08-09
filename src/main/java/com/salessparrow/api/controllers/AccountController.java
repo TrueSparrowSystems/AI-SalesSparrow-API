@@ -50,4 +50,12 @@ public class AccountController {
 
     return getNotesListService.getNotesList(request, accountId);
   }
+  
+  @GetMapping("/{account_id}/notes/{note_id}")
+  public ResponseEntity<String> getNoteFromAccount(
+    @PathVariable("account_id") String accountId, 
+    @PathVariable("note_id") String noteId
+  ) {
+    return ResponseEntity.ok("Note from Account");
+  }
 }
