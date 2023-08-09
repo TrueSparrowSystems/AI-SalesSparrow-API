@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.salessparrow.api.dto.NoteDto;
 import com.salessparrow.api.dto.formatter.GetAccountsFormatterDto;
+import com.salessparrow.api.dto.formatter.GetNotesListFormatterDto;
 import com.salessparrow.api.services.accounts.GetAccountListService;
+import com.salessparrow.api.services.accounts.GetNotesListService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -25,6 +27,9 @@ public class AccountController {
 
   @Autowired
   private GetAccountListService getAccountListService;
+
+  @Autowired
+  private GetNotesListService getNotesListService;
 
   @PostMapping("/{account_id}/notes")
   public ResponseEntity<String> addNoteToAccount(
@@ -38,5 +43,11 @@ public class AccountController {
   public GetAccountsFormatterDto getAccounts(HttpServletRequest request, @RequestParam String q) {
 
     return getAccountListService.getAccounts(request, q);
+  }
+
+  @GetMapping("/{account_id}/notes")
+  public GetNotesListFormatterDto getNotesList(HttpServletRequest request,@PathVariable("account_id") String accountId) {
+
+    return getNotesListService.getNotesList(request, accountId);
   }
 }
