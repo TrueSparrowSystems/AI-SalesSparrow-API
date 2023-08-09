@@ -1,25 +1,33 @@
 package com.salessparrow.api.lib.globalConstants;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.salessparrow.api.config.CoreConstants;
-
-@Component
+/**
+ * This class contains the names of the DynamoDB tables used by the application.
+ */
 public class DynamoDbTableNameConstants {
-  
-  @Autowired
-  private CoreConstants coreConstants;
 
-  public String salesforceOrganizationsTableName() {
-    return coreConstants.tableNamePrefix() + "salesforce_organizations";
+  private static String environment = System.getenv("ENVIRONMENT");
+
+  /**
+   * Returns the name of the table that contains the Salesforce organizations.
+   * @return
+   */
+  public static String salesforceOrganizationsTableName() {
+    return environment + "_salesforce_organizations";
   }
 
-  public String salesforceOauthTokensTableName() {
-    return coreConstants.tableNamePrefix() + "salesforce_oauth_tokens";
+  /**
+   * Returns the name of the table that contains the Salesforce OAuth tokens.
+   * @return
+   */
+  public static String salesforceOauthTokensTableName() {
+    return environment + "_salesforce_oauth_tokens";
   }
 
-  public String salesforceUsersTableName() {
-    return coreConstants.tableNamePrefix() + "salesforce_users";
+  /**
+   * Returns the name of the table that contains the Salesforce users.
+   * @return
+   */
+  public static String salesforceUsersTableName() {
+    return environment + "_salesforce_users";
   }
 }

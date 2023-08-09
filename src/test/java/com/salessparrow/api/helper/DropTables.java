@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.model.ListTablesRequest;
 import com.amazonaws.services.dynamodbv2.model.ListTablesResult;
+import com.salessparrow.api.config.CoreConstants;
 
 /**
  * This class is used to drop the tables.
@@ -21,15 +22,24 @@ public class DropTables {
   @Autowired
   private AmazonDynamoDB dynamoDB;
 
+  @Autowired
+  private CoreConstants coreConstants;
+
   /**
    * This method is used to drop the tables.
    */
   public void perform() {
+    if (!coreConstants.environment().equals("test")) {
+      throw new RuntimeException("Cannot drop tables in non test environment");
+    }
+
     List<String> tableList = getAllTableList();
+    String envPrefix = coreConstants.environment() + "_";
 
     for (String tableName : tableList) {
-      logger.info("Dropping table: " + tableName);
-      dynamoDB.deleteTable(tableName);
+      if (tableName.startsWith(envPrefix)) {
+        dynamoDB.deleteTable(tableName);
+      }
     }
   }
 

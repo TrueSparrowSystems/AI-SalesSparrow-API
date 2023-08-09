@@ -25,7 +25,7 @@ import com.salessparrow.api.services.salesforce.AuthService.AuthServiceDto;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v1/auth/")
+@RequestMapping("/api/v1/auth")
 @Validated
 public class AuthController {
 
@@ -40,7 +40,7 @@ public class AuthController {
   @Autowired
   private CookieHelper cookieHelper;
 
-  @GetMapping("salesforce/redirect-url")
+  @GetMapping("/salesforce/redirect-url")
   public ResponseEntity<RedirectUrlService.RedirectUrlServiceDto> getSalesforceRedirectUrl(
       @Valid @ModelAttribute SalesforceRedirectUrlDto salesforceRedirectUrlDto) {
     RedirectUrlService.RedirectUrlServiceDto salesforceOauthServiceDto = redirectUrlService
@@ -49,7 +49,7 @@ public class AuthController {
     return ResponseEntity.ok().body(salesforceOauthServiceDto);
   }
 
-  @PostMapping("salesforce/connect")
+  @PostMapping("/salesforce/connect")
   public ResponseEntity<SalesforceConnectFormatterDto> connectToSalesforce(
       @Valid @RequestBody SalesforceConnectDto salesforceConnectDto) {
     logger.info("Salesforce connection request received");
