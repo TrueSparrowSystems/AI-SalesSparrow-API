@@ -39,7 +39,7 @@ public class CoreConstants {
   }
 
   public String cacheClusterId() {
-    return env.getProperty("CACHE_CLUSTER_ID");
+    return env.getProperty("SALESSPARROW_CACHE_CLUSTER_ID");
   }
 
   public String kmsKeyId() {
@@ -74,5 +74,9 @@ public class CoreConstants {
     }
 
     return "";
+  }
+
+  public String memcachedAddress() {
+    return env.getProperty("LOCAL_CACHE_HOST") + ":" + env.getProperty("LOCAL_CACHE_PORT") ;
   }
 }
