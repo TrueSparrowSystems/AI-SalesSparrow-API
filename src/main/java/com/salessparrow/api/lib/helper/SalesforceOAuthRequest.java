@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.salessparrow.api.exception.CustomException;
-import com.salessparrow.api.lib.ErrorObject;
+import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.salesforce.SalesforceOAuthAccessToken;
 
 @Component

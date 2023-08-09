@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.salessparrow.api.domain.SalesforceOauthToken;
 import com.salessparrow.api.exception.CustomException;
-import com.salessparrow.api.lib.ErrorObject;
+import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.helper.SalesforceOAuthRequest;
 import com.salessparrow.api.lib.helper.SalesforceOAuthRequestInterface;
