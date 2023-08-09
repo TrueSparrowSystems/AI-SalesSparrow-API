@@ -59,7 +59,7 @@ public class MakeCompositeRequest {
     } catch (Exception e) {
       throw new CustomException(
         new ErrorObject(
-          "s_s_ga_1",
+          "s_mcr_mpr_1",
           "something_went_wrong",
           e.getMessage()));
     }
