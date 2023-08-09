@@ -71,7 +71,7 @@ public class CoreConstants {
     return "";
   }
 
-  public String memcachedAddress() {
+  public static String memcachedAddress() {
     return System.getenv("LOCAL_CACHE_HOST") + ":" + System.getenv("LOCAL_CACHE_PORT") ;
   }
 }

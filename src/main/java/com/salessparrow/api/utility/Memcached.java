@@ -28,11 +28,7 @@ public class Memcached implements Cache {
 
   private String name;
 
-  @Autowired
-  MemcachedClient cache;
-
-  @Autowired
-  private CoreConstants coreConstants;
+  private MemcachedClient cache;
 
   private int expiration;
 
@@ -41,7 +37,7 @@ public class Memcached implements Cache {
     this.expiration = expiration;
 
     try {
-      if (coreConstants.isDevEnvironment()) {
+      if (CoreConstants.isDevEnvironment()) {
         System.out.println("Using local memcached");
         // Local environment, use the provided memcachedAddresses
         cache = new MemcachedClient(
@@ -49,20 +45,20 @@ public class Memcached implements Cache {
             .setTranscoder(new SerializingTranscoder())
             .setProtocol(ConnectionFactoryBuilder.Protocol.BINARY)
             .build(),
-          AddrUtil.getAddresses(coreConstants.memcachedAddress()));
+          AddrUtil.getAddresses(CoreConstants.memcachedAddress()));
       } else {
         BasicAWSCredentials awsCredentials = new BasicAWSCredentials(
-          coreConstants.awsAccessKeyId(), 
-          coreConstants.awsSecretAccessKey()
+          CoreConstants.awsAccessKeyId(), 
+          CoreConstants.awsSecretAccessKey()
         );
 
         AmazonElastiCache amazonElastiCache = AmazonElastiCacheClientBuilder.standard()
           .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-          .withRegion(coreConstants.awsRegion())
+          .withRegion(CoreConstants.awsRegion())
           .build();
 
         DescribeCacheClustersResult clustersResult = amazonElastiCache.describeCacheClusters(
-                new DescribeCacheClustersRequest().withCacheClusterId(coreConstants.cacheClusterId()));
+                new DescribeCacheClustersRequest().withCacheClusterId(CoreConstants.cacheClusterId()));
         CacheCluster cluster = clustersResult.getCacheClusters().get(0);
         String endpoint = cluster.getConfigurationEndpoint().getAddress();
         int port = cluster.getConfigurationEndpoint().getPort();
