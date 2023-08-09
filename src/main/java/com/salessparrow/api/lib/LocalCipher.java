@@ -6,6 +6,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.stereotype.Component;
 
 import com.salessparrow.api.exception.CustomException;
+import com.salessparrow.api.lib.errorLib.ErrorObject;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

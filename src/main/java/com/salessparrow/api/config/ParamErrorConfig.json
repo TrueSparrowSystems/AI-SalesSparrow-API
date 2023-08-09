@@ -1,0 +1,6 @@
+{
+    "invalid_email": {
+        "parameter": "email",
+        "message": "The email address you entered is incorrect. Please double check and try again."
+    }
+}
