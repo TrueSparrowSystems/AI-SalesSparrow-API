@@ -31,6 +31,10 @@ public class SalesforceConstants {
     return urlPrefix + compositeUrlPath();
   }
 
+  public String oauth2AuthorizeUrl() {
+    return coreConstants.salesforceAuthUrl() + "/services/oauth2/authorize";
+  }
+
   public String oauth2Url() {
     return coreConstants.salesforceAuthUrl() + "/services/oauth2/token";
   }
