@@ -22,8 +22,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.salessparrow.api.data.TestDataItem;
 import com.salessparrow.api.helper.Cleanup;
+import com.salessparrow.api.helper.Scenario;
 import com.salessparrow.api.helper.Setup;
 
 @SpringBootTest
@@ -55,9 +55,9 @@ public class GetRedirectUrlTest {
 
   @Test
   public void testGetRedirectUrl() throws Exception{
-    List<TestDataItem> testDataItems = loadTestData();
+    List<Scenario> testDataItems = loadTestData();
 
-    for (TestDataItem testDataItem : testDataItems) {
+    for (Scenario testDataItem : testDataItems) {
       ObjectMapper objectMapper = new ObjectMapper();
       String expectedOutput = objectMapper.writeValueAsString(testDataItem.getOutput());
 
@@ -75,10 +75,10 @@ public class GetRedirectUrlTest {
     }
   }
 
-  public List<TestDataItem> loadTestData() throws IOException {
-    String scenariosPath = "classpath:com/salessparrow/api/data/controllers/authController/redirectUrl.scenarios.json";
+  public List<Scenario> loadTestData() throws IOException {
+    String scenariosPath = "classpath:data/controllers/authController/redirectUrl.scenarios.json";
     Resource resource = resourceLoader.getResource(scenariosPath);
     ObjectMapper objectMapper = new ObjectMapper();
-    return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<TestDataItem>>() {});
+    return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});
   }
 }

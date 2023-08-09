@@ -1,11 +1,11 @@
-package com.salessparrow.api.data;
+package com.salessparrow.api.helper;
 
 import java.util.Map;
 
 import lombok.Data;
 
 @Data
-public class TestDataItem {
+public class Scenario {
   String description;
 
   Map<String, Object> input;
