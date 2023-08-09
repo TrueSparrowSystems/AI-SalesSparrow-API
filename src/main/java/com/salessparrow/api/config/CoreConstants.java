@@ -27,15 +27,15 @@ public class CoreConstants {
   }
 
   public String awsAccessKeyId() {
-    return env.getProperty("AWS_ACCESS_KEY_ID");
+    return env.getProperty("SALESSPARROW_ACCESS_KEY_ID");
   }
 
   public String awsSecretAccessKey() {
-    return env.getProperty("AWS_SECRET_ACCESS_KEY");
+    return env.getProperty("SALESSPARROW_SECRET_ACCESS_KEY");
   }
 
   public String awsRegion() {
-    return env.getProperty("AWS_REGION");
+    return env.getProperty("SALESSPARROW_REGION");
   }
 
   public String cacheClusterId() {

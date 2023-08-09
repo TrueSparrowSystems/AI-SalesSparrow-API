@@ -104,7 +104,7 @@
       <artifactId>aws-lambda-java-core</artifactId>
       <version>1.2.1</version>
     </dependency>
-    
+
 		<dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-nop</artifactId>
