@@ -11,7 +11,6 @@ import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
 import com.amazonaws.services.dynamodbv2.model.KeyType;
 import com.amazonaws.services.dynamodbv2.model.Projection;
 import com.amazonaws.services.dynamodbv2.model.ProjectionType;
-import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
 import com.github.dynamobee.changeset.ChangeLog;
 import com.github.dynamobee.changeset.ChangeSet;
@@ -34,7 +33,7 @@ public class DatabaseChangelog {
 								ScalarAttributeType.S))
 				.withKeySchema(
 						new KeySchemaElement("id", KeyType.HASH))
-				.withProvisionedThroughput(new ProvisionedThroughput(1L, 1L))
+				.withBillingMode("PAY_PER_REQUEST")
 				.withGlobalSecondaryIndexes(
 						new GlobalSecondaryIndex()
 								.withIndexName("external_organization_id_index")
@@ -43,9 +42,7 @@ public class DatabaseChangelog {
 												"external_organization_id",
 												KeyType.HASH))
 								.withProjection(new Projection()
-										.withProjectionType(ProjectionType.ALL))
-								.withProvisionedThroughput(
-										new ProvisionedThroughput(1L, 1L)));
+										.withProjectionType(ProjectionType.ALL)));
 
 		db.createTable(request);
 		System.out.println("Done creating table: " + tableName);
@@ -63,7 +60,7 @@ public class DatabaseChangelog {
 						new AttributeDefinition("salesforce_user_id", ScalarAttributeType.S))
 				.withKeySchema(
 						new KeySchemaElement("id", KeyType.HASH))
-				.withProvisionedThroughput(new ProvisionedThroughput(1L, 1L))
+				.withBillingMode("PAY_PER_REQUEST")
 				.withGlobalSecondaryIndexes(
 						new GlobalSecondaryIndex()
 								.withIndexName("salesforce_user_id_index")
@@ -72,9 +69,8 @@ public class DatabaseChangelog {
 												"salesforce_user_id",
 												KeyType.HASH))
 								.withProjection(new Projection()
-										.withProjectionType(ProjectionType.ALL))
-								.withProvisionedThroughput(
-										new ProvisionedThroughput(1L, 1L)));
+										.withProjectionType(ProjectionType.ALL)));
+
 		db.createTable(request);
 
 		logger.info("Done creating table: " + tableName);
@@ -92,7 +88,7 @@ public class DatabaseChangelog {
 						new AttributeDefinition("external_user_id", ScalarAttributeType.S))
 				.withKeySchema(
 						new KeySchemaElement("id", KeyType.HASH))
-				.withProvisionedThroughput(new ProvisionedThroughput(1L, 1L))
+				.withBillingMode("PAY_PER_REQUEST")
 				.withGlobalSecondaryIndexes(
 						new GlobalSecondaryIndex()
 								.withIndexName("external_user_id_index")
@@ -100,9 +96,7 @@ public class DatabaseChangelog {
 										new KeySchemaElement("external_user_id",
 												KeyType.HASH))
 								.withProjection(new Projection()
-										.withProjectionType(ProjectionType.ALL))
-								.withProvisionedThroughput(
-										new ProvisionedThroughput(1L, 1L)));
+										.withProjectionType(ProjectionType.ALL)));
 
 		db.createTable(request);
 

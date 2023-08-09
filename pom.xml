@@ -12,7 +12,7 @@
 	</parent>
 	
 	<groupId>com.salessparrow</groupId>
-	<artifactId>api</artifactId>
+	<artifactId>salessparrow-api</artifactId>
 	<version>0.0.1</version>
 	<name>api</name>
 	<description>Salessparrow apis</description>
@@ -104,7 +104,7 @@
       <artifactId>aws-lambda-java-core</artifactId>
       <version>1.2.1</version>
     </dependency>
-    
+
 		<dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-nop</artifactId>
