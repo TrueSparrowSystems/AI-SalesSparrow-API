@@ -1,11 +1,13 @@
 package com.salessparrow.api.exception;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -17,6 +19,9 @@ import com.salessparrow.api.lib.errorLib.ParamErrorConfig;
 @Component
 public class ErrorResponse {
 
+  @Autowired
+  private ResourceLoader resourceLoader;
+
   /**
    * Get error response
    * 
@@ -26,18 +31,18 @@ public class ErrorResponse {
    * @return ErrorResponseObject
    */
   protected ErrorResponseObject getErrorResponse(String apiIdentifier, String internalErrorIdentifier, String message) {
-    InputStream inputStream = GlobalExceptionHandler.class
-        .getResourceAsStream("/com/salessparrow/api/config/ApiErrorConfig.json");
 
+    String errorConfigPath = "classpath:config/ApiErrorConfig.json";
+    Resource resource = resourceLoader.getResource(errorConfigPath);
     ObjectMapper objectMapper = new ObjectMapper();
-
-    TypeReference<HashMap<String, ErrorConfig>> typeReference = new TypeReference<>() {
-    };
     Map<String, ErrorConfig> errorDataMap = new HashMap<>();
     try {
-      errorDataMap = objectMapper.readValue(inputStream, typeReference);
+      errorDataMap = objectMapper.readValue(resource.getInputStream(),
+          new TypeReference<HashMap<String, ErrorConfig>>() {
+          });
     } catch (Exception e) {
       e.printStackTrace();
+      throw new RuntimeException("Error while reading error config file:" + e.getMessage());
     }
 
     ErrorConfig errorInfo = errorDataMap.get(apiIdentifier);
@@ -47,11 +52,10 @@ public class ErrorResponse {
     }
 
     logError(message, Integer.parseInt(errorInfo.getHttp_code()), internalErrorIdentifier);
-    
 
     ErrorResponseObject errorResponseObject = new ErrorResponseObject(
-        Integer.parseInt(errorInfo.getHttp_code()), 
-        errorInfo.getCode(), 
+        Integer.parseInt(errorInfo.getHttp_code()),
+        errorInfo.getCode(),
         errorInfo.getMessage(),
         internalErrorIdentifier,
         new ArrayList<ParamErrorConfig>());
@@ -70,34 +74,35 @@ public class ErrorResponse {
    */
   protected ErrorResponseObject getParamErrorResponse(String internalErrorIdentifier, String message,
       List<String> params) {
-    InputStream inputStream = GlobalExceptionHandler.class
-        .getResourceAsStream("/com/salessparrow/api/config/ParamErrorConfig.json");
 
+    String paramsErrorPath = "classpath:config/ParamErrorConfig.json";
+    Resource resource = resourceLoader.getResource(paramsErrorPath);
     ObjectMapper objectMapper = new ObjectMapper();
-
-    TypeReference<HashMap<String, ParamErrorConfig>> typeReference = new TypeReference<>() {
-    };
     Map<String, ParamErrorConfig> paramErrorDataMap = new HashMap<>();
     try {
-      paramErrorDataMap = objectMapper.readValue(inputStream, typeReference);
+      paramErrorDataMap = objectMapper.readValue(resource.getInputStream(),
+          new TypeReference<HashMap<String, ParamErrorConfig>>() {
+          });
     } catch (Exception e) {
       e.printStackTrace();
+      throw new RuntimeException("Error while reading param error config file:" + e.getMessage());
     }
+
     List<ParamErrorConfig> paramErrorConfigList = new ArrayList<ParamErrorConfig>();
-    if(params.size() > 0){
-      for(String param : params){
+    if (params.size() > 0) {
+      for (String param : params) {
         ParamErrorConfig paramErrorConfig = paramErrorDataMap.get(param);
-        if(paramErrorConfig != null){
+        if (paramErrorConfig != null) {
           paramErrorConfigList.add(paramErrorConfig);
         }
       }
     }
 
-    logError(message,400, internalErrorIdentifier);
+    logError(message, 400, internalErrorIdentifier);
 
     ErrorResponseObject errorResponseObject = new ErrorResponseObject(
-        400, 
-        "At least one parameter is invalid or missing.", 
+        400,
+        "At least one parameter is invalid or missing.",
         "INVALID_PARAMS",
         internalErrorIdentifier,
         paramErrorConfigList);
