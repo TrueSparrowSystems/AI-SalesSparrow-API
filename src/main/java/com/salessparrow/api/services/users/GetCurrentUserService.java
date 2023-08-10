@@ -7,6 +7,9 @@ import com.salessparrow.api.dto.formatter.CurrentUserEntityDto;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * Get current user service.
+ */
 @Service
 public class GetCurrentUserService {
     
