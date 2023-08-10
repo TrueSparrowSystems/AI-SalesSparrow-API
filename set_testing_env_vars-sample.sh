@@ -6,9 +6,9 @@ export ENCRYPTION_KEY='1234567890'
 export API_COOKIE_SECRET='1234567890'
 
 # AWS
-export SALESSPARROW_ACCESS_KEY_ID='accessKeyId'
-export SALESSPARROW_SECRET_ACCESS_KEY='secretAccessKey'
-export SALESSPARROW_REGION='region'
+export AWS_IAM_ACCESS_KEY_ID='accessKeyId'
+export AWS_IAM_SECRET_ACCESS_KEY='secretAccessKey'
+export AWS_IAM_REGION='region'
 export KMS_KEY_ID=''
 export CACHE_CLUSTER_ID=''
 

@@ -22,15 +22,15 @@ public class CoreConstants {
   }
 
   public static String awsAccessKeyId() {
-    return System.getenv("SALESSPARROW_ACCESS_KEY_ID");
+    return System.getenv("AWS_IAM_ACCESS_KEY_ID");
   }
 
   public static String awsSecretAccessKey() {
-    return System.getenv("SALESSPARROW_SECRET_ACCESS_KEY");
+    return System.getenv("AWS_IAM_SECRET_ACCESS_KEY");
   }
 
   public static String awsRegion() {
-    return System.getenv("SALESSPARROW_REGION");
+    return System.getenv("AWS_IAM_REGION");
   }
 
   public static String cacheClusterId() {
