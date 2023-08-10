@@ -12,7 +12,7 @@ import com.salessparrow.api.services.users.GetCurrentUserService;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/api/v1/users/")
+@RequestMapping("/api/v1/users")
 public class UserController {
   
   @Autowired
