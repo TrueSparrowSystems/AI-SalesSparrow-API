@@ -45,24 +45,31 @@ public class AccountController {
   }
 
   @GetMapping("")
-  public GetAccountsFormatterDto getAccounts(HttpServletRequest request, @RequestParam String q) {
+  public ResponseEntity<GetAccountsFormatterDto> getAccounts(HttpServletRequest request, @RequestParam String q) {
+    System.out.println("Request received");
 
-    return getAccountListService.getAccounts(request, q);
+    GetAccountsFormatterDto getAccountsResponse = getAccountListService.getAccounts(request, q);
+
+    return ResponseEntity.ok().body(getAccountsResponse);
   }
 
   @GetMapping("/{account_id}/notes")
-  public GetNotesListFormatterDto getNotesList(HttpServletRequest request,@PathVariable("account_id") String accountId) {
+  public ResponseEntity<GetNotesListFormatterDto> getNotesList(HttpServletRequest request,@PathVariable("account_id") String accountId) {
 
-    return getNotesListService.getNotesList(request, accountId);
+    GetNotesListFormatterDto getNotesListResponse = getNotesListService.getNotesList(request, accountId);
+
+    return ResponseEntity.ok().body(getNotesListResponse);
   }
   
   @GetMapping("/{account_id}/notes/{note_id}")
-  public GetNoteDetailsFormatterDto getNoteFromAccount(
+  public ResponseEntity<GetNoteDetailsFormatterDto> getNoteFromAccount(
     HttpServletRequest request,
     @PathVariable("account_id") String accountId, 
     @PathVariable("note_id") String noteId
   ) {
+
+    GetNoteDetailsFormatterDto getNoteDetailsResponse = getNoteDetailsService.getNoteDetails(request, noteId);
     
-    return getNoteDetailsService.getNoteDetails(request, noteId);
+    return ResponseEntity.ok().body(getNoteDetailsResponse);
   }
 }
