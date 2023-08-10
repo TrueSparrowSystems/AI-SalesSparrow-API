@@ -19,9 +19,11 @@ import com.salessparrow.api.services.salesforce.RedirectUrlService;
 import com.salessparrow.api.dto.SalesforceConnectDto;
 import com.salessparrow.api.dto.formatter.SalesforceConnectFormatterDto;
 import com.salessparrow.api.lib.CookieHelper;
+import com.salessparrow.api.lib.globalConstants.CookieConstants;
 import com.salessparrow.api.services.salesforce.AuthService;
 import com.salessparrow.api.services.salesforce.AuthService.AuthServiceDto;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -63,5 +65,20 @@ public class AuthController {
     salesforceConnectResponse.setCurrent_user(authServiceResponse.getCurrentUser());
 
     return ResponseEntity.ok().headers(headers).body(salesforceConnectResponse);
+  }
+
+  @PostMapping("/logout")
+  public ResponseEntity<String> logout(HttpServletRequest request) {
+    logger.info("User logout request received");
+
+    String cookieName = CookieConstants.USER_LOGIN_COOKIE_NAME;
+    String cookieValue = "";
+    int cookieExpiry = -1;
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.add(HttpHeaders.SET_COOKIE, String.format("%s=%s; Max-Age=%d; Path=/",
+        cookieName, cookieValue, cookieExpiry));
+
+    return ResponseEntity.ok().headers(headers).body(null);
   }
 }
