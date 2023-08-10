@@ -15,7 +15,7 @@ public class GetNotesListFactory {
     private GetSalesforceNotesList getSalesforceNotesList;
 
     /**
-     * Get the list of notes for a given account
+     * Get the list of notes for a given account.
      * @param user
      * @param accountId
      * 
