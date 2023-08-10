@@ -54,27 +54,27 @@ public class GetSalesforceNoteDeatails implements GetNoteDetails{
         Integer timeoutMillis = salesforceConstants.timeoutMillis();
 
         SalesforceOAuthRequestInterface<HttpClient.HttpResponse> request = token -> {
-        Map<String,String> headers = new HashMap<>();
-        headers.put("Authorization", "Bearer " + token);
+            Map<String,String> headers = new HashMap<>();
+            headers.put("Authorization", "Bearer " + token);
 
-        HttpClient.HttpResponse response = HttpClient.makeGetRequest(
-            noteContentQuery, 
-            headers, 
-            timeoutMillis);
+            HttpClient.HttpResponse response = HttpClient.makeGetRequest(
+                noteContentQuery, 
+                headers, 
+                timeoutMillis);
 
-        return response;
+            return response;
         };
 
         HttpClient.HttpResponse response = null;
         try {
-        response = salesforceOauthRequest.makeRequest(salesforceUserId, request);
+            response = salesforceOauthRequest.makeRequest(salesforceUserId, request);
         } catch (Exception e) {
-        throw new CustomException(
-            new ErrorObject(
-            "s_l_ca_gnd_gsnd_1",
-            "something_went_wrong",
-            e.getMessage()));
-        }
+            throw new CustomException(
+                new ErrorObject(
+                "s_l_ca_gnd_gsnd_1",
+                "something_went_wrong",
+                e.getMessage()));
+            }
         return response;
     
     }

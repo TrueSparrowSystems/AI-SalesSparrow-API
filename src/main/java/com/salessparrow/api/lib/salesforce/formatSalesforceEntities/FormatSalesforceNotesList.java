@@ -11,7 +11,9 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salessparrow.api.dto.entities.NoteListEntity;
 import com.salessparrow.api.dto.formatter.GetNotesListFormatterDto;
+import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.Util;
+import com.salessparrow.api.lib.errorLib.ErrorObject;
 
 /**
  * FormatSalesforceNotesList is a class for the FormatSalesforceNotesList action for formatting the response body.
@@ -27,14 +29,24 @@ public class FormatSalesforceNotesList {
     public List<String> formatContentDocumentId(String responseBody){
 
         List<String> contentDocumentIds = new ArrayList<String>();
-        
-        Util util = new Util();
-        JsonNode rootNode = util.getJsonNode(responseBody);
-        JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");
 
-        for (JsonNode recordNode : recordsNode) {
-            String contentDocumentId = recordNode.get("ContentDocumentId").asText();
-            contentDocumentIds.add(contentDocumentId);
+        try {
+            Util util = new Util();
+            JsonNode rootNode = util.getJsonNode(responseBody);
+            JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");
+
+            for (JsonNode recordNode : recordsNode) {
+                String contentDocumentId = recordNode.get("ContentDocumentId").asText();
+                contentDocumentIds.add(contentDocumentId);
+            }
+        } catch (Exception e) {
+            throw new CustomException(
+                new ErrorObject(
+                    "l_s_fse_fsnl_1",
+                    "something_went_wrong",
+                    e.getMessage()
+                )
+            );
         }
 
         return contentDocumentIds;
@@ -51,34 +63,44 @@ public class FormatSalesforceNotesList {
         List<String> noteIds = new ArrayList<String>();
         Map<String,NoteListEntity> noteListEntities = new HashMap<>();
 
-        Util util = new Util();
-        JsonNode rootNode = util.getJsonNode(responseBody);
-        JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");
+        try {
+            Util util = new Util();
+            JsonNode rootNode = util.getJsonNode(responseBody);
+            JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");
 
-        for (JsonNode recordNode : recordsNode) {
-            String noteId = recordNode.get("Id").asText();
-            String textPreview = recordNode.get("TextPreview").asText();
-            
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-            Date lastModifiedDate = new Date();
-            try {
-                lastModifiedDate = dateFormat.parse(recordNode.get("LastModifiedDate").asText());
-            } catch (ParseException e) {
-                e.printStackTrace();
+            for (JsonNode recordNode : recordsNode) {
+                String noteId = recordNode.get("Id").asText();
+                String textPreview = recordNode.get("TextPreview").asText();
+                
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+                Date lastModifiedDate = new Date();
+                try {
+                    lastModifiedDate = dateFormat.parse(recordNode.get("LastModifiedDate").asText());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                String createdBy = recordNode.get("CreatedBy").get("Name").asText();
+
+
+                noteIds.add(noteId);
+                NoteListEntity noteListEntity = new NoteListEntity(
+                    noteId,
+                    createdBy,
+                    textPreview,
+                    lastModifiedDate
+                );
+                
+                noteListEntities.put(noteId, noteListEntity);
             }
-
-            String createdBy = recordNode.get("CreatedBy").get("Name").asText();
-
-
-            noteIds.add(noteId);
-            NoteListEntity noteListEntity = new NoteListEntity(
-                noteId,
-                createdBy,
-                textPreview,
-                lastModifiedDate
+        } catch (Exception e) {
+            throw new CustomException(
+                new ErrorObject(
+                    "l_s_fse_fsnl_2",
+                    "something_went_wrong",
+                    e.getMessage()
+                )
             );
-            
-            noteListEntities.put(noteId, noteListEntity);
         }
 
         GetNotesListFormatterDto getNotesListFormatterDto = new GetNotesListFormatterDto();

@@ -1,25 +1,18 @@
 package com.salessparrow.api.dto.formatter;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.salessparrow.api.dto.entities.GetNoteDetailsEntity;
 
 import lombok.Data;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GetNoteDetailsFormatterDto {
-    private String id;
-    private String creator;
-    private String text;
-    private Date lastModifiedTime;
 
-    public GetNoteDetailsFormatterDto(String id, String creator, String text, Date lastModifiedTime){
-        this.id = id;
-        this.creator = creator;
-        this.text = text;
-        this.lastModifiedTime = lastModifiedTime;
-    }
+    private GetNoteDetailsEntity note_details;
     
+    public GetNoteDetailsFormatterDto(GetNoteDetailsEntity note_details){
+        this.note_details = note_details;
+    }
 }
