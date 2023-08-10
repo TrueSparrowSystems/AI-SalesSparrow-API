@@ -11,7 +11,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.salessparrow.api.changelogs.DatabaseChangelog;
 import com.salessparrow.api.domain.User;
 import com.salessparrow.api.lib.CookieHelper;
 import com.salessparrow.api.lib.UserLoginCookieAuth;
@@ -27,6 +30,8 @@ public class UserAuthInterceptor implements HandlerInterceptor {
   @Autowired
   private UserLoginCookieAuth userLoginCookieAuth;
 
+  Logger logger = LoggerFactory.getLogger(DatabaseChangelog.class);
+
   @Autowired
   private CookieHelper cookieHelper;
 
@@ -41,8 +46,9 @@ public class UserAuthInterceptor implements HandlerInterceptor {
    */
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    System.out.println("UserAuthInterceptor: Intercepting request");
+    logger.info("UserAuthInterceptor: Intercepting request");
     String cookieValue = getCookieValue(request);
+    logger.info("UserAuthInterceptor: Cookie value: {}", cookieValue);
 
     Map<String, Object> userLoginCookieAuthRes = userLoginCookieAuth.validateAndSetCookie(cookieValue);
 
