@@ -14,7 +14,6 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.salessparrow.api.changelogs.DatabaseChangelog;
 import com.salessparrow.api.domain.User;
 import com.salessparrow.api.lib.CookieHelper;
 import com.salessparrow.api.lib.UserLoginCookieAuth;
@@ -30,7 +29,7 @@ public class UserAuthInterceptor implements HandlerInterceptor {
   @Autowired
   private UserLoginCookieAuth userLoginCookieAuth;
 
-  Logger logger = LoggerFactory.getLogger(DatabaseChangelog.class);
+  Logger logger = LoggerFactory.getLogger(UserAuthInterceptor.class);
 
   @Autowired
   private CookieHelper cookieHelper;
