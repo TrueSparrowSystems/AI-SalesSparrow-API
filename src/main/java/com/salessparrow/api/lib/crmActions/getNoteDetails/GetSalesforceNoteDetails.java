@@ -24,7 +24,7 @@ import com.salessparrow.api.lib.salesforce.formatSalesforceEntities.FormatSalesf
 import com.salessparrow.api.repositories.SalesforceOauthTokenRepository;
 
 @Component
-public class GetSalesforceNoteDetails implements GetNoteDetails{
+public class GetSalesforceNoteDetails implements GetNoteDetails {
 
     @Autowired
     private SalesforceConstants salesforceConstants;
@@ -40,6 +40,7 @@ public class GetSalesforceNoteDetails implements GetNoteDetails{
 
     /**
      * Get the list of notes for a given account
+     * 
      * @param documentIds
      * @param salesforceUserId
      * 
@@ -56,35 +57,37 @@ public class GetSalesforceNoteDetails implements GetNoteDetails{
         List<CompositeRequest> compositeRequests = new ArrayList<CompositeRequest>();
         compositeRequests.add(noteCompositeRequest);
 
-        HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId );
+        HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId);
 
         return response;
     }
 
     /**
      * Get the content of a note
-     *  
+     * 
      * @param noteid
      * @param salesforceUserId
      * 
      * @return HttpClient.HttpResponse
      */
-    private HttpClient.HttpResponse getContent(String noteid, String salesforceUserId){
 
-        SalesforceOauthToken sfOAuthToken = sfOauthTokenRepository.getSalesforceOauthTokenBySalesforceUserId(salesforceUserId);
+    public HttpClient.HttpResponse getContent(String noteid, String salesforceUserId) {
+
+        SalesforceOauthToken sfOAuthToken = sfOauthTokenRepository
+                .getSalesforceOauthTokenByExternalUserId(salesforceUserId);
 
         String noteContentQuery = salesforceConstants.salesfroceContentUrl(sfOAuthToken.getInstanceUrl(), noteid);
 
         Integer timeoutMillis = salesforceConstants.timeoutMillis();
 
         SalesforceOAuthRequestInterface<HttpClient.HttpResponse> request = token -> {
-            Map<String,String> headers = new HashMap<>();
+            Map<String, String> headers = new HashMap<>();
             headers.put("Authorization", "Bearer " + token);
 
             HttpClient.HttpResponse response = HttpClient.makeGetRequest(
-                noteContentQuery, 
-                headers, 
-                timeoutMillis);
+                    noteContentQuery,
+                    headers,
+                    timeoutMillis);
 
             return response;
         };
@@ -94,23 +97,24 @@ public class GetSalesforceNoteDetails implements GetNoteDetails{
             response = salesforceOauthRequest.makeRequest(salesforceUserId, request);
         } catch (Exception e) {
             throw new CustomException(
-                new ErrorObject(
-                "s_l_ca_gnd_gsnd_1",
-                "something_went_wrong",
-                e.getMessage()));
-            }
+                    new ErrorObject(
+                            "s_l_ca_gnd_gsnd_1",
+                            "something_went_wrong",
+                            e.getMessage()));
+        }
         return response;
-    
     }
 
     /**
      * Get the details of a note
+     * 
      * @param user
      * @param noteid
      * 
      * @return GetNoteDetailsFormatterDto
      **/
-    public GetNoteDetailsFormatterDto getNoteDetails(SalesforceUser user, String noteId){
+
+    public GetNoteDetailsFormatterDto getNoteDetails(SalesforceUser user, String noteId) {
 
         String salesforceUserId = user.getExternalUserId();
 
@@ -119,10 +123,11 @@ public class GetSalesforceNoteDetails implements GetNoteDetails{
         HttpClient.HttpResponse noteContentResponse = getContent(noteId, salesforceUserId);
 
         FormatSalesforceNoteDetails formatSalesforceNoteDetails = new FormatSalesforceNoteDetails();
-        GetNoteDetailsFormatterDto noteDetailsFormatterDto = formatSalesforceNoteDetails.formatNoteDetails(noteDetailsResponse.getResponseBody(), noteContentResponse.getResponseBody());
+        GetNoteDetailsFormatterDto noteDetailsFormatterDto = formatSalesforceNoteDetails
+                .formatNoteDetails(noteDetailsResponse.getResponseBody(), noteContentResponse.getResponseBody());
 
         return noteDetailsFormatterDto;
-        
+
     }
 
 }

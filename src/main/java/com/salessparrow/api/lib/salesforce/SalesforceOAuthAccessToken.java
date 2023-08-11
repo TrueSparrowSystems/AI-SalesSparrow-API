@@ -34,7 +34,8 @@ public class SalesforceOAuthAccessToken {
   private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
 
   public String fetchAccessToken(String salesforceUserId) {
-    SalesforceOauthToken sfOAuthToken = sfOauthTokenRepository.getSalesforceOauthTokenBySalesforceUserId(salesforceUserId);
+    SalesforceOauthToken sfOAuthToken = sfOauthTokenRepository
+        .getSalesforceOauthTokenByExternalUserId(salesforceUserId);
 
     String decryptedAccessToken = awsKms.decryptToken(sfOAuthToken.getAccessToken());
 
@@ -42,7 +43,8 @@ public class SalesforceOAuthAccessToken {
   }
 
   public String updateAccessToken(String salesforceUserId) {
-    SalesforceOauthToken sfOAuthToken = sfOauthTokenRepository.getSalesforceOauthTokenBySalesforceUserId(salesforceUserId);
+    SalesforceOauthToken sfOAuthToken = sfOauthTokenRepository
+        .getSalesforceOauthTokenByExternalUserId(salesforceUserId);
     String encryptedRefreshToken = sfOAuthToken.getRefreshToken();
     String decryptedRefreshToken = awsKms.decryptToken(encryptedRefreshToken);
 
@@ -70,7 +72,7 @@ public class SalesforceOAuthAccessToken {
     String encryptedAccessToken = awsKms.encryptToken(decryptedAccessToken);
 
     sfOAuthToken.setAccessToken(encryptedAccessToken);
-    salesforceOauthTokenRepository.upsertSalesforceOauthToken(sfOAuthToken);
+    salesforceOauthTokenRepository.saveSalesforceOauthToken(sfOAuthToken);
 
     return decryptedAccessToken;
   }

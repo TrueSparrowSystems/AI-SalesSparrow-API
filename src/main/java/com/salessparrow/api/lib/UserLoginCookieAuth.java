@@ -147,7 +147,7 @@ public class UserLoginCookieAuth {
   }
 
   private void fetchAndValidateSalesforceUser() {
-    User userObj = salesforceUserRepository.getSalesforceUserById(userId);
+    User userObj = salesforceUserRepository.getSalesforceUserByExternalUserId(userId);
 
     if (userObj == null) {
       throw new CustomException(

@@ -1,4 +1,4 @@
-package com.salessparrow.api.dto.formatter;
+package com.salessparrow.api.dto.entities;
 
 /**
  * Salesforce connect formatter DTO.

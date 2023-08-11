@@ -29,27 +29,26 @@ public class MakeCompositeRequest {
   private SalesforceOauthTokenRepository sfOauthTokenRepository;
 
   public HttpClient.HttpResponse makePostRequest(
-    List<CompositeRequest> compositeRequests,
-    String salesforceUserId
-  ) {
+      List<CompositeRequest> compositeRequests,
+      String salesforceUserId) {
     Map<String, List<CompositeRequest>> compositeRequestsMap = new HashMap<>();
     compositeRequestsMap.put("compositeRequest", compositeRequests);
 
-    SalesforceOauthToken sfOAuthToken = sfOauthTokenRepository.getSalesforceOauthTokenBySalesforceUserId(salesforceUserId);
+    SalesforceOauthToken sfOAuthToken = sfOauthTokenRepository
+        .getSalesforceOauthTokenByExternalUserId(salesforceUserId);
 
     String httpReqUrl = salesforceConstants.salesforceCompositeUrl(sfOAuthToken.getInstanceUrl());
     Integer timeoutMillis = salesforceConstants.timeoutMillis();
 
     SalesforceOAuthRequestInterface<HttpClient.HttpResponse> request = token -> {
-      Map<String,String> headers = new HashMap<>();
+      Map<String, String> headers = new HashMap<>();
       headers.put("Authorization", "Bearer " + token);
 
       HttpClient.HttpResponse response = HttpClient.makePostRequest(
-        httpReqUrl, 
-        headers, 
-        compositeRequestsMap, 
-        timeoutMillis
-      );
+          httpReqUrl,
+          headers,
+          compositeRequestsMap,
+          timeoutMillis);
       return response;
     };
 
@@ -58,10 +57,10 @@ public class MakeCompositeRequest {
       response = salesforceOauthRequest.makeRequest(salesforceUserId, request);
     } catch (Exception e) {
       throw new CustomException(
-        new ErrorObject(
-          "s_mcr_mpr_1",
-          "something_went_wrong",
-          e.getMessage()));
+          new ErrorObject(
+              "s_mcr_mpr_1",
+              "something_went_wrong",
+              e.getMessage()));
     }
     return response;
   }

@@ -4,6 +4,8 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.salessparrow.api.exception.CustomException;
+import com.salessparrow.api.lib.errorLib.ErrorObject;
 
 /**
  * Class for utility functions.
@@ -25,7 +27,11 @@ public class Util {
     try {
       jsonNode = mapper.readTree(jsonString);
     } catch (Exception e) {
-      e.printStackTrace();
+      throw new CustomException(
+          new ErrorObject(
+              "l_u_gjn_1",
+              "something_went_wrong",
+              e.getMessage()));
     }
     return jsonNode;
   }

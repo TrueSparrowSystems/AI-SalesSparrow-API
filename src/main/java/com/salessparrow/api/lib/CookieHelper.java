@@ -22,7 +22,7 @@ public class CookieHelper {
 
     String cookieToken = getCookieToken(user, decryptedSalt, timestamp);
 
-    if (user.getId() == null) {
+    if (user.getExternalUserId() == null) {
       throw new CustomException(
           new ErrorObject(
               "l_ch_gcv_1",
@@ -30,16 +30,18 @@ public class CookieHelper {
               "User is null"));
     }
 
-    return CookieConstants.LATEST_VERSION + ':' + user.getId() + ':' + userKind + ':' + timestamp + ':' + cookieToken;
+    return CookieConstants.LATEST_VERSION + ':' + user.getExternalUserId() + ':' + userKind + ':' + timestamp + ':'
+        + cookieToken;
   }
 
   public String getCookieToken(User user, String decryptedSalt, Long timestamp) {
 
     String decryptedCookieToken = localCipher.decrypt(decryptedSalt, user.getCookieToken());
     String strSecret = CoreConstants.apiCookieSecret();
-    String stringToSign = user.getId() + ':' + timestamp + ':' + strSecret + ':'
+    String stringToSign = user.getExternalUserId() + ':' + timestamp + ':' + strSecret + ':'
         + decryptedCookieToken.substring(0, 16);
-    String salt = user.getId() + ':' + decryptedCookieToken.substring(decryptedCookieToken.length() - 16) + ':'
+    String salt = user.getExternalUserId() + ':' + decryptedCookieToken.substring(decryptedCookieToken.length() - 16)
+        + ':'
         + strSecret + ':' + timestamp;
     String encryptedCookieToken = localCipher.encrypt(salt, stringToSign);
 

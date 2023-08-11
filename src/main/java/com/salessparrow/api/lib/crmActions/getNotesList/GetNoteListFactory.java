@@ -7,7 +7,8 @@ import com.salessparrow.api.domain.SalesforceUser;
 import com.salessparrow.api.dto.formatter.GetNotesListFormatterDto;
 
 /**
- * GetNotesListfactory is a factory class for the GetNotesList action for the CRM.
+ * GetNotesListFactory is a factory class for the GetNotesList action for the
+ * CRM.
  */
 @Component
 public class GetNoteListFactory {
@@ -16,13 +17,14 @@ public class GetNoteListFactory {
 
     /**
      * Get the list of notes for a given account.
+     * 
      * @param user
      * @param accountId
      * 
      * @return GetNotesListFormatterDto
      **/
     public GetNotesListFormatterDto getNotesList(SalesforceUser user, String accountId) {
-        
+
         GetNotesListFormatterDto getNotesListResponse = null;
         getNotesListResponse = getSalesforceNotesList.getNotesList(user, accountId);
 
