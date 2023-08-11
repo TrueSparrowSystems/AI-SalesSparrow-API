@@ -19,10 +19,9 @@ import com.salessparrow.api.repositories.SalesforceUserRepository;
 @Component
 public class UserLoginCookieAuth {
   private String cookieValue;
-  private int expireTimestamp;
   private String userId;
   private String userKind;
-  private Long timestamp;
+  private Integer timestampInCookie;
   private String token;
   private User user;
   private String userLoginCookieValue;
@@ -47,7 +46,6 @@ public class UserLoginCookieAuth {
    */
   public Map<String, Object> validateAndSetCookie(String cookieValue) {
     this.cookieValue = cookieValue;
-    this.expireTimestamp = CookieConstants.USER_LOGIN_COOKIE_EXPIRY_IN_MS;
 
     System.out.println("Validating cookie");
     validate();
@@ -79,13 +77,6 @@ public class UserLoginCookieAuth {
               "Invalid cookie value"));
     }
 
-    if (expireTimestamp < 0) {
-      throw new CustomException(
-          new ErrorObject(
-              "l_ulca_v_2",
-              "unauthorized_api_request",
-              "Invalid expire timestamp"));
-    }
   }
 
   /**
@@ -96,19 +87,25 @@ public class UserLoginCookieAuth {
   private void setParts() {
     List<String> cookieValueParts = Arrays.asList(cookieValue.split(":"));
 
-    if (cookieValueParts.get(0).equals(CookieConstants.LATEST_VERSION)) {
-      if (cookieValueParts.size() != 5) {
-        throw new CustomException(
-            new ErrorObject(
-                "l_ulca_sp_1",
-                "unauthorized_api_request",
-                "Invalid cookie value"));
-      }
+    if (cookieValueParts.size() != 5) {
+      throw new CustomException(
+          new ErrorObject(
+              "l_ulca_sp_1",
+              "unauthorized_api_request",
+              "Invalid cookie value"));
+    }
 
+    if (cookieValueParts.get(0).equals(CookieConstants.LATEST_VERSION)) {
       userId = cookieValueParts.get(1);
       userKind = cookieValueParts.get(2);
-      timestamp = Long.parseLong(cookieValueParts.get(3));
+      timestampInCookie = Integer.parseInt(cookieValueParts.get(3));
       token = cookieValueParts.get(4);
+    } else {
+      throw new CustomException(
+          new ErrorObject(
+              "l_ulca_sp_2",
+              "unauthorized_api_request",
+              "Invalid cookie version"));
     }
   }
 
@@ -118,7 +115,7 @@ public class UserLoginCookieAuth {
    * @throws RuntimeException
    */
   private void validateTimestamp() {
-    if (timestamp + expireTimestamp < System.currentTimeMillis()) {
+    if (timestampInCookie + CookieConstants.USER_LOGIN_COOKIE_EXPIRY_IN_SEC < System.currentTimeMillis() / 1000) {
       throw new CustomException(
           new ErrorObject(
               "l_ulca_vt_1",
@@ -171,7 +168,7 @@ public class UserLoginCookieAuth {
         encryptionSalt);
 
     String generatedToken = cookieHelper.getCookieToken(user,
-        decryptedEncryptionSalt, timestamp);
+        decryptedEncryptionSalt, timestampInCookie);
     if (!generatedToken.equals(token)) {
       throw new CustomException(
           new ErrorObject(
@@ -188,8 +185,7 @@ public class UserLoginCookieAuth {
    */
   private void setCookie() {
     userLoginCookieValue = cookieHelper.getCookieValue(user, userKind,
-        decryptedEncryptionSalt,
-        System.currentTimeMillis());
+        decryptedEncryptionSalt);
   }
 
 }

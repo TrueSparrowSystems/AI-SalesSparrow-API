@@ -253,8 +253,7 @@ public class AuthService {
 
     String userLoginCookieValue = cookieHelper.getCookieValue(this.salesforceUser,
         UserConstants.SALESFORCE_USER_KIND,
-        this.decryptedSalt,
-        System.currentTimeMillis());
+        this.decryptedSalt);
 
     authServiceDto.setCurrentUser(currentUserEntityDto);
     authServiceDto.setCurrentUserLoginCookie(userLoginCookieValue);

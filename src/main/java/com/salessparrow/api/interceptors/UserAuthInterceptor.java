@@ -58,13 +58,11 @@ public class UserAuthInterceptor implements HandlerInterceptor {
     String userLoginCookieValue = (String) userLoginCookieAuthRes.get("userLoginCookieValue");
 
     String cookieName = CookieConstants.USER_LOGIN_COOKIE_NAME;
-    int cookieExpiry = CookieConstants.USER_LOGIN_COOKIE_EXPIRY_IN_MS;
 
     HttpHeaders headers = new HttpHeaders();
-    headers = cookieHelper.setCookieInHeaders(cookieName, userLoginCookieValue,
-        cookieExpiry, headers);
-    response.addHeader(HttpHeaders.SET_COOKIE,
-        headers.getFirst(HttpHeaders.SET_COOKIE));
+    headers = cookieHelper.setCookieInHeaders(cookieName, userLoginCookieValue, headers);
+
+    response.addHeader(HttpHeaders.SET_COOKIE, headers.getFirst(HttpHeaders.SET_COOKIE));
 
     return true;
   }

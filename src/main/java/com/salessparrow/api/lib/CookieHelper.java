@@ -18,9 +18,10 @@ public class CookieHelper {
   @Autowired
   private LocalCipher localCipher;
 
-  public String getCookieValue(User user, String userKind, String decryptedSalt, Long timestamp) {
+  public String getCookieValue(User user, String userKind, String decryptedSalt) {
 
-    String cookieToken = getCookieToken(user, decryptedSalt, timestamp);
+    Integer currentTimestamp = (int) (System.currentTimeMillis() / 1000);
+    String cookieToken = getCookieToken(user, decryptedSalt, currentTimestamp);
 
     if (user.getExternalUserId() == null) {
       throw new CustomException(
@@ -30,11 +31,12 @@ public class CookieHelper {
               "User is null"));
     }
 
-    return CookieConstants.LATEST_VERSION + ':' + user.getExternalUserId() + ':' + userKind + ':' + timestamp + ':'
+    return CookieConstants.LATEST_VERSION + ':' + user.getExternalUserId() + ':' + userKind + ':' + currentTimestamp
+        + ':'
         + cookieToken;
   }
 
-  public String getCookieToken(User user, String decryptedSalt, Long timestamp) {
+  public String getCookieToken(User user, String decryptedSalt, Integer timestamp) {
 
     String decryptedCookieToken = localCipher.decrypt(decryptedSalt, user.getCookieToken());
     String strSecret = CoreConstants.apiCookieSecret();
@@ -48,9 +50,9 @@ public class CookieHelper {
     return encryptedCookieToken;
   }
 
-  public HttpHeaders setCookieInHeaders(String cookieName, String cookieValue, int cookieExpiryInMs,
+  public HttpHeaders setCookieInHeaders(String cookieName, String cookieValue,
       HttpHeaders headers) {
-    Integer cookieExpiryInSecond = cookieExpiryInMs / 1000;
+    int cookieExpiryInSecond = CookieConstants.USER_LOGIN_COOKIE_EXPIRY_IN_SEC;
 
     Cookie cookie = new Cookie(cookieName, cookieValue);
     cookie.setHttpOnly(true);
@@ -65,9 +67,8 @@ public class CookieHelper {
 
   public HttpHeaders setUserCookie(String cookieValue, HttpHeaders headers) {
     String cookieName = CookieConstants.USER_LOGIN_COOKIE_NAME;
-    int cookieExpiry = CookieConstants.USER_LOGIN_COOKIE_EXPIRY_IN_MS;
 
-    headers = setCookieInHeaders(cookieName, cookieValue, cookieExpiry, headers);
+    headers = setCookieInHeaders(cookieName, cookieValue, headers);
 
     return headers;
   }

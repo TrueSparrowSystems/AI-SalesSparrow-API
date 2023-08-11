@@ -34,7 +34,7 @@ public class SalesforceGetIdentity {
     } catch (Exception e) {
       throw new CustomException(
           new ErrorObject(
-              "l_s_w_sgt_1",
+              "l_s_w_sgi_gui_1",
               "bad_request",
               e.getMessage()));
     }
