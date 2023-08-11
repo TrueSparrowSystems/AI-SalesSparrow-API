@@ -1,5 +1,7 @@
 package com.salessparrow.api.dto;
 
+import com.salessparrow.api.lib.customAnnotations.ValidRedirectUri;
+
 import jakarta.validation.constraints.NotBlank;
 
 /**
@@ -16,6 +18,7 @@ public class SalesforceConnectDto {
   private String code;
 
   @NotBlank(message = "Redirect URI is required")
+  @ValidRedirectUri(message = "Invalid redirect URI")
   private String redirect_uri;
 
   public String getCode() {
@@ -32,6 +35,11 @@ public class SalesforceConnectDto {
 
   public void setRedirect_uri(String redirect_uri) {
     this.redirect_uri = redirect_uri;
+  }
+
+  @Override
+  public String toString() {
+    return "SalesforceConnectDto [code=" + code + ", redirect_uri=" + redirect_uri + "]";
   }
 
 }

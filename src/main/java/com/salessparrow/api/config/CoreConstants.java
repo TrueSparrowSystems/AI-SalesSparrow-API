@@ -70,4 +70,9 @@ public class CoreConstants {
 
     return "";
   }
+
+  public static String[] getWhitelistedRedirectUris() {
+    String redirectUrisJson = System.getenv("SALESFORCE_WHITELISTED_REDIRECT_URIS");
+    return redirectUrisJson.split(",");
+  }
 }

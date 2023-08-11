@@ -1,5 +1,6 @@
 # Application
 export ENVIRONMENT='test'
+export SALESFORCE_WHITELISTED_REDIRECT_URIS=''
 
 # Authentication
 export ENCRYPTION_KEY='1234567890'
