@@ -47,4 +47,9 @@ public class SalesforceQueries {
 
     return queryBuilder.toString();
   }
+
+  public String getNoteDetailsUrl(String noteId){
+    return "SELECT Id, Title, TextPreview, CreatedBy.Name, LastModifiedDate FROM ContentNote WHERE Id = '" + noteId + "'";
+  }
+
 }

@@ -33,7 +33,7 @@ public class GetSalesforceNotesList implements GetNotesList{
      * 
      * @return HttpResponse
      **/
-    public HttpClient.HttpResponse getDocumentIds(String accountId, String salesforceUserId) {
+    private HttpClient.HttpResponse getDocumentIds(String accountId, String salesforceUserId) {
         SalesforceQueries salesforceLib = new SalesforceQueries();
         String documentIdsQuery = salesforceLib.getContentDocumentIdUrl(accountId);
 
@@ -56,7 +56,7 @@ public class GetSalesforceNotesList implements GetNotesList{
      * 
      * @return HttpResponse
      **/
-    public HttpClient.HttpResponse getNotes(List<String> documentIds, String salesforceUserId) {
+    private HttpClient.HttpResponse getNotes(List<String> documentIds, String salesforceUserId) {
         SalesforceQueries salesforceLib = new SalesforceQueries();
         String notesQuery = salesforceLib.getNoteListIdUrl(documentIds);
 

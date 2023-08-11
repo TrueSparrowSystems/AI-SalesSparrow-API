@@ -12,7 +12,7 @@ import com.salessparrow.api.dto.formatter.GetNoteDetailsFormatterDto;
 @Component
 public class GetNoteDetailsFactory {
     @Autowired 
-    GetSalesforceNoteDeatails getSalesforceNoteDeatails;
+    GetSalesforceNoteDetails getSalesforceNoteDetails;
 
     /**
      * getNoteDetails is a method that returns the details of a note.
@@ -26,7 +26,7 @@ public class GetNoteDetailsFactory {
         
         GetNoteDetailsFormatterDto getNoteDetailsResponse = null;
 
-        getNoteDetailsResponse = getSalesforceNoteDeatails.getNoteDetails(user, noteId);
+        getNoteDetailsResponse = getSalesforceNoteDetails.getNoteDetails(user, noteId);
         return getNoteDetailsResponse;
     }
 }
