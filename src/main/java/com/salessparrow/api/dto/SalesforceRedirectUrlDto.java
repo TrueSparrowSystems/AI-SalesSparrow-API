@@ -14,8 +14,8 @@ import jakarta.validation.constraints.NotBlank;
  */
 public class SalesforceRedirectUrlDto {
 
-    @NotBlank(message = "redirect_uri is required")
-    @ValidRedirectUri(message = "Invalid redirect URI")
+    @NotBlank(message = "missing_redirect_uri")
+    @ValidRedirectUri(message = "invalid_redirect_uri")
     private String redirect_uri;
 
     private String state;

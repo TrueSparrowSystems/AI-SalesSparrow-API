@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -55,8 +57,8 @@ public class ErrorResponse {
 
     ErrorResponseObject errorResponseObject = new ErrorResponseObject(
         Integer.parseInt(errorInfo.getHttp_code()),
-        errorInfo.getCode(),
         errorInfo.getMessage(),
+        errorInfo.getCode(),
         internalErrorIdentifier,
         new ArrayList<ParamErrorConfig>());
 
@@ -89,13 +91,26 @@ public class ErrorResponse {
     }
 
     List<ParamErrorConfig> paramErrorConfigList = new ArrayList<ParamErrorConfig>();
-    if (params.size() > 0) {
-      for (String param : params) {
-        ParamErrorConfig paramErrorConfig = paramErrorDataMap.get(param);
-        if (paramErrorConfig != null) {
+   
+    for (String param : params) {
+      ParamErrorConfig paramErrorConfig = null;
+
+      Pattern pattern = Pattern.compile("^missing_(.*)$");
+      Matcher matcher = pattern.matcher(param);
+
+      if (matcher.matches()) {
+          String paramName = matcher.group(1);
+          String messageString = paramName + " is required parameter. Please provide " + paramName + ".";
+
+          paramErrorConfig = new ParamErrorConfig(paramName, messageString);
           paramErrorConfigList.add(paramErrorConfig);
-        }
-      }
+      } 
+      else {
+          paramErrorConfig = paramErrorDataMap.get(param);
+          if (paramErrorConfig != null) {
+            paramErrorConfigList.add(paramErrorConfig);
+          }
+      } 
     }
 
     logError(message, 400, internalErrorIdentifier);

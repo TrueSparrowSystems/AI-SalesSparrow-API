@@ -5,10 +5,10 @@ import lombok.Data;
 
 @Data
 public class NoteDto {
-  @NotBlank(message = "Title is required")
+  @NotBlank(message = "missing_title")
   private String title;
 
-  @NotBlank(message = "Content is required")
+  @NotBlank(message = "missing_content")
   private String content;
 }
 
