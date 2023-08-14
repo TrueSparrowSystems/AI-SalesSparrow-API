@@ -70,12 +70,12 @@ public class ErrorResponse {
    * 
    * @param internalErrorIdentifier
    * @param message
-   * @param params
+   * @param paramErrorIdentifiers
    * 
    * @return ErrorResponseObject
    */
   protected ErrorResponseObject getParamErrorResponse(String internalErrorIdentifier, String message,
-      List<String> params) {
+      List<String> paramErrorIdentifiers) {
 
     String paramsErrorPath = "classpath:config/ParamErrorConfig.json";
     Resource resource = resourceLoader.getResource(paramsErrorPath);
@@ -92,11 +92,11 @@ public class ErrorResponse {
 
     List<ParamErrorConfig> paramErrorConfigList = new ArrayList<ParamErrorConfig>();
    
-    for (String param : params) {
+    for (String paramErrorIdentifier : paramErrorIdentifiers) {
       ParamErrorConfig paramErrorConfig = null;
 
       Pattern pattern = Pattern.compile("^missing_(.*)$");
-      Matcher matcher = pattern.matcher(param);
+      Matcher matcher = pattern.matcher(paramErrorIdentifier);
 
       if (matcher.matches()) {
           String paramName = matcher.group(1);
@@ -106,7 +106,7 @@ public class ErrorResponse {
           paramErrorConfigList.add(paramErrorConfig);
       } 
       else {
-          paramErrorConfig = paramErrorDataMap.get(param);
+          paramErrorConfig = paramErrorDataMap.get(paramErrorIdentifier);
           if (paramErrorConfig != null) {
             paramErrorConfigList.add(paramErrorConfig);
           }
