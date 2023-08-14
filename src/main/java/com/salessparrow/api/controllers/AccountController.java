@@ -1,5 +1,6 @@
 package com.salessparrow.api.controllers;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +28,8 @@ import jakarta.validation.Valid;
 @Validated
 public class AccountController {
 
+  private Logger logger = org.slf4j.LoggerFactory.getLogger(AccountController.class);
+
   @Autowired
   private GetAccountListService getAccountListService;
 
@@ -46,7 +49,7 @@ public class AccountController {
 
   @GetMapping("")
   public ResponseEntity<GetAccountsFormatterDto> getAccounts(HttpServletRequest request, @RequestParam String q) {
-    System.out.println("Request received");
+    logger.info("Request received");
 
     GetAccountsFormatterDto getAccountsResponse = getAccountListService.getAccounts(request, q);
 

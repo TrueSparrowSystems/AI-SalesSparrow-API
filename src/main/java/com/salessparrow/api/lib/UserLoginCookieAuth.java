@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +20,8 @@ import com.salessparrow.api.repositories.SalesforceUserRepository;
 
 @Component
 public class UserLoginCookieAuth {
+  Logger logger = LoggerFactory.getLogger(UserLoginCookieAuth.class);
+
   private String cookieValue;
   private String userId;
   private String userKind;
@@ -47,7 +51,7 @@ public class UserLoginCookieAuth {
   public Map<String, Object> validateAndSetCookie(String cookieValue) {
     this.cookieValue = cookieValue;
 
-    System.out.println("Validating cookie");
+    logger.info("Validating cookie");
     validate();
     setParts();
     validateTimestamp();
@@ -132,13 +136,13 @@ public class UserLoginCookieAuth {
    */
   private void fetchAndValidateUser() {
 
-    System.out.println("Fetching and validating user");
+    logger.info("Fetching and validating user");
     if (userKind.equals(UserConstants.SALESFORCE_USER_KIND)) {
-      System.out.println("Fetching and validating salesforce user");
+      logger.info("Fetching and validating salesforce user");
       fetchAndValidateSalesforceUser();
     } else {
-      System.out.println("Fetching another user");
-      // Todo: Add other user kinds
+      logger.info("Fetching another user");
+      // Todo: Throw an error
     }
 
   }

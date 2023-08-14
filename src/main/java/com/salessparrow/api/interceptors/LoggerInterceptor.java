@@ -35,9 +35,23 @@ public class LoggerInterceptor implements HandlerInterceptor {
       trackingId = java.util.UUID.randomUUID().toString();
     }
 
-    logger.info("Request: {} {}", request.getMethod(), request.getRequestURI());
+    long startTime = System.currentTimeMillis();
+    request.setAttribute("startTime", startTime);
 
     MDC.put("trackingId", trackingId);
+
+    logger.info("Request Start: {} {}", request.getMethod(), request.getRequestURI());
     return true;
+  }
+
+  @Override
+  public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    Logger logger = LoggerFactory.getLogger(LoggerInterceptor.class);
+
+    long startTime = (Long)request.getAttribute("startTime");    
+    long endTime = System.currentTimeMillis();
+    long executeTime = endTime - startTime;
+
+    logger.info("Request Ended with {} in {}ms", response.getStatus(), executeTime);
   }
 }
