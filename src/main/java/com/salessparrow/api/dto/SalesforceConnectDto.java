@@ -14,11 +14,11 @@ import jakarta.validation.constraints.NotBlank;
  */
 public class SalesforceConnectDto {
 
-  @NotBlank(message = "Code is required")
+  @NotBlank(message = "missing_code")
   private String code;
 
-  @NotBlank(message = "Redirect URI is required")
-  @ValidRedirectUri(message = "Invalid redirect URI")
+  @NotBlank(message = "missing_redirect_uri")
+  @ValidRedirectUri(message = "invalid_redirect_uri")
   private String redirect_uri;
 
   public String getCode() {

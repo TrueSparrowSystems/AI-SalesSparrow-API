@@ -1,7 +1,7 @@
 package com.salessparrow.api.exception;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,18 +84,18 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ResponseEntity<ErrorResponseObject> handleValidationException(MethodArgumentNotValidException ex) {
-    Map<String, String> errorMap = new HashMap<>();
+    List<String> paramErrorIdentifiers = new ArrayList<>();
 
     for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-      errorMap.put(error.getField(), error.getDefaultMessage());
+      paramErrorIdentifiers.add(error.getDefaultMessage());
     }
-
-    CustomException ce = new CustomException(
-        new ErrorObject(
+    
+    CustomException ce2 = new CustomException(
+        new ParamErrorObject(
             "b_2",
-            "invalid_params",
-            errorMap.toString()));
+            paramErrorIdentifiers.toString(),
+            paramErrorIdentifiers));
 
-    return handleCustomException(ce);
+    return handleCustomException(ce2);
   }
 }
