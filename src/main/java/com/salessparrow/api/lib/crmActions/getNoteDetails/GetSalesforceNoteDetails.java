@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.salessparrow.api.domain.SalesforceOauthToken;
-import com.salessparrow.api.domain.SalesforceUser;
+import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.formatter.GetNoteDetailsFormatterDto;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
@@ -103,8 +103,7 @@ public class GetSalesforceNoteDetails implements GetNoteDetails {
      * 
      * @return GetNoteDetailsFormatterDto
      **/
-
-    public GetNoteDetailsFormatterDto getNoteDetails(SalesforceUser user, String noteId) {
+    public GetNoteDetailsFormatterDto getNoteDetails(User user, String noteId) {
 
         String salesforceUserId = user.getExternalUserId();
 

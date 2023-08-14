@@ -229,7 +229,7 @@ public class AuthService {
     salesforceUser.setExternalOrganizationId(this.userData.path("organization_id").asText());
     salesforceUser.setName(this.userData.path("name").asText());
     salesforceUser.setEmail(this.userData.path("email").asText());
-    salesforceUser.setUserType(this.userData.path("user_type").asText());
+    salesforceUser.setUserKind(UserConstants.SALESFORCE_USER_KIND);
     salesforceUser.setCookieToken(encryptedCookieToken);
     salesforceUser.setEncryptionSalt(encryptedSalt);
     salesforceUser.setStatus(SalesforceUser.Status.ACTIVE);

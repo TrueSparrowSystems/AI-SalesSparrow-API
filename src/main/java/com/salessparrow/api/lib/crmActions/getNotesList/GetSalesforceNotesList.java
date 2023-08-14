@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.salessparrow.api.domain.SalesforceUser;
+import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.formatter.GetNotesListFormatterDto;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
@@ -79,7 +79,7 @@ public class GetSalesforceNotesList implements GetNotesList{
      * 
      * @return GetNotesListFormatterDto
      **/
-    public GetNotesListFormatterDto getNotesList(SalesforceUser user,String accountId) {
+    public GetNotesListFormatterDto getNotesList(User user,String accountId) {
 
         String salesforceUserId = user.getExternalUserId();
 

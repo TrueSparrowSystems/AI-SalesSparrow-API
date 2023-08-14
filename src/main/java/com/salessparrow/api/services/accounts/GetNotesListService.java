@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-import com.salessparrow.api.domain.SalesforceUser;
+import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.formatter.GetNotesListFormatterDto;
 import com.salessparrow.api.lib.crmActions.getNotesList.GetNoteListFactory;
 
@@ -26,7 +26,7 @@ public class GetNotesListService {
      **/
     public GetNotesListFormatterDto getNotesList(HttpServletRequest request, String accountId) {
 
-        SalesforceUser user = (SalesforceUser) request.getAttribute("user");
+        User user = (User) request.getAttribute("user");
 
         return getNotesListFactory.getNotesList(user, accountId);
     }

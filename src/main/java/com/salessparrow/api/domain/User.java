@@ -11,7 +11,7 @@ public interface User {
 
   String getName();
 
-  String getUserType();
+  String getUserKind();
 
   String getCookieToken();
 

@@ -3,7 +3,7 @@ package com.salessparrow.api.services.accounts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.salessparrow.api.domain.SalesforceUser;
+import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.formatter.GetNoteDetailsFormatterDto;
 import com.salessparrow.api.lib.crmActions.getNoteDetails.GetNoteDetailsFactory;
 
@@ -26,7 +26,7 @@ public class GetNoteDetailsService {
    * @return GetNoteDetailsFormatterDto
    */
   public GetNoteDetailsFormatterDto getNoteDetails(HttpServletRequest request, String noteId) {
-      SalesforceUser user = (SalesforceUser) request.getAttribute("user");
+      User user = (User) request.getAttribute("user");
       
       return getNoteDetailsFactory.getNoteDetails(user, noteId);
   }

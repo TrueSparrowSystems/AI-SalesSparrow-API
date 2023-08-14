@@ -2,7 +2,7 @@ package com.salessparrow.api.services.users;
 
 import org.springframework.stereotype.Service;
 
-import com.salessparrow.api.domain.SalesforceUser;
+import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.entities.CurrentUserEntityDto;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,10 +14,10 @@ import jakarta.servlet.http.HttpServletRequest;
 public class GetCurrentUserService {
 
   public CurrentUserEntityDto getCurrentUser(HttpServletRequest request) {
-    SalesforceUser user = (SalesforceUser) request.getAttribute("user");
+    User user = (User) request.getAttribute("user");
 
     CurrentUserEntityDto currentUserEntityDto = new CurrentUserEntityDto();
-    currentUserEntityDto.setId(user.getId(user.getExternalUserId()));
+    currentUserEntityDto.setId(user.getExternalUserId());
     currentUserEntityDto.setName(user.getName());
     currentUserEntityDto.setEmail(user.getEmail());
 

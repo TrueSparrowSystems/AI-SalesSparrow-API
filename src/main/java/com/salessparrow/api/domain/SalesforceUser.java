@@ -51,8 +51,8 @@ public class SalesforceUser implements User {
   @DynamoDBAttribute(attributeName = "email")
   private String email;
 
-  @DynamoDBAttribute(attributeName = "user_type")
-  private String userType;
+  @DynamoDBAttribute(attributeName = "user_kind")
+  private String userKind;
 
   @DynamoDBAttribute(attributeName = "cookie_token")
   private String cookieToken;

@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.salessparrow.api.domain.SalesforceUser;
+import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.formatter.GetAccountsFormatterDto;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
@@ -26,7 +26,15 @@ public class GetSalesforceAccounts implements GetAccounts{
   @Autowired
   private FormatSalesforceAccounts formatSalesforceAccounts;
 
-  public GetAccountsFormatterDto getAccounts(SalesforceUser user, String searchTerm) {
+  /**
+   * Get the list of accounts for a given search term
+   * 
+   * @param user
+   * @param searchTerm
+   * 
+   * @return GetAccountsFormatterDto
+  **/
+  public GetAccountsFormatterDto getAccounts(User user, String searchTerm) {
     String salesforceUserId = user.getExternalUserId();
 
     SalesforceQueries salesforceQueries = new SalesforceQueries();
