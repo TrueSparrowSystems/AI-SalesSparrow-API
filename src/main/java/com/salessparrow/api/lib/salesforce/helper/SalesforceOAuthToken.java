@@ -1,18 +1,14 @@
 package com.salessparrow.api.lib.salesforce.helper;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.salessparrow.api.config.CoreConstants;
 import com.salessparrow.api.domain.SalesforceOauthToken;
 import com.salessparrow.api.lib.AwsKms;
 import com.salessparrow.api.lib.Util;
-import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
+import com.salessparrow.api.lib.salesforce.wrappers.SalesforceGetRefreshedAccessToken;
 import com.salessparrow.api.repositories.SalesforceOauthTokenRepository;
 
 @Service
@@ -22,10 +18,10 @@ public class SalesforceOAuthToken {
   private AwsKms awsKms;
 
   @Autowired
-  private SalesforceConstants salesforceConstants;
+  private SalesforceOauthTokenRepository sfOauthTokenRepository;
 
   @Autowired
-  private SalesforceOauthTokenRepository sfOauthTokenRepository;
+  private SalesforceGetRefreshedAccessToken salesforceGetRefreshedAccessToken;
 
   @Autowired
   private Util util;
@@ -48,18 +44,7 @@ public class SalesforceOAuthToken {
     String encryptedRefreshToken = sfOAuthToken.getRefreshToken();
     String decryptedRefreshToken = awsKms.decryptToken(encryptedRefreshToken);
 
-    String url = salesforceConstants.oauth2Url();
-
-    String requestBody = "grant_type=" + salesforceConstants.refreshTokenGrantType() + "&client_id="
-        + CoreConstants.salesforceClientId()
-        + "&client_secret="
-        + CoreConstants.salesforceClientSecret() +
-        "&refresh_token=" + decryptedRefreshToken;
-
-    Map<String, String> headers = new HashMap<>();
-    headers.put("content-type", "application/x-www-form-urlencoded");
-
-    HttpClient.HttpResponse response = HttpClient.makePostRequest(url, headers, requestBody, 5000);
+    HttpClient.HttpResponse response = salesforceGetRefreshedAccessToken.getRefreshedAccessToken(decryptedRefreshToken);
     String decryptedAccessToken = updateAccessTokenInDatabase(response.getResponseBody(), sfOAuthToken);
 
     return decryptedAccessToken;
