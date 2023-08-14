@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.salessparrow.api.dto.entities.NoteListEntity;
+import com.salessparrow.api.dto.entities.NoteEntity;
 import com.salessparrow.api.dto.formatter.GetNotesListFormatterDto;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.Util;
@@ -61,7 +61,7 @@ public class FormatSalesforceNotesList {
     public GetNotesListFormatterDto formatNotesList(String responseBody){
 
         List<String> noteIds = new ArrayList<String>();
-        Map<String,NoteListEntity> noteListEntities = new HashMap<>();
+        Map<String,NoteEntity> noteIdToEntityMap = new HashMap<>();
 
         try {
             Util util = new Util();
@@ -84,14 +84,14 @@ public class FormatSalesforceNotesList {
 
 
                 noteIds.add(noteId);
-                NoteListEntity noteListEntity = new NoteListEntity(
+                NoteEntity noteEntity = new NoteEntity(
                     noteId,
                     createdBy,
                     textPreview,
                     lastModifiedDate
                 );
                 
-                noteListEntities.put(noteId, noteListEntity);
+                noteIdToEntityMap.put(noteId, noteEntity);
             }
         } catch (Exception e) {
             throw new CustomException(
@@ -105,7 +105,7 @@ public class FormatSalesforceNotesList {
 
         GetNotesListFormatterDto getNotesListFormatterDto = new GetNotesListFormatterDto();
         getNotesListFormatterDto.setNoteIds(noteIds);
-        getNotesListFormatterDto.setNoteMapById(noteListEntities);
+        getNotesListFormatterDto.setNoteMapById(noteIdToEntityMap);
 
         return getNotesListFormatterDto;
 

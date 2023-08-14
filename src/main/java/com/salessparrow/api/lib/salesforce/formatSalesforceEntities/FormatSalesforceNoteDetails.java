@@ -5,8 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.salessparrow.api.dto.entities.GetNoteDetailsEntity;
-import com.salessparrow.api.dto.entities.NoteListEntity;
+import com.salessparrow.api.dto.entities.NoteDetailEntity;
+import com.salessparrow.api.dto.entities.NoteEntity;
 import com.salessparrow.api.dto.formatter.GetNoteDetailsFormatterDto;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.Util;
@@ -27,7 +27,7 @@ public class FormatSalesforceNoteDetails {
      * @return GetNoteDetailsFormatterDto
      */ 
     public GetNoteDetailsFormatterDto formatNoteDetails(String noteDetailsResponse, String noteContentResponse){
-        NoteListEntity noteListEntity = new NoteListEntity();
+        NoteEntity noteEntity = new NoteEntity();
         try {
             Util util = new Util();
             JsonNode rootNode = util.getJsonNode(noteDetailsResponse);
@@ -47,7 +47,7 @@ public class FormatSalesforceNoteDetails {
 
                 String createdBy = recordNode.get("CreatedBy").get("Name").asText();
 
-                noteListEntity = new NoteListEntity(
+                noteEntity = new NoteEntity(
                     noteId,
                     createdBy,
                     textPreview,
@@ -65,11 +65,11 @@ public class FormatSalesforceNoteDetails {
         }
 
         GetNoteDetailsFormatterDto getNoteDetailsFormatterDto = new GetNoteDetailsFormatterDto(
-            new GetNoteDetailsEntity(
-                noteListEntity.getId(),
-                noteListEntity.getCreator(),
+            new NoteDetailEntity(
+                noteEntity.getId(),
+                noteEntity.getCreator(),
                 noteContentResponse,
-                noteListEntity.getLastModifiedTime()
+                noteEntity.getLastModifiedTime()
             )
         );
 
