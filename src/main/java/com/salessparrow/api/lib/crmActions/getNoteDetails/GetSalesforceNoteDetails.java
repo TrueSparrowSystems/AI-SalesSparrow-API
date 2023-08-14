@@ -1,14 +1,11 @@
 package com.salessparrow.api.lib.crmActions.getNoteDetails;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.salessparrow.api.domain.SalesforceOauthToken;
 import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.formatter.GetNoteDetailsFormatterDto;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
@@ -17,9 +14,7 @@ import com.salessparrow.api.lib.salesforce.dto.CompositeRequest;
 import com.salessparrow.api.lib.salesforce.formatSalesforceEntities.FormatSalesforceNoteDetails;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 import com.salessparrow.api.lib.salesforce.helper.SalesforceQueries;
-import com.salessparrow.api.lib.salesforce.helper.SalesforceRequest;
-import com.salessparrow.api.lib.salesforce.helper.SalesforceRequestInterface;
-import com.salessparrow.api.repositories.SalesforceOauthTokenRepository;
+import com.salessparrow.api.lib.salesforce.wrappers.SalesforceGetNoteContent;
 
 @Component
 public class GetSalesforceNoteDetails implements GetNoteDetails {
@@ -28,13 +23,10 @@ public class GetSalesforceNoteDetails implements GetNoteDetails {
     private SalesforceConstants salesforceConstants;
 
     @Autowired
-    private SalesforceOauthTokenRepository sfOauthTokenRepository;
-
-    @Autowired
-    private SalesforceRequest salesforceOauthRequest;
-
-    @Autowired
     private MakeCompositeRequest makeCompositeRequest;
+
+    @Autowired
+    private SalesforceGetNoteContent salesforceGetNoteContent;
 
     /**
      * Get the list of notes for a given account
@@ -61,45 +53,10 @@ public class GetSalesforceNoteDetails implements GetNoteDetails {
     }
 
     /**
-     * Get the content of a note
-     * 
-     * @param noteid
-     * @param salesforceUserId
-     * 
-     * @return HttpClient.HttpResponse
-     */
-
-    public HttpClient.HttpResponse getContent(String noteid, String salesforceUserId) {
-
-        SalesforceOauthToken sfOAuthToken = sfOauthTokenRepository
-                .getSalesforceOauthTokenByExternalUserId(salesforceUserId);
-
-        String noteContentQuery = salesforceConstants.salesfroceContentUrl(sfOAuthToken.getInstanceUrl(), noteid);
-
-        Integer timeoutMillis = salesforceConstants.timeoutMillis();
-
-        SalesforceRequestInterface<HttpClient.HttpResponse> request = token -> {
-            Map<String, String> headers = new HashMap<>();
-            headers.put("Authorization", "Bearer " + token);
-
-            HttpClient.HttpResponse response = HttpClient.makeGetRequest(
-                    noteContentQuery,
-                    headers,
-                    timeoutMillis);
-
-            return response;
-        };
-
-        HttpClient.HttpResponse response = null;
-        response = salesforceOauthRequest.makeRequest(salesforceUserId, request);
-        return response;
-    }
-
-    /**
      * Get the details of a note
      * 
      * @param user
-     * @param noteid
+     * @param noteId
      * 
      * @return GetNoteDetailsFormatterDto
      **/
@@ -109,7 +66,7 @@ public class GetSalesforceNoteDetails implements GetNoteDetails {
 
         HttpClient.HttpResponse noteDetailsResponse = getNotes(noteId, salesforceUserId);
 
-        HttpClient.HttpResponse noteContentResponse = getContent(noteId, salesforceUserId);
+        HttpClient.HttpResponse noteContentResponse = salesforceGetNoteContent.getNoteContent(noteId, salesforceUserId);
 
         FormatSalesforceNoteDetails formatSalesforceNoteDetails = new FormatSalesforceNoteDetails();
         GetNoteDetailsFormatterDto noteDetailsFormatterDto = formatSalesforceNoteDetails
