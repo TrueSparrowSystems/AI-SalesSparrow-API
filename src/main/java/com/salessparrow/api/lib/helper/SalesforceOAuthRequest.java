@@ -13,7 +13,7 @@ public class SalesforceOAuthRequest {
   @Autowired
   private SalesforceOAuthAccessToken getAccessTokenService;
 
-  public <T> T makeRequest(String salesforceUserId, SalesforceOAuthRequestInterface<T> request) throws Exception {
+  public <T> T makeRequest(String salesforceUserId, SalesforceOAuthRequestInterface<T> request) {
     String decryptedAccessToken = getAccessTokenService.fetchAccessToken(salesforceUserId);
 
     try {

@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.salessparrow.api.domain.SalesforceOauthToken;
-import com.salessparrow.api.exception.CustomException;
-import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.helper.SalesforceOAuthRequest;
 import com.salessparrow.api.lib.helper.SalesforceOAuthRequestInterface;
@@ -53,15 +51,8 @@ public class MakeCompositeRequest {
     };
 
     HttpClient.HttpResponse response = null;
-    try {
-      response = salesforceOauthRequest.makeRequest(salesforceUserId, request);
-    } catch (Exception e) {
-      throw new CustomException(
-          new ErrorObject(
-              "s_mcr_mpr_1",
-              "something_went_wrong",
-              e.getMessage()));
-    }
+    
+    response = salesforceOauthRequest.makeRequest(salesforceUserId, request);
     return response;
   }
 }

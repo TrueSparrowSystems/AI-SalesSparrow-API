@@ -2,5 +2,5 @@ package com.salessparrow.api.lib.helper;
 
 @FunctionalInterface
 public interface SalesforceOAuthRequestInterface<T> {
-  T execute(String token) throws Exception;
+  T execute(String token);
 }

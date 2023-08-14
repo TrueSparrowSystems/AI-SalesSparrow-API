@@ -11,8 +11,6 @@ import org.springframework.stereotype.Component;
 import com.salessparrow.api.domain.SalesforceOauthToken;
 import com.salessparrow.api.domain.SalesforceUser;
 import com.salessparrow.api.dto.formatter.GetNoteDetailsFormatterDto;
-import com.salessparrow.api.exception.CustomException;
-import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.helper.SalesforceOAuthRequest;
 import com.salessparrow.api.lib.helper.SalesforceOAuthRequestInterface;
@@ -93,15 +91,7 @@ public class GetSalesforceNoteDetails implements GetNoteDetails {
         };
 
         HttpClient.HttpResponse response = null;
-        try {
-            response = salesforceOauthRequest.makeRequest(salesforceUserId, request);
-        } catch (Exception e) {
-            throw new CustomException(
-                    new ErrorObject(
-                            "s_l_ca_gnd_gsnd_1",
-                            "something_went_wrong",
-                            e.getMessage()));
-        }
+        response = salesforceOauthRequest.makeRequest(salesforceUserId, request);
         return response;
     }
 
