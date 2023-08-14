@@ -1,4 +1,4 @@
-package com.salessparrow.api.lib.salesforce;
+package com.salessparrow.api.lib.salesforce.helper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +16,7 @@ import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.repositories.SalesforceOauthTokenRepository;
 
 @Service
-public class SalesforceOAuthAccessToken {
+public class SalesforceOAuthToken {
 
   @Autowired
   private AwsKms awsKms;
@@ -42,7 +42,7 @@ public class SalesforceOAuthAccessToken {
     return decryptedAccessToken;
   }
 
-  public String updateAccessToken(String salesforceUserId) {
+  public String updateAndGetRefreshedAccessToken(String salesforceUserId) {
     SalesforceOauthToken sfOAuthToken = sfOauthTokenRepository
         .getSalesforceOauthTokenByExternalUserId(salesforceUserId);
     String encryptedRefreshToken = sfOAuthToken.getRefreshToken();

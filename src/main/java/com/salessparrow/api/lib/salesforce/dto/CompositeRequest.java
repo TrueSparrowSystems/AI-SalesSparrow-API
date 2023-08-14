@@ -1,4 +1,4 @@
-package com.salessparrow.api.lib.salesforce;
+package com.salessparrow.api.lib.salesforce.dto;
 
 public class CompositeRequest {
   

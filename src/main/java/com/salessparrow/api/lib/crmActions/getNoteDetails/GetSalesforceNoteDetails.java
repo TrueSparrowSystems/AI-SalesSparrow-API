@@ -11,16 +11,14 @@ import org.springframework.stereotype.Component;
 import com.salessparrow.api.domain.SalesforceOauthToken;
 import com.salessparrow.api.domain.SalesforceUser;
 import com.salessparrow.api.dto.formatter.GetNoteDetailsFormatterDto;
-import com.salessparrow.api.exception.CustomException;
-import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
-import com.salessparrow.api.lib.helper.SalesforceOAuthRequest;
-import com.salessparrow.api.lib.helper.SalesforceOAuthRequestInterface;
 import com.salessparrow.api.lib.httpLib.HttpClient;
-import com.salessparrow.api.lib.salesforce.CompositeRequest;
-import com.salessparrow.api.lib.salesforce.MakeCompositeRequest;
-import com.salessparrow.api.lib.salesforce.SalesforceQueries;
+import com.salessparrow.api.lib.salesforce.dto.CompositeRequest;
 import com.salessparrow.api.lib.salesforce.formatSalesforceEntities.FormatSalesforceNoteDetails;
+import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
+import com.salessparrow.api.lib.salesforce.helper.SalesforceQueries;
+import com.salessparrow.api.lib.salesforce.helper.SalesforceRequest;
+import com.salessparrow.api.lib.salesforce.helper.SalesforceRequestInterface;
 import com.salessparrow.api.repositories.SalesforceOauthTokenRepository;
 
 @Component
@@ -33,7 +31,7 @@ public class GetSalesforceNoteDetails implements GetNoteDetails {
     private SalesforceOauthTokenRepository sfOauthTokenRepository;
 
     @Autowired
-    private SalesforceOAuthRequest salesforceOauthRequest;
+    private SalesforceRequest salesforceOauthRequest;
 
     @Autowired
     private MakeCompositeRequest makeCompositeRequest;
@@ -80,7 +78,7 @@ public class GetSalesforceNoteDetails implements GetNoteDetails {
 
         Integer timeoutMillis = salesforceConstants.timeoutMillis();
 
-        SalesforceOAuthRequestInterface<HttpClient.HttpResponse> request = token -> {
+        SalesforceRequestInterface<HttpClient.HttpResponse> request = token -> {
             Map<String, String> headers = new HashMap<>();
             headers.put("Authorization", "Bearer " + token);
 
@@ -93,15 +91,7 @@ public class GetSalesforceNoteDetails implements GetNoteDetails {
         };
 
         HttpClient.HttpResponse response = null;
-        try {
-            response = salesforceOauthRequest.makeRequest(salesforceUserId, request);
-        } catch (Exception e) {
-            throw new CustomException(
-                    new ErrorObject(
-                            "s_l_ca_gnd_gsnd_1",
-                            "something_went_wrong",
-                            e.getMessage()));
-        }
+        response = salesforceOauthRequest.makeRequest(salesforceUserId, request);
         return response;
     }
 

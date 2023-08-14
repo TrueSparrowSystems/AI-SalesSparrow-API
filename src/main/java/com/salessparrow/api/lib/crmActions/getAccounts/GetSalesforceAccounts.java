@@ -10,10 +10,10 @@ import com.salessparrow.api.domain.SalesforceUser;
 import com.salessparrow.api.dto.formatter.GetAccountsFormatterDto;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
-import com.salessparrow.api.lib.salesforce.CompositeRequest;
-import com.salessparrow.api.lib.salesforce.MakeCompositeRequest;
-import com.salessparrow.api.lib.salesforce.SalesforceQueries;
+import com.salessparrow.api.lib.salesforce.dto.CompositeRequest;
 import com.salessparrow.api.lib.salesforce.formatSalesforceEntities.FormatSalesforceAccounts;
+import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
+import com.salessparrow.api.lib.salesforce.helper.SalesforceQueries;
 
 @Component
 public class GetSalesforceAccounts implements GetAccounts{
