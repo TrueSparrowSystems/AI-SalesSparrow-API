@@ -160,6 +160,7 @@ public class AuthService {
     String salesforceUserId = this.tokensData.path("id").asText().split("/")[5];
 
     SalesforceOauthToken salesforceOauthToken = new SalesforceOauthToken();
+    // Todo: use salesforceconnect res entity object
     salesforceOauthToken.setExternalUserId(salesforceUserId);
     salesforceOauthToken.setIdentityUrl(this.tokensData.path("id").asText());
     salesforceOauthToken.setAccessToken(encryptedAccessToken);
@@ -225,7 +226,7 @@ public class AuthService {
     SalesforceUser salesforceUser = new SalesforceUser();
     salesforceUser.setExternalUserId(this.userData.path("user_id").asText());
     salesforceUser.setIdentityUrl(this.userData.path("sub").asText());
-    salesforceUser.setSalesforceOrganizationId(this.userData.path("organization_id").asText());
+    salesforceUser.setExternalOrganizationId(this.userData.path("organization_id").asText());
     salesforceUser.setName(this.userData.path("name").asText());
     salesforceUser.setEmail(this.userData.path("email").asText());
     salesforceUser.setUserType(this.userData.path("user_type").asText());

@@ -72,4 +72,15 @@ public class CookieHelper {
 
     return headers;
   }
+
+  public HttpHeaders clearUserCookie(HttpHeaders headers) {
+    String cookieName = CookieConstants.USER_LOGIN_COOKIE_NAME;
+    String cookieValue = "";
+    int cookieExpiry = -1;
+
+    headers.add(HttpHeaders.SET_COOKIE, String.format("%s=%s; Max-Age=%d; Path=/",
+        cookieName, cookieValue, cookieExpiry));
+
+    return headers;
+  }
 }

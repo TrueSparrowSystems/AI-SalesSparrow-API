@@ -19,7 +19,6 @@ import com.salessparrow.api.services.salesforce.RedirectUrlService;
 import com.salessparrow.api.dto.SalesforceConnectDto;
 import com.salessparrow.api.dto.formatter.SalesforceConnectFormatterDto;
 import com.salessparrow.api.lib.CookieHelper;
-import com.salessparrow.api.lib.globalConstants.CookieConstants;
 import com.salessparrow.api.services.salesforce.AuthService;
 import com.salessparrow.api.services.salesforce.AuthService.AuthServiceDto;
 
@@ -71,13 +70,8 @@ public class AuthController {
   public ResponseEntity<String> logout(HttpServletRequest request) {
     logger.info("User logout request received");
 
-    String cookieName = CookieConstants.USER_LOGIN_COOKIE_NAME;
-    String cookieValue = "";
-    int cookieExpiry = -1;
-
     HttpHeaders headers = new HttpHeaders();
-    headers.add(HttpHeaders.SET_COOKIE, String.format("%s=%s; Max-Age=%d; Path=/",
-        cookieName, cookieValue, cookieExpiry));
+    headers = cookieHelper.clearUserCookie(headers);
 
     return ResponseEntity.ok().headers(headers).body(null);
   }

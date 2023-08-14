@@ -42,8 +42,8 @@ public class SalesforceUser implements User {
   @DynamoDBAttribute(attributeName = "identity_url")
   private String identityUrl;
 
-  @DynamoDBAttribute(attributeName = "salesforce_organization_id")
-  private String salesforceOrganizationId;
+  @DynamoDBAttribute(attributeName = "external_organization_id")
+  private String externalOrganizationId;
 
   @DynamoDBAttribute(attributeName = "name")
   private String name;
