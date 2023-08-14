@@ -10,11 +10,11 @@ import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.formatter.GetNoteDetailsFormatterDto;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
-import com.salessparrow.api.lib.salesforce.dto.CompositeRequest;
+import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
 import com.salessparrow.api.lib.salesforce.formatSalesforceEntities.FormatSalesforceNoteDetails;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
-import com.salessparrow.api.lib.salesforce.helper.SalesforceQueries;
 import com.salessparrow.api.lib.salesforce.wrappers.SalesforceGetNoteContent;
+import com.salessparrow.api.lib.salesforce.helper.SalesforceQueryBuilder;
 
 @Component
 public class GetSalesforceNoteDetails implements GetNoteDetails {
@@ -37,14 +37,14 @@ public class GetSalesforceNoteDetails implements GetNoteDetails {
      * @return HttpResponse
      **/
     private HttpClient.HttpResponse getNotes(String noteId, String salesforceUserId) {
-        SalesforceQueries salesforceLib = new SalesforceQueries();
+        SalesforceQueryBuilder salesforceLib = new SalesforceQueryBuilder();
         String notesQuery = salesforceLib.getNoteDetailsUrl(noteId);
 
         String notesUrl = salesforceConstants.queryUrlPath() + notesQuery;
 
-        CompositeRequest noteCompositeRequest = new CompositeRequest("GET", notesUrl, "GetNotesList");
+        CompositeRequestDto noteCompositeRequest = new CompositeRequestDto("GET", notesUrl, "GetNotesList");
 
-        List<CompositeRequest> compositeRequests = new ArrayList<CompositeRequest>();
+        List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
         compositeRequests.add(noteCompositeRequest);
 
         HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId);

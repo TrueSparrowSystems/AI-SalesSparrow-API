@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import com.salessparrow.api.domain.SalesforceOauthToken;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
-import com.salessparrow.api.lib.salesforce.dto.CompositeRequest;
+import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
 import com.salessparrow.api.repositories.SalesforceOauthTokenRepository;
 
 @Component
@@ -26,9 +26,9 @@ public class MakeCompositeRequest {
   private SalesforceOauthTokenRepository sfOauthTokenRepository;
 
   public HttpClient.HttpResponse makePostRequest(
-      List<CompositeRequest> compositeRequests,
+      List<CompositeRequestDto> compositeRequests,
       String salesforceUserId) {
-    Map<String, List<CompositeRequest>> compositeRequestsMap = new HashMap<>();
+    Map<String, List<CompositeRequestDto>> compositeRequestsMap = new HashMap<>();
     compositeRequestsMap.put("compositeRequest", compositeRequests);
 
     SalesforceOauthToken sfOAuthToken = sfOauthTokenRepository

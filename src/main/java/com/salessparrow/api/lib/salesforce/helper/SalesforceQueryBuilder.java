@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * SalesforceQueries is a class for building the Salesforce queries.
  */
 @Component
-public class SalesforceQueries {
+public class SalesforceQueryBuilder {
   
   public String getAccountsQuery(String q) {
     if (q == "") {
