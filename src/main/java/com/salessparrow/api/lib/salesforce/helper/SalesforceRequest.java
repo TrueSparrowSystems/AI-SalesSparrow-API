@@ -1,26 +1,25 @@
-package com.salessparrow.api.lib.helper;
+package com.salessparrow.api.lib.salesforce.helper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
-import com.salessparrow.api.lib.salesforce.SalesforceOAuthAccessToken;
 
 @Component
-public class SalesforceOAuthRequest {
+public class SalesforceRequest {
 
   @Autowired
-  private SalesforceOAuthAccessToken getAccessTokenService;
+  private SalesforceOAuthToken getAccessTokenService;
 
-  public <T> T makeRequest(String salesforceUserId, SalesforceOAuthRequestInterface<T> request) {
+  public <T> T makeRequest(String salesforceUserId, SalesforceRequestInterface<T> request) {
     String decryptedAccessToken = getAccessTokenService.fetchAccessToken(salesforceUserId);
 
     try {
       return request.execute(decryptedAccessToken);
     } catch (Exception e) {
       try {
-        decryptedAccessToken = getAccessTokenService.updateAccessToken(salesforceUserId);
+        decryptedAccessToken = getAccessTokenService.updateAndGetRefreshedAccessToken(salesforceUserId);
         return request.execute(decryptedAccessToken);
       } catch (Exception e1) {
         throw new CustomException(
