@@ -10,11 +10,12 @@ import com.salessparrow.api.interceptors.UserAuthInterceptor;
 
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
-  @Autowired
-  private final UserAuthInterceptor userAuthInterceptor;
-
+  
   @Autowired
   private final LoggerInterceptor loggerInterceptor;
+
+  @Autowired
+  private final UserAuthInterceptor userAuthInterceptor;
 
   public InterceptorConfig(UserAuthInterceptor userAuthInterceptor, LoggerInterceptor loggerInterceptor) {
     this.userAuthInterceptor = userAuthInterceptor;
@@ -23,11 +24,11 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
+    registry.addInterceptor(loggerInterceptor)
+        .addPathPatterns("/**");
+
     registry.addInterceptor(userAuthInterceptor)
         .addPathPatterns("/**")
         .excludePathPatterns("/api/v1/auth/salesforce/**");
-
-    registry.addInterceptor(loggerInterceptor)
-        .addPathPatterns("/**");
   }
 }

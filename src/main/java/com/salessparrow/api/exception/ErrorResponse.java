@@ -56,7 +56,6 @@ public class ErrorResponse {
       errorInfo = errorDataMap.get("something_went_wrong");
     }
 
-    logError(message, Integer.parseInt(errorInfo.getHttp_code()), internalErrorIdentifier);
 
     ErrorResponseObject errorResponseObject = new ErrorResponseObject(
         Integer.parseInt(errorInfo.getHttp_code()),
@@ -115,8 +114,6 @@ public class ErrorResponse {
           }
       } 
     }
-
-    logError(message, 400, internalErrorIdentifier);
 
     ErrorResponseObject errorResponseObject = new ErrorResponseObject(
         400,

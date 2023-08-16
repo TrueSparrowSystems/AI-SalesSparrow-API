@@ -44,10 +44,8 @@ public class UserAuthInterceptor implements HandlerInterceptor {
    */
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    logger.info("UserAuthInterceptor: Intercepting request");
     String cookieValue = getCookieValue(request);
-    logger.info("UserAuthInterceptor: Cookie value: {}", cookieValue);
-
+    
     Map<String, Object> userLoginCookieAuthRes = userLoginCookieAuth.validateAndSetCookie(cookieValue);
 
     User user = (User) userLoginCookieAuthRes.get("user");
