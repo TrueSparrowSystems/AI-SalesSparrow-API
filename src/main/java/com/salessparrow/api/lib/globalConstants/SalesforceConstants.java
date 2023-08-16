@@ -30,6 +30,14 @@ public class SalesforceConstants {
     return CoreConstants.salesforceAuthUrl() + "/services/oauth2/token";
   }
 
+  public String salesforceCreateNoteUrl() {
+    return sObjectsPath() + "/ContentNote";
+  }
+
+  public String salesforceAttachNoteUrl() {
+    return sObjectsPath() + "/ContentDocumentLink";
+  }
+
   public String identityUrl() {
     return "/services/oauth2/userinfo";
   }
