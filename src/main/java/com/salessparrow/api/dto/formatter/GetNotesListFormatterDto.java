@@ -17,4 +17,12 @@ import lombok.Data;
 public class GetNotesListFormatterDto {
     private List<String> noteIds;
     private Map<String, NoteEntity> noteMapById;
+
+    public GetNotesListFormatterDto(){
+    }
+
+    public GetNotesListFormatterDto(List<String> noteIds, Map<String, NoteEntity> noteMapById){
+        this.noteIds = noteIds;
+        this.noteMapById = noteMapById;
+    }
 }
