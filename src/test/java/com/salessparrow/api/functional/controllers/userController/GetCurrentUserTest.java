@@ -1,4 +1,4 @@
-package com.salessparrow.api.functional.controllers.authController;
+package com.salessparrow.api.functional.controllers.userController;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,15 +23,21 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dynamobee.exception.DynamobeeException;
+import com.salessparrow.api.domain.SalesforceUser;
 import com.salessparrow.api.helper.Cleanup;
+import com.salessparrow.api.helper.Common;
 import com.salessparrow.api.helper.Scenario;
 import com.salessparrow.api.helper.Setup;
+import com.salessparrow.api.lib.globalConstants.CookieConstants;
+import com.salessparrow.api.repositories.SalesforceUserRepository;
+
+import jakarta.servlet.http.Cookie;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @WebAppConfiguration
-@Import({ Setup.class, Cleanup.class })
-public class GetRedirectUrlTest {
+@Import({ Setup.class, Cleanup.class, Common.class })
+public class GetCurrentUserTest {
   @Autowired
   private ResourceLoader resourceLoader;
 
@@ -43,9 +49,15 @@ public class GetRedirectUrlTest {
 
   @Autowired
   private Cleanup cleanup;
-  
+
+  @Autowired
+  private Common common;
+
+  @Autowired
+  private SalesforceUserRepository salesforceUserRepository;
+
   @BeforeEach
-  public void setUp() throws DynamobeeException {
+  public void setUp() throws DynamobeeException, IOException {
     setup.perform();
   }
 
@@ -55,16 +67,19 @@ public class GetRedirectUrlTest {
   }
 
   @Test
-  public void testGetRedirectUrl() throws Exception{
+  public void testGetCurrentUser() throws Exception{
+    SalesforceUser salesforceUserFixture = common.loadSalesforceUserFixture("classpath:fixtures/controllers/userController/getCurrentUser.fixtures.json");
+    salesforceUserRepository.saveSalesforceUser(salesforceUserFixture);
+
     List<Scenario> testDataItems = loadTestData();
 
     for (Scenario testDataItem : testDataItems) {
       ObjectMapper objectMapper = new ObjectMapper();
       String expectedOutput = objectMapper.writeValueAsString(testDataItem.getOutput());
+      String cookieValue = (String) testDataItem.getInput().get("cookie");
 
-      ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/auth/salesforce/redirect-url")
-        .param("redirect_uri", (String) testDataItem.getInput().get("redirect_uri"))
-        .param("state", (String) testDataItem.getInput().get("state"))
+      ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/current")
+        .cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
         .contentType(MediaType.APPLICATION_JSON));
 
       if(resultActions.andReturn().getResponse().getStatus() == 200) {
@@ -77,7 +92,7 @@ public class GetRedirectUrlTest {
   }
 
   public List<Scenario> loadTestData() throws IOException {
-    String scenariosPath = "classpath:data/controllers/authController/redirectUrl.scenarios.json";
+    String scenariosPath = "classpath:data/controllers/userController/getCurrentUser.scenarios.json";
     Resource resource = resourceLoader.getResource(scenariosPath);
     ObjectMapper objectMapper = new ObjectMapper();
     return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});

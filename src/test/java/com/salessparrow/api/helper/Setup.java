@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Import;
 
+import com.github.dynamobee.Dynamobee;
+import com.github.dynamobee.exception.DynamobeeException;
+
 /**
  * This class is used to create the setup.
  */
@@ -18,16 +21,22 @@ public class Setup {
   @Autowired
   private DropTables dropTables;
   
+  @Autowired
+  private Dynamobee dynamobee;
+  
   /**
    * Create the setup.
    * - Flush the cache
    * - Drop dynamodb tables
+   * - Run migrations
+   * @throws DynamobeeException
    */
-  public void perform() {
+  public void perform() throws DynamobeeException {
     logger.info("Creating setup");
 
     flushCache();
     dropTables();
+    runMigrations();
   }
 
   /**
@@ -42,5 +51,13 @@ public class Setup {
    */
   private void dropTables() {
     dropTables.perform();
+  }
+
+  /**
+   * Run migrations.
+   * @throws DynamobeeException
+   */
+  public void runMigrations() throws DynamobeeException {
+    dynamobee.execute();
   }
 }
