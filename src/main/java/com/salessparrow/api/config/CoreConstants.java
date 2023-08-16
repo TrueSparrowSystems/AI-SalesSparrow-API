@@ -75,4 +75,8 @@ public class CoreConstants {
     String redirectUrisJson = System.getenv("SALESFORCE_WHITELISTED_REDIRECT_URIS");
     return redirectUrisJson.split(",");
   }
+
+  public static String memcachedAddress() {
+    return System.getenv("LOCAL_CACHE_HOST") + ":" + System.getenv("LOCAL_CACHE_PORT") ;
+  }
 }
