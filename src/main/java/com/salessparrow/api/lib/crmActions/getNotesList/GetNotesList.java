@@ -2,7 +2,7 @@ package com.salessparrow.api.lib.crmActions.getNotesList;
 
 import org.springframework.stereotype.Component;
 
-import com.salessparrow.api.domain.SalesforceUser;
+import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.formatter.GetNotesListFormatterDto;
 
 /**
@@ -10,6 +10,6 @@ import com.salessparrow.api.dto.formatter.GetNotesListFormatterDto;
  */
 @Component
 public interface GetNotesList {
-    public GetNotesListFormatterDto getNotesList(SalesforceUser user, String accountId);
+    public GetNotesListFormatterDto getNotesList(User user, String accountId);
 }
 

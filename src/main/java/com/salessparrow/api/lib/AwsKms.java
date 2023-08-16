@@ -12,6 +12,8 @@ import java.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.salessparrow.api.config.CoreConstants;
+import com.salessparrow.api.exception.CustomException;
+import com.salessparrow.api.lib.errorLib.ErrorObject;
 
 /**
  * AWS Key Management Service (KMS) component for encryption and decryption
@@ -44,8 +46,18 @@ public class AwsKms {
         .withKeyId(CoreConstants.kmsKeyId())
         .withPlaintext(ByteBuffer.wrap(token.getBytes()));
 
-    EncryptResult result = kmsClient.encrypt(request);
+    EncryptResult result = null;
+    try {
+      result = kmsClient.encrypt(request);
+    } catch (Exception e) {
+      throw new CustomException(
+          new ErrorObject(
+              "l_ak_et_1",
+              "something_went_wrong",
+              e.getMessage()));
+    }
     return Base64.getEncoder().encodeToString(result.getCiphertextBlob().array());
+
   }
 
   /**
@@ -61,8 +73,17 @@ public class AwsKms {
     DecryptRequest request = new DecryptRequest()
         .withCiphertextBlob(ByteBuffer.wrap(decodedToken))
         .withKeyId(CoreConstants.kmsKeyId());
+    DecryptResult result = null;
 
-    DecryptResult result = kmsClient.decrypt(request);
+    try {
+      result = kmsClient.decrypt(request);
+    } catch (Exception e) {
+      throw new CustomException(
+          new ErrorObject(
+              "l_ak_dt_1",
+              "something_went_wrong",
+              e.getMessage()));
+    }
 
     if (result == null || result.getPlaintext() == null) {
       return null;

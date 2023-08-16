@@ -1,6 +1,7 @@
 package com.salessparrow.api.lib;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.salessparrow.api.exception.CustomException;
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class UtilTest {
@@ -37,8 +39,6 @@ public class UtilTest {
   public void testGetJsonNode_InvalidJson() throws Exception {
     String invalidJsonString = "invalid json";
 
-    JsonNode resultJsonNode = util.getJsonNode(invalidJsonString);
-
-    assertEquals(null, resultJsonNode);
+    assertThrows(CustomException.class, () -> util.getJsonNode(invalidJsonString));
   }
 }

@@ -1,5 +1,7 @@
 package com.salessparrow.api.dto.formatter;
 
+import com.salessparrow.api.dto.entities.CurrentUserEntityDto;
+
 /**
  * Salesforce connect formatter DTO.
  * 

@@ -18,11 +18,12 @@ public class CookieHelper {
   @Autowired
   private LocalCipher localCipher;
 
-  public String getCookieValue(User user, String userKind, String decryptedSalt, Long timestamp) {
+  public String getCookieValue(User user, String userKind, String decryptedSalt) {
 
-    String cookieToken = getCookieToken(user, decryptedSalt, timestamp);
+    Integer currentTimestamp = (int) (System.currentTimeMillis() / 1000);
+    String cookieToken = getCookieToken(user, decryptedSalt, currentTimestamp);
 
-    if (user.getId() == null) {
+    if (user.getExternalUserId() == null) {
       throw new CustomException(
           new ErrorObject(
               "l_ch_gcv_1",
@@ -30,25 +31,28 @@ public class CookieHelper {
               "User is null"));
     }
 
-    return CookieConstants.LATEST_VERSION + ':' + user.getId() + ':' + userKind + ':' + timestamp + ':' + cookieToken;
+    return CookieConstants.LATEST_VERSION + ':' + user.getExternalUserId() + ':' + userKind + ':' + currentTimestamp
+        + ':'
+        + cookieToken;
   }
 
-  public String getCookieToken(User user, String decryptedSalt, Long timestamp) {
+  public String getCookieToken(User user, String decryptedSalt, Integer timestamp) {
 
     String decryptedCookieToken = localCipher.decrypt(decryptedSalt, user.getCookieToken());
     String strSecret = CoreConstants.apiCookieSecret();
-    String stringToSign = user.getId() + ':' + timestamp + ':' + strSecret + ':'
+    String stringToSign = user.getExternalUserId() + ':' + timestamp + ':' + strSecret + ':'
         + decryptedCookieToken.substring(0, 16);
-    String salt = user.getId() + ':' + decryptedCookieToken.substring(decryptedCookieToken.length() - 16) + ':'
+    String salt = user.getExternalUserId() + ':' + decryptedCookieToken.substring(decryptedCookieToken.length() - 16)
+        + ':'
         + strSecret + ':' + timestamp;
     String encryptedCookieToken = localCipher.encrypt(salt, stringToSign);
 
     return encryptedCookieToken;
   }
 
-  public HttpHeaders setCookieInHeaders(String cookieName, String cookieValue, int cookieExpiryInMs,
+  public HttpHeaders setCookieInHeaders(String cookieName, String cookieValue,
       HttpHeaders headers) {
-    Integer cookieExpiryInSecond = cookieExpiryInMs / 1000;
+    int cookieExpiryInSecond = CookieConstants.USER_LOGIN_COOKIE_EXPIRY_IN_SEC;
 
     Cookie cookie = new Cookie(cookieName, cookieValue);
     cookie.setHttpOnly(true);
@@ -63,9 +67,19 @@ public class CookieHelper {
 
   public HttpHeaders setUserCookie(String cookieValue, HttpHeaders headers) {
     String cookieName = CookieConstants.USER_LOGIN_COOKIE_NAME;
-    int cookieExpiry = CookieConstants.USER_LOGIN_COOKIE_EXPIRY_IN_MS;
 
-    headers = setCookieInHeaders(cookieName, cookieValue, cookieExpiry, headers);
+    headers = setCookieInHeaders(cookieName, cookieValue, headers);
+
+    return headers;
+  }
+
+  public HttpHeaders clearUserCookie(HttpHeaders headers) {
+    String cookieName = CookieConstants.USER_LOGIN_COOKIE_NAME;
+    String cookieValue = "";
+    int cookieExpiry = -1;
+
+    headers.add(HttpHeaders.SET_COOKIE, String.format("%s=%s; Max-Age=%d; Path=/",
+        cookieName, cookieValue, cookieExpiry));
 
     return headers;
   }

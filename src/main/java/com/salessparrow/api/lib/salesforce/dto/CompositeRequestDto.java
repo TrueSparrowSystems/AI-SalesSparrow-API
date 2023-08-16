@@ -1,19 +1,19 @@
-package com.salessparrow.api.lib.salesforce;
+package com.salessparrow.api.lib.salesforce.dto;
 
-public class CompositeRequest {
+public class CompositeRequestDto {
   
   private String method;
   private String url;
   private String referenceId;
   private Object body;
   
-  public CompositeRequest(String method, String url, String referenceId) {
+  public CompositeRequestDto(String method, String url, String referenceId) {
     this.method = method;
     this.url = url;
     this.referenceId = referenceId;
   }
 
-  public CompositeRequest(String method, String url, String referenceId, Object body) {
+  public CompositeRequestDto(String method, String url, String referenceId, Object body) {
     this.method = method;
     this.url = url;
     this.referenceId = referenceId;

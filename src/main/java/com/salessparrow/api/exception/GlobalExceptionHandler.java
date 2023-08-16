@@ -1,7 +1,7 @@
 package com.salessparrow.api.exception;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.errorLib.ErrorResponseObject;
@@ -24,6 +25,27 @@ public class GlobalExceptionHandler {
 
   @Autowired
   private ErrorResponse er;
+
+  /**
+   * Handle 404. Catches the exception for undefined endpoints 
+   * 
+   * @param NoHandlerFoundException
+   * 
+   * @return ResponseEntity<ErrorResponseObject>
+   */
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ErrorResponseObject> handleNoHandlerFoundException(NoHandlerFoundException ex) {
+      ErrorResponseObject errorResponse = null;
+
+      errorResponse = er.getErrorResponse(
+        "resource_not_found",
+          "a_e_geh_nf_1", 
+          "handleNoHandlerFoundException");
+
+      return ResponseEntity.status(errorResponse.getHttpCode())
+        .body(errorResponse);
+    }
+
 
   /**
    * Handle custom exception
@@ -84,18 +106,18 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ResponseEntity<ErrorResponseObject> handleValidationException(MethodArgumentNotValidException ex) {
-    Map<String, String> errorMap = new HashMap<>();
+    List<String> paramErrorIdentifiers = new ArrayList<>();
 
     for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-      errorMap.put(error.getField(), error.getDefaultMessage());
+      paramErrorIdentifiers.add(error.getDefaultMessage());
     }
-
-    CustomException ce = new CustomException(
-        new ErrorObject(
+    
+    CustomException ce2 = new CustomException(
+        new ParamErrorObject(
             "b_2",
-            "invalid_params",
-            errorMap.toString()));
+            paramErrorIdentifiers.toString(),
+            paramErrorIdentifiers));
 
-    return handleCustomException(ce);
+    return handleCustomException(ce2);
   }
 }

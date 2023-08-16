@@ -22,6 +22,7 @@ import com.salessparrow.api.lib.CookieHelper;
 import com.salessparrow.api.services.salesforce.AuthService;
 import com.salessparrow.api.services.salesforce.AuthService.AuthServiceDto;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -63,5 +64,15 @@ public class AuthController {
     salesforceConnectResponse.setCurrent_user(authServiceResponse.getCurrentUser());
 
     return ResponseEntity.ok().headers(headers).body(salesforceConnectResponse);
+  }
+
+  @PostMapping("/logout")
+  public ResponseEntity<String> logout(HttpServletRequest request) {
+    logger.info("User logout request received");
+
+    HttpHeaders headers = new HttpHeaders();
+    headers = cookieHelper.clearUserCookie(headers);
+
+    return ResponseEntity.ok().headers(headers).body(null);
   }
 }

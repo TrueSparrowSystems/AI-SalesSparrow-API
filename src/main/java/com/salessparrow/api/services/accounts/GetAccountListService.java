@@ -3,7 +3,7 @@ package com.salessparrow.api.services.accounts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.salessparrow.api.domain.SalesforceUser;
+import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.formatter.GetAccountsFormatterDto;
 import com.salessparrow.api.lib.crmActions.getAccounts.GetAccountsFactory;
 
@@ -15,7 +15,7 @@ public class GetAccountListService {
   private GetAccountsFactory getAccountsFactory;
   
   public GetAccountsFormatterDto getAccounts(HttpServletRequest request, String q) {
-    SalesforceUser user = (SalesforceUser) request.getAttribute("user");
+    User user = (User) request.getAttribute("user");
 
     String formattedSearchString = formatSearchString(q);
     return getAccountsFactory.getAccounts(user, formattedSearchString);

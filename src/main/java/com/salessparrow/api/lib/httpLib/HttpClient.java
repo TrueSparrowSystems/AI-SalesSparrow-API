@@ -47,7 +47,7 @@ public class HttpClient {
 
     WebClient webClient = WebClient.builder().build();
 
-    WebClient.RequestHeadersSpec<?> request = webClient.post()
+    WebClient.RequestHeadersSpec<?> request = webClient.get()
       .uri(url);
 
     if (headers != null) {

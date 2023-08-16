@@ -22,15 +22,15 @@ public class CoreConstants {
   }
 
   public static String awsAccessKeyId() {
-    return System.getenv("SALESSPARROW_ACCESS_KEY_ID");
+    return System.getenv("AWS_IAM_ACCESS_KEY_ID");
   }
 
   public static String awsSecretAccessKey() {
-    return System.getenv("SALESSPARROW_SECRET_ACCESS_KEY");
+    return System.getenv("AWS_IAM_SECRET_ACCESS_KEY");
   }
 
   public static String awsRegion() {
-    return System.getenv("SALESSPARROW_REGION");
+    return System.getenv("AWS_IAM_REGION");
   }
 
   public static String cacheClusterId() {
@@ -71,7 +71,8 @@ public class CoreConstants {
     return "";
   }
 
-  public static String memcachedAddress() {
-    return System.getenv("LOCAL_CACHE_HOST") + ":" + System.getenv("LOCAL_CACHE_PORT") ;
+  public static String[] getWhitelistedRedirectUris() {
+    String redirectUrisJson = System.getenv("SALESFORCE_WHITELISTED_REDIRECT_URIS");
+    return redirectUrisJson.split(",");
   }
 }

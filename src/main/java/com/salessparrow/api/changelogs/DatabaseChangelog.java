@@ -6,11 +6,8 @@ import org.slf4j.LoggerFactory;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.model.AttributeDefinition;
 import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
-import com.amazonaws.services.dynamodbv2.model.GlobalSecondaryIndex;
 import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
 import com.amazonaws.services.dynamodbv2.model.KeyType;
-import com.amazonaws.services.dynamodbv2.model.Projection;
-import com.amazonaws.services.dynamodbv2.model.ProjectionType;
 import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
 import com.github.dynamobee.changeset.ChangeLog;
 import com.github.dynamobee.changeset.ChangeSet;
@@ -28,24 +25,14 @@ public class DatabaseChangelog {
 		CreateTableRequest request = new CreateTableRequest()
 				.withTableName(tableName)
 				.withAttributeDefinitions(
-						new AttributeDefinition("id", ScalarAttributeType.S),
 						new AttributeDefinition("external_organization_id",
 								ScalarAttributeType.S))
 				.withKeySchema(
-						new KeySchemaElement("id", KeyType.HASH))
-				.withBillingMode("PAY_PER_REQUEST")
-				.withGlobalSecondaryIndexes(
-						new GlobalSecondaryIndex()
-								.withIndexName("external_organization_id_index")
-								.withKeySchema(
-										new KeySchemaElement(
-												"external_organization_id",
-												KeyType.HASH))
-								.withProjection(new Projection()
-										.withProjectionType(ProjectionType.ALL)));
+						new KeySchemaElement("external_organization_id", KeyType.HASH))
+				.withBillingMode("PAY_PER_REQUEST");
 
 		db.createTable(request);
-		System.out.println("Done creating table: " + tableName);
+		logger.info("Done creating table: " + tableName);
 	}
 
 	@ChangeSet(order = "002", id = "002", author = "testAuthor")
@@ -56,20 +43,10 @@ public class DatabaseChangelog {
 		CreateTableRequest request = new CreateTableRequest()
 				.withTableName(tableName)
 				.withAttributeDefinitions(
-						new AttributeDefinition("id", ScalarAttributeType.S),
-						new AttributeDefinition("salesforce_user_id", ScalarAttributeType.S))
+						new AttributeDefinition("external_user_id", ScalarAttributeType.S))
 				.withKeySchema(
-						new KeySchemaElement("id", KeyType.HASH))
-				.withBillingMode("PAY_PER_REQUEST")
-				.withGlobalSecondaryIndexes(
-						new GlobalSecondaryIndex()
-								.withIndexName("salesforce_user_id_index")
-								.withKeySchema(
-										new KeySchemaElement(
-												"salesforce_user_id",
-												KeyType.HASH))
-								.withProjection(new Projection()
-										.withProjectionType(ProjectionType.ALL)));
+						new KeySchemaElement("external_user_id", KeyType.HASH))
+				.withBillingMode("PAY_PER_REQUEST");
 
 		db.createTable(request);
 
@@ -84,19 +61,10 @@ public class DatabaseChangelog {
 		CreateTableRequest request = new CreateTableRequest()
 				.withTableName(tableName)
 				.withAttributeDefinitions(
-						new AttributeDefinition("id", ScalarAttributeType.S),
 						new AttributeDefinition("external_user_id", ScalarAttributeType.S))
 				.withKeySchema(
-						new KeySchemaElement("id", KeyType.HASH))
-				.withBillingMode("PAY_PER_REQUEST")
-				.withGlobalSecondaryIndexes(
-						new GlobalSecondaryIndex()
-								.withIndexName("external_user_id_index")
-								.withKeySchema(
-										new KeySchemaElement("external_user_id",
-												KeyType.HASH))
-								.withProjection(new Projection()
-										.withProjectionType(ProjectionType.ALL)));
+						new KeySchemaElement("external_user_id", KeyType.HASH))
+				.withBillingMode("PAY_PER_REQUEST");
 
 		db.createTable(request);
 

@@ -10,7 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.salessparrow.api.domain.User;
 import com.salessparrow.api.lib.CookieHelper;
@@ -27,6 +28,8 @@ public class UserAuthInterceptor implements HandlerInterceptor {
   @Autowired
   private UserLoginCookieAuth userLoginCookieAuth;
 
+  Logger logger = LoggerFactory.getLogger(UserAuthInterceptor.class);
+
   @Autowired
   private CookieHelper cookieHelper;
 
@@ -41,25 +44,21 @@ public class UserAuthInterceptor implements HandlerInterceptor {
    */
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    System.out.println("UserAuthInterceptor: Intercepting request");
     String cookieValue = getCookieValue(request);
-
+    
     Map<String, Object> userLoginCookieAuthRes = userLoginCookieAuth.validateAndSetCookie(cookieValue);
 
     User user = (User) userLoginCookieAuthRes.get("user");
-    User safeUserDto = new ModelMapper().map(user, User.class);
-    request.setAttribute("user", safeUserDto);
+    request.setAttribute("user", user);
 
     String userLoginCookieValue = (String) userLoginCookieAuthRes.get("userLoginCookieValue");
 
     String cookieName = CookieConstants.USER_LOGIN_COOKIE_NAME;
-    int cookieExpiry = CookieConstants.USER_LOGIN_COOKIE_EXPIRY_IN_MS;
 
     HttpHeaders headers = new HttpHeaders();
-    headers = cookieHelper.setCookieInHeaders(cookieName, userLoginCookieValue,
-        cookieExpiry, headers);
-    response.addHeader(HttpHeaders.SET_COOKIE,
-        headers.getFirst(HttpHeaders.SET_COOKIE));
+    headers = cookieHelper.setCookieInHeaders(cookieName, userLoginCookieValue, headers);
+
+    response.addHeader(HttpHeaders.SET_COOKIE, headers.getFirst(HttpHeaders.SET_COOKIE));
 
     return true;
   }

@@ -1,5 +1,6 @@
 package com.salessparrow.api.controllers;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.salessparrow.api.dto.NoteDto;
 import com.salessparrow.api.dto.formatter.GetAccountsFormatterDto;
+import com.salessparrow.api.dto.formatter.GetNoteDetailsFormatterDto;
 import com.salessparrow.api.dto.formatter.GetNotesListFormatterDto;
 import com.salessparrow.api.services.accounts.GetAccountListService;
+import com.salessparrow.api.services.accounts.GetNoteDetailsService;
 import com.salessparrow.api.services.accounts.GetNotesListService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,11 +28,16 @@ import jakarta.validation.Valid;
 @Validated
 public class AccountController {
 
+  private Logger logger = org.slf4j.LoggerFactory.getLogger(AccountController.class);
+
   @Autowired
   private GetAccountListService getAccountListService;
 
   @Autowired
   private GetNotesListService getNotesListService;
+
+  @Autowired
+  private GetNoteDetailsService getNoteDetailsService;
 
   @PostMapping("/{account_id}/notes")
   public ResponseEntity<String> addNoteToAccount(
@@ -40,22 +48,31 @@ public class AccountController {
   }
 
   @GetMapping("")
-  public GetAccountsFormatterDto getAccounts(HttpServletRequest request, @RequestParam String q) {
+  public ResponseEntity<GetAccountsFormatterDto> getAccounts(HttpServletRequest request, @RequestParam String q) {
+    logger.info("Request received");
 
-    return getAccountListService.getAccounts(request, q);
+    GetAccountsFormatterDto getAccountsResponse = getAccountListService.getAccounts(request, q);
+
+    return ResponseEntity.ok().body(getAccountsResponse);
   }
 
   @GetMapping("/{account_id}/notes")
-  public GetNotesListFormatterDto getNotesList(HttpServletRequest request,@PathVariable("account_id") String accountId) {
+  public ResponseEntity<GetNotesListFormatterDto> getNotesList(HttpServletRequest request,@PathVariable("account_id") String accountId) {
 
-    return getNotesListService.getNotesList(request, accountId);
+    GetNotesListFormatterDto getNotesListResponse = getNotesListService.getNotesList(request, accountId);
+
+    return ResponseEntity.ok().body(getNotesListResponse);
   }
   
   @GetMapping("/{account_id}/notes/{note_id}")
-  public ResponseEntity<String> getNoteFromAccount(
+  public ResponseEntity<GetNoteDetailsFormatterDto> getNoteFromAccount(
+    HttpServletRequest request,
     @PathVariable("account_id") String accountId, 
     @PathVariable("note_id") String noteId
   ) {
-    return ResponseEntity.ok("Note from Account");
+
+    GetNoteDetailsFormatterDto getNoteDetailsResponse = getNoteDetailsService.getNoteDetails(request, noteId);
+    
+    return ResponseEntity.ok().body(getNoteDetailsResponse);
   }
 }

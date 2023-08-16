@@ -1,13 +1,9 @@
 package com.salessparrow.api.repositories;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
-import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.salessparrow.api.domain.SalesforceOrganization;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.salessparrow.api.exception.CustomException;
+import com.salessparrow.api.lib.errorLib.ErrorObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -29,35 +25,34 @@ public class SalesforceOrganizationRepository {
      * @return SalesforceOrganization
      */
     public SalesforceOrganization saveSalesforceOrganization(SalesforceOrganization sfo) {
-        dynamoDBMapper.save(sfo);
+        try {
+            dynamoDBMapper.save(sfo);
+        } catch (Exception e) {
+            throw new CustomException(new ErrorObject(
+                    "r_sor_sso_1",
+                    "something_went_wrong",
+                    e.getMessage()));
+        }
         return sfo;
     }
 
     /**
-     * Retrieves a SalesforceOrganization from the salesforce_organizations table
-     * based on externalOrganizationId.
+     * Gets a SalesforceOrganization from the salesforce_organizations table by
+     * externalOrganizationId.
      * 
      * @param externalOrganizationId
      * 
      * @return SalesforceOrganization
      */
     public SalesforceOrganization getSalesforceOrganizationByExternalOrganizationId(String externalOrganizationId) {
-        Map<String, AttributeValue> expressionAttributeValues = new HashMap<>();
-        expressionAttributeValues.put(":val", new AttributeValue().withS(externalOrganizationId));
-
-        DynamoDBQueryExpression<SalesforceOrganization> queryExpression = new DynamoDBQueryExpression<SalesforceOrganization>()
-                .withConsistentRead(false)
-                .withIndexName("external_organization_id_index")
-                .withKeyConditionExpression("external_organization_id= :val")
-                .withExpressionAttributeValues(expressionAttributeValues);
-
-        PaginatedQueryList<SalesforceOrganization> queryResult = dynamoDBMapper.query(SalesforceOrganization.class,
-                queryExpression);
-
-        if (queryResult != null && !queryResult.isEmpty()) {
-            return queryResult.get(0);
-        } else {
-            return null;
+        try {
+            return dynamoDBMapper.load(SalesforceOrganization.class, externalOrganizationId);
+        } catch (Exception e) {
+            throw new CustomException(
+                    new ErrorObject(
+                            "r_sor_gsobeoi_1",
+                            "something_went_wrong",
+                            e.getMessage()));
         }
     }
 }

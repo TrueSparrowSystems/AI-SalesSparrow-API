@@ -1,4 +1,4 @@
-package com.salessparrow.api.lib.salesforce;
+package com.salessparrow.api.lib.salesforce.helper;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * SalesforceQueries is a class for building the Salesforce queries.
  */
 @Component
-public class SalesforceQueries {
+public class SalesforceQueryBuilder {
   
   public String getAccountsQuery(String q) {
     if (q == "") {
@@ -47,4 +47,9 @@ public class SalesforceQueries {
 
     return queryBuilder.toString();
   }
+
+  public String getNoteDetailsUrl(String noteId){
+    return "SELECT Id, Title, TextPreview, CreatedBy.Name, LastModifiedDate FROM ContentNote WHERE Id = '" + noteId + "'";
+  }
+
 }

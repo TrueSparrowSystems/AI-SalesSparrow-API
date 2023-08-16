@@ -2,17 +2,23 @@ package com.salessparrow.api.dto.entities;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
 /**
  * NoteListEntity is a DTO class for the NoteListEntity.
  */
-public class NoteListEntity {
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class NoteEntity {
     private String id;
     private String creator;
     private String textPreview;
     private Date lastModifiedTime;
 
+    public NoteEntity() {
+    }
 
-    public NoteListEntity(String id, String creator, String text_preview, Date last_modified_time) {
+    public NoteEntity(String id, String creator, String text_preview, Date last_modified_time) {
         this.id = id;
         this.creator = creator;
         this.textPreview = text_preview;
