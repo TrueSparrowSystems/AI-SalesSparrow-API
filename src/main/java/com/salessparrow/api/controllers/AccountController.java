@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.salessparrow.api.dto.NoteDto;
+import com.salessparrow.api.dto.formatter.CreateNoteFormatterDto;
 import com.salessparrow.api.dto.formatter.GetAccountsFormatterDto;
 import com.salessparrow.api.dto.formatter.GetNoteDetailsFormatterDto;
 import com.salessparrow.api.dto.formatter.GetNotesListFormatterDto;
+import com.salessparrow.api.services.accounts.CreateNoteService;
 import com.salessparrow.api.services.accounts.GetAccountListService;
 import com.salessparrow.api.services.accounts.GetNoteDetailsService;
 import com.salessparrow.api.services.accounts.GetNotesListService;
@@ -39,12 +41,18 @@ public class AccountController {
   @Autowired
   private GetNoteDetailsService getNoteDetailsService;
 
+  @Autowired
+  private CreateNoteService createNoteService;
+
   @PostMapping("/{account_id}/notes")
-  public ResponseEntity<String> addNoteToAccount(
+  public ResponseEntity<CreateNoteFormatterDto> addNoteToAccount(
+    HttpServletRequest request,
     @PathVariable("account_id") String accountId, 
     @Valid @RequestBody NoteDto note
   ) {
-    return ResponseEntity.ok("Note added to Account");
+    CreateNoteFormatterDto createNoteFormatterDto = createNoteService.createNote(request, accountId, note);
+
+    return ResponseEntity.ok().body(createNoteFormatterDto);
   }
 
   @GetMapping("")
