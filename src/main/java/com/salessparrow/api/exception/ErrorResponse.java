@@ -138,9 +138,7 @@ public class ErrorResponse {
    * @return void
    */
   private void logError(String message, int httpCode, String internal_error_identifier) {
-    logger.error("Error message: " + message);
-    logger.error("Error code: " + httpCode);
-    logger.error("Internal error identifier: " + internal_error_identifier);
+    logger.error("Error code:{} Internal error identifier: {} Error message: {}", httpCode, internal_error_identifier, message);
   }
 
 }

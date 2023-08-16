@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.errorLib.ErrorResponseObject;
@@ -24,6 +25,27 @@ public class GlobalExceptionHandler {
 
   @Autowired
   private ErrorResponse er;
+
+  /**
+   * Handle 404. Catches the exception for undefined endpoints 
+   * 
+   * @param NoHandlerFoundException
+   * 
+   * @return ResponseEntity<ErrorResponseObject>
+   */
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ErrorResponseObject> handleNoHandlerFoundException(NoHandlerFoundException ex) {
+      ErrorResponseObject errorResponse = null;
+
+      errorResponse = er.getErrorResponse(
+        "resource_not_found",
+          "a_e_geh_nf_1", 
+          "handleNoHandlerFoundException");
+
+      return ResponseEntity.status(errorResponse.getHttpCode())
+        .body(errorResponse);
+    }
+
 
   /**
    * Handle custom exception
