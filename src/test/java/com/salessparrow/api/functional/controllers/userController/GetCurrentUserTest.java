@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.util.List;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,20 +22,19 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dynamobee.exception.DynamobeeException;
-import com.salessparrow.api.domain.SalesforceUser;
 import com.salessparrow.api.helper.Cleanup;
 import com.salessparrow.api.helper.Common;
+import com.salessparrow.api.helper.FixtureData;
+import com.salessparrow.api.helper.LoadFixture;
 import com.salessparrow.api.helper.Scenario;
 import com.salessparrow.api.helper.Setup;
 import com.salessparrow.api.lib.globalConstants.CookieConstants;
-import com.salessparrow.api.repositories.SalesforceUserRepository;
-
 import jakarta.servlet.http.Cookie;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @WebAppConfiguration
-@Import({ Setup.class, Cleanup.class, Common.class })
+@Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
 public class GetCurrentUserTest {
   @Autowired
   private ResourceLoader resourceLoader;
@@ -54,7 +52,7 @@ public class GetCurrentUserTest {
   private Common common;
 
   @Autowired
-  private SalesforceUserRepository salesforceUserRepository;
+  private LoadFixture loadFixture;
 
   @BeforeEach
   public void setUp() throws DynamobeeException, IOException {
@@ -68,8 +66,8 @@ public class GetCurrentUserTest {
 
   @Test
   public void testGetCurrentUser() throws Exception{
-    SalesforceUser salesforceUserFixture = common.loadSalesforceUserFixture("classpath:fixtures/controllers/userController/getCurrentUser.fixtures.json");
-    salesforceUserRepository.saveSalesforceUser(salesforceUserFixture);
+    FixtureData fixtureData = common.loadFixture("classpath:fixtures/controllers/userController/getCurrentUser.fixtures.json");
+    loadFixture.perform(fixtureData);
 
     List<Scenario> testDataItems = loadTestData();
 
