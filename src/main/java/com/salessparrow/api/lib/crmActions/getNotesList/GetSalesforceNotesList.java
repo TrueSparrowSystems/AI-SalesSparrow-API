@@ -110,6 +110,13 @@ public class GetSalesforceNotesList implements GetNotesList{
         return getNotesListFormatterDto;
     }
 
+    /**
+     * Get the list of notes for a given account
+     * 
+     * @param responseBody
+     * 
+     * @return List<String>
+     */
     private List<String> getNotesIds(String responseBody) {
         List<String> notesIds = new ArrayList<String>();
 
@@ -136,6 +143,13 @@ public class GetSalesforceNotesList implements GetNotesList{
         return notesIds;
     }
 
+    /**
+     * Get the list of notes for a given account
+     * 
+     * @param responseBody
+     * 
+     * @return GetNotesListFormatterDto
+     */
     private GetNotesListFormatterDto formatNotesList(String responseBody){
         List<String> noteIds = new ArrayList<String>();
         Map<String,NoteEntity> noteIdToEntityMap = new HashMap<>();

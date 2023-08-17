@@ -34,7 +34,7 @@ public class SalesforceGetNoteContent {
         Integer timeoutMillis = salesforceConstants.timeoutMillis();
 
         SalesforceRequestInterface<HttpClient.HttpResponse> request = (token, instanceUrl) -> {
-            String noteContentQuery = salesforceConstants.salesfroceContentUrl(instanceUrl, noteId);
+            String noteContentQuery = salesforceConstants.salesforceNotesContentUrl(instanceUrl, noteId);
           
             Map<String, String> headers = new HashMap<>();
             headers.put("Authorization", "Bearer " + token);

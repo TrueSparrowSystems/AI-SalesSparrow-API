@@ -81,6 +81,14 @@ public class GetSalesforceNoteDetails implements GetNoteDetails {
 
     }
 
+    /**
+     * Format the response of the note details
+     * 
+     * @param noteDetailsResponse
+     * @param noteContentResponse
+     * 
+     * @return GetNoteDetailsFormatterDto
+     */
     private GetNoteDetailsFormatterDto formatNoteDetails(String noteDetailsResponse, String noteContentResponse) {
         NoteDetailEntity noteDetailEntity = new NoteDetailEntity();
         try {
