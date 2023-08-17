@@ -21,6 +21,9 @@ import com.salessparrow.api.config.CoreConstants;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 
+/**
+ * Memcached implementation of the Cache interface.
+ */
 public class Memcached implements Cache {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Memcached.class);
@@ -31,6 +34,12 @@ public class Memcached implements Cache {
 
   private int expiration;
 
+  /**
+   * Constructor
+   * 
+   * @param name
+   * @param expiration
+   */
   public Memcached(String name, int expiration) {
     this.name = name;
     this.expiration = expiration;
@@ -77,16 +86,31 @@ public class Memcached implements Cache {
     } 
   }
 
+  /**
+   * Returns the name of the cache.
+   * 
+   * @param name
+   */
   @Override
   public String getName() {
     return name;
   }
 
+  /**
+   * Returns the native cache.
+   * 
+   * @param name
+   */
   @Override
   public Object getNativeCache() {
     return cache;
   }
 
+  /**
+   * Returns the value associated with the key.
+   * 
+   * @param key
+   */
   @Override
   public ValueWrapper get(final Object key) {
     String keyString = name + "_" + key.toString();
@@ -105,6 +129,12 @@ public class Memcached implements Cache {
     return new SimpleValueWrapper(value);
   }
 
+  /**
+   * Associates the value with the key.
+   * 
+   * @param key
+   * @param value
+   */
   @Override
   public void put(final Object key, final Object value) {
     String keyString = name + "_" + key.toString();
@@ -114,7 +144,11 @@ public class Memcached implements Cache {
     }
   }
 
-
+  /**
+   * Removes the key and its associated value.
+   * 
+   * @param key
+   */
   @Override
   public void evict(final Object key) {
     String keyString = name + "_" + key.toString();
@@ -122,22 +156,45 @@ public class Memcached implements Cache {
     LOGGER.info("cache delete for key: " + keyString);
   }
 
+  /**
+   * Clears the cache.
+   * 
+   * @param key
+   */
   @Override
   public void clear() {
     cache.flush();
     LOGGER.info("cache clear completed");
   }
 
+  /**
+   * Returns the value associated with the key.
+   * 
+   * @param key
+   * @param aClass
+   */
   @Override
   public <T> T get(Object o, Class<T> aClass) {
     return null;
   }
 
+  /**
+   * Returns the value associated with the key.
+   * 
+   * @param key
+   * @param callable
+   */
   @Override
   public <T> T get(Object o, Callable<T> callable) {
     return null;
   }
 
+  /**
+   * Associates the value with the key if absent.
+   * 
+   * @param key
+   * @param value
+   */
   @Override
   public ValueWrapper putIfAbsent(Object o, Object o1) {
     return null;
