@@ -10,23 +10,28 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salessparrow.api.domain.SalesforceUser;
 import com.salessparrow.api.dto.NoteDto;
 import com.salessparrow.api.dto.formatter.CreateNoteFormatterDto;
+import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.Base64Helper;
+import com.salessparrow.api.lib.Util;
+import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
+import com.salessparrow.api.lib.salesforce.dto.SalesforceAttachNoteDto;
+import com.salessparrow.api.lib.salesforce.dto.SalesforceCreateNoteDto;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
-import com.salessparrow.api.lib.salesforce.formatSalesforceEntities.FormatSalesforceCreateNote;
 
 /**
  * CreateSalesforceNote is a class that creates a note in Salesforce and attaches it to an account.
  */
 @Component
 public class CreateSalesforceNote implements CreateNoteInterface {
-
-  Logger logger = LoggerFactory.getLogger(CreateSalesforceNote.class);
   
   @Autowired
   private SalesforceConstants salesforceConstants;
@@ -46,20 +51,6 @@ public class CreateSalesforceNote implements CreateNoteInterface {
    * @return CreateNoteFormatterDto
    */
   public CreateNoteFormatterDto createNote(SalesforceUser user, String accountId, NoteDto note) {
-    CreateNoteFormatterDto createNoteFormatterDto = createSalesforceNote(user, accountId, note);
-
-    return formatResponse(createNoteFormatterDto);
-  }
-
-  /**
-   * Create a note in Salesforce and attach it to an account.
-   *
-   * @param user
-   * @param accountId
-   * @param note
-   * @return CreateNoteFormatterDto
-   */
-  private CreateNoteFormatterDto createSalesforceNote(SalesforceUser user, String accountId, NoteDto note) {
     String salesforceUserId = user.getExternalUserId();
 
     String noteTitle = getNoteTitleFromContent(note);
@@ -93,18 +84,52 @@ public class CreateSalesforceNote implements CreateNoteInterface {
 
     HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId);
 
-    FormatSalesforceCreateNote formatSalesforceCreateNote = new FormatSalesforceCreateNote();
-    CreateNoteFormatterDto createNoteFormatterDto = formatSalesforceCreateNote.formatCreateNote(response.getResponseBody());
-
-    return createNoteFormatterDto;
+    return parseResponse(response.getResponseBody());
   }
 
   /**
-   * Format the response from Salesforce.
+   * Parse the response from Salesforce.
+   *
    * @param createNoteFormatterDto
    * @return CreateNoteFormatterDto - formatted response
    */
-  private CreateNoteFormatterDto formatResponse(CreateNoteFormatterDto createNoteFormatterDto) {
+  private CreateNoteFormatterDto parseResponse(String createNoteResponse) {
+    Util util = new Util();
+    JsonNode rootNode = util.getJsonNode(createNoteResponse);
+
+    JsonNode createNoteNode = rootNode.get("compositeResponse").get(0).get("body");
+
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+    SalesforceCreateNoteDto salesforceCreateNoteDto = mapper.convertValue(createNoteNode, SalesforceCreateNoteDto.class);
+
+    if (salesforceCreateNoteDto.getSuccess().equals("false")) {
+      String[] errors = salesforceCreateNoteDto.getErrors();
+
+      throw new CustomException(
+      new ErrorObject(
+          "l_s_fse_fscn_fcn_1",
+          "internal_server_error",
+          errors.toString())); 
+    }
+
+    
+    JsonNode attachNoteNode = rootNode.get("compositeResponse").get(1).get("body");
+    SalesforceAttachNoteDto salesforceAttachNoteDto = mapper.convertValue(attachNoteNode, SalesforceAttachNoteDto.class);
+
+    if (salesforceAttachNoteDto.getSuccess().equals("false")) {
+      String[] errors = salesforceAttachNoteDto.getErrors();
+
+      throw new CustomException(
+      new ErrorObject(
+          "l_s_fse_fscn_fcn_2",
+          "internal_server_error",
+          errors.toString())); 
+    }
+
+    CreateNoteFormatterDto createNoteFormatterDto = new CreateNoteFormatterDto();
+    createNoteFormatterDto.setNoteId(salesforceCreateNoteDto.getId());
+
     return createNoteFormatterDto;
   }
 
