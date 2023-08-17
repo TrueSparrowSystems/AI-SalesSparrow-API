@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import com.salessparrow.api.lib.ErrorEmailService;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.errorLib.ErrorResponseObject;
 import com.salessparrow.api.lib.errorLib.ParamErrorObject;
@@ -25,6 +26,9 @@ public class GlobalExceptionHandler {
 
   @Autowired
   private ErrorResponse er;
+
+  @Autowired
+  private ErrorEmailService errorEmailService;
 
   /**
    * Handle 404. Catches the exception for undefined endpoints 
@@ -80,6 +84,12 @@ public class GlobalExceptionHandler {
 
     logger.error("Error response: {}", errorResponse);
 
+    // Send email for 500 errors only
+    if (errorResponse.getHttpCode() == 500) {
+      StackTraceElement[] stackTrace = ex.getStackTrace();
+      errorEmailService.sendErrorMail("handleCustomException", errorResponse, stackTrace);
+    }
+
     return ResponseEntity.status(errorResponse.getHttpCode())
         .body(errorResponse);
   }
@@ -99,6 +109,9 @@ public class GlobalExceptionHandler {
     ErrorResponseObject errorResponse = er.getErrorResponse("something_went_wrong",
         "e_geh_hre_1", ex.getMessage());
 
+        StackTraceElement[] stackTrace = ex.getStackTrace();
+        errorEmailService.sendErrorMail("RuntimeException", errorResponse, stackTrace);
+
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body(errorResponse);
   }
@@ -116,7 +129,7 @@ public class GlobalExceptionHandler {
         new ParamErrorObject(
             "b_2",
             paramErrorIdentifiers.toString(),
-            paramErrorIdentifiers));
+            paramErrorIdentifiers));           
 
     return handleCustomException(ce2);
   }

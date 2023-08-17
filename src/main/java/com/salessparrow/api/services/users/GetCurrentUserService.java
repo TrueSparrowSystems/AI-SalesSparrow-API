@@ -14,12 +14,12 @@ import jakarta.servlet.http.HttpServletRequest;
 public class GetCurrentUserService {
 
   public CurrentUserEntityDto getCurrentUser(HttpServletRequest request) {
-    User user = (User) request.getAttribute("user");
+    User currentUser = (User) request.getAttribute("current_user");
 
     CurrentUserEntityDto currentUserEntityDto = new CurrentUserEntityDto();
-    currentUserEntityDto.setId(user.getExternalUserId());
-    currentUserEntityDto.setName(user.getName());
-    currentUserEntityDto.setEmail(user.getEmail());
+    currentUserEntityDto.setId(currentUser.getExternalUserId());
+    currentUserEntityDto.setName(currentUser.getName());
+    currentUserEntityDto.setEmail(currentUser.getEmail());
 
     return currentUserEntityDto;
   }

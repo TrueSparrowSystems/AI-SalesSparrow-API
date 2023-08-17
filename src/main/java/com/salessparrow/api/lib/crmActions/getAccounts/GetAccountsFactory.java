@@ -17,6 +17,14 @@ public class GetAccountsFactory {
   @Autowired
   private GetSalesforceAccounts getSalesforceAccounts;
 
+  /**
+   * Get the list of accounts for a given searchterm.
+   * 
+   * @param user
+   * @param searchTerm
+   * 
+   * @return GetAccountsFormatterDto
+   **/
   public GetAccountsFormatterDto getAccounts(User user, String searchTerm) {
 
     switch(user.getUserKind()) {

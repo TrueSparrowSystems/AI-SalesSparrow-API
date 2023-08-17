@@ -10,11 +10,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class SalesforceQueryBuilder {
   
-  public String getAccountsQuery(String q) {
-    if (q == "") {
+  /**
+   * Get the list of accounts for a given searchTerm
+   * 
+   * @param searchTerm
+   * 
+   * @return String
+   */
+  public String getAccountsQuery(String searchTerm) {
+    if (searchTerm == "") {
       return "SELECT Id, Name FROM Account ORDER BY LastModifiedDate DESC LIMIT 20";
     } 
-    return "SELECT Id, Name FROM Account WHERE Name LIKE '%25"+q+"%25' ORDER BY LastModifiedDate DESC LIMIT 20";
+    return "SELECT Id, Name FROM Account WHERE Name LIKE '%25"+searchTerm+"%25' ORDER BY LastModifiedDate DESC LIMIT 20";
   }
 
   /**

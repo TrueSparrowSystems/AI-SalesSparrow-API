@@ -27,7 +27,7 @@ public class UserLoginCookieAuth {
   private String userKind;
   private Integer timestampInCookie;
   private String token;
-  private User user;
+  private User currentUser;
   private String userLoginCookieValue;
   private String decryptedEncryptionSalt;
 
@@ -60,7 +60,7 @@ public class UserLoginCookieAuth {
     setCookie();
 
     Map<String, Object> resultMap = new HashMap<>();
-    resultMap.put("user", user);
+    resultMap.put("current_user", currentUser);
     resultMap.put("userLoginCookieValue", userLoginCookieValue);
 
     return resultMap;
@@ -136,7 +136,7 @@ public class UserLoginCookieAuth {
    */
   private void fetchAndValidateUser() {
 
-    logger.info("Fetching and validating user");
+    logger.info("Fetching and validating current user");
     if (userKind.equals(UserConstants.SALESFORCE_USER_KIND)) {
       logger.info("Fetching and validating salesforce user");
       fetchAndValidateSalesforceUser();
@@ -158,7 +158,7 @@ public class UserLoginCookieAuth {
               "User not found"));
     }
 
-    user = userObj;
+    currentUser = userObj;
   }
 
   /**
@@ -167,11 +167,11 @@ public class UserLoginCookieAuth {
    * @throws RuntimeException
    */
   private void validateCookieToken() {
-    String encryptionSalt = user.getEncryptionSalt();
+    String encryptionSalt = currentUser.getEncryptionSalt();
     decryptedEncryptionSalt = localCipher.decrypt(CoreConstants.encryptionKey(),
         encryptionSalt);
 
-    String generatedToken = cookieHelper.getCookieToken(user,
+    String generatedToken = cookieHelper.getCookieToken(currentUser,
         decryptedEncryptionSalt, timestampInCookie);
     if (!generatedToken.equals(token)) {
       throw new CustomException(
@@ -188,7 +188,7 @@ public class UserLoginCookieAuth {
    * @throws RuntimeException
    */
   private void setCookie() {
-    userLoginCookieValue = cookieHelper.getCookieValue(user, userKind,
+    userLoginCookieValue = cookieHelper.getCookieValue(currentUser, userKind,
         decryptedEncryptionSalt);
   }
 

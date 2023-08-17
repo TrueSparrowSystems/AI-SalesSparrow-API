@@ -26,9 +26,9 @@ public class GetNotesListService {
      **/
     public GetNotesListFormatterDto getNotesList(HttpServletRequest request, String accountId) {
 
-        User user = (User) request.getAttribute("user");
+        User currentUser = (User) request.getAttribute("current_user");
 
-        return getNotesListFactory.getNotesList(user, accountId);
+        return getNotesListFactory.getNotesList(currentUser, accountId);
     }
 
     

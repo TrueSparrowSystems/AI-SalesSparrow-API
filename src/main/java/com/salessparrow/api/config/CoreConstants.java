@@ -71,12 +71,42 @@ public class CoreConstants {
     return "";
   }
 
+  /**
+  * This method returns the list of redirect URIs that are whitelisted in Salesforce connected app for oAuth.
+  *
+  * @return String[]
+  */
   public static String[] getWhitelistedRedirectUris() {
     String redirectUrisJson = System.getenv("SALESFORCE_WHITELISTED_REDIRECT_URIS");
     return redirectUrisJson.split(",");
   }
 
+  /** 
+  * This method returns the memcached address that is going to be used for locals
+  *
+  * @return String
+  */
   public static String memcachedAddress() {
     return System.getenv("LOCAL_CACHE_HOST") + ":" + System.getenv("LOCAL_CACHE_PORT") ;
   }
+
+  /** 
+  * This method returns the email address that will be used to send error emails.
+  * This email address or its domain must be verified in AWS SES.
+  *
+  * @return String
+  */
+  public static String errorEmailFrom() {
+    return System.getenv("ERROR_MAIL_FROM");
+  }
+
+  /** 
+  * This method returns the email address that will receive the error emails.
+  *
+  * @return String
+  */
+  public static String errorEmailTo() {
+    return System.getenv("ERROR_MAIL_TO");
+  }
+
 }

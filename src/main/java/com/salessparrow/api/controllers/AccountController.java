@@ -5,17 +5,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.salessparrow.api.dto.formatter.CreateNoteFormatterDto;
 import com.salessparrow.api.dto.formatter.GetAccountsFormatterDto;
 import com.salessparrow.api.dto.formatter.GetNoteDetailsFormatterDto;
 import com.salessparrow.api.dto.formatter.GetNotesListFormatterDto;
+import com.salessparrow.api.dto.requestMapper.GetAccountsDto;
 import com.salessparrow.api.dto.requestMapper.NoteDto;
 import com.salessparrow.api.services.accounts.CreateNoteService;
 import com.salessparrow.api.services.accounts.GetAccountListService;
@@ -56,10 +57,12 @@ public class AccountController {
   }
 
   @GetMapping("")
-  public ResponseEntity<GetAccountsFormatterDto> getAccounts(HttpServletRequest request, @RequestParam String q) {
+  public ResponseEntity<GetAccountsFormatterDto> getAccounts(
+    HttpServletRequest request, 
+    @Valid @ModelAttribute GetAccountsDto getAccountsDto) {
     logger.info("Request received");
 
-    GetAccountsFormatterDto getAccountsResponse = getAccountListService.getAccounts(request, q);
+    GetAccountsFormatterDto getAccountsResponse = getAccountListService.getAccounts(request, getAccountsDto);
 
     return ResponseEntity.ok().body(getAccountsResponse);
   }
