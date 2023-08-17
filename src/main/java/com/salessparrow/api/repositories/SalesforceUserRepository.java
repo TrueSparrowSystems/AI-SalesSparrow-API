@@ -27,7 +27,7 @@ public class SalesforceUserRepository {
    * 
    * @return SalesforceUser
    */
-  @CachePut(value=CacheConstants.SALESFORCE_USER_CACHE, key="#salesforceUser.externalUserId")
+  @CachePut(value=CacheConstants.SS_SALESFORCE_USER_CACHE, key="#salesforceUser.externalUserId")
   public SalesforceUser saveSalesforceUser(SalesforceUser salesforceUser) {
     try {
       dynamoDBMapper.save(salesforceUser);
@@ -49,7 +49,7 @@ public class SalesforceUserRepository {
    * 
    * @return SalesforceUser
    */
-  @Cacheable(value=CacheConstants.SALESFORCE_USER_CACHE, key="#externalUserId")
+  @Cacheable(value=CacheConstants.SS_SALESFORCE_USER_CACHE, key="#externalUserId")
   public SalesforceUser getSalesforceUserByExternalUserId(String externalUserId) {
     try {
       return dynamoDBMapper.load(SalesforceUser.class, externalUserId);

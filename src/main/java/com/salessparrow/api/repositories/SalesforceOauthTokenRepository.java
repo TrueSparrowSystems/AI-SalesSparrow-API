@@ -27,7 +27,7 @@ public class SalesforceOauthTokenRepository {
    * 
    * @return SalesforceOauthToken
    */
-  @CachePut(value = CacheConstants.SALESFORCE_OAUTH_TOKEN_CACHE, key = "#salesforceOauthToken.externalUserId")
+  @CachePut(value = CacheConstants.SS_SALESFORCE_OAUTH_TOKEN_CACHE, key = "#salesforceOauthToken.externalUserId")
   public SalesforceOauthToken saveSalesforceOauthToken(SalesforceOauthToken salesforceOauthToken) {
     try {
       dynamoDBMapper.save(salesforceOauthToken);
@@ -49,7 +49,7 @@ public class SalesforceOauthTokenRepository {
    * 
    * @return SalesforceOauthToken
    */
-  @Cacheable(value = CacheConstants.SALESFORCE_OAUTH_TOKEN_CACHE, key = "#externalUserId")
+  @Cacheable(value = CacheConstants.SS_SALESFORCE_OAUTH_TOKEN_CACHE, key = "#externalUserId")
   public SalesforceOauthToken getSalesforceOauthTokenByExternalUserId(String externalUserId) {
     try {
       return dynamoDBMapper.load(SalesforceOauthToken.class, externalUserId);
