@@ -40,7 +40,7 @@ public class ErrorEmailService {
         body += "code=" + errorObj.getCode() + "\n";
         body += "message=" + errorObj.getMessage() + "\n";
         body += "internal_error_identifier=" + errorObj.getInternalErrorIdentifier() + "\n";
-        body += "params_error=" + errorObj.getParam_errors() + "\n\n\n";
+        body += "params_error=" + errorObj.getParamErrors() + "\n\n\n";
 
         for (StackTraceElement stackTraceElement : stackTraceElements) {
             body += stackTraceElement.toString() + "\n";
