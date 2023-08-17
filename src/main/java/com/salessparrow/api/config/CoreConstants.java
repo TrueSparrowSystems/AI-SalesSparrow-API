@@ -71,6 +71,15 @@ public class CoreConstants {
     return "";
   }
 
+  /** 
+  * This method returns the memcached address that is going to be used for locals
+  *
+  * @return String
+  */
+  public static String memcachedAddress() {
+    return System.getenv("LOCAL_CACHE_HOST") + ":" + System.getenv("LOCAL_CACHE_PORT") ;
+  }
+
   /**
   * This method returns the list of redirect URIs that are whitelisted in Salesforce connected app for oAuth.
   *
@@ -79,15 +88,6 @@ public class CoreConstants {
   public static String[] getWhitelistedRedirectUris() {
     String redirectUrisJson = System.getenv("SALESFORCE_WHITELISTED_REDIRECT_URIS");
     return redirectUrisJson.split(",");
-  }
-
-  /** 
-  * This method returns the memcached address that is going to be used for locals
-  *
-  * @return String
-  */
-  public static String memcachedAddress() {
-    return System.getenv("LOCAL_CACHE_HOST") + ":" + System.getenv("LOCAL_CACHE_PORT") ;
   }
 
   /** 
