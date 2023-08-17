@@ -3,60 +3,38 @@ package com.salessparrow.api.functional.controllers.authController;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.IOException;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.dynamobee.exception.DynamobeeException;
 import com.salessparrow.api.helper.Cleanup;
+import com.salessparrow.api.helper.Common;
 import com.salessparrow.api.helper.Scenario;
 import com.salessparrow.api.helper.Setup;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @WebAppConfiguration
-@Import({ Setup.class, Cleanup.class })
+@Import({ Setup.class, Cleanup.class, Common.class })
 public class GetRedirectUrlTest {
-  @Autowired
-  private ResourceLoader resourceLoader;
-
   @Autowired
   private MockMvc mockMvc;
 
   @Autowired
-  private Setup setup;
-
-  @Autowired
-  private Cleanup cleanup;
-  
-  @BeforeEach
-  public void setUp() throws DynamobeeException {
-    setup.perform();
-  }
-
-  @AfterEach
-  public void tearDown() {
-    cleanup.perform();
-  }
+  private Common common;
 
   @Test
-  public void testGetRedirectUrl() throws Exception{
-    List<Scenario> testDataItems = loadTestData();
+  public void getRedirectUrl() throws Exception{
+    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/controllers/authController/redirectUrl.scenarios.json");
 
     for (Scenario testDataItem : testDataItems) {
       ObjectMapper objectMapper = new ObjectMapper();
@@ -74,12 +52,5 @@ public class GetRedirectUrlTest {
         assertEquals(testDataItem.getOutput().get("status"), resultActions.andReturn().getResponse().getStatus());
       }
     }
-  }
-
-  public List<Scenario> loadTestData() throws IOException {
-    String scenariosPath = "classpath:data/controllers/authController/redirectUrl.scenarios.json";
-    Resource resource = resourceLoader.getResource(scenariosPath);
-    ObjectMapper objectMapper = new ObjectMapper();
-    return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});
   }
 }

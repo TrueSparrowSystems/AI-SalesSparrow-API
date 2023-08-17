@@ -101,7 +101,7 @@ public class ErrorResponse {
           String paramName = matcher.group(1);
           String messageString = paramName + " is required parameter. Please provide " + paramName + ".";
 
-          paramErrorConfig = new ParamErrorConfig(paramName, messageString);
+          paramErrorConfig = new ParamErrorConfig(paramName, paramErrorIdentifier, messageString);
           paramErrorConfigList.add(paramErrorConfig);
       } 
       else {

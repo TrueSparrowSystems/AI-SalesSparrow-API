@@ -1,14 +1,17 @@
 {
     "invalid_email": {
         "parameter": "email",
+        "param_error_identifier": "invalid_email",
         "message": "The email address you entered is incorrect. Please double check and try again."
     },
     "invalid_redirect_uri":{
         "parameter": "redirect_uri",
+        "param_error_identifier": "invalid_redirect_uri",
         "message": "Invalid redirect URI. Please double check and try again."
     },
     "search_term_too_long":{
       "parameter": "q",
+      "param_error_identifier": "search_term_too_long",
       "message": "Search term too long. Please shorten and try again."
     }
 }
