@@ -120,7 +120,7 @@ public class MemcachedConfig implements CachingConfigurer {
     } catch (Exception e) {
       throw new CustomException(
         new ErrorObject(
-          "u_m_m_1",
+          "a_c_mc_mc_1",
           "something_went_wrong",
           e.getMessage()));
     } 
