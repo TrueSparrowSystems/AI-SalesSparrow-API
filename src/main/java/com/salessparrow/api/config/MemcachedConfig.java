@@ -41,6 +41,11 @@ public class MemcachedConfig implements CachingConfigurer {
         CacheConstants.SALESFORCE_ORG_CACHE, 
         CacheConstants.SALESFORCE_ORG_CACHE_EXP
       ));
+    caches.add(
+      new Memcached(
+        CacheConstants.SALESFORCE_OAUTH_TOKEN_CACHE, 
+        CacheConstants.SALESFORCE_OAUTH_TOKEN_CACHE_EXP
+      ));
     return caches;
   }
 

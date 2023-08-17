@@ -1,12 +1,15 @@
 package com.salessparrow.api.repositories;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.salessparrow.api.domain.SalesforceOauthToken;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
+import com.salessparrow.api.lib.globalConstants.CacheConstants;
 
 /**
  * Repository for SalesforceOauthToken.
@@ -24,6 +27,7 @@ public class SalesforceOauthTokenRepository {
    * 
    * @return SalesforceOauthToken
    */
+  @CachePut(value = CacheConstants.SALESFORCE_OAUTH_TOKEN_CACHE, key = "#salesforceOauthToken.externalUserId")
   public SalesforceOauthToken saveSalesforceOauthToken(SalesforceOauthToken salesforceOauthToken) {
     try {
       dynamoDBMapper.save(salesforceOauthToken);
@@ -45,6 +49,7 @@ public class SalesforceOauthTokenRepository {
    * 
    * @return SalesforceOauthToken
    */
+  @Cacheable(value = CacheConstants.SALESFORCE_OAUTH_TOKEN_CACHE, key = "#externalUserId")
   public SalesforceOauthToken getSalesforceOauthTokenByExternalUserId(String externalUserId) {
     try {
       return dynamoDBMapper.load(SalesforceOauthToken.class, externalUserId);
@@ -56,5 +61,4 @@ public class SalesforceOauthTokenRepository {
               e.getMessage()));
     }
   }
-
 }

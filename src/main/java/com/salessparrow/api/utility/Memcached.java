@@ -88,41 +88,44 @@ public class Memcached implements Cache {
   }
 
   @Override
-public ValueWrapper get(final Object key) {
+  public ValueWrapper get(final Object key) {
+    String keyString = name + "_" + key.toString();
     Object value = null;
     try {
-        value = cache.get(key.toString());
+        value = cache.get(keyString);
     } catch (final Exception e) {
         LOGGER.warn(e.getMessage());
     }
     if (value == null) {
-        LOGGER.debug("cache miss for key: " + key.toString());
+        LOGGER.info("cache miss for key: " + keyString);
         return null;
     }
-    LOGGER.debug("cache hit for key: " + key.toString());
+    LOGGER.info("cache hit for key: " + keyString);
 
     return new SimpleValueWrapper(value);
   }
 
   @Override
   public void put(final Object key, final Object value) {
+    String keyString = name + "_" + key.toString();
     if (value != null) {
-      cache.set(key.toString(), expiration, value);
-      LOGGER.debug("cache put for key: " + key.toString());
+      cache.set(keyString, expiration, value);
+      LOGGER.info("cache put for key: " + keyString);
     }
   }
 
 
   @Override
   public void evict(final Object key) {
-    this.cache.delete(key.toString());
-    LOGGER.debug("cache delete for key: " + key.toString());
+    String keyString = name + "_" + key.toString();
+    this.cache.delete(keyString);
+    LOGGER.info("cache delete for key: " + keyString);
   }
 
   @Override
   public void clear() {
     cache.flush();
-    LOGGER.debug("cache clear completed");
+    LOGGER.info("cache clear completed");
   }
 
   @Override

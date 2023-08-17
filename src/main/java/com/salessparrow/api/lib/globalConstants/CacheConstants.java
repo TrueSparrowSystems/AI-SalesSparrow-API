@@ -10,4 +10,7 @@ public class CacheConstants {
 
   public static final String SALESFORCE_ORG_CACHE = "sf_org";
   public static final Integer SALESFORCE_ORG_CACHE_EXP = 30 * 24 * 60 * 60; // 30 days
+
+  public static final String SALESFORCE_OAUTH_TOKEN_CACHE = "sf_oauth_token";
+  public static final Integer SALESFORCE_OAUTH_TOKEN_CACHE_EXP = 30 * 24 * 60 * 60; // 30 days
 }
