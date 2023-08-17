@@ -22,6 +22,9 @@ import com.salessparrow.api.lib.salesforce.dto.SalesforceAccountDto;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 import com.salessparrow.api.lib.salesforce.helper.SalesforceQueryBuilder;
 
+/**
+ * GetSalesforceAccounts is a class for the GetAccounts service for the Salesforce CRM.
+ **/
 @Component
 public class GetSalesforceAccounts implements GetAccounts{
   @Autowired

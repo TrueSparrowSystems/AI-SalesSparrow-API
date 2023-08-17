@@ -8,6 +8,9 @@ import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.repositories.SalesforceOauthTokenRepository;
 
+/**
+ * SalesforceRequest is a class for making a request to the Salesforce API.
+ */
 @Component
 public class SalesforceRequest {
 
@@ -17,7 +20,14 @@ public class SalesforceRequest {
   @Autowired
   private SalesforceOauthTokenRepository sfOauthTokenRepository;
 
-
+  /**
+   * Make a request to the Salesforce API.
+   * 
+   * @param salesforceUserId
+   * @param request
+   * 
+   * @return T
+   */
   public <T> T makeRequest(String salesforceUserId, SalesforceRequestInterface<T> request) {
     SalesforceOauthToken sfOAuthToken = sfOauthTokenRepository
         .getSalesforceOauthTokenByExternalUserId(salesforceUserId);

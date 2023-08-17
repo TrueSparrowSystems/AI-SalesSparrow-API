@@ -10,11 +10,21 @@ import com.salessparrow.api.lib.crmActions.getAccounts.GetAccountsFactory;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * GetAccountListService is a service class for the GetAccounts action for the CRM.
+ */
 @Service
 public class GetAccountListService {
   @Autowired
   private GetAccountsFactory getAccountsFactory;
   
+  /**
+     * Get the list of accounts for a given search term
+     * @param request
+     * @param getAccountsDto
+     * 
+     * @return GetAccountsFormatterDto
+     **/
   public GetAccountsFormatterDto getAccounts(HttpServletRequest request, GetAccountsDto getAccountsDto) {
     User user = (User) request.getAttribute("user");
 

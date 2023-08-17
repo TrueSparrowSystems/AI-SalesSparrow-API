@@ -11,6 +11,9 @@ import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
 
+/**
+ * MakeCompositeRequest is a class for making a composite request to the Salesforce API.
+ **/
 @Component
 public class MakeCompositeRequest {
 
@@ -20,6 +23,14 @@ public class MakeCompositeRequest {
   @Autowired
   private SalesforceConstants salesforceConstants;
 
+  /**
+   * Make composite post request to the Salesforce API.
+   * 
+   * @param compositeRequests
+   * @param salesforceUserId
+   * 
+   * @return HttpClient.HttpResponse
+   **/
   public HttpClient.HttpResponse makePostRequest(
       List<CompositeRequestDto> compositeRequests,
       String salesforceUserId) {
