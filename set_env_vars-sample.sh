@@ -22,5 +22,5 @@ export SALESFORCE_CLIENT_ID=''
 export SALESFORCE_CLIENT_SECRET=''
 
 # Local Cache
-export LOCAL_CACHE_HOST='memcached'
+export LOCAL_CACHE_HOST='localhost'
 export LOCAL_CACHE_PORT='11211'
