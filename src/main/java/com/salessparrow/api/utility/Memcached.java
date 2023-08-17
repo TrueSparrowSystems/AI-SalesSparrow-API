@@ -7,7 +7,6 @@ import net.spy.memcached.MemcachedClient;
 import net.spy.memcached.transcoders.SerializingTranscoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.support.SimpleValueWrapper;
 
