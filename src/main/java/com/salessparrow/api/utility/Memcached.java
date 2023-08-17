@@ -1,25 +1,11 @@
 package com.salessparrow.api.utility;
 
 import java.util.concurrent.Callable;
-import net.spy.memcached.AddrUtil;
-import net.spy.memcached.ConnectionFactoryBuilder;
 import net.spy.memcached.MemcachedClient;
-import net.spy.memcached.transcoders.SerializingTranscoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
 import org.springframework.cache.support.SimpleValueWrapper;
-
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.elasticache.AmazonElastiCache;
-import com.amazonaws.services.elasticache.AmazonElastiCacheClientBuilder;
-import com.amazonaws.services.elasticache.model.CacheCluster;
-import com.amazonaws.services.elasticache.model.DescribeCacheClustersRequest;
-import com.amazonaws.services.elasticache.model.DescribeCacheClustersResult;
-import com.salessparrow.api.config.CoreConstants;
-import com.salessparrow.api.exception.CustomException;
-import com.salessparrow.api.lib.errorLib.ErrorObject;
 
 /**
  * Memcached implementation of the Cache interface.
@@ -40,50 +26,10 @@ public class Memcached implements Cache {
    * @param name
    * @param expiration
    */
-  public Memcached(String name, int expiration) {
+  public Memcached(String name, int expiration, MemcachedClient memcachedClient) {
     this.name = name;
     this.expiration = expiration;
-
-    try {
-      if (CoreConstants.isDevEnvironment()) {
-        System.out.println("Using local memcached");
-        // Local environment, use the provided memcachedAddresses
-        cache = new MemcachedClient(
-          new ConnectionFactoryBuilder()
-            .setTranscoder(new SerializingTranscoder())
-            .setProtocol(ConnectionFactoryBuilder.Protocol.BINARY)
-            .build(),
-          AddrUtil.getAddresses(CoreConstants.memcachedAddress()));
-      } else {
-        BasicAWSCredentials awsCredentials = new BasicAWSCredentials(
-          CoreConstants.awsAccessKeyId(), 
-          CoreConstants.awsSecretAccessKey()
-        );
-
-        AmazonElastiCache amazonElastiCache = AmazonElastiCacheClientBuilder.standard()
-          .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-          .withRegion(CoreConstants.awsRegion())
-          .build();
-
-        DescribeCacheClustersResult clustersResult = amazonElastiCache.describeCacheClusters(
-                new DescribeCacheClustersRequest().withCacheClusterId(CoreConstants.cacheClusterId()));
-        CacheCluster cluster = clustersResult.getCacheClusters().get(0);
-        String endpoint = cluster.getConfigurationEndpoint().getAddress();
-        int port = cluster.getConfigurationEndpoint().getPort();
-
-        cache = new MemcachedClient(new ConnectionFactoryBuilder()
-                .setTranscoder(new SerializingTranscoder())
-                .setProtocol(ConnectionFactoryBuilder.Protocol.BINARY)
-                .build(),
-                AddrUtil.getAddresses(endpoint + ":" + port));
-      }
-    } catch (Exception e) {
-      throw new CustomException(
-        new ErrorObject(
-          "u_m_m_1",
-          "something_went_wrong",
-          e.getMessage()));
-    } 
+    this.cache = memcachedClient;
   }
 
   /**
