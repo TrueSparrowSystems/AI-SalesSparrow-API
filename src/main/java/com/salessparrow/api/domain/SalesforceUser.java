@@ -16,6 +16,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * SalesforceUser model.
+ * 
+ * Cached data is serialized into bytes and stored in cache and deserialize when retrieved.
+ * Hence, the class must implement Serializable.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
