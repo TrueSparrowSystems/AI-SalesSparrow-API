@@ -14,23 +14,23 @@ public class ErrorResponseObject {
     String message;
     String code;
     String internalErrorIdentifier;
-    List<ParamErrorConfig> param_errors;
+    List<ParamErrorConfig> paramErrors;
 
     public ErrorResponseObject() {
     }
 
     public ErrorResponseObject(int httpCode, String message, String code, String internalErrorIdentifier,
-            List<ParamErrorConfig> errorData) {
+            List<ParamErrorConfig> paramErrors) {
         this.httpCode = httpCode;
         this.message = message;
         this.code = code;
         this.internalErrorIdentifier = internalErrorIdentifier;
-        this.param_errors = errorData;
+        this.paramErrors = paramErrors;
     }
 
     @Override
     public String toString() {
-        return "ErrorResponseObject [code=" + code + ", errorData=" + param_errors + ", httpCode=" + httpCode
+        return "ErrorResponseObject [code=" + code + ", paramErrors=" + paramErrors + ", httpCode=" + httpCode
                 + ", internalErrorIdentifier=" + internalErrorIdentifier + ", message=" + message + "]";
     }
 }
