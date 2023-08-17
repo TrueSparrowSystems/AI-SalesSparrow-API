@@ -26,7 +26,7 @@ import com.salessparrow.api.lib.errorLib.ErrorObject;
  */
 public class Memcached implements Cache {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(Memcached.class);
+  private static final Logger logger = LoggerFactory.getLogger(Memcached.class);
 
   private String name;
 
@@ -118,13 +118,13 @@ public class Memcached implements Cache {
     try {
         value = cache.get(keyString);
     } catch (final Exception e) {
-        LOGGER.warn(e.getMessage());
+        logger.warn(e.getMessage());
     }
     if (value == null) {
-        LOGGER.info("cache miss for key: " + keyString);
+        logger.info("cache miss for key: " + keyString);
         return null;
     }
-    LOGGER.info("cache hit for key: " + keyString);
+    logger.info("cache hit for key: " + keyString);
 
     return new SimpleValueWrapper(value);
   }
@@ -140,7 +140,7 @@ public class Memcached implements Cache {
     String keyString = name + "_" + key.toString();
     if (value != null) {
       cache.set(keyString, expiration, value);
-      LOGGER.info("cache put for key: " + keyString);
+      logger.info("cache put for key: " + keyString);
     }
   }
 
@@ -153,7 +153,7 @@ public class Memcached implements Cache {
   public void evict(final Object key) {
     String keyString = name + "_" + key.toString();
     this.cache.delete(keyString);
-    LOGGER.info("cache delete for key: " + keyString);
+    logger.info("cache delete for key: " + keyString);
   }
 
   /**
@@ -164,7 +164,7 @@ public class Memcached implements Cache {
   @Override
   public void clear() {
     cache.flush();
-    LOGGER.info("cache clear completed");
+    logger.info("cache clear completed");
   }
 
   /**
