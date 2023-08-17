@@ -20,3 +20,7 @@ export DYNAMO_DB_URL='http://dynamodb:8000'
 export SALESFORCE_AUTH_URL='https://test.salesforce.com'
 export SALESFORCE_CLIENT_ID=''
 export SALESFORCE_CLIENT_SECRET=''
+
+# Error Email
+export ERROR_MAIL_FROM=''
+export ERROR_MAIL_TO=''

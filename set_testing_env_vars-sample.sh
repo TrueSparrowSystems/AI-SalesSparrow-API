@@ -20,3 +20,8 @@ export DYNAMO_DB_URL='http://localhost:8000'
 export SALESFORCE_CLIENT_ID=''
 export SALESFORCE_CLIENT_SECRET=''
 export SALESFORCE_AUTH_URL=''
+
+
+# Error Email
+export ERROR_MAIL_FROM=''
+export ERROR_MAIL_TO=''
