@@ -34,7 +34,7 @@ public class CoreConstants {
   }
 
   public static String cacheClusterId() {
-    return System.getenv("SALESSPARROW_CACHE_CLUSTER_ID");
+    return System.getenv("AWS_IAM_CACHE_CLUSTER_ID");
   }
 
   public static String kmsKeyId() {

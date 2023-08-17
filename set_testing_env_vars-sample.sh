@@ -10,8 +10,8 @@ export API_COOKIE_SECRET='1234567890'
 export AWS_IAM_ACCESS_KEY_ID='accessKeyId'
 export AWS_IAM_SECRET_ACCESS_KEY='secretAccessKey'
 export AWS_IAM_REGION='region'
+export AWS_IAM_CACHE_CLUSTER_ID=''
 export KMS_KEY_ID=''
-export CACHE_CLUSTER_ID=''
 
 # Database
 export DYNAMO_DB_URL='http://localhost:8000'
@@ -20,3 +20,7 @@ export DYNAMO_DB_URL='http://localhost:8000'
 export SALESFORCE_CLIENT_ID=''
 export SALESFORCE_CLIENT_SECRET=''
 export SALESFORCE_AUTH_URL=''
+
+# Local Cache
+export LOCAL_CACHE_HOST='localhost'
+export LOCAL_CACHE_PORT='11211'
