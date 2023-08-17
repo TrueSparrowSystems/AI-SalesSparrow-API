@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -24,8 +23,6 @@ public class ErrorResponse {
 
   @Autowired
   private ResourceLoader resourceLoader;
-
-    private Logger logger = org.slf4j.LoggerFactory.getLogger(ErrorResponse.class);
 
   /**
    * Get error response
@@ -58,7 +55,7 @@ public class ErrorResponse {
 
 
     ErrorResponseObject errorResponseObject = new ErrorResponseObject(
-        Integer.parseInt(errorInfo.getHttp_code()),
+        Integer.parseInt(errorInfo.getHttpCode()),
         errorInfo.getMessage(),
         errorInfo.getCode(),
         internalErrorIdentifier,
@@ -123,19 +120,6 @@ public class ErrorResponse {
         paramErrorConfigList);
 
     return errorResponseObject;
-  }
-
-  /**
-   * Log error
-   * 
-   * @param message
-   * @param httpCode
-   * @param internal_error_identifier
-   * 
-   * @return void
-   */
-  private void logError(String message, int httpCode, String internal_error_identifier) {
-    logger.error("Error code:{} Internal error identifier: {} Error message: {}", httpCode, internal_error_identifier, message);
   }
 
 }

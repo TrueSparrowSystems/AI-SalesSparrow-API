@@ -10,9 +10,9 @@ import lombok.Data;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GetNoteDetailsFormatterDto {
 
-    private NoteDetailEntity note_detail;
+    private NoteDetailEntity noteDetail;
     
     public GetNoteDetailsFormatterDto(NoteDetailEntity noteDetail){
-        this.note_detail = noteDetail;
+        this.noteDetail = noteDetail;
     }
 }

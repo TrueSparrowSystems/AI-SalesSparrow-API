@@ -2,6 +2,9 @@ package com.salessparrow.api.lib.errorLib;
 
 import java.util.List;
 
+import lombok.Data;
+
+@Data
 public class ParamErrorObject {
     
     private String internalErrorIdentifier;
@@ -15,29 +18,5 @@ public class ParamErrorObject {
         this.internalErrorIdentifier = internalErrorIdentifier;
         this.message = message;
         this.paramErrorIdentifiers = paramErrorIdentifiers;
-    }
-
-    public String getInternalErrorIdentifier() {
-        return internalErrorIdentifier;
-    }
-
-    public void setInternalErrorIdentifier(String internalErrorIdentifier) {
-        this.internalErrorIdentifier = internalErrorIdentifier;
-    }
-
-    public List<String> getParamErrorIdentifiers() {
-        return paramErrorIdentifiers;
-    }
-
-    public void setParamErrorIdentifiers(List<String> paramErrorIdentifiers) {
-        this.paramErrorIdentifiers = paramErrorIdentifiers;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 }
