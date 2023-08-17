@@ -1,4 +1,4 @@
-package com.salessparrow.api.dto;
+package com.salessparrow.api.dto.requestMapper;
 
 import com.salessparrow.api.lib.customAnnotations.ValidRedirectUri;
 

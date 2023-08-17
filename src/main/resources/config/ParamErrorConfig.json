@@ -6,5 +6,9 @@
     "invalid_redirect_uri":{
         "parameter": "redirect_uri",
         "message": "Invalid redirect URI. Please double check and try again."
+    },
+    "search_term_too_long":{
+      "parameter": "q",
+      "message": "Search term too long. Please shorten and try again."
     }
 }

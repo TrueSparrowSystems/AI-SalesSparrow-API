@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.salessparrow.api.domain.SalesforceUser;
-import com.salessparrow.api.dto.NoteDto;
 import com.salessparrow.api.dto.formatter.CreateNoteFormatterDto;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.globalConstants.UserConstants;
+import com.salessparrow.api.dto.requestMapper.NoteDto;
 
 /**
  * CreateNoteFactory is a factory class for the create note action for the CRM.
