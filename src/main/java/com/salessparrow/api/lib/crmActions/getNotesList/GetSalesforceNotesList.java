@@ -1,17 +1,27 @@
 package com.salessparrow.api.lib.crmActions.getNotesList;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salessparrow.api.domain.User;
+import com.salessparrow.api.dto.entities.NoteEntity;
 import com.salessparrow.api.dto.formatter.GetNotesListFormatterDto;
+import com.salessparrow.api.exception.CustomException;
+import com.salessparrow.api.lib.Util;
+import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
-import com.salessparrow.api.lib.salesforce.formatSalesforceEntities.FormatSalesforceNotesList;
+import com.salessparrow.api.lib.salesforce.dto.SalesforceGetNoteIdDto;
+import com.salessparrow.api.lib.salesforce.dto.SalesforceGetNotesListDto;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 import com.salessparrow.api.lib.salesforce.helper.SalesforceQueryBuilder;
 
@@ -85,12 +95,92 @@ public class GetSalesforceNotesList implements GetNotesList{
 
         HttpClient.HttpResponse response = getDocumentIds(accountId, salesforceUserId);
 
-        FormatSalesforceNotesList formatSalesforceNotesList = new FormatSalesforceNotesList();
-        List<String> ContentDocumentIds = formatSalesforceNotesList.formatContentDocumentId(response.getResponseBody());
+        List<String> ContentDocumentIds = getNotesIds(response.getResponseBody());
 
+        if(ContentDocumentIds.size() == 0) {
+            return new GetNotesListFormatterDto(
+                new ArrayList<String>(),
+                new HashMap<String, NoteEntity>()
+            );
+        }
         HttpClient.HttpResponse getNotesResponse = getNotes(ContentDocumentIds, salesforceUserId);
 
-        GetNotesListFormatterDto getNotesListFormatterDto = formatSalesforceNotesList.formatNotesList(getNotesResponse.getResponseBody());
+        GetNotesListFormatterDto getNotesListFormatterDto = formatNotesList(getNotesResponse.getResponseBody());
+
+        return getNotesListFormatterDto;
+    }
+
+    /**
+     * Get the list of notes for a given account
+     * 
+     * @param responseBody
+     * 
+     * @return List<String>
+     */
+    private List<String> getNotesIds(String responseBody) {
+        List<String> notesIds = new ArrayList<String>();
+
+        try {
+            Util util = new Util();
+            JsonNode rootNode = util.getJsonNode(responseBody);
+            JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");
+            for (JsonNode recordNode : recordsNode) {
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+                SalesforceGetNoteIdDto salesforceGetNoteId = mapper.convertValue(recordNode, SalesforceGetNoteIdDto.class);
+                notesIds.add(salesforceGetNoteId.getContentDocumentId());
+            }
+        } catch (Exception e) {
+            throw new CustomException(
+                new ErrorObject(
+                    "l_c_gnl_gsnl_1",
+                    "something_went_wrong",
+                    e.getMessage()
+                )
+            );
+        }
+
+        return notesIds;
+    }
+
+    /**
+     * Get the list of notes for a given account
+     * 
+     * @param responseBody
+     * 
+     * @return GetNotesListFormatterDto
+     */
+    private GetNotesListFormatterDto formatNotesList(String responseBody){
+        List<String> noteIds = new ArrayList<String>();
+        Map<String,NoteEntity> noteIdToEntityMap = new HashMap<>();
+
+        try {
+            Util util = new Util();
+            JsonNode rootNode = util.getJsonNode(responseBody);
+            JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");
+
+            for (JsonNode recordNode : recordsNode) {
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+                SalesforceGetNotesListDto salesforceGetNotesList = mapper.convertValue(recordNode, SalesforceGetNotesListDto.class);
+                NoteEntity noteEntity = salesforceGetNotesList.noteEntity();
+          
+                noteIds.add(noteEntity.getId());
+                noteIdToEntityMap.put(noteEntity.getId(), noteEntity);
+            }
+        } catch (Exception e) {
+            throw new CustomException(
+                new ErrorObject(
+                    "l_c_gnl_gsnl_2",
+                    "something_went_wrong",
+                    e.getMessage()
+                )
+            );
+        }
+
+        GetNotesListFormatterDto getNotesListFormatterDto = new GetNotesListFormatterDto();
+        getNotesListFormatterDto.setNoteIds(noteIds);
+        getNotesListFormatterDto.setNoteMapById(noteIdToEntityMap);
 
         return getNotesListFormatterDto;
     }

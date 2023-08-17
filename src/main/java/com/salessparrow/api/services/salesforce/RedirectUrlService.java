@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.salessparrow.api.config.CoreConstants;
-import com.salessparrow.api.dto.SalesforceRedirectUrlDto;
+import com.salessparrow.api.dto.requestMapper.SalesforceRedirectUrlDto;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 
 /**

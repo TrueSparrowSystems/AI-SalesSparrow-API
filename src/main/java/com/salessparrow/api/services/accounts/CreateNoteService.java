@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.salessparrow.api.domain.SalesforceUser;
-import com.salessparrow.api.dto.NoteDto;
 import com.salessparrow.api.dto.formatter.CreateNoteFormatterDto;
+import com.salessparrow.api.dto.requestMapper.NoteDto;
 import com.salessparrow.api.lib.crmActions.createNote.CreateNoteFactory;
 
 import jakarta.servlet.http.HttpServletRequest;

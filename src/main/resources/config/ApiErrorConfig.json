@@ -1,41 +1,41 @@
 {
   "bad_request": {
-    "http_code": "400",
+    "httpCode": "400",
     "code": "BAD_REQUEST",
     "message": "Invalid request. Please check your input."
   },
   "unauthorized_api_request": {
-    "http_code": "401",
+    "httpCode": "401",
     "code": "UNAUTHORIZED",
     "message": "Unauthorized API request. Please check your API key."
   },
   "resource_not_found": {
-    "http_code": "404",
+    "httpCode": "404",
     "code": "NOT_FOUND",
     "message": "Resource not found. Please check if the resource identifier passed in the URL is valid and try again."
   },
   "something_went_wrong": {
-    "http_code": "500",
+    "httpCode": "500",
     "code": "INTERNAL_SERVER_ERROR",
     "message": "Something went wrong."
   },
   "internal_server_error": {
-    "http_code": "500",
+    "httpCode": "500",
     "code": "INTERNAL_SERVER_ERROR",
     "message": "Something went wrong."
   },
   "invalid_credentials": {
-    "http_code": "401",
+    "httpCode": "401",
     "code": "INVALID_CREDENTIALS",
     "message": "Invalid credentials. Please check your email and password."
   },
   "user_already_exists": {
-    "http_code": "403",
+    "httpCode": "403",
     "code": "USER_ALREADY_EXISTS",
     "message": "User with the provided email already exists."
   },
   "invalid_params": {
-    "http_code": "400",
+    "httpCode": "400",
     "code": "INVALID_PARAMS",
     "message": "At least one parameter is invalid or missing."
   }

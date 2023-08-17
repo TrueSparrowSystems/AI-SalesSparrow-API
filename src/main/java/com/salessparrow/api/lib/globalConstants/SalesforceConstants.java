@@ -54,7 +54,7 @@ public class SalesforceConstants {
     return 10000;
   }
 
-  public String salesfroceContentUrl(String urlPrefix, String noteId){
+  public String salesforceNotesContentUrl(String urlPrefix, String noteId){
     return urlPrefix + "/services/data/v58.0/sobjects/ContentNote/" + noteId + "/Content";
   }
 }

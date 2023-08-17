@@ -13,11 +13,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpHeaders;
 
-import com.salessparrow.api.dto.SalesforceRedirectUrlDto;
-
 import com.salessparrow.api.services.salesforce.RedirectUrlService;
-import com.salessparrow.api.dto.SalesforceConnectDto;
 import com.salessparrow.api.dto.formatter.SalesforceConnectFormatterDto;
+import com.salessparrow.api.dto.requestMapper.SalesforceConnectDto;
+import com.salessparrow.api.dto.requestMapper.SalesforceRedirectUrlDto;
 import com.salessparrow.api.lib.CookieHelper;
 import com.salessparrow.api.services.salesforce.AuthService;
 import com.salessparrow.api.services.salesforce.AuthService.AuthServiceDto;

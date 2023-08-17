@@ -1,5 +1,8 @@
 package com.salessparrow.api.lib.errorLib;
 
+import lombok.Data;
+
+@Data
 public class ErrorObject {
 
   private String internalErrorIdentifier;
@@ -13,30 +16,6 @@ public class ErrorObject {
     this.internalErrorIdentifier = internalErrorIdentifier;
     this.apiErrorIdentifier = apiErrorIdentifier;
     this.message = message;
-  }
-
-  public String getMessage() {
-    return message;
-  }
-
-  public void setMessage(String message) {
-    this.message = message;
-  }
-
-  public String getInternalErrorIdentifier() {
-    return internalErrorIdentifier;
-  }
-
-  public void setInternalErrorIdentifier(String internalErrorIdentifier) {
-    this.internalErrorIdentifier = internalErrorIdentifier;
-  }
-
-  public String getApiErrorIdentifier() {
-    return apiErrorIdentifier;
-  }
-
-  public void setApiErrorIdentifier(String apiErrorIdentifier) {
-    this.apiErrorIdentifier = apiErrorIdentifier;
   }
 
 }

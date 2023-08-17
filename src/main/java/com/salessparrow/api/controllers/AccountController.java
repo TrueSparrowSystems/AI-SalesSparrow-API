@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.salessparrow.api.dto.NoteDto;
 import com.salessparrow.api.dto.formatter.CreateNoteFormatterDto;
 import com.salessparrow.api.dto.formatter.GetAccountsFormatterDto;
 import com.salessparrow.api.dto.formatter.GetNoteDetailsFormatterDto;
 import com.salessparrow.api.dto.formatter.GetNotesListFormatterDto;
+import com.salessparrow.api.dto.requestMapper.NoteDto;
 import com.salessparrow.api.services.accounts.CreateNoteService;
 import com.salessparrow.api.services.accounts.GetAccountListService;
 import com.salessparrow.api.services.accounts.GetNoteDetailsService;

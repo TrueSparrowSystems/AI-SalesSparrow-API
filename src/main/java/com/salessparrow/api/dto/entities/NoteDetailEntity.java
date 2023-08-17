@@ -18,6 +18,9 @@ public class NoteDetailEntity {
     private String text;
     private Date lastModifiedTime;
 
+    public NoteDetailEntity(){
+    }
+
     public NoteDetailEntity(String id, String creator, String text, Date lastModifiedTime){
         this.id = id;
         this.creator = creator;
