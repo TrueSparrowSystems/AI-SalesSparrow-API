@@ -26,8 +26,8 @@ public class GetNoteDetailsService {
    * @return GetNoteDetailsFormatterDto
    */
   public GetNoteDetailsFormatterDto getNoteDetails(HttpServletRequest request, String noteId) {
-      User user = (User) request.getAttribute("user");
+      User currentUser = (User) request.getAttribute("current_user");
       
-      return getNoteDetailsFactory.getNoteDetails(user, noteId);
+      return getNoteDetailsFactory.getNoteDetails(currentUser, noteId);
   }
 }

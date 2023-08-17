@@ -26,10 +26,10 @@ public class GetAccountListService {
      * @return GetAccountsFormatterDto
      **/
   public GetAccountsFormatterDto getAccounts(HttpServletRequest request, GetAccountsDto getAccountsDto) {
-    User user = (User) request.getAttribute("user");
+    User currentUser = (User) request.getAttribute("current_user");
 
     String formattedSearchString = formatSearchString(getAccountsDto.getQ());
-    return getAccountsFactory.getAccounts(user, formattedSearchString);
+    return getAccountsFactory.getAccounts(currentUser, formattedSearchString);
   }
 
   private String formatSearchString(String q) {

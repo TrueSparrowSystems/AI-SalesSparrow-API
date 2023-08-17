@@ -48,8 +48,8 @@ public class UserAuthInterceptor implements HandlerInterceptor {
     
     Map<String, Object> userLoginCookieAuthRes = userLoginCookieAuth.validateAndSetCookie(cookieValue);
 
-    User user = (User) userLoginCookieAuthRes.get("user");
-    request.setAttribute("user", user);
+    User currentUser = (User) userLoginCookieAuthRes.get("current_user");
+    request.setAttribute("current_user", currentUser);
 
     String userLoginCookieValue = (String) userLoginCookieAuthRes.get("userLoginCookieValue");
 

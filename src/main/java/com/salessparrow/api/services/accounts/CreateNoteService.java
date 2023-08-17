@@ -28,8 +28,8 @@ public class CreateNoteService {
    */
   public CreateNoteFormatterDto createNote(HttpServletRequest request, String accountId, NoteDto note) {
 
-      SalesforceUser user = (SalesforceUser) request.getAttribute("user");
+      SalesforceUser currentUser = (SalesforceUser) request.getAttribute("current_user");
 
-      return createNoteFactory.createNote(user, accountId, note);
+      return createNoteFactory.createNote(currentUser, accountId, note);
   }
 }
