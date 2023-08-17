@@ -18,9 +18,17 @@ import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Configuration for Memcached.
+ */
 @Configuration
 public class MemcachedConfig implements CachingConfigurer {
 
+  /**
+   * Cache Manager
+   * 
+   * @return CacheManager
+   */
   @Override
   @Bean
   public CacheManager cacheManager() {
@@ -30,6 +38,11 @@ public class MemcachedConfig implements CachingConfigurer {
     return cacheManager;
   }
 
+  /**
+   * Internal Caches
+   * 
+   * @return Collection<Memcached>
+   */
   private Collection<Memcached> internalCaches() {
     final Collection<Memcached> caches = new ArrayList<>();
     caches.add(new Memcached(
@@ -49,16 +62,31 @@ public class MemcachedConfig implements CachingConfigurer {
     return caches;
   }
 
+  /**
+   * Key Generator
+   * 
+   * @return KeyGenerator
+   */
   @Override
   public KeyGenerator keyGenerator() {
     return new SimpleKeyGenerator();
   }
 
+  /**
+   * Error Handler
+   * 
+   * @return CacheErrorHandler
+   */
   @Override
   public CacheErrorHandler errorHandler() {
     return new SimpleCacheErrorHandler();
   }
 
+  /**
+   * Cache Resolver
+   * 
+   * @return CacheResolver
+   */
   @Override
   public CacheResolver cacheResolver() {
     return null;
