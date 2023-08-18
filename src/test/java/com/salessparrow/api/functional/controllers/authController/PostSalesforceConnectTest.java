@@ -7,10 +7,14 @@ import org.mockito.MockitoAnnotations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,10 +32,12 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dynamobee.exception.DynamobeeException;
 import com.salessparrow.api.helper.Cleanup;
+import com.salessparrow.api.helper.Common;
+import com.salessparrow.api.helper.FixtureData;
+import com.salessparrow.api.helper.LoadFixture;
 import com.salessparrow.api.helper.Scenario;
 import com.salessparrow.api.helper.Setup;
 import com.salessparrow.api.lib.salesforce.wrappers.SalesforceGetIdentity;
@@ -42,7 +48,7 @@ import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
 @SpringBootTest
 @AutoConfigureMockMvc
 @WebAppConfiguration
-@Import({ Setup.class, Cleanup.class })
+@Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
 public class PostSalesforceConnectTest {
   @Autowired
   private ResourceLoader resourceLoader;
@@ -55,6 +61,12 @@ public class PostSalesforceConnectTest {
 
   @Autowired
   private Cleanup cleanup;
+
+  @Autowired
+  private Common common;
+
+  @Autowired
+  private LoadFixture loadFixture;
 
   @MockBean
   private SalesforceGetTokens mockGetTokens;
@@ -80,8 +92,11 @@ public class PostSalesforceConnectTest {
   }
 
   @Test
-  public void testPostSalesforceConnect() throws Exception {
-    List<Scenario> testDataItems = loadTestData();
+  public void testPostSalesforceConnectSignup() throws Exception {
+    String currentFunctionName = new Object() {
+    }.getClass().getEnclosingMethod().getName();
+
+    List<Scenario> testDataItems = loadTestData(currentFunctionName);
 
     for (Scenario testDataItem : testDataItems) {
       System.out.println("Test description: " + testDataItem.getDescription());
@@ -103,33 +118,67 @@ public class PostSalesforceConnectTest {
 
       String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
 
-      JsonNode expJsonNode = objectMapper.readTree(
-          objectMapper.writeValueAsString(testDataItem.getOutput()));
-
-      JsonNode resJsonNode = objectMapper.readTree(actualOutput);
-
-      assertEquals(expJsonNode.get("status").asInt(), resultActions.andReturn().getResponse().getStatus());
       if (resultActions.andReturn().getResponse().getStatus() == 200) {
-        assertEquals(objectMapper.writeValueAsString(testDataItem.getOutput().get("body")), actualOutput);
+        assertEquals(objectMapper.writeValueAsString(testDataItem.getOutput()), actualOutput);
       } else if (resultActions.andReturn().getResponse().getStatus() == 400) {
-
-        // Todo: Loop over param_errors and check if param_error_identifier is present
-        // in body
-
-        String paramError = resJsonNode.get("param_errors").get(0).get("param_error_identifier").asText();
-        assertEquals(expJsonNode.get("body").get("param_error_identifiers").get(0).asText(), paramError);
+        common.compareErrors(testDataItem, actualOutput);
       } else {
-        assertEquals(testDataItem.getOutput().get("status"), resultActions.andReturn().getResponse().getStatus());
+        assertEquals(testDataItem.getOutput().get("http_code"), resultActions.andReturn().getResponse().getStatus());
       }
     }
   }
 
-  public List<Scenario> loadTestData() throws IOException {
+  @Test
+  public void testPostSalesforceConnectLogin() throws Exception {
+    String currentFunctionName = new Object() {
+    }.getClass().getEnclosingMethod().getName();
+
+    FixtureData fixtureData = common.loadFixture(
+        "classpath:fixtures/controllers/authController/PostSalesforceConnectFixture.json",
+        currentFunctionName);
+    loadFixture.perform(fixtureData);
+
+    List<Scenario> testDataItems = loadTestData(currentFunctionName);
+
+    for (Scenario testDataItem : testDataItems) {
+      System.out.println("Test description: " + testDataItem.getDescription());
+      ObjectMapper objectMapper = new ObjectMapper();
+
+      HttpResponse getTokensMockRes = new HttpResponse();
+      getTokensMockRes.setResponseBody(objectMapper.writeValueAsString(testDataItem.getMocks().get("getTokens")));
+
+      when(mockGetTokens.getTokens(anyString(), anyString())).thenReturn(getTokensMockRes);
+
+      ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/salesforce/connect")
+          .content(objectMapper.writeValueAsString(testDataItem.getInput().get("body")))
+          .accept(MediaType.APPLICATION_JSON).characterEncoding("UTF-8")
+          .contentType(MediaType.APPLICATION_JSON));
+
+      String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
+
+      if (resultActions.andReturn().getResponse().getStatus() == 200) {
+        assertEquals(objectMapper.writeValueAsString(testDataItem.getOutput()), actualOutput);
+        verify(mockGetTokens, times(1)).getTokens(anyString(), anyString());
+        verify(mockGetIdentity, times(0)).getUserIdentity(anyString(), anyString());
+      } else if (resultActions.andReturn().getResponse().getStatus() == 400) {
+        common.compareErrors(testDataItem, actualOutput);
+      } else {
+        assertEquals(testDataItem.getOutput().get("http_code"), resultActions.andReturn().getResponse().getStatus());
+      }
+    }
+
+  }
+
+  public List<Scenario> loadTestData(String key) throws IOException {
     String scenariosPath = "classpath:data/controllers/authController/SalesforceConnect.scenarios.json";
     Resource resource = resourceLoader.getResource(scenariosPath);
     ObjectMapper objectMapper = new ObjectMapper();
-    return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {
-    });
+
+    Map<String, List<Scenario>> scenariosMap = new HashMap<>();
+    scenariosMap = objectMapper.readValue(resource.getInputStream(),
+        new TypeReference<HashMap<String, List<Scenario>>>() {
+        });
+    return scenariosMap.get(key);
   }
 
 }

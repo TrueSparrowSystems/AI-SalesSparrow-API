@@ -8,7 +8,7 @@ import lombok.Data;
 public class FixtureData {
   List<FilePathData> salesforce_users;
   List<FilePathData> salesforce_oauth_tokens;
-  List<FilePathData> salesforce_organiztions;
+  List<FilePathData> salesforce_organizations;
 }
 
 @Data

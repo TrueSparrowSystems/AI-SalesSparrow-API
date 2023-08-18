@@ -1,78 +1,164 @@
-[
-  {
-    "description": "Should return the current user for valid code",
-    "input": {
-      "body": {
-        "code": "1234567",
-        "redirect_uri": "http://localhost:3000"
-      }
-    },
-    "mocks": {
-      "getTokens": {
-        "access_token": "xyz",
-        "refresh_token": "xyz",
-        "signature": "xyz",
-        "scope": "xyz",
-        "id_token": "xyz",
-        "instance_url": "xyz",
-        "id": "https://test.salesforce.com/id/00D1e0000000NRYEA2/0055i00000AUxQHAA1",
-        "token_type": "Bearer",
-        "issued_at": "1690520247198"
-      },
-      "getIdentity": {
-          "sub": "https://test.salesforce.com/id/00D1e0000000NRYEA2/0055i00000AUxQHAA1",
-          "user_id": "0055i00000AUxQHAA1",
-          "organization_id": "00D1e0000000NRYEA2",
-          "name": "Ashfaq Bhojani",
-          "email": "ashfaq@truesparrow.com"
-    }
-    },
-    "output": {
-      "body": {
-        "current_user": {
-          "id": "SALESFORCE-0055i00000AUxQHAA1",
-          "name": "Ashfaq Bhojani",
-          "email": "ashfaq@truesparrow.com"
+{
+  "testPostSalesforceConnectSignup": [
+    {
+      "description": "Should return the current user for valid code and redirect_uri",
+      "input": {
+        "body": {
+          "code": "1234567",
+          "redirect_uri": "http://localhost:3000"
         }
       },
-      "status": 200
-    }
-  },
-  {
-    "description": "Should return the params error for empty code",
-    "input": {
-      "body": {
-        "code": "",
-        "redirect_uri": "http://localhost:3000"
+      "mocks": {
+        "getTokens": {
+          "access_token": "xyz",
+          "refresh_token": "xyz",
+          "signature": "xyz",
+          "scope": "xyz",
+          "id_token": "xyz",
+          "instance_url": "xyz",
+          "id": "https://test.salesforce.com/id/00D2v0000012gJjEAI/00112233445566AAA1",
+          "token_type": "Bearer",
+          "issued_at": "1690520247198"
+        },
+        "getIdentity": {
+          "sub": "https://test.salesforce.com/id/00D2v0000012gJjEAI/00112233445566AAA1",
+          "user_id": "00112233445566AAA1",
+          "organization_id": "00D2v0000012gJjEAI",
+          "name": "Test User",
+          "email": "test@test.com"
+        }
+      },
+      "output": {
+        "current_user": {
+          "id": "SALESFORCE-00112233445566AAA1",
+          "name": "Test User",
+          "email": "test@test.com"
+        }
       }
     },
-    "mocks": {},
-    "output": {
-      "body": {
-        "param_error_identifiers": [
+    {
+      "description": "Should return the params error for empty code",
+      "input": {
+        "body": {
+          "code": "",
+          "redirect_uri": "http://localhost:3000"
+        }
+      },
+      "mocks": {},
+      "output": {
+        "http_code": 400,
+        "code": "INVALID_PARAMS",
+        "param_errors": [
           "missing_code"
         ]
-      },
-      "status": 400
-    }
-  },
-  {
-    "description": "Should return the params error for invalid redirect_uri",
-    "input": {
-      "body": {
-        "code": "1234567",
-        "redirect_uri": "abcd"
       }
     },
-    "mocks": {},
-    "output": {
-      "body": {
-        "param_error_identifiers": [
+    {
+      "description": "Should return the params error for invalid redirect_uri",
+      "input": {
+        "body": {
+          "code": "1234567",
+          "redirect_uri": "abcd"
+        }
+      },
+      "mocks": {},
+      "output": {
+        "http_code": 400,
+        "code": "INVALID_PARAMS",
+        "param_errors": [
           "invalid_redirect_uri"
         ]
+      }
+    },
+    {
+      "description": "Should return the params error for empty redirect_uri",
+      "input": {
+        "body": {
+          "code": "1234567",
+          "redirect_uri": ""
+        }
       },
-      "status": 400
+      "mocks": {},
+      "output": {
+        "http_code": 400,
+        "code": "INVALID_PARAMS",
+        "param_errors": [
+          "missing_redirect_uri",
+          "invalid_redirect_uri"
+        ]
+      }
     }
-  }
-
-]
+  ],
+  "testPostSalesforceConnectLogin":[
+    {
+      "description": "Should return the current user for valid code and redirect_uri",
+      "input": {
+        "body": {
+          "code": "1234567",
+          "redirect_uri": "http://localhost:3000"
+        }
+      },
+      "mocks": {
+        "getTokens": {
+          "access_token": "testAccessToken",
+          "refresh_token": "testRefreshToken",
+          "signature": "testSignature",
+          "scope": "testScope",
+          "id_token": "testIdToken",
+          "instance_url": "https://test.sandbox.my.salesforce.com",
+          "id": "https://test.salesforce.com/id/00D2v0000012gJjEAI/00112233445566AAA1",
+          "token_type": "Bearer",
+          "issued_at": "1690520247198"
+        },
+        "getIdentity": {
+          "sub": "https://test.salesforce.com/id/00D2v0000012gJjEAI/00112233445566AAA1",
+          "user_id": "00112233445566AAA1",
+          "organization_id": "00D2v0000012gJjEAI",
+          "name": "Test User",
+          "email": "test@test.com"
+        }
+      },
+      "output": {
+        "current_user": {
+          "id": "SALESFORCE-00112233445566AAA1",
+          "name": "Test User",
+          "email": "test@test.com"
+        }
+      }
+    },
+    {
+      "description": "Should return error for not active organization",
+      "input": {
+        "body": {
+          "code": "1234567",
+          "redirect_uri": "http://localhost:3000"
+        }
+      },
+      "mocks": {
+        "getTokens": {
+          "access_token": "testAccessToken",
+          "refresh_token": "testRefreshToken",
+          "signature": "testSignature",
+          "scope": "testScope",
+          "id_token": "testIdToken",
+          "instance_url": "https://test.sandbox.my.salesforce.com",
+          "id": "https://test.salesforce.com/id/00D2v0000012gJjEAI2/00112233445566AAA12",
+          "token_type": "Bearer",
+          "issued_at": "1690520247198"
+        },
+        "getIdentity": {
+          "sub": "https://test.salesforce.com/id/00D2v0000012gJjEAI2/00112233445566AAA12",
+          "user_id": "00112233445566AAA12",
+          "organization_id": "00D2v0000012gJjEAI2",
+          "name": "Test User 2",
+          "email": "test2@test.com"
+        }
+      },
+      "output": {
+        "http_code": 403,
+        "code": "FORBIDDEN",
+        "message": "Forbidden API request. You do not have the necessary permissions."
+      }
+    }
+  ]
+}

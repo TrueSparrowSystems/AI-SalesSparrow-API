@@ -38,5 +38,10 @@
     "httpCode": "400",
     "code": "INVALID_PARAMS",
     "message": "At least one parameter is invalid or missing."
-  }
+  },
+    "forbidden_api_request": {
+      "httpCode": "403",
+      "code": "FORBIDDEN",
+      "message": "Forbidden API request. You do not have the necessary permissions."
+    }
 }
