@@ -26,6 +26,9 @@ public class HttpClient {
       this.contentType = contentType;
     }
 
+    public HttpResponse() {
+    }
+
     public int getStatusCode() {
       return statusCode;
     }
@@ -41,6 +44,11 @@ public class HttpClient {
     public String getContentType() {
       return contentType;
     }
+
+    public void setResponseBody(String responseBody) {
+      this.responseBody = responseBody;
+    }
+
   }
 
   public static HttpResponse makeGetRequest(String url, Map<String, String> headers, int timeoutMillis) {
@@ -48,7 +56,7 @@ public class HttpClient {
     WebClient webClient = WebClient.builder().build();
 
     WebClient.RequestHeadersSpec<?> request = webClient.get()
-      .uri(url);
+        .uri(url);
 
     if (headers != null) {
       request.headers(httpHeaders -> {
@@ -57,8 +65,8 @@ public class HttpClient {
     }
 
     Mono<ResponseEntity<String>> responseMono = request
-      .retrieve()
-      .toEntity(String.class);
+        .retrieve()
+        .toEntity(String.class);
 
     ResponseEntity<String> responseEntity = responseMono.block(Duration.ofMillis(timeoutMillis));
 
@@ -70,13 +78,14 @@ public class HttpClient {
     return new HttpResponse(statusCode, responseBody, responseHeaders, contentType);
   }
 
-  public static HttpResponse makePostRequest(String url, Map<String, String> headers, Object requestBody, int timeoutMillis) {
+  public static HttpResponse makePostRequest(String url, Map<String, String> headers, Object requestBody,
+      int timeoutMillis) {
     WebClient webClient = WebClient.builder().build();
 
     WebClient.RequestHeadersSpec<?> request = webClient.post()
-      .uri(url)
-      .contentType(MediaType.APPLICATION_JSON)
-      .bodyValue(requestBody);
+        .uri(url)
+        .contentType(MediaType.APPLICATION_JSON)
+        .bodyValue(requestBody);
 
     if (headers != null) {
       request.headers(httpHeaders -> {
@@ -85,8 +94,8 @@ public class HttpClient {
     }
 
     Mono<ResponseEntity<String>> responseMono = request
-      .retrieve()
-      .toEntity(String.class);
+        .retrieve()
+        .toEntity(String.class);
 
     ResponseEntity<String> responseEntity = responseMono.block(Duration.ofMillis(timeoutMillis));
 

@@ -10,5 +10,7 @@ public class Scenario {
 
   Map<String, Object> input;
 
+  Map<String, Object> mocks;
+
   Map<String, Object> output;
 }
