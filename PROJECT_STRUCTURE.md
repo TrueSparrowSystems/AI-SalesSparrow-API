@@ -78,47 +78,47 @@ This directory contains the Java source code for your application.
 
 This directory contains the specific source code for your application. It contains the below directories and files.
 
-###### changelogs/
+- changelogs/
 
 This directory contains the Dynamobee changelog files for your application which are used to manage database changes.
 
-###### config/
+- config/
 
 This directory contains the different configuration classes for your application like aws, dynamobee, cors, etc. 
 
-###### controllers/
+- controllers/
 
 This directory contains the controller classes for your application which are used to handle the incoming requests and send the response back to the client.
 
-###### domain/
+- domain/
 
 This directory contains the domain classes for your application which are used to map the database tables.
 
-###### dto/
+- dto/
 
 This directory contains the DTO classes for your application which are used to map the request and response objects.
 
-###### exception/
+- exception/
 
 This directory contains the exception classes for your application which are used to handle different exceptions.
 
-###### interceptors/
+- interceptors/
 
 This directory contains the interceptor classes for your application which are used to intercept the incoming requests and outgoing responses. It contains interceptors for logging, authentication, etc.
 
-###### lib/
+- lib/
 
 This directory contains the library classes for your application which are used to handle the common functionalities like http client, utility functions, etc.
 
-###### repositories/
+- repositories/
 
 This directory contains the repository classes for your application which are used to handle the database operations.
 
-###### services/
+- services/
 
 This directory contains the service classes for your application which are used to handle the business logic.
 
-###### SalesSparrowApi.java
+- SalesSparrowApi.java
 
 This is the main class for your application which is  used to start the application.
 
@@ -147,11 +147,11 @@ This directory contains the Java test source code for your application.
 This directory contains the specific test source code for your application. It contains the below directories and files.
 
 
-###### functional/
+- functional/
 
 This directory contains the functional test classes for your application which are used to test the application end to end.
 
-###### unit/
+- unit/
 
 This directory contains the unit test classes for your application which are used to test the application units.
 
