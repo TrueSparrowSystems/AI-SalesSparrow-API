@@ -79,8 +79,7 @@ public class GlobalExceptionHandler {
           paramErrorObject.getInternalErrorIdentifier(), 
           paramErrorObject.getMessage(),
           paramErrorObject.getParamErrorIdentifiers());
-    }
-    else if (ex.getErrorObject() == null || ex.getErrorObject().getApiErrorIdentifier() == null) {
+    } else if (ex.getErrorObject() == null || ex.getErrorObject().getApiErrorIdentifier() == null) {
       errorResponse = er.getErrorResponse(
         "something_went_wrong",
           "e_geh_hce_1", 
