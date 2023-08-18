@@ -10,7 +10,6 @@ export API_COOKIE_SECRET='1234567890'
 export AWS_IAM_ACCESS_KEY_ID=''
 export AWS_IAM_SECRET_ACCESS_KEY=''
 export AWS_IAM_REGION=''
-export AWS_IAM_CACHE_CLUSTER_ID=''
 export KMS_KEY_ID=''
 
 # Dynamo DB

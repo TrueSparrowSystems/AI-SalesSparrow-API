@@ -10,7 +10,6 @@ export API_COOKIE_SECRET='1234567890'
 export AWS_IAM_ACCESS_KEY_ID='accessKeyId'
 export AWS_IAM_SECRET_ACCESS_KEY='secretAccessKey'
 export AWS_IAM_REGION='region'
-export AWS_IAM_CACHE_CLUSTER_ID=''
 export KMS_KEY_ID=''
 
 # Database

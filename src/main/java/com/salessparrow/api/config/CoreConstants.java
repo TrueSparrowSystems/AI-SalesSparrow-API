@@ -33,10 +33,6 @@ public class CoreConstants {
     return System.getenv("AWS_IAM_REGION");
   }
 
-  public static String cacheClusterId() {
-    return System.getenv("AWS_IAM_CACHE_CLUSTER_ID");
-  }
-
   public static String kmsKeyId() {
     return System.getenv("KMS_KEY_ID");
   }
