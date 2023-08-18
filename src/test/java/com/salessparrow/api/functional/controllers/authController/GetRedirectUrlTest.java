@@ -2,7 +2,6 @@ package com.salessparrow.api.functional.controllers.authController;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salessparrow.api.helper.Cleanup;
 import com.salessparrow.api.helper.Common;
@@ -45,11 +43,11 @@ public class GetRedirectUrlTest {
         .param("state", (String) testDataItem.getInput().get("state"))
         .contentType(MediaType.APPLICATION_JSON));
 
+      String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
       if(resultActions.andReturn().getResponse().getStatus() == 200) {
-        String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
-        assertEquals(expectedOutput, actualOutput);
+        assertEquals(expectedOutput, contentAsString);
       } else {
-        assertEquals(testDataItem.getOutput().get("status"), resultActions.andReturn().getResponse().getStatus());
+        common.compareErrors(testDataItem, contentAsString);
       }
     }
   }
