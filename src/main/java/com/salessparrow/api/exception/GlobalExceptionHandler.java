@@ -3,6 +3,7 @@ package com.salessparrow.api.exception;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import com.salessparrow.api.lib.CookieHelper;
+import com.salessparrow.api.lib.Util;
 import com.salessparrow.api.lib.ErrorEmailService;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.errorLib.ErrorResponseObject;
@@ -43,7 +45,11 @@ public class GlobalExceptionHandler {
    * @return ResponseEntity<ErrorResponseObject>
    */
     @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<ErrorResponseObject> handleNoHandlerFoundException(NoHandlerFoundException ex) {
+    public ResponseEntity<ErrorResponseObject> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpServletRequest request) {
+      // Logging all headers from the request
+      String headerStr = Util.generateHeaderLogString(request);
+      logger.info("headerStr: {}", headerStr);
+
       ErrorResponseObject errorResponse = null;
 
       errorResponse = er.getErrorResponse(

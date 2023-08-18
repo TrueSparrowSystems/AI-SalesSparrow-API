@@ -1,9 +1,8 @@
 package com.salessparrow.api.interceptors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import com.salessparrow.api.lib.globalConstants.ApiSource;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,13 +26,8 @@ public class V1Interceptor implements HandlerInterceptor {
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-    Logger logger = LoggerFactory.getLogger(V1Interceptor.class);
-
-    //Log App specific Headers
-    logger.info("Headers device-uuid:{} device-name:{} device-os:{} build-number:{}", 
-    request.getHeader("x-salessparrow-device-uuid"), request.getHeader("x-salessparrow-device-name"),
-    request.getHeader("x-salessparrow-device-os"), request.getHeader("x-salessparrow-build-number"));
-
+    // Set Source for app.This can be used to differentiate common web routes from app routes in the service.
+    request.setAttribute("api_source", ApiSource.APP);
     return true;
   }
 }
