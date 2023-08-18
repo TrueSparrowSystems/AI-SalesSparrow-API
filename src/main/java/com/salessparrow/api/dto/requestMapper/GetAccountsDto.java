@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 public class GetAccountsDto {
-  @Size(max = 30, message = "search_term_too_long")
+  @Size(max = 50, message = "search_term_too_long")
   private String q;
 }

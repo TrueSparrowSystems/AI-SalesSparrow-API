@@ -110,9 +110,9 @@
     }
   },
   {
-    "description": "Should return error if search string length > 20", 
+    "description": "Should return error if search string length > 50", 
     "input": {
-      "q": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+      "q": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
     },
     "mocks": {},
     "output": {
