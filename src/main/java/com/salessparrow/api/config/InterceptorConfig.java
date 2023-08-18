@@ -7,6 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.salessparrow.api.interceptors.LoggerInterceptor;
 import com.salessparrow.api.interceptors.UserAuthInterceptor;
+import com.salessparrow.api.interceptors.V1Interceptor;
 
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
@@ -15,17 +16,24 @@ public class InterceptorConfig implements WebMvcConfigurer {
   private final LoggerInterceptor loggerInterceptor;
 
   @Autowired
+  private final V1Interceptor V1Interceptor;
+
+  @Autowired
   private final UserAuthInterceptor userAuthInterceptor;
 
-  public InterceptorConfig(UserAuthInterceptor userAuthInterceptor, LoggerInterceptor loggerInterceptor) {
+  public InterceptorConfig(UserAuthInterceptor userAuthInterceptor, LoggerInterceptor loggerInterceptor, V1Interceptor V1Interceptor) {
     this.userAuthInterceptor = userAuthInterceptor;
     this.loggerInterceptor = loggerInterceptor;
+    this.V1Interceptor = V1Interceptor;
   }
 
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
     registry.addInterceptor(loggerInterceptor)
         .addPathPatterns("/**");
+
+    registry.addInterceptor(V1Interceptor)
+      .addPathPatterns("/api/v1/**");
 
     registry.addInterceptor(userAuthInterceptor)
         .addPathPatterns("/**")

@@ -27,4 +27,4 @@ export ERROR_MAIL_FROM=''
 export ERROR_MAIL_TO=''
 
 # Logging
-export LOG_LEVEL=info
+export LOG_LEVEL='info'
