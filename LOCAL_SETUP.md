@@ -21,6 +21,12 @@ To clone the project and install dependencies, follow these steps:
 $ git clone git@github.com:TrueSparrowSystems/AI-SalesSparrow-API.git
 $ cd AI-SalesSparrow-API
 ```
+
+### Clone the AI-SalesSparrow-Docs submodule ###
+```
+$ git submodule update --init
+```
+
 ### Set Environment Variables
 1. Copy the contents of set_env_vars-sample.sh to set_env_vars.sh
 2. Update the values of the environment variables in set_env_vars.sh
