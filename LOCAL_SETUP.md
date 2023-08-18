@@ -46,6 +46,6 @@ $ ./mvnw spring-boot:run
  
  **To install new dependencies**
  ```
- $ ./mvnw clean install
+ $ ./mvnw clean install -Dmaven.test.skip
  ```
  
