@@ -21,7 +21,6 @@ import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
-import com.salessparrow.api.lib.salesforce.dto.SalesforceAttachNoteDto;
 import com.salessparrow.api.lib.salesforce.dto.SalesforceCreateNoteDto;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 
@@ -95,34 +94,36 @@ public class CreateSalesforceNote implements CreateNoteInterface {
     Util util = new Util();
     JsonNode rootNode = util.getJsonNode(createNoteResponse);
 
-    JsonNode createNoteNode = rootNode.get("compositeResponse").get(0).get("body");
+    JsonNode createNoteCompositeResponse = rootNode.get("compositeResponse").get(0);
+    String createNoteStatusCode = createNoteCompositeResponse.get("httpStatusCode").asText();
 
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-    SalesforceCreateNoteDto salesforceCreateNoteDto = mapper.convertValue(createNoteNode, SalesforceCreateNoteDto.class);
-
-    if (salesforceCreateNoteDto.getSuccess().equals("false")) {
-      String[] errors = salesforceCreateNoteDto.getErrors();
+    if (!createNoteStatusCode.equals("200") && !createNoteStatusCode.equals("201")) {
+      String errorBody = createNoteCompositeResponse.get("body").asText();
 
       throw new CustomException(
       new ErrorObject(
           "l_s_fse_fscn_fcn_1",
           "internal_server_error",
-          errors.toString())); 
+          errorBody)); 
     }
 
-    
-    JsonNode attachNoteNode = rootNode.get("compositeResponse").get(1).get("body");
-    SalesforceAttachNoteDto salesforceAttachNoteDto = mapper.convertValue(attachNoteNode, SalesforceAttachNoteDto.class);
+    JsonNode createNoteNodeResponseBody = rootNode.get("compositeResponse").get(0).get("body");
 
-    if (salesforceAttachNoteDto.getSuccess().equals("false")) {
-      String[] errors = salesforceAttachNoteDto.getErrors();
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+    SalesforceCreateNoteDto salesforceCreateNoteDto = mapper.convertValue(createNoteNodeResponseBody, SalesforceCreateNoteDto.class);
+
+    JsonNode attachNoteCompositeResponse = rootNode.get("compositeResponse").get(1);
+    String attachNoteStatusCode = attachNoteCompositeResponse.get("httpStatusCode").asText();
+    
+    if (!attachNoteStatusCode.equals("200") && !attachNoteStatusCode.equals("201")) {
+      String errorBody = attachNoteCompositeResponse.get("body").toString();
 
       throw new CustomException(
-      new ErrorObject(
-          "l_s_fse_fscn_fcn_2",
-          "internal_server_error",
-          errors.toString())); 
+        new ErrorObject(
+            "l_s_fse_fscn_fcn_2",
+            "internal_server_error",
+            errorBody)); 
     }
 
     CreateNoteFormatterDto createNoteFormatterDto = new CreateNoteFormatterDto();

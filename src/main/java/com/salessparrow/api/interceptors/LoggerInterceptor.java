@@ -6,6 +6,8 @@ import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import com.salessparrow.api.lib.Util;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -39,8 +41,12 @@ public class LoggerInterceptor implements HandlerInterceptor {
     request.setAttribute("startTime", startTime);
 
     MDC.put("trackingId", trackingId);
-
     logger.info("Request Start: {} {}", request.getMethod(), request.getRequestURI());
+    
+    // Logging all headers from the request
+    String headerStr = Util.generateHeaderLogString(request);
+    logger.info("headerStr: {}", headerStr);
+    
     return true;
   }
 

@@ -3,8 +3,10 @@ package com.salessparrow.api.exception;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import com.salessparrow.api.lib.CookieHelper;
+import com.salessparrow.api.lib.Util;
 import com.salessparrow.api.lib.ErrorEmailService;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.errorLib.ErrorResponseObject;
@@ -30,6 +34,9 @@ public class GlobalExceptionHandler {
   @Autowired
   private ErrorEmailService errorEmailService;
 
+  @Autowired
+  private CookieHelper cookieHelper;
+
   /**
    * Handle 404. Catches the exception for undefined endpoints 
    * 
@@ -38,7 +45,11 @@ public class GlobalExceptionHandler {
    * @return ResponseEntity<ErrorResponseObject>
    */
     @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<ErrorResponseObject> handleNoHandlerFoundException(NoHandlerFoundException ex) {
+    public ResponseEntity<ErrorResponseObject> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpServletRequest request) {
+      // Logging all headers from the request
+      String headerStr = Util.generateHeaderLogString(request);
+      logger.info("headerStr: {}", headerStr);
+
       ErrorResponseObject errorResponse = null;
 
       errorResponse = er.getErrorResponse(
@@ -68,8 +79,7 @@ public class GlobalExceptionHandler {
           paramErrorObject.getInternalErrorIdentifier(), 
           paramErrorObject.getMessage(),
           paramErrorObject.getParamErrorIdentifiers());
-    }
-    else if (ex.getErrorObject() == null || ex.getErrorObject().getApiErrorIdentifier() == null) {
+    } else if (ex.getErrorObject() == null || ex.getErrorObject().getApiErrorIdentifier() == null) {
       errorResponse = er.getErrorResponse(
         "something_went_wrong",
           "e_geh_hce_1", 
@@ -88,6 +98,15 @@ public class GlobalExceptionHandler {
     if (errorResponse.getHttpCode() == 500) {
       StackTraceElement[] stackTrace = ex.getStackTrace();
       errorEmailService.sendErrorMail("handleCustomException", errorResponse, stackTrace);
+    }
+
+    // Clear user cookie for 401 errors
+    if (errorResponse.getHttpCode() == 401) {
+      HttpHeaders headers = new HttpHeaders();
+      headers = cookieHelper.clearUserCookie(headers);
+      return ResponseEntity.status(errorResponse.getHttpCode())
+        .headers(headers)
+        .body(errorResponse);
     }
 
     return ResponseEntity.status(errorResponse.getHttpCode())

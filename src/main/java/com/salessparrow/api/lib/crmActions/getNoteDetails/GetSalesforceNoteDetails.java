@@ -102,10 +102,19 @@ public class GetSalesforceNoteDetails implements GetNoteDetails {
                 SalesforceGetNoteDetailsDto salesforceGetNotesList = mapper.convertValue(recordNode, SalesforceGetNoteDetailsDto.class);
                 noteDetailEntity = salesforceGetNotesList.noteDetailEntity(noteContentResponse);
             }
+            if(recordsNode.size() == 0) {   
+                throw new CustomException(
+                    new ErrorObject(
+                        "l_c_gnd_gsnd_1",
+                        "something_went_wrong",
+                        "Note not found"
+                    )
+                );
+            }
         } catch (Exception e) {
             throw new CustomException(
                 new ErrorObject(
-                    "l_c_gnd_gsnd_1",
+                    "l_c_gnd_gsnd_2",
                     "something_went_wrong",
                     e.getMessage()
                 )
