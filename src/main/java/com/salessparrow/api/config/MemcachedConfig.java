@@ -47,9 +47,9 @@ public class MemcachedConfig implements CachingConfigurer {
   public CacheManager cacheManager() {
     SimpleCacheManager cacheManager = new SimpleCacheManager();
 
-    MemcachedClient cache = memcachedClient();
+    setMemcachedClient();
     
-    cacheManager.setCaches(internalCaches(cache));
+    cacheManager.setCaches(internalCaches(this.cache));
     return cacheManager;
   }
 
@@ -76,10 +76,10 @@ public class MemcachedConfig implements CachingConfigurer {
     return caches;
   }
 
-  public MemcachedClient memcachedClient() {
+  public void setMemcachedClient() {
     logger.info("Memcached Client Initialized");
     try {
-      cache = new MemcachedClient(
+      this.cache = new MemcachedClient(
         new ConnectionFactoryBuilder()
           .setTranscoder(new SerializingTranscoder())
           .setProtocol(ConnectionFactoryBuilder.Protocol.BINARY)
@@ -92,7 +92,6 @@ public class MemcachedConfig implements CachingConfigurer {
           "something_went_wrong",
           e.getMessage()));
     }
-    return cache;
   } 
 
   /**
