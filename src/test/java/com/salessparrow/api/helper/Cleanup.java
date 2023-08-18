@@ -32,7 +32,7 @@ public class Cleanup {
    * Flush the cache.
    */
   private void flushCache(){
-    logger.info("Setup: Flushing cache");
+    logger.info("Cleanup: Flushing cache");
   }
 
   /**

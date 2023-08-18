@@ -14,7 +14,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.entities.AccountEntity;
 import com.salessparrow.api.dto.formatter.GetAccountsFormatterDto;
+import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.Util;
+import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
@@ -73,6 +75,17 @@ public class GetSalesforceAccounts implements GetAccounts{
 
     Util util = new Util();
     JsonNode rootNode = util.getJsonNode(responseBody);
+
+    JsonNode httpStatusCodeNode = rootNode.get("compositeResponse").get(0).get("httpStatusCode");
+    
+    if (httpStatusCodeNode.asInt() != 200) {
+      throw new CustomException(
+        new ErrorObject(
+          "l_ca_ga_gsa_pr_1",
+          "bad_request",
+          "Error in fetching accounts from salesforce"));
+    }
+
     JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");
 
     for (JsonNode recordNode : recordsNode) {

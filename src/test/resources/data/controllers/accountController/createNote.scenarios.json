@@ -1,0 +1,107 @@
+[
+  {
+    "description": "Should successfully create the note", 
+    "input": {
+      "body": {
+        "text": "Test note"
+      },
+      "accountId": "0011e00000bWSxdAAG",
+      "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw=="
+    },
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
+          {
+            "body": {
+              "id": "0691e000001WaSzAAK",
+              "success": true,
+              "errors": []
+            },
+            "httpHeaders": {
+              "Location": "/services/data/v58.0/sobjects/ContentNote/0691e000001WaSzAAK"
+            },
+            "httpStatusCode": 201,
+            "referenceId": "createNote"
+          },
+          {
+            "body": {
+              "id": "06A1e000002iD9mEAE",
+              "success": true,
+              "errors": []
+            },
+            "httpHeaders": {
+              "Location": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002iD9mEAE"
+            },
+            "httpStatusCode": 201,
+            "referenceId": "attachNote"
+          }
+        ]
+      }
+    },
+    "output": {
+      "note_id": "0691e000001WaSzAAK"
+    }
+  },
+  {
+    "description": "Should fail when the note text is empty", 
+    "input": {
+      "body": {
+        "text": ""
+      },
+      "accountId": "0011e00000bWSxdAAG",
+      "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw=="
+    },
+    "mocks": {},
+    "output": {
+      "http_code": 400,
+      "message": "At least one parameter is invalid or missing.",
+      "code": "INVALID_PARAMS",
+      "internal_error_identifier": "b_2",
+      "param_errors": [
+        {
+          "parameter": "text",
+          "param_error_identifier": "missing_text",
+          "message": "text is required parameter. Please provide text."
+        }
+      ]
+    }
+  },
+  {
+    "description": "Should fail when the note text is not provided", 
+    "input": {
+      "body": {},
+      "accountId": "0011e00000bWSxdAAG",
+      "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw=="
+    },
+    "mocks": {},
+    "output": {
+      "http_code": 400,
+      "message": "At least one parameter is invalid or missing.",
+      "code": "INVALID_PARAMS",
+      "internal_error_identifier": "b_2",
+      "param_errors": [
+        {
+          "parameter": "text",
+          "param_error_identifier": "missing_text",
+          "message": "text is required parameter. Please provide text."
+        }
+      ]
+    }
+  },
+  {
+    "description": "Should fail when the cookie is invalid", 
+    "input": {
+      "body": {},
+      "accountId": "0011e00000bWSxdAAG",
+      "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:invalid"
+    },
+    "mocks": {},
+    "output": {
+      "http_code": 401,
+      "message": "Unauthorized API request. Please check your API key.",
+      "code": "UNAUTHORIZED",
+      "internal_error_identifier": "l_ulca_vct_2",
+      "param_errors": []
+    }
+  }
+]

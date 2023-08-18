@@ -75,11 +75,11 @@ public class GetCurrentUserTest {
         .cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
         .contentType(MediaType.APPLICATION_JSON));
 
+      String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
       if(resultActions.andReturn().getResponse().getStatus() == 200) {
-        String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
         assertEquals(expectedOutput, actualOutput);
       } else {
-        assertEquals(testDataItem.getOutput().get("status"), resultActions.andReturn().getResponse().getStatus());
+        common.compareErrors(testDataItem, actualOutput);
       }
     }
   }
