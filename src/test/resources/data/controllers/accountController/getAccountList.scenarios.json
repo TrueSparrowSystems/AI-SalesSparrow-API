@@ -112,7 +112,7 @@
   {
     "description": "Should return error if search string length > 20", 
     "input": {
-      "q": "ajdhfkshdfijskdfhisjkdfshdfjksldf"
+      "q": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
     },
     "mocks": {},
     "output": {
