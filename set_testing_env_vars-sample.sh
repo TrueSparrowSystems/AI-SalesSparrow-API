@@ -11,7 +11,6 @@ export AWS_IAM_ACCESS_KEY_ID='accessKeyId'
 export AWS_IAM_SECRET_ACCESS_KEY='secretAccessKey'
 export AWS_IAM_REGION='region'
 export KMS_KEY_ID=''
-export CACHE_CLUSTER_ID=''
 
 # Database
 export DYNAMO_DB_URL='http://localhost:8000'
@@ -21,6 +20,9 @@ export SALESFORCE_CLIENT_ID=''
 export SALESFORCE_CLIENT_SECRET=''
 export SALESFORCE_AUTH_URL=''
 
+# Memcached
+export MEMCACHED_CACHE_HOST='localhost'
+export MEMCACHED_CACHE_PORT='11211'
 
 # Error Email
 export ERROR_MAIL_FROM=''

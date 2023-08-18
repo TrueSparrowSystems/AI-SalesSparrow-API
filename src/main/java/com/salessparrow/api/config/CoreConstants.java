@@ -33,10 +33,6 @@ public class CoreConstants {
     return System.getenv("AWS_IAM_REGION");
   }
 
-  public static String cacheClusterId() {
-    return System.getenv("CACHE_CLUSTER_ID");
-  }
-
   public static String kmsKeyId() {
     return System.getenv("KMS_KEY_ID");
   }
@@ -71,6 +67,15 @@ public class CoreConstants {
     return "";
   }
 
+  /** 
+  * This method returns the memcached address that is going to be used for locals
+  *
+  * @return String
+  */
+  public static String memcachedAddress() {
+    return System.getenv("MEMCACHED_CACHE_HOST") + ":" + System.getenv("MEMCACHED_CACHE_PORT") ;
+  }
+
   /**
   * This method returns the list of redirect URIs that are whitelisted in Salesforce connected app for oAuth.
   *
@@ -80,7 +85,6 @@ public class CoreConstants {
     String redirectUrisJson = System.getenv("SALESFORCE_WHITELISTED_REDIRECT_URIS");
     return redirectUrisJson.split(",");
   }
-
 
   /** 
   * This method returns the email address that will be used to send error emails.

@@ -10,7 +10,6 @@ export API_COOKIE_SECRET='1234567890'
 export AWS_IAM_ACCESS_KEY_ID=''
 export AWS_IAM_SECRET_ACCESS_KEY=''
 export AWS_IAM_REGION=''
-export CACHE_CLUSTER_ID=''
 export KMS_KEY_ID=''
 
 # Dynamo DB
@@ -20,6 +19,10 @@ export DYNAMO_DB_URL='http://dynamodb:8000'
 export SALESFORCE_AUTH_URL='https://test.salesforce.com'
 export SALESFORCE_CLIENT_ID=''
 export SALESFORCE_CLIENT_SECRET=''
+
+# Memcached
+export MEMCACHED_CACHE_HOST='localhost'
+export MEMCACHED_CACHE_PORT='11211'
 
 # Error Email
 export ERROR_MAIL_FROM=''
