@@ -11,18 +11,17 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverter;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
  * SalesforceOauthToken model.
  * 
- * Cached data is serialized into bytes and stored in cache and deserialize when retrieved.
+ * Cached data is serialized into bytes and stored in cache and deserialize when
+ * retrieved.
  * Hence, the class must implement Serializable.
  */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @DynamoDBTable(tableName = "salesforce_oauth_tokens")
 public class SalesforceOauthToken implements Serializable {

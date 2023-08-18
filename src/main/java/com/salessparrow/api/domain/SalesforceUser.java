@@ -12,18 +12,17 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverter;
 import com.salessparrow.api.lib.globalConstants.UserConstants;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
  * SalesforceUser model.
  * 
- * Cached data is serialized into bytes and stored in cache and deserialize when retrieved.
+ * Cached data is serialized into bytes and stored in cache and deserialize when
+ * retrieved.
  * Hence, the class must implement Serializable.
  */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @DynamoDBTable(tableName = "salesforce_users")
 public class SalesforceUser implements User, Serializable {

@@ -53,24 +53,6 @@ public class CoreConstants {
     return System.getenv("SALESFORCE_CLIENT_SECRET");
   }
 
-  public static String salesforceClientBaseUrl() {
-    return System.getenv("SALESFORCE_CLIENT_BASE_URL");
-  }
-
-  public static String tableNamePrefix() {
-    if (environment().equals("test")) {
-      return "test_";
-    } else if (environment().equals("development")) {
-      return "dev_";
-    } else if (environment().equals("staging")) {
-      return "staging_";
-    } else if (environment().equals("production")) {
-      return "prod_";
-    }
-
-    return "";
-  }
-
   /**
    * This method returns the memcached address that is going to be used for locals
    *
