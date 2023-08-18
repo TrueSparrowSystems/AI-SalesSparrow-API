@@ -1,5 +1,7 @@
 package com.salessparrow.api.helper;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +14,7 @@ import org.springframework.core.io.ResourceLoader;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 
 /**
  * Common is a helper class for the tests.
@@ -49,5 +52,27 @@ public class Common {
     Resource resource = resourceLoader.getResource(location);
     ObjectMapper objectMapper = new ObjectMapper();
     return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});
+  }
+
+  /**
+   * Compare the errors from the test data with the actual errors.
+   * 
+   * @param testDataItem
+   * @param contentAsString
+   */
+  public void compareErrors(Scenario testDataItem, String contentAsString) {
+    Integer httpCode = JsonPath.read(contentAsString, "$.http_code");
+    assertEquals(testDataItem.getOutput().get("http_code"), httpCode);
+
+    String code = JsonPath.read(contentAsString, "$.code");
+    assertEquals(testDataItem.getOutput().get("code"), code);
+
+    List<String> paramErrors = (List<String>) testDataItem.getOutput().get("param_errors");
+    if (paramErrors != null) {
+      for ( int i = 0; i < paramErrors.size(); i++) {
+        String actualError = JsonPath.read(contentAsString, "$.param_errors[" + i + "].param_error_identifier");
+        assertEquals(paramErrors.contains(actualError), true);
+      }
+    }
   }
 }
