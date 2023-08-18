@@ -1,0 +1,78 @@
+[
+  {
+    "description": "Should return the current user for valid code",
+    "input": {
+      "body": {
+        "code": "1234567",
+        "redirect_uri": "http://localhost:3000"
+      }
+    },
+    "mocks": {
+      "getTokens": {
+        "access_token": "xyz",
+        "refresh_token": "xyz",
+        "signature": "xyz",
+        "scope": "xyz",
+        "id_token": "xyz",
+        "instance_url": "xyz",
+        "id": "https://test.salesforce.com/id/00D1e0000000NRYEA2/0055i00000AUxQHAA1",
+        "token_type": "Bearer",
+        "issued_at": "1690520247198"
+      },
+      "getIdentity": {
+          "sub": "https://test.salesforce.com/id/00D1e0000000NRYEA2/0055i00000AUxQHAA1",
+          "user_id": "0055i00000AUxQHAA1",
+          "organization_id": "00D1e0000000NRYEA2",
+          "name": "Ashfaq Bhojani",
+          "email": "ashfaq@truesparrow.com"
+    }
+    },
+    "output": {
+      "body": {
+        "current_user": {
+          "id": "SALESFORCE-0055i00000AUxQHAA1",
+          "name": "Ashfaq Bhojani",
+          "email": "ashfaq@truesparrow.com"
+        }
+      },
+      "status": 200
+    }
+  },
+  {
+    "description": "Should return the params error for empty code",
+    "input": {
+      "body": {
+        "code": "",
+        "redirect_uri": "http://localhost:3000"
+      }
+    },
+    "mocks": {},
+    "output": {
+      "body": {
+        "param_error_identifiers": [
+          "missing_code"
+        ]
+      },
+      "status": 400
+    }
+  },
+  {
+    "description": "Should return the params error for invalid redirect_uri",
+    "input": {
+      "body": {
+        "code": "1234567",
+        "redirect_uri": "abcd"
+      }
+    },
+    "mocks": {},
+    "output": {
+      "body": {
+        "param_error_identifiers": [
+          "invalid_redirect_uri"
+        ]
+      },
+      "status": 400
+    }
+  }
+
+]
