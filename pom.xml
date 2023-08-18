@@ -73,7 +73,7 @@
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-elasticache</artifactId>
-      <version>1.12.146</version>
+      <version>1.12.531</version>
     </dependency>
 
     <dependency>
