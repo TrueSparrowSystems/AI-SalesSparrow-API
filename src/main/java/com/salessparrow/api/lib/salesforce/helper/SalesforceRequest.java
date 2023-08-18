@@ -2,6 +2,7 @@ package com.salessparrow.api.lib.salesforce.helper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import com.salessparrow.api.domain.SalesforceOauthToken;
 import com.salessparrow.api.exception.CustomException;
@@ -36,17 +37,24 @@ public class SalesforceRequest {
 
     try {
       return request.execute(decryptedAccessToken, sfOAuthToken.getInstanceUrl());
-    } catch (Exception e) {
-      try {
-        decryptedAccessToken = getAccessTokenService.updateAndGetRefreshedAccessToken(sfOAuthToken);
-        return request.execute(decryptedAccessToken, sfOAuthToken.getInstanceUrl());
-      } catch (Exception e1) {
-        throw new CustomException(
-          new ErrorObject(
-            "l_s_h_sr_mr_1",
-            "something_went_wrong",
-            e.getMessage()));
+    } catch (WebClientResponseException e) {
+      if(e.getStatusCode().value() == 401) {
+        try {
+          decryptedAccessToken = getAccessTokenService.updateAndGetRefreshedAccessToken(sfOAuthToken);
+          return request.execute(decryptedAccessToken, sfOAuthToken.getInstanceUrl());
+        } catch (Exception e1) {
+          throw new CustomException(
+            new ErrorObject(
+              "l_s_h_sr_mr_1",
+              "something_went_wrong",
+              e.getMessage()));
+        }
       }
+      throw new CustomException(
+        new ErrorObject(
+          "l_s_h_sr_mr_2",
+          "something_went_wrong",
+          e.getMessage()));
     }
   }
 }
