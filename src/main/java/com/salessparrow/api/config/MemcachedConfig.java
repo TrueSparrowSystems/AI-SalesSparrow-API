@@ -4,13 +4,6 @@ package com.salessparrow.api.config;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.elasticache.AmazonElastiCache;
-import com.amazonaws.services.elasticache.AmazonElastiCacheClientBuilder;
-import com.amazonaws.services.elasticache.model.CacheCluster;
-import com.amazonaws.services.elasticache.model.DescribeCacheClustersRequest;
-import com.amazonaws.services.elasticache.model.DescribeCacheClustersResult;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.globalConstants.CacheConstants;
@@ -84,47 +77,21 @@ public class MemcachedConfig implements CachingConfigurer {
   }
 
   public MemcachedClient memcachedClient() {
+    logger.info("Memcached Client Initialized");
     try {
-      if (CoreConstants.isDevEnvironment()) {
-        logger.info("Using local memcached");
-        // Local environment, use the provided memcachedAddresses
-        cache = new MemcachedClient(
-          new ConnectionFactoryBuilder()
-            .setTranscoder(new SerializingTranscoder())
-            .setProtocol(ConnectionFactoryBuilder.Protocol.BINARY)
-            .build(),
-          AddrUtil.getAddresses(CoreConstants.memcachedAddress()));
-      } else {
-        BasicAWSCredentials awsCredentials = new BasicAWSCredentials(
-          CoreConstants.awsAccessKeyId(), 
-          CoreConstants.awsSecretAccessKey()
-        );
-
-        AmazonElastiCache amazonElastiCache = AmazonElastiCacheClientBuilder.standard()
-          .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-          .withRegion(CoreConstants.awsRegion())
-          .build();
-
-        DescribeCacheClustersResult clustersResult = amazonElastiCache.describeCacheClusters(
-                new DescribeCacheClustersRequest().withCacheClusterId(CoreConstants.cacheClusterId()));
-        CacheCluster cluster = clustersResult.getCacheClusters().get(0);
-        String endpoint = cluster.getConfigurationEndpoint().getAddress();
-        int port = cluster.getConfigurationEndpoint().getPort();
-
-        cache = new MemcachedClient(new ConnectionFactoryBuilder()
-                .setTranscoder(new SerializingTranscoder())
-                .setProtocol(ConnectionFactoryBuilder.Protocol.BINARY)
-                .build(),
-                AddrUtil.getAddresses(endpoint + ":" + port));
-      }
+      cache = new MemcachedClient(
+        new ConnectionFactoryBuilder()
+          .setTranscoder(new SerializingTranscoder())
+          .setProtocol(ConnectionFactoryBuilder.Protocol.BINARY)
+          .build(),
+        AddrUtil.getAddresses(CoreConstants.memcachedAddress()));
     } catch (Exception e) {
       throw new CustomException(
         new ErrorObject(
           "a_c_mc_mc_1",
           "something_went_wrong",
           e.getMessage()));
-    } 
-
+    }
     return cache;
   } 
 

@@ -21,9 +21,9 @@ export SALESFORCE_AUTH_URL='https://test.salesforce.com'
 export SALESFORCE_CLIENT_ID=''
 export SALESFORCE_CLIENT_SECRET=''
 
-# Local Cache
-export LOCAL_CACHE_HOST='localhost'
-export LOCAL_CACHE_PORT='11211'
+# Memcached
+export MEMCACHED_CACHE_HOST='localhost'
+export MEMCACHED_CACHE_PORT='11211'
 
 # Error Email
 export ERROR_MAIL_FROM=''
