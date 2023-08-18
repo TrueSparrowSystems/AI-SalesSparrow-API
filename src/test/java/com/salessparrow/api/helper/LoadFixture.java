@@ -30,7 +30,7 @@ public class LoadFixture {
 
   @Autowired
   private SalesforceOrganizationRepository salesforceOrganizationRepository;
-  
+
   /**
    * Load the fixture data.
    * 
@@ -45,8 +45,8 @@ public class LoadFixture {
         SalesforceUser salesforceUser = loadSalesForceUserFixture(filePathData.getFilepath());
         salesforceUserRepository.saveSalesforceUser(salesforceUser);
       }
-    } 
-    
+    }
+
     if (fixtureData.getSalesforce_oauth_tokens() != null) {
       for (FilePathData filePathData : fixtureData.getSalesforce_oauth_tokens()) {
         SalesforceOauthToken salesforceOauth = loadSalesForceOAuthTokenFixture(filePathData.getFilepath());
@@ -54,13 +54,13 @@ public class LoadFixture {
       }
     }
 
-    if (fixtureData.getSalesforce_organiztions() != null) {
-      for (FilePathData filePathData : fixtureData.getSalesforce_organiztions()) {
+    if (fixtureData.getSalesforce_organizations() != null) {
+      for (FilePathData filePathData : fixtureData.getSalesforce_organizations()) {
         SalesforceOrganization salesforceOrganization = loadSalesForceOrganizationFixture(filePathData.getFilepath());
         salesforceOrganizationRepository.saveSalesforceOrganization(salesforceOrganization);
       }
     }
-  
+
   }
 
   /**
@@ -73,7 +73,8 @@ public class LoadFixture {
   public SalesforceUser loadSalesForceUserFixture(String location) throws IOException {
     Resource resource = resourceLoader.getResource(location);
     ObjectMapper objectMapper = new ObjectMapper();
-    return objectMapper.readValue(resource.getInputStream(), new TypeReference<SalesforceUser>() {});
+    return objectMapper.readValue(resource.getInputStream(), new TypeReference<SalesforceUser>() {
+    });
   }
 
   /**
@@ -86,7 +87,8 @@ public class LoadFixture {
   public SalesforceOauthToken loadSalesForceOAuthTokenFixture(String location) throws IOException {
     Resource resource = resourceLoader.getResource(location);
     ObjectMapper objectMapper = new ObjectMapper();
-    return objectMapper.readValue(resource.getInputStream(), new TypeReference<SalesforceOauthToken>() {});
+    return objectMapper.readValue(resource.getInputStream(), new TypeReference<SalesforceOauthToken>() {
+    });
   }
 
   /**
@@ -99,6 +101,7 @@ public class LoadFixture {
   public SalesforceOrganization loadSalesForceOrganizationFixture(String location) throws IOException {
     Resource resource = resourceLoader.getResource(location);
     ObjectMapper objectMapper = new ObjectMapper();
-    return objectMapper.readValue(resource.getInputStream(), new TypeReference<SalesforceOrganization>() {});
+    return objectMapper.readValue(resource.getInputStream(), new TypeReference<SalesforceOrganization>() {
+    });
   }
 }
