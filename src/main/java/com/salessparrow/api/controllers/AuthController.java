@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpHeaders;
 
 import com.salessparrow.api.services.salesforce.RedirectUrlService;
+import com.salessparrow.api.dto.formatter.RedirectUrlFormatterDto;
 import com.salessparrow.api.dto.formatter.SalesforceConnectFormatterDto;
 import com.salessparrow.api.dto.requestMapper.SalesforceConnectDto;
 import com.salessparrow.api.dto.requestMapper.SalesforceRedirectUrlDto;
@@ -32,7 +33,7 @@ public class AuthController {
   Logger logger = LoggerFactory.getLogger(AuthController.class);
 
   @Autowired
-  private RedirectUrlService redirectUrlService = new RedirectUrlService();
+  private RedirectUrlService redirectUrlService;
 
   @Autowired
   private AuthService authService;
@@ -41,12 +42,12 @@ public class AuthController {
   private CookieHelper cookieHelper;
 
   @GetMapping("/salesforce/redirect-url")
-  public ResponseEntity<RedirectUrlService.RedirectUrlServiceDto> getSalesforceRedirectUrl(
+  public ResponseEntity<RedirectUrlFormatterDto> getSalesforceRedirectUrl(
       @Valid @ModelAttribute SalesforceRedirectUrlDto salesforceRedirectUrlDto) {
-    RedirectUrlService.RedirectUrlServiceDto salesforceOauthServiceDto = redirectUrlService
-        .getSalesforceOauthUrl(salesforceRedirectUrlDto);
+    
+    RedirectUrlFormatterDto redirectUrlFormatterDto = redirectUrlService.getSalesforceOauthUrl(salesforceRedirectUrlDto);
 
-    return ResponseEntity.ok().body(salesforceOauthServiceDto);
+    return ResponseEntity.ok().body(redirectUrlFormatterDto);
   }
 
   @PostMapping("/salesforce/connect")

@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class UserController {
   
   @Autowired
-  private GetCurrentUserService getCurrentUserService = new GetCurrentUserService();
+  private GetCurrentUserService getCurrentUserService;
   
   @GetMapping("/current")
   public ResponseEntity<GetCurrentUserFormatterDto> GetCurrentUser(HttpServletRequest request) {

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.salessparrow.api.config.CoreConstants;
+import com.salessparrow.api.dto.formatter.RedirectUrlFormatterDto;
 import com.salessparrow.api.dto.requestMapper.SalesforceRedirectUrlDto;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 
@@ -24,11 +25,11 @@ public class RedirectUrlService {
    * Get the redirect url for the oauth2 flow
    * @param salesforceRedirectUrlDto
    * 
-   * @return RedirectUrlServiceDto
+   * @return RedirectUrlFormatterDto
    **/
-  public RedirectUrlServiceDto getSalesforceOauthUrl(SalesforceRedirectUrlDto salesforceRedirectUrlDto) {
+  public RedirectUrlFormatterDto getSalesforceOauthUrl(SalesforceRedirectUrlDto salesforceRedirectUrlDto) {
 
-    String redirectUri = salesforceRedirectUrlDto.getRedirectUri();
+    String redirectUri = salesforceRedirectUrlDto.getRedirect_uri();
     String state = salesforceRedirectUrlDto.getState();
 
     String salesforceLoginUrl = salesforceConstants.oauth2AuthorizeUrl();
@@ -42,25 +43,9 @@ public class RedirectUrlService {
       salesforceOauthUrl += "&state=" + state;
     }
 
-    RedirectUrlServiceDto salesforceOauthServiceDto = new RedirectUrlServiceDto();
-    salesforceOauthServiceDto.setUrl(salesforceOauthUrl);
+    RedirectUrlFormatterDto redirectUrlFormatterDto = new RedirectUrlFormatterDto();
+    redirectUrlFormatterDto.setUrl(salesforceOauthUrl);
 
-    return salesforceOauthServiceDto;
-  }
-
-  /**
-   * DTO class for the redirect url service
-   * @return RedirectUrlServiceDto
-   **/
-  public static class RedirectUrlServiceDto {
-    private String url;
-
-    public String getUrl() {
-      return url;
-    }
-
-    public void setUrl(String url) {
-      this.url = url;
-    }
+    return redirectUrlFormatterDto;
   }
 }
