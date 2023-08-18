@@ -67,107 +67,60 @@ This directory serves as a submodule linked to [ai-salesparrow-docs](https://git
 ```
 
 ### main/
-
 This directory contains the main source code for your application. 
 
-#### java/
+#### java/com/salessparrow/api/
+This directory contains the Java source code for your application. It contains the below directories and files.
 
-This directory contains the Java source code for your application.
+- changelogs/ - This directory contains the Dynamobee changelog files for your application which are used to manage database changes.
 
-##### com/salessparrow/api/
+- config/ - This directory contains the different configuration classes for your application like aws, dynamobee, cors, etc. 
 
-This directory contains the specific source code for your application. It contains the below directories and files.
+- controllers/ - This directory contains the controller classes for your application which are used to handle the incoming requests and send the response back to the client.
 
-- changelogs/
+- domain/ - This directory contains the domain classes for your application which are used to map the database tables.
 
-This directory contains the Dynamobee changelog files for your application which are used to manage database changes.
+- dto/ - This directory contains the DTO classes for your application which are used to map the request and response objects.
 
-- config/
+- exception/ - This directory contains the exception classes for your application which are used to handle different exceptions.
 
-This directory contains the different configuration classes for your application like aws, dynamobee, cors, etc. 
+- interceptors/ - This directory contains the interceptor classes for your application which are used to intercept the incoming requests and outgoing responses. It contains interceptors for logging, authentication, etc.
 
-- controllers/
+- lib/ - This directory contains the library classes for your application which are used to handle the common functionalities like http client, utility functions, etc.
 
-This directory contains the controller classes for your application which are used to handle the incoming requests and send the response back to the client.
+- repositories/ - This directory contains the repository classes for your application which are used to handle the database operations.
 
-- domain/
+- services/ - This directory contains the service classes for your application which are used to handle the business logic.
 
-This directory contains the domain classes for your application which are used to map the database tables.
-
-- dto/
-
-This directory contains the DTO classes for your application which are used to map the request and response objects.
-
-- exception/
-
-This directory contains the exception classes for your application which are used to handle different exceptions.
-
-- interceptors/
-
-This directory contains the interceptor classes for your application which are used to intercept the incoming requests and outgoing responses. It contains interceptors for logging, authentication, etc.
-
-- lib/
-
-This directory contains the library classes for your application which are used to handle the common functionalities like http client, utility functions, etc.
-
-- repositories/
-
-This directory contains the repository classes for your application which are used to handle the database operations.
-
-- services/
-
-This directory contains the service classes for your application which are used to handle the business logic.
-
-- SalesSparrowApi.java
-
-This is the main class for your application which is  used to start the application.
+- SalesSparrowApi.java - This is the main class for your application which is  used to start the application.
 
 #### resources/
 
-This directory contains the resources for your application.
+This directory contains the resources for your application. Below are the directories and files in this directory.
 
-##### config/
+- config/ - This directory contains the configuration files for your application like apiErrorConfig, paramErrorConfig, etc.
 
-This directory contains the configuration files for your application like apiErrorConfig, paramErrorConfig, etc.
-
-##### application.properties
-
-This file contains the application properties for your application like server port, database connection details, etc.
+- application.properties - This file contains the application properties for your application like server port, database connection details, etc.
 
 ### test/
 
 This directory contains the test source code for your application.
 
-#### java/
+#### java/com/salessparrow/api/
 
-This directory contains the Java test source code for your application.
+This directory contains the Java test source code for your application. It contains the below directories and files.
 
-##### com/salessparrow/api/
+- functional/ - This directory contains the functional test classes for your application which are used to test the application end to end.
 
-This directory contains the specific test source code for your application. It contains the below directories and files.
+- unit/ - This directory contains the unit test classes for your application which are used to test the application units.
 
-
-- functional/
-
-This directory contains the functional test classes for your application which are used to test the application end to end.
-
-- unit/
-
-This directory contains the unit test classes for your application which are used to test the application units.
-
-###### helper/
-
-This directory contains the helper classes for running the tests.
+- helper/ - This directory contains the helper classes for running the tests.
 
 #### resources/
 
 This directory contains the test resources for your application. It contains the below directories and files.
 
-##### data/
+-  data/ - This directory contains the data files for your application which contains the test data.
 
-This directory contains the data files for your application which contains the test data.
-
-##### fixtures/
-
-This directory contains the fixtures files for your application which are used to load the data into the database.
+-  fixtures/ - This directory contains the fixtures files for your application which are used to load the data into the database.
 
