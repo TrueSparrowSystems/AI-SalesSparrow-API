@@ -1,0 +1,132 @@
+[
+  {
+    "description": "Should return the list of accounts", 
+    "input": {
+      "q": "a"
+    },
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
+          {
+            "body": {
+              "totalSize": 2,
+              "done": true,
+              "records": [
+                {
+                  "attributes": {
+                    "type": "Account",
+                    "url": "/services/data/v58.0/sobjects/Account/0011e00000dWhY5AAK"
+                  },
+                  "Id": "0011e00000dWhY5AAK",
+                  "Name": "Test 1"
+                },
+                {
+                  "attributes": {
+                    "type": "Account",
+                    "url": "/services/data/v58.0/sobjects/Account/0011e00000bQwsKAAS"
+                  },
+                  "Id": "0011e00000bQwsKAAS",
+                  "Name": "Test 2"
+                }
+              ]
+            },
+            "httpHeaders": {},
+            "httpStatusCode": 200,
+            "referenceId": "getAccounts"
+          }
+        ]
+      }
+    },
+    "output": {
+      "account_ids": [
+          "0011e00000dWhY5AAK",
+          "0011e00000bQwsKAAS"
+      ],
+      "account_map_by_id": {
+        "0011e00000dWhY5AAK": {
+          "id": "0011e00000dWhY5AAK",
+          "name": "Test 1"
+        },
+        "0011e00000bQwsKAAS": {
+          "id": "0011e00000bQwsKAAS",
+          "name": "Test 2"
+        }
+      }
+    }
+  },
+  {
+    "description": "Should return the list of accounts sorted by modified date", 
+    "input": {
+      "q": ""
+    },
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
+          {
+            "body": {
+              "totalSize": 2,
+              "done": true,
+              "records": [
+                {
+                  "attributes": {
+                    "type": "Account",
+                    "url": "/services/data/v58.0/sobjects/Account/0011e00000dWhY5AAK"
+                  },
+                  "Id": "0011e00000dWhY5AAK",
+                  "Name": "Test 1"
+                },
+                {
+                  "attributes": {
+                    "type": "Account",
+                    "url": "/services/data/v58.0/sobjects/Account/0011e00000bQwsKAAS"
+                  },
+                  "Id": "0011e00000bQwsKAAS",
+                  "Name": "Test 2"
+                }
+              ]
+            },
+            "httpHeaders": {},
+            "httpStatusCode": 200,
+            "referenceId": "getAccounts"
+          }
+        ]
+      }
+    },
+    "output": {
+      "account_ids": [
+          "0011e00000dWhY5AAK",
+          "0011e00000bQwsKAAS"
+      ],
+      "account_map_by_id": {
+        "0011e00000dWhY5AAK": {
+          "id": "0011e00000dWhY5AAK",
+          "name": "Test 1"
+        },
+        "0011e00000bQwsKAAS": {
+          "id": "0011e00000bQwsKAAS",
+          "name": "Test 2"
+        }
+      }
+    }
+  },
+  {
+    "description": "Should return error if search string length > 20", 
+    "input": {
+      "q": "ajdhfkshdfijskdfhisjkdfshdfjksldf"
+    },
+    "mocks": {},
+    "output": {
+      "http_code": 400,
+      "message": "At least one parameter is invalid or missing.",
+      "code": "INVALID_PARAMS",
+      "internal_error_identifier": "b_2",
+      "param_errors": [
+        {
+          "parameter": "q",
+          "param_error_identifier": "search_term_too_long",
+          "message": "Search term too long. Please shorten and try again."
+        }
+      ]
+    }
+  }
+]
