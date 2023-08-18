@@ -14,15 +14,15 @@ import jakarta.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
-  
+
   @Autowired
   private GetCurrentUserService getCurrentUserService;
-  
+
   @GetMapping("/current")
   public ResponseEntity<GetCurrentUserFormatterDto> GetCurrentUser(HttpServletRequest request) {
-  
+
     GetCurrentUserFormatterDto getCurrentUserFormatterDto = new GetCurrentUserFormatterDto();
-    getCurrentUserFormatterDto.setCurrent_user(getCurrentUserService.getCurrentUser(request));
+    getCurrentUserFormatterDto.setCurrentUser(getCurrentUserService.getCurrentUser(request));
 
     return ResponseEntity.ok().body(getCurrentUserFormatterDto);
   }

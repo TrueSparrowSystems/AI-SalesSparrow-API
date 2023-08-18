@@ -16,5 +16,5 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GetCurrentUserFormatterDto {
-  private CurrentUserEntityDto current_user;
+  private CurrentUserEntityDto currentUser;
 }

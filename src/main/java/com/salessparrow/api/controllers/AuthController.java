@@ -61,7 +61,7 @@ public class AuthController {
     headers = cookieHelper.setUserCookie(authServiceResponse.getCurrentUserLoginCookie(), headers);
 
     SalesforceConnectFormatterDto salesforceConnectResponse = new SalesforceConnectFormatterDto();
-    salesforceConnectResponse.setCurrent_user(authServiceResponse.getCurrentUser());
+    salesforceConnectResponse.setCurrentUser(authServiceResponse.getCurrentUser());
 
     return ResponseEntity.ok().headers(headers).body(salesforceConnectResponse);
   }

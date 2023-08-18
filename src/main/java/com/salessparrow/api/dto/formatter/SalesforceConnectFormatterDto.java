@@ -1,6 +1,10 @@
 package com.salessparrow.api.dto.formatter;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.salessparrow.api.dto.entities.CurrentUserEntityDto;
+
+import lombok.Data;
 
 /**
  * Salesforce connect formatter DTO.
@@ -9,18 +13,12 @@ import com.salessparrow.api.dto.entities.CurrentUserEntityDto;
  * 
  * @return SalesforceConnectFormatterDto
  */
+@Data
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class SalesforceConnectFormatterDto {
   public SalesforceConnectFormatterDto() {
   }
 
-  private CurrentUserEntityDto current_user;
-
-  public CurrentUserEntityDto getCurrent_user() {
-    return current_user;
-  }
-
-  public void setCurrent_user(CurrentUserEntityDto current_user) {
-    this.current_user = current_user;
-  }
+  private CurrentUserEntityDto currentUser;
 
 }
