@@ -48,4 +48,13 @@ $ ./mvnw spring-boot:run
  ```
  $ ./mvnw clean install -Dmaven.test.skip
  ```
- 
+
+ **To run test cases**
+ ```
+ $ ./mvnw clean test
+ ```
+
+ **To run test cases and generate coverage report**
+ ```
+ $ ./mvnw clean test jacoco:report
+ ```
