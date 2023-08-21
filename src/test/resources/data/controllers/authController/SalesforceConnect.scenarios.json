@@ -1,7 +1,7 @@
 {
   "testPostSalesforceConnectSignup": [
     {
-      "description": "Should return the current user for valid code and redirect_uri",
+      "description": "Should return the current user for valid code and redirect_uri while signup",
       "input": {
         "body": {
           "code": "1234567",
@@ -91,7 +91,7 @@
   ],
   "testPostSalesforceConnectLogin":[
     {
-      "description": "Should return the current user for valid code and redirect_uri",
+      "description": "Should return the current user for valid code and redirect_uri while login",
       "input": {
         "body": {
           "code": "1234567",

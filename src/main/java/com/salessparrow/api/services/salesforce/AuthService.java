@@ -41,7 +41,7 @@ public class AuthService {
   private SalesforceOauthToken salesforceOauthToken;
   private SalesforceUser salesforceUser;
   private String decryptedSalt;
-  private Boolean isNewUser = true;
+  private Boolean isNewUser;
 
   Logger logger = LoggerFactory.getLogger(AuthService.class);
 
@@ -80,6 +80,8 @@ public class AuthService {
    * @return AuthServiceDto
    */
   public AuthServiceDto connectToSalesforce(SalesforceConnectDto params) {
+    this.isNewUser = true; // setting default value true to this variable, this will be updated based on conditions in further processing
+
     code = params.getCode();
     redirectUri = params.getRedirect_uri();
 
