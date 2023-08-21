@@ -1,0 +1,38 @@
+version: '3'
+services:
+  # App server provisioning
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    ports:
+      - '8080:8080'
+    networks:
+      - localdev
+    volumes:
+      - './:/app'
+    command: bash -c 'sh start_local.sh'
+
+  # Memcached provisioning
+  memcached:
+    image: memcached
+    ports:
+      - '11211:11211'
+    networks:
+      - localdev
+  
+  # DynamoDB provisioning
+  dynamodb:
+    image: amazon/dynamodb-local:latest
+    ports:
+      - '8000:8000'
+    networks:
+      - localdev
+    volumes:
+     - "./docker/dynamodb:/home/dynamodblocal/data"
+    working_dir: /home/dynamodblocal
+    command: '-jar DynamoDBLocal.jar -sharedDb -dbPath ./data'
+
+networks:
+  localdev:
+    driver: bridge

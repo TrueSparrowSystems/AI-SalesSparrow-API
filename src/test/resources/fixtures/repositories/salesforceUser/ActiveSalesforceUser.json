@@ -1,0 +1,11 @@
+{
+  "externalUserId": "00112233445566AAA1",
+  "identityUrl": "https://test.salesforce.com/id/00D2v0000012gJjEAI/00112233445566AAA1",
+  "externalOrganizationId": "00D2v0000012gJjEAI",
+  "name": "Test User",
+  "email": "test@test.com",
+  "userKind": "SALESFORCE",
+  "cookieToken": "RSfDRwhQvIeFwJ9AAnv1ed3YN3ob9e9R0vSgKbsaxFcHFKwuyH6DiWVpD4orMrHQ3Kftns15kq04igHvaPaZLXbzWxQUOgtMr1lYZWBBF3s=",
+  "encryptionSalt": "EHpifHQeXUJcz1LtEDdx2Z/yB2qoHNTGfcWZQQlxsOeHGICDip9rPMpzG+LVtUOh",
+  "status": "ACTIVE"
+}

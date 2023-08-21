@@ -1,0 +1,9 @@
+{
+  "getCurrentUser": {
+    "salesforce_users": [
+      { 
+        "filepath": "classpath:fixtures/repositories/salesforceUser/ActiveSalesforceUser.json"
+      }
+    ]
+  }
+}

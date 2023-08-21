@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<property name="DEV_HOME" value="logs" />
+		
+	<appender name="JSON-STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="net.logstash.logback.encoder.LogstashEncoder">
+			<customFields>{"app_name":"YourAppName"}</customFields>
+			<fieldNames>
+				<message>message</message>
+				<levelValue>log_level</levelValue>
+				<timestamp>timestamp</timestamp>
+				<logger>logger</logger>
+				<mdc>{"trackingId": "trackingId"}</mdc>
+				<exception>exception</exception>
+			</fieldNames>
+		</encoder>
+	</appender>
+
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+			<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+					<Pattern>
+					%d{yyyy-MM-dd HH:mm:ss} %highlight(%-5level) [%X{trackingId}] %logger{36} - %highlight(%msg%n)
+					</Pattern>	
+			</encoder>		
+	</appender>
+
+	<!-- Send logs to both console and file audit -->
+	<logger name="com.salessparrow.api" level="${LOG_LEVEL:-info}"
+		additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<root level="info">
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>

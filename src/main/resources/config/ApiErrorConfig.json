@@ -1,0 +1,47 @@
+{
+  "bad_request": {
+    "httpCode": "400",
+    "code": "BAD_REQUEST",
+    "message": "Invalid request. Please check your input."
+  },
+  "unauthorized_api_request": {
+    "httpCode": "401",
+    "code": "UNAUTHORIZED",
+    "message": "Unauthorized API request. Please check your API key."
+  },
+  "resource_not_found": {
+    "httpCode": "404",
+    "code": "NOT_FOUND",
+    "message": "Resource not found. Please check if the resource identifier passed in the URL is valid and try again."
+  },
+  "something_went_wrong": {
+    "httpCode": "500",
+    "code": "INTERNAL_SERVER_ERROR",
+    "message": "Something went wrong."
+  },
+  "internal_server_error": {
+    "httpCode": "500",
+    "code": "INTERNAL_SERVER_ERROR",
+    "message": "Something went wrong."
+  },
+  "invalid_credentials": {
+    "httpCode": "401",
+    "code": "INVALID_CREDENTIALS",
+    "message": "Invalid credentials. Please check your email and password."
+  },
+  "user_already_exists": {
+    "httpCode": "403",
+    "code": "USER_ALREADY_EXISTS",
+    "message": "User with the provided email already exists."
+  },
+  "invalid_params": {
+    "httpCode": "400",
+    "code": "INVALID_PARAMS",
+    "message": "At least one parameter is invalid or missing."
+  },
+    "forbidden_api_request": {
+      "httpCode": "403",
+      "code": "FORBIDDEN",
+      "message": "Forbidden API request. You do not have the necessary permissions."
+    }
+}
