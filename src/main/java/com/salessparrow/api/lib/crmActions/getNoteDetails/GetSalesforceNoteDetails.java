@@ -36,6 +36,28 @@ public class GetSalesforceNoteDetails implements GetNoteDetails {
     private SalesforceGetNoteContent salesforceGetNoteContent;
 
     /**
+     * Get the details of a note
+     * 
+     * @param user
+     * @param noteId
+     * 
+     * @return GetNoteDetailsFormatterDto
+     **/
+    public GetNoteDetailsFormatterDto getNoteDetails(User user, String noteId) {
+
+        String salesforceUserId = user.getExternalUserId();
+
+        HttpClient.HttpResponse noteDetailsResponse = notesResponse(noteId, salesforceUserId);
+
+        HttpClient.HttpResponse noteContentResponse = salesforceGetNoteContent.getNoteContent(noteId, salesforceUserId);
+
+        GetNoteDetailsFormatterDto noteDetailsFormatterDto = parseResponse(noteDetailsResponse.getResponseBody(), noteContentResponse.getResponseBody());
+
+        return noteDetailsFormatterDto;
+
+    }
+
+    /**
      * Get the list of notes for a given account
      * 
      * @param documentIds
@@ -43,7 +65,7 @@ public class GetSalesforceNoteDetails implements GetNoteDetails {
      * 
      * @return HttpResponse
      **/
-    private HttpClient.HttpResponse getNotes(String noteId, String salesforceUserId) {
+    private HttpClient.HttpResponse notesResponse(String noteId, String salesforceUserId) {
         SalesforceQueryBuilder salesforceLib = new SalesforceQueryBuilder();
         String notesQuery = salesforceLib.getNoteDetailsUrl(noteId);
 
@@ -60,28 +82,6 @@ public class GetSalesforceNoteDetails implements GetNoteDetails {
     }
 
     /**
-     * Get the details of a note
-     * 
-     * @param user
-     * @param noteId
-     * 
-     * @return GetNoteDetailsFormatterDto
-     **/
-    public GetNoteDetailsFormatterDto getNoteDetails(User user, String noteId) {
-
-        String salesforceUserId = user.getExternalUserId();
-
-        HttpClient.HttpResponse noteDetailsResponse = getNotes(noteId, salesforceUserId);
-
-        HttpClient.HttpResponse noteContentResponse = salesforceGetNoteContent.getNoteContent(noteId, salesforceUserId);
-
-        GetNoteDetailsFormatterDto noteDetailsFormatterDto = formatNoteDetails(noteDetailsResponse.getResponseBody(), noteContentResponse.getResponseBody());
-
-        return noteDetailsFormatterDto;
-
-    }
-
-    /**
      * Format the response of the note details
      * 
      * @param noteDetailsResponse
@@ -89,7 +89,7 @@ public class GetSalesforceNoteDetails implements GetNoteDetails {
      * 
      * @return GetNoteDetailsFormatterDto
      */
-    private GetNoteDetailsFormatterDto formatNoteDetails(String noteDetailsResponse, String noteContentResponse) {
+    private GetNoteDetailsFormatterDto parseResponse(String noteDetailsResponse, String noteContentResponse) {
         NoteDetailEntity noteDetailEntity = new NoteDetailEntity();
         try {
             Util util = new Util();

@@ -249,8 +249,8 @@
                                         "url": "/services/data/v58.0/sobjects/ContentNote/0691e000001WuIuAAK"
                                     },
                                     "Id": "0691e000001WuIuAAK",
-                                    "Title": "Sunil’s test from Alpesh’s account",
-                                    "TextPreview": "Sunil’s test from Alpesh’s account",
+                                    "Title": "Sunils test from Alpeshs account",
+                                    "TextPreview": "Sunils test from Alpeshs account",
                                     "CreatedBy": {
                                         "attributes": {
                                             "type": "User",
@@ -344,7 +344,7 @@
                 "0691e000001WuIuAAK": {
                     "id": "0691e000001WuIuAAK",
                     "creator": "Ashfaq Bhojani",
-                    "text_preview": "Sunil’s test from Alpesh’s account",
+                    "text_preview": "Sunils test from Alpeshs account",
                     "last_modified_time": "2023-08-17T13:37:13.000+00:00"
                 },
                 "0691e000001Wu8pAAC": {

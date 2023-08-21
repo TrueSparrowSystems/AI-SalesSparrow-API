@@ -38,12 +38,41 @@ public class GetSalesforceNotesList implements GetNotesList{
 
     /**
      * Get the list of notes for a given account
+     * @param user
+     * @param accountId
+     * 
+     * @return GetNotesListFormatterDto
+     **/
+    public GetNotesListFormatterDto getNotesList(User user,String accountId) {
+
+        String salesforceUserId = user.getExternalUserId();
+
+        HttpClient.HttpResponse response = notesListIdResponse(accountId, salesforceUserId);
+
+        List<String> ContentDocumentIds = parseNotesId(response.getResponseBody());
+
+        if(ContentDocumentIds.size() == 0) {
+            return new GetNotesListFormatterDto(
+                new ArrayList<String>(),
+                new HashMap<String, NoteEntity>()
+            );
+        }
+
+        HttpClient.HttpResponse getNotesResponse = notesListByIdResponse(ContentDocumentIds, salesforceUserId);
+
+        GetNotesListFormatterDto getNotesListFormatterDto = parseResponse(getNotesResponse.getResponseBody());
+
+        return getNotesListFormatterDto;
+    }
+
+    /**
+     * Get the list of notes id for a given account
      * @param accountId
      * @param salesforceUserId
      * 
      * @return HttpResponse
      **/
-    private HttpClient.HttpResponse getDocumentIds(String accountId, String salesforceUserId) {
+    private HttpClient.HttpResponse notesListIdResponse(String accountId, String salesforceUserId) {
         SalesforceQueryBuilder salesforceLib = new SalesforceQueryBuilder();
         String documentIdsQuery = salesforceLib.getContentDocumentIdUrl(accountId);
 
@@ -66,7 +95,7 @@ public class GetSalesforceNotesList implements GetNotesList{
      * 
      * @return HttpResponse
      **/
-    private HttpClient.HttpResponse getNotes(List<String> documentIds, String salesforceUserId) {
+    private HttpClient.HttpResponse notesListByIdResponse(List<String> documentIds, String salesforceUserId) {
         SalesforceQueryBuilder salesforceLib = new SalesforceQueryBuilder();
         String notesQuery = salesforceLib.getNoteListIdUrl(documentIds);
 
@@ -82,33 +111,7 @@ public class GetSalesforceNotesList implements GetNotesList{
         return response;
     }
 
-    /**
-     * Get the list of notes for a given account
-     * @param user
-     * @param accountId
-     * 
-     * @return GetNotesListFormatterDto
-     **/
-    public GetNotesListFormatterDto getNotesList(User user,String accountId) {
-
-        String salesforceUserId = user.getExternalUserId();
-
-        HttpClient.HttpResponse response = getDocumentIds(accountId, salesforceUserId);
-
-        List<String> ContentDocumentIds = getNotesIds(response.getResponseBody());
-
-        if(ContentDocumentIds.size() == 0) {
-            return new GetNotesListFormatterDto(
-                new ArrayList<String>(),
-                new HashMap<String, NoteEntity>()
-            );
-        }
-        HttpClient.HttpResponse getNotesResponse = getNotes(ContentDocumentIds, salesforceUserId);
-
-        GetNotesListFormatterDto getNotesListFormatterDto = formatNotesList(getNotesResponse.getResponseBody());
-
-        return getNotesListFormatterDto;
-    }
+    
 
     /**
      * Get the list of notes for a given account
@@ -117,7 +120,7 @@ public class GetSalesforceNotesList implements GetNotesList{
      * 
      * @return List<String>
      */
-    private List<String> getNotesIds(String responseBody) {
+    private List<String> parseNotesId(String responseBody) {
         List<String> notesIds = new ArrayList<String>();
 
         try {
@@ -150,21 +153,20 @@ public class GetSalesforceNotesList implements GetNotesList{
      * 
      * @return GetNotesListFormatterDto
      */
-    private GetNotesListFormatterDto formatNotesList(String responseBody){
+    private GetNotesListFormatterDto parseResponse(String responseBody){
         List<String> noteIds = new ArrayList<String>();
         Map<String,NoteEntity> noteIdToEntityMap = new HashMap<>();
-
+        
         try {
             Util util = new Util();
             JsonNode rootNode = util.getJsonNode(responseBody);
             JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");
-
             for (JsonNode recordNode : recordsNode) {
                 ObjectMapper mapper = new ObjectMapper();
                 mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
                 SalesforceGetNotesListDto salesforceGetNotesList = mapper.convertValue(recordNode, SalesforceGetNotesListDto.class);
                 NoteEntity noteEntity = salesforceGetNotesList.noteEntity();
-          
+                
                 noteIds.add(noteEntity.getId());
                 noteIdToEntityMap.put(noteEntity.getId(), noteEntity);
             }

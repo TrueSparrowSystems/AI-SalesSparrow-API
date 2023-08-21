@@ -5,9 +5,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -36,9 +38,12 @@ import com.salessparrow.api.helper.LoadFixture;
 import com.salessparrow.api.helper.Scenario;
 import com.salessparrow.api.helper.Setup;
 import com.salessparrow.api.lib.globalConstants.CookieConstants;
+import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
+import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
-import com.salessparrow.api.lib.salesforce.wrappers.SalesforceGetNoteContent;
+import com.salessparrow.api.lib.salesforce.helper.SalesforceQueryBuilder;
+import com.salessparrow.api.lib.salesforce.helper.SalesforceRequest;
 
 import jakarta.servlet.http.Cookie;
 
@@ -46,7 +51,7 @@ import jakarta.servlet.http.Cookie;
 @AutoConfigureMockMvc
 @WebAppConfiguration
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
-public class GetNoteDetailsTest {
+public class GetNoteListTest {
   @Autowired
   private MockMvc mockMvc;
 
@@ -66,7 +71,7 @@ public class GetNoteDetailsTest {
   private MakeCompositeRequest makeCompositeRequestMock;
 
   @MockBean
-  private SalesforceGetNoteContent salesforceGetNoteContentMock;
+  private SalesforceRequest salesforceOauthRequestMock;
 
   @BeforeEach
   public void setUp() throws DynamobeeException, IOException {
@@ -80,10 +85,10 @@ public class GetNoteDetailsTest {
 
   @ParameterizedTest
   @MethodSource("testScenariosProvider")
-  public void getNoteDetails(Scenario testScenario) throws Exception{
+  public void getNoteList(Scenario testScenario) throws Exception{
     String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
     FixtureData fixtureData = common.loadFixture(
-      "classpath:fixtures/controllers/accountController/getNoteDetails.fixtures.json",
+      "classpath:fixtures/controllers/accountController/getNotesList.fixtures.json",
       currentFunctionName
     );
     loadFixture.perform(fixtureData);
@@ -92,21 +97,40 @@ public class GetNoteDetailsTest {
 
     String cookieValue = (String) testScenario.getInput().get("cookie");
     String accountId = (String) testScenario.getInput().get("accountId");
-    String noteId = (String) testScenario.getInput().get("noteId");
+    List<String> documentIds = (List<String>) testScenario.getInput().get("documentId");
 
-    HttpResponse getNoteDetailsMockResponse = new HttpResponse();
+    if(documentIds == null) {
+      documentIds = new ArrayList<String>();
+    }
 
-    getNoteDetailsMockResponse.setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeCompositeRequest")));
+    // Mocking the CompositeRequests of the salesforce oauth request
+    SalesforceQueryBuilder salesforceLib = new SalesforceQueryBuilder();
+    String documentIdsQuery = salesforceLib.getContentDocumentIdUrl(accountId);
+    String documentIdsUrl = new SalesforceConstants().queryUrlPath() + documentIdsQuery;
+    CompositeRequestDto documentIdsCompositeReq = new CompositeRequestDto("GET", documentIdsUrl, "GetContentDocumentId");
+    List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
+    compositeRequests.add(documentIdsCompositeReq);
+
+
+    HttpResponse getNotesListIdMockResponse = new HttpResponse();
+    getNotesListIdMockResponse.setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeCompositeRequest1")));
+
+    when(makeCompositeRequestMock.makePostRequest(eq(compositeRequests), any())).thenReturn(getNotesListIdMockResponse);
     
-    when(makeCompositeRequestMock.makePostRequest(any(), any())).thenReturn(getNoteDetailsMockResponse);
+    // Mocking the CompositeRequests of the salesforce notes list request
+    String notesQuery = salesforceLib.getNoteListIdUrl(documentIds);
+    String notesUrl = new SalesforceConstants().queryUrlPath() + notesQuery;
+    CompositeRequestDto noteCompositeRequest = new CompositeRequestDto("GET", notesUrl, "GetNotesList");
+    List<CompositeRequestDto> noteCompositeRequests = new ArrayList<CompositeRequestDto>();
+    noteCompositeRequests.add(noteCompositeRequest);
+    
+    
+    HttpResponse getNotesListMockResponse = new HttpResponse();
+    getNotesListMockResponse.setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeCompositeRequest2")));
+    
+    when(makeCompositeRequestMock.makePostRequest(eq(noteCompositeRequests), any())).thenReturn(getNotesListMockResponse);
 
-
-    HttpResponse getNoteContentMockResponse = new HttpResponse();
-    getNoteContentMockResponse.setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeWrapperRequest")));
-
-    when(salesforceGetNoteContentMock.getNoteContent(any(), any())).thenReturn(getNoteContentMockResponse);
-
-    String url = "/api/v1/accounts/" + accountId + "/notes/" + noteId;
+    String url = "/api/v1/accounts/" + accountId + "/notes";
     ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(url)
       .cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
       .contentType(MediaType.APPLICATION_JSON));
@@ -123,7 +147,7 @@ public class GetNoteDetailsTest {
   }
 
   public static List<Scenario> loadScenarios() throws IOException {
-    String scenariosPath = "classpath:data/controllers/accountController/getNoteDetails.scenarios.json";
+    String scenariosPath = "classpath:data/controllers/accountController/getNotesList.scenarios.json";
     Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
     ObjectMapper objectMapper = new ObjectMapper();
     return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});
