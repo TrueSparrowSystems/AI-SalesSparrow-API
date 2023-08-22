@@ -89,6 +89,10 @@ public class SecretConstants {
 
   /* Secrets start */
 
+  public static String awsRegion() {
+    return getSecret("AWS_IAM_REGION");
+  }
+
   public static String encryptionKey() {
     return getSecret("ENCRYPTION_KEY");
   }

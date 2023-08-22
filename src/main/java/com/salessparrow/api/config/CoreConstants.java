@@ -20,10 +20,6 @@ public class CoreConstants {
     return System.getenv("AWS_IAM_SECRET_ACCESS_KEY");
   }
 
-  public static String awsRegion() {
-    return System.getenv("AWS_IAM_REGION");
-  }
-
   public static Boolean isDevEnvironment() {
     return environment().equals("development");
   }
@@ -33,6 +29,10 @@ public class CoreConstants {
   }
 
   /* End: Env variables required before spring application context is initialized */
+
+  public static String awsRegion() {
+    return SecretConstants.awsRegion();
+  }
 
   public static String encryptionKey() {
     return SecretConstants.encryptionKey();
