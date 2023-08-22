@@ -37,7 +37,6 @@ public class SecretConstants {
    * This is the builder that is going to be used to access the secrets manager.
    */
   public static SecretsManagerClientBuilder secretsManagerClientBuilder = SecretsManagerClient.builder()
-          .region(Region.of(CoreConstants.awsRegion()))
           .credentialsProvider(InstanceProfileCredentialsProvider.builder().build());
 
   /**
