@@ -1,14 +1,25 @@
 name: Deploy to Staging EC2 Instance
 
 on:
-  push:
-    branches:
-      - ci-cd
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Enter github branch name to be deployed'
+        required: true
+        default: 'main'
+      description:
+        description: 'Enter description about deployment'
+        required: true
+        default: 'New feature release'
+        
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+      with:
+          ref: ${{ github.event.inputs.branch }}
   
     - name: Install Java 17
       uses: actions/setup-java@v3
