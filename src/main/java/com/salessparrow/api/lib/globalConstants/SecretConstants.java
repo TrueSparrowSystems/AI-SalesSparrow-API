@@ -14,6 +14,7 @@ import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.InstanceProfileCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClientBuilder;
@@ -36,8 +37,8 @@ public class SecretConstants {
    * This is the builder that is going to be used to access the secrets manager.
    */
   public static SecretsManagerClientBuilder secretsManagerClientBuilder = SecretsManagerClient.builder()
-          .region(Region.of(CoreConstants.awsRegion()));
-          // .credentialsProvider(() -> credentials);
+          .region(Region.of(CoreConstants.awsRegion()))
+          .credentialsProvider(InstanceProfileCredentialsProvider.builder().build());
 
   /**
    * This method returns the secrets from the secrets manager.
