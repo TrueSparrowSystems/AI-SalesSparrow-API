@@ -78,7 +78,7 @@ public class GetSalesforceAccounts implements GetAccounts{
 
     JsonNode httpStatusCodeNode = rootNode.get("compositeResponse").get(0).get("httpStatusCode");
     
-    if (httpStatusCodeNode.asInt() != 200 || httpStatusCodeNode.asInt() != 201) {
+    if (httpStatusCodeNode.asInt() != 200 && httpStatusCodeNode.asInt() != 201) {
       throw new CustomException(
         new ErrorObject(
           "l_ca_ga_gsa_pr_1",
