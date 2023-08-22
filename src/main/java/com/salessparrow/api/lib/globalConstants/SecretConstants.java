@@ -39,18 +39,14 @@ public class SecretConstants {
   public static String getSecret(String key) {
     String secretJson = "";
 
-    System.out.println("CoreConstants.isDevEnvironment(): ---" + CoreConstants.isDevEnvironment());
     if (CoreConstants.isDevEnvironment()) {
       secretJson = getLocalEnvVars();
     } else {
       SecretCache cache = new SecretCache(secretsManagerClientBuilder);
       String secretId = getSecretId();
-      System.out.println("secretId: ---" + secretId);
       secretJson = cache.getSecretString(secretId);
       cache.close();
     }
-
-    System.out.print("secretJson: ---" + secretJson);
 
     ObjectMapper objectMapper = new ObjectMapper();
     String specificValue = "";
