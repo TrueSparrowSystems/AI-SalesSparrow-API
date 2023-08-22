@@ -19,7 +19,6 @@ public class DynamoDBConfiguration {
 
     Logger logger = LoggerFactory.getLogger(DynamoDBConfiguration.class);
 
-
     @Value("${aws.dynamodb.endpoint}")
     private String dynamodbEndpoint;
 

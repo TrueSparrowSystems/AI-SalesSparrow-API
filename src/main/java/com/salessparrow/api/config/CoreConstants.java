@@ -1,28 +1,15 @@
 package com.salessparrow.api.config;
 
+import com.salessparrow.api.lib.globalConstants.SecretConstants;
+
 /**
  * Class to get the environment variables.
  */
 public class CoreConstants {
-
-  public static String encryptionKey() {
-    return System.getenv("ENCRYPTION_KEY");
-  }
-
-  public static String apiCookieSecret() {
-    return System.getenv("API_COOKIE_SECRET");
-  }
+  /* Start: Env variables required before spring application context is initialized */
 
   public static String environment() {
     return System.getenv("ENVIRONMENT");
-  }
-
-  public static Boolean isDevEnvironment() {
-    return environment().equals("development");
-  }
-
-  public static Boolean isTestEnvironment() {
-    return environment().equals("test");
   }
 
   public static String awsAccessKeyId() {
@@ -37,20 +24,38 @@ public class CoreConstants {
     return System.getenv("AWS_IAM_REGION");
   }
 
+  public static Boolean isDevEnvironment() {
+    return environment().equals("development");
+  }
+
+  public static Boolean isTestEnvironment() {
+    return environment().equals("test");
+  }
+
+  /* End: Env variables required before spring application context is initialized */
+
+  public static String encryptionKey() {
+    return SecretConstants.encryptionKey();
+  }
+
+  public static String apiCookieSecret() {
+    return SecretConstants.apiCookieSecret();
+  }
+
   public static String kmsKeyId() {
-    return System.getenv("KMS_KEY_ID");
+    return SecretConstants.kmsKeyId();
   }
 
   public static String salesforceAuthUrl() {
-    return System.getenv("SALESFORCE_AUTH_URL");
+    return SecretConstants.salesforceAuthUrl();
   }
 
   public static String salesforceClientId() {
-    return System.getenv("SALESFORCE_CLIENT_ID");
+    return SecretConstants.salesforceClientId();
   }
 
   public static String salesforceClientSecret() {
-    return System.getenv("SALESFORCE_CLIENT_SECRET");
+    return SecretConstants.salesforceClientSecret();
   }
 
   /**
@@ -59,7 +64,7 @@ public class CoreConstants {
    * @return String
    */
   public static String memcachedAddress() {
-    return System.getenv("MEMCACHED_CACHE_HOST") + ":" + System.getenv("MEMCACHED_CACHE_PORT");
+    return SecretConstants.memcachedHost() + ":" + SecretConstants.memcachedPort();
   }
 
   /**
@@ -69,7 +74,7 @@ public class CoreConstants {
    * @return String[]
    */
   public static String[] getWhitelistedRedirectUris() {
-    String redirectUrisJson = System.getenv("SALESFORCE_WHITELISTED_REDIRECT_URIS");
+    String redirectUrisJson = SecretConstants.salesforceWhitelistedRedirectUris();
     return redirectUrisJson.split(",");
   }
 
@@ -80,7 +85,7 @@ public class CoreConstants {
    * @return String
    */
   public static String errorEmailFrom() {
-    return System.getenv("ERROR_MAIL_FROM");
+    return SecretConstants.errorEmailFrom();
   }
 
   /**
@@ -89,7 +94,7 @@ public class CoreConstants {
    * @return String
    */
   public static String errorEmailTo() {
-    return System.getenv("ERROR_MAIL_TO");
+    return SecretConstants.errorEmailTo();
   }
 
 }
