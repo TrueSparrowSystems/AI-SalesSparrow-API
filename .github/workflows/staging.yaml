@@ -53,6 +53,8 @@ jobs:
         port: ${{ secrets.STAGING_PORT }}
         script: |
           cd salesparrow-api
+          echo "Moving jar file" 
+          echo $(ls | grep "\.jar$" | tail -n 1)
           mv $(ls | grep "\.jar$" | tail -n 1) app.jar
           chmod 777 app.jar
           sudo systemctl stop app.service
