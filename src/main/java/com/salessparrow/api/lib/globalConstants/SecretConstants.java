@@ -28,16 +28,16 @@ public class SecretConstants {
   /**
    * This is the credentials that are going to be used to access the secrets manager.
    */
-  public static AwsBasicCredentials credentials = AwsBasicCredentials.create(
-      CoreConstants.awsAccessKeyId(), 
-      CoreConstants.awsSecretAccessKey());
+  // public static AwsBasicCredentials credentials = AwsBasicCredentials.create(
+  //     CoreConstants.awsAccessKeyId(), 
+  //     CoreConstants.awsSecretAccessKey());
 
   /**
    * This is the builder that is going to be used to access the secrets manager.
    */
   public static SecretsManagerClientBuilder secretsManagerClientBuilder = SecretsManagerClient.builder()
-          .region(Region.of(CoreConstants.awsRegion()))
-          .credentialsProvider(() -> credentials);
+          .region(Region.of(CoreConstants.awsRegion()));
+          // .credentialsProvider(() -> credentials);
 
   /**
    * This method returns the secrets from the secrets manager.
@@ -48,13 +48,18 @@ public class SecretConstants {
   public static String getSecret(String key) {
     String secretJson = "";
 
+    System.out.println("CoreConstants.isDevEnvironment(): ---" + CoreConstants.isDevEnvironment());
     if (CoreConstants.isDevEnvironment()) {
       secretJson = getLocalEnvVars();
     } else {
       SecretCache cache = new SecretCache(secretsManagerClientBuilder);
-      secretJson = cache.getSecretString(getSecretId());
+      String secretId = getSecretId();
+      System.out.println("secretId: ---" + secretId);
+      secretJson = cache.getSecretString(secretId);
       cache.close();
     }
+
+    System.out.print("secretJson: ---" + secretJson);
 
     ObjectMapper objectMapper = new ObjectMapper();
     String specificValue = "";

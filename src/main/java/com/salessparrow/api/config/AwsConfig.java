@@ -36,12 +36,7 @@ public class AwsConfig {
    */
   @Bean
   public AmazonSimpleEmailService sesClient() {
-    BasicAWSCredentials awsCredentials = new BasicAWSCredentials(
-        CoreConstants.awsAccessKeyId(),
-        CoreConstants.awsSecretAccessKey());
-
       return AmazonSimpleEmailServiceClientBuilder.standard()
-          .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
           .withRegion(CoreConstants.awsRegion())
           .build();
   }
