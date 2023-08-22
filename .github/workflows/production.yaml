@@ -1,0 +1,41 @@
+name: Deploy to PROD EC2 Instance
+
+on:
+  push:
+    branches:
+      - ci-cd
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+  
+    - name: Install Java 17
+      uses: actions/setup-java@v3
+      with:
+          java-version: '17'
+          distribution: 'adopt'
+    
+    - name: Build with Maven
+      run: |-
+        ./mvnw clean package -DskipTests
+
+    - name: Copy Jar to Server 
+      run : |-
+        echo "${{ secrets.PROD_PRIVATE_KEY }}" >> prod.pem
+        chmod 600 prod.pem
+        scp -o StrictHostKeyChecking=no -i prod.pem -P ${{ secrets.PROD_PORT }} target/$(ls target | grep "\.jar$") ${{ secrets.PROD_USERNAME }}@${{ secrets.PROD_HOST }}:/home/ubuntu/salesparrow-api/
+
+    - name: Restart server
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.PROD_HOST }}
+        username: ${{ secrets.PROD_USERNAME }}
+        key: ${{ secrets.PROD_PRIVATE_KEY }}
+        port: ${{ secrets.PROD_PORT }}
+        script: |
+          cd salesparrow-api
+          mv $(ls | grep "\.jar$") app.jar
+          chmod 777 app.jar
+          sudo systemctl stop app.service
+          sudo systemctl start app.service

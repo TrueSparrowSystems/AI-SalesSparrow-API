@@ -1,0 +1,48 @@
+name: Deploy to Staging EC2 Instance
+
+on:
+  push:
+    branches:
+      - ci-cd
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+  
+    - name: Install Java 17
+      uses: actions/setup-java@v3
+      with:
+          java-version: '17'
+          distribution: 'adopt'
+    
+    - name: Build with Maven
+      run: |-
+        ./mvnw clean package -DskipTests
+
+
+
+    - name: Copy Jar to Server 
+      env:
+        STAGING_PORT: ${{ secrets.STAGING_PORT }}
+        STAGING_USERNAME: ${{ secrets.STAGING_USERNAME }}
+        STAGING_HOST: ${{ secrets.STAGING_HOST }}
+        STAGING_PRIVATE_KEY: ${{ secrets.STAGING_PRIVATE_KEY }}
+      run : |-
+        echo "${{ secrets.STAGING_PRIVATE_KEY }}" >> staging.pem
+        chmod 600 staging.pem
+        scp -o StrictHostKeyChecking=no -i staging.pem -P ${{ secrets.STAGING_PORT }} target/$(ls target | grep "\.jar$") ${{ secrets.STAGING_USERNAME }}@${{ secrets.STAGING_HOST }}:/home/ubuntu/salesparrow-api/
+
+    - name: Restart server
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.STAGING_HOST }}
+        username: ${{ secrets.STAGING_USERNAME }}
+        key: ${{ secrets.STAGING_PRIVATE_KEY }}
+        port: ${{ secrets.STAGING_PORT }}
+        script: |
+          cd salesparrow-api
+          mv $(ls | grep "\.jar$") app.jar
+          chmod 777 app.jar
+          sudo systemctl stop app.service
+          sudo systemctl start app.service
