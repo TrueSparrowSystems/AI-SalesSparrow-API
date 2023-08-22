@@ -24,12 +24,7 @@ public class AwsConfig {
    */
   @Bean
   public AWSKMS kmsClient() {
-    BasicAWSCredentials awsCredentials = new BasicAWSCredentials(
-        CoreConstants.awsAccessKeyId(),
-        CoreConstants.awsSecretAccessKey());
-
     return AWSKMSClientBuilder.standard()
-        .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
         .withRegion(CoreConstants.awsRegion())
         .build();
   }

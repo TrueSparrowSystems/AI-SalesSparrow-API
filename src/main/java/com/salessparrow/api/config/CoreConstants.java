@@ -97,4 +97,12 @@ public class CoreConstants {
     return SecretConstants.errorEmailTo();
   }
 
+  /**
+   * This method returns the dynamodb url.
+   * @return
+   */
+  public static String dynamoDbUrl() {
+    return SecretConstants.dynamoDbUrl();
+  }
+
 }

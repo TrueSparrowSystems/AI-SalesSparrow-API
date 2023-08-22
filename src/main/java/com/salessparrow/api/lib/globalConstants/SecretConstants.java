@@ -128,6 +128,10 @@ public class SecretConstants {
     return getSecret("ERROR_EMAIL_TO");
   }
 
+  public static String dynamoDbUrl() {
+    return getSecret("DYNAMO_DB_URL");
+  }
+
   /* Secrets end */
 
   /**
