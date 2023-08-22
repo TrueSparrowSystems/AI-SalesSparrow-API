@@ -14,6 +14,7 @@ public class SalesSparrowApi {
 
 	public static void main(String[] args) {
 
+		System.out.println("Env variables ---- : " + System.getenv());
 		System.out.println("Env variables ---- environment: " + CoreConstants.environment());
 		System.out.println("Env variables ---- aws region: " + CoreConstants.awsRegion());
 		SpringApplication.run(SalesSparrowApi.class, args);
