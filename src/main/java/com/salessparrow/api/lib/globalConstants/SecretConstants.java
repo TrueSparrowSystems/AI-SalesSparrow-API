@@ -13,9 +13,7 @@ import com.salessparrow.api.config.CoreConstants;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.InstanceProfileCredentialsProvider;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClientBuilder;
 
@@ -25,13 +23,6 @@ import software.amazon.awssdk.services.secretsmanager.SecretsManagerClientBuilde
 public class SecretConstants {
 
   /* Secret manager configuration start */
-
-  /**
-   * This is the credentials that are going to be used to access the secrets manager.
-   */
-  // public static AwsBasicCredentials credentials = AwsBasicCredentials.create(
-  //     CoreConstants.awsAccessKeyId(), 
-  //     CoreConstants.awsSecretAccessKey());
 
   /**
    * This is the builder that is going to be used to access the secrets manager.
@@ -118,11 +109,11 @@ public class SecretConstants {
   }
 
   public static String memcachedHost() {
-    return getSecret("MEMCACHED_HOST");
+    return getSecret("MEMCACHED_CACHE_HOST");
   }
 
   public static String memcachedPort() {
-    return getSecret("MEMCACHED_PORT");
+    return getSecret("MEMCACHED_CACHE_PORT");
   }
 
   public static String salesforceWhitelistedRedirectUris() {
