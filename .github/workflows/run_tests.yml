@@ -45,6 +45,6 @@ jobs:
           distribution: 'adopt'
 
       - run: |-
-          echo "Start: test case run"
+          echo "Start: run test cases"
           sh ./mvnw clean test
-          echo "Done: test case run"
+          echo "Done: run test cases"
