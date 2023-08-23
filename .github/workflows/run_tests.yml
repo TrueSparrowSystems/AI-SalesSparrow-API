@@ -1,0 +1,42 @@
+name: Run Test Cases
+
+on:
+  pull_request:
+    branches:
+      - master
+env:
+  ENVIRONMENT: test
+  AWS_ACCESS_KEY_ID: local
+  AWS_SECRET_ACCESS_KEY: local
+  AWS_REGION: us-east-1
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      memcached:
+        image: memcached:1.6.21
+        ports:
+          - 11211:11211
+      dynamodb:
+        image: amazon/dynamodb-local:latest
+        ports:
+          - 8000:8000
+      localkms:
+        image: nsmithuk/local-kms
+        ports:
+          - 4599:8080
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+
+      - run: |-
+          echo "Start: test case run"
+          sh ./mvnw clean test
+          echo "Done: test case run"
