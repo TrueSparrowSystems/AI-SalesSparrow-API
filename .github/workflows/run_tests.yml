@@ -18,14 +18,22 @@ jobs:
         image: memcached:1.6.21
         ports:
           - 11211:11211
+
       dynamodb:
         image: amazon/dynamodb-local:latest
         ports:
           - 8000:8000
+    
       localkms:
         image: nsmithuk/local-kms
         ports:
           - 4599:8080
+        volumes:
+          - ./init:/init
+        env:
+          KMS_ACCOUNT_ID: '111122223333'
+          KMS_REGION: 'us-east-1'
+          KMS_SEED_PATH: init/seed.yaml
 
     steps:
       - uses: actions/checkout@v3
