@@ -9,7 +9,7 @@ import com.salessparrow.api.controllers.AccountTaskController;
 import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.formatter.CreateTaskFormatterDto;
 import com.salessparrow.api.dto.requestMapper.CreateTaskDto;
-import com.salessparrow.api.lib.crmActions.createTask.CreateTaskFactory;
+import com.salessparrow.api.lib.crmActions.createTaskInAccount.CreateTaskInAccountFactory;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -21,7 +21,7 @@ public class CreateTaskService {
     Logger logger = LoggerFactory.getLogger(AccountTaskController.class);
 
     @Autowired
-    private CreateTaskFactory createTaskFactory;
+    private CreateTaskInAccountFactory createTaskInAccountFactory;
     
     /**
      * Create a task in CRM
@@ -35,6 +35,6 @@ public class CreateTaskService {
     public CreateTaskFormatterDto createTask(HttpServletRequest request, String accountId, CreateTaskDto task) {
         logger.info("inside createTask Service");
         User currentUser = (User) request.getAttribute("current_user");
-        return createTaskFactory.createTask(currentUser, accountId, task);
+        return createTaskInAccountFactory.createTask(currentUser, accountId, task);
     }
 }

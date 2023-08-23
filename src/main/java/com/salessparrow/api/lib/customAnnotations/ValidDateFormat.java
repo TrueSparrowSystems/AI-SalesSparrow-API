@@ -10,7 +10,7 @@ import com.salessparrow.api.lib.validators.DateFormatValidator;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = DateFormatValidator.class)
 public @interface ValidDateFormat {
-  String message() default "Invalid redirect URI";
+  String message() default "Invalid Date Format";
 
   Class<?>[] groups() default {};
 

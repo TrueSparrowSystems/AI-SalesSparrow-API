@@ -1,4 +1,4 @@
-package com.salessparrow.api.lib.crmActions.createTask;
+package com.salessparrow.api.lib.crmActions.createTaskInAccount;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +30,7 @@ import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
  * CreateSalesforceTask class is responsible for creating a task in Salesforce
  */
 @Component
-public class CreateSalesforceTask implements CreateTask{
+public class CreateSalesforceTask implements CreateTaskInAccount{
 
     Logger logger = LoggerFactory.getLogger(AccountTaskController.class);
 
@@ -72,8 +72,6 @@ public class CreateSalesforceTask implements CreateTask{
 
         List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
         compositeRequests.add(createTaskCompositeRequestDto);
-
-        logger.info("making composite request to salesforce");
 
         HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId);
 

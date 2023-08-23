@@ -1,4 +1,4 @@
-package com.salessparrow.api.lib.crmActions.createTask;
+package com.salessparrow.api.lib.crmActions.createTaskInAccount;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import com.salessparrow.api.lib.globalConstants.UserConstants;
  * CreateTaskFactory class is responsible for creating a task in CRM
  */
 @Component
-public class CreateTaskFactory {
+public class CreateTaskInAccountFactory {
 
     Logger logger = LoggerFactory.getLogger(AccountTaskController.class);
 
