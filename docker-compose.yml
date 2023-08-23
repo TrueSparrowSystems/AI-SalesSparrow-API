@@ -10,7 +10,16 @@ services:
       - localdev
     volumes:
       - './:/app'
-    command: bash -c 'sh start_local.sh'
+    environment:
+      - ENVIRONMENT=development
+      - AWS_ACCESS_KEY_ID=local
+      - AWS_SECRET_ACCESS_KEY=local
+      - AWS_REGION=us-east-1
+    command: ["./mvnw", "spring-boot:run"]
+    depends_on:
+      - dynamodb
+      - localkms
+      - memcached
 
   test:
     build:
@@ -22,7 +31,12 @@ services:
       - localdev
     volumes:
       - './:/app'
-    command: bash -c 'sh test_start_local.sh'
+    environment:
+      - ENVIRONMENT=local-test
+      - AWS_ACCESS_KEY_ID=local
+      - AWS_SECRET_ACCESS_KEY=local
+      - AWS_REGION=us-east-1
+    command: ["./mvnw", "clean", "test"]
     depends_on:
       - dynamodb
       - localkms

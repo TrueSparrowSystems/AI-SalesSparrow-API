@@ -10,5 +10,3 @@ COPY . /app
 EXPOSE 8080
 # Start the app
 RUN apk add --no-cache bash
-
-CMD ["sh", "-c", "start_local.sh"]

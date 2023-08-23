@@ -19,13 +19,27 @@ import org.springframework.context.annotation.Configuration;
 public class AwsConfig {
 
   /**
-   * Creates and configures an AWS KMS (Key Management Service) client.
-   *
-   * @return An instance of AWSKMS that allows access to AWS KMS operations.
+   * Returns an instance of the AWS Key Management Service (KMS)
+   * client based on the environment.
+   * 
+   * @implNote - Client is configured to use the local KMS endpoint for following environments
+   *    - development
+   *    - test
+   *    - local-test 
+   *    For test and production environments, the client is configured to use the AWS KMS endpoint
+   * 
+   * @return An instance of the AWSKMS client configured 
+   * for the appropriate environment.
+   * 
    */
   @Bean
   public AWSKMS kmsClient() {
-    if (CoreConstants.isTestEnvironment() || CoreConstants.isLocalTestEnvironment()) {
+    if (
+      CoreConstants.isDevEnvironment() || 
+      CoreConstants.isTestEnvironment() || 
+      CoreConstants.isLocalTestEnvironment()
+    ) {
+      
       AwsClientBuilder.EndpointConfiguration endpointConfiguration = new AwsClientBuilder.EndpointConfiguration(
             CoreConstants.localKmsEndpoint(),
             CoreConstants.awsRegion()
