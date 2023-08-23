@@ -38,6 +38,10 @@ public class SalesforceConstants {
     return sObjectsPath() + "/ContentDocumentLink";
   }
 
+  public String salesforceCreateEventUrl() {
+    return sObjectsPath() + "/Event";
+  }
+
   public String identityUrl() {
     return "/services/oauth2/userinfo";
   }
