@@ -1,0 +1,53 @@
+[
+  {
+    "description": "Should successfully delete the note for given note id", 
+    "input": {
+      "accountId": "0011e00000bWSxdAAG",
+      "noteId":"0691e000001X1yTAAS"
+    },
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
+          {
+            "body": null,
+            "httpHeaders": {},
+            "httpStatusCode": 204,
+            "referenceId": "DeleteNote"
+          }
+        ]
+      }
+    },
+    "output": {}
+  },
+  {
+    "description": "should return error response when note id is invalid", 
+    "input": {
+      "accountId": "0011e00000bWSxdAAG",
+      "noteId":"invalidNoteId"
+    },
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
+        {
+          "body": [
+            {
+              "errorCode": "NOT_FOUND",
+              "message": "Provided external ID field does not exist or is not accessible: INVALID_NOTE_ID"
+            }
+          ],
+          "httpHeaders": {},
+          "httpStatusCode": 404,
+          "referenceId": "DeleteNote"
+        }
+      ]
+    }
+    },
+    "output": {
+      "http_code": 500,
+      "message": "Something went wrong.",
+      "code": "INTERNAL_SERVER_ERROR",
+      "internal_error_identifier": "l_ca_dan_dasn_pr_1",
+      "param_errors": []
+    }
+  }
+]

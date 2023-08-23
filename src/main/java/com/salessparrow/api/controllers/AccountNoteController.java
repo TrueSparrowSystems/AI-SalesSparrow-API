@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import com.salessparrow.api.dto.formatter.GetNoteDetailsFormatterDto;
 import com.salessparrow.api.dto.formatter.GetNotesListFormatterDto;
 import com.salessparrow.api.dto.requestMapper.NoteDto;
 import com.salessparrow.api.services.accountNotes.CreateNoteService;
+import com.salessparrow.api.services.accountNotes.DeleteAccountNoteService;
 import com.salessparrow.api.services.accountNotes.GetNoteDetailsService;
 import com.salessparrow.api.services.accountNotes.GetNotesListService;
 
@@ -27,7 +29,7 @@ import jakarta.validation.Valid;
 @Validated
 public class AccountNoteController {
 
-  private Logger logger = org.slf4j.LoggerFactory.getLogger(AccountController.class);
+  private Logger logger = org.slf4j.LoggerFactory.getLogger(AccountNoteController.class);
 
   @Autowired
   private GetNotesListService getNotesListService;
@@ -37,6 +39,9 @@ public class AccountNoteController {
 
   @Autowired
   private CreateNoteService createNoteService;
+
+  @Autowired
+  private DeleteAccountNoteService deleteAccountNoteService;
 
   @PostMapping("")
   public ResponseEntity<CreateNoteFormatterDto> addNoteToAccount(
@@ -74,5 +79,18 @@ public class AccountNoteController {
     GetNoteDetailsFormatterDto getNoteDetailsResponse = getNoteDetailsService.getNoteDetails(request, noteId);
     
     return ResponseEntity.ok().body(getNoteDetailsResponse);
+  }
+
+  @DeleteMapping("/{note_id}")
+  public ResponseEntity<GetNoteDetailsFormatterDto> deleteNote(
+    HttpServletRequest request,
+    @PathVariable("account_id") String accountId, 
+    @PathVariable("note_id") String noteId
+  ) {
+    logger.info("Delete Note request received");
+
+    deleteAccountNoteService.deleteAcountNote(request, accountId, noteId);
+    
+    return ResponseEntity.noContent().build();
   }
 }

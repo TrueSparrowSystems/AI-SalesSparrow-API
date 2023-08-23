@@ -34,6 +34,10 @@ public class SalesforceConstants {
     return sObjectsPath() + "/ContentNote";
   }
 
+  public String salesforceDeleteNoteUrl(String noteId) {
+    return sObjectsPath() + "/ContentNote/" + noteId;
+  }
+
   public String salesforceAttachNoteUrl() {
     return sObjectsPath() + "/ContentDocumentLink";
   }
