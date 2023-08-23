@@ -1,5 +1,6 @@
 package com.salessparrow.api.lib.crmActions.createEvent;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,7 @@ import com.salessparrow.api.lib.globalConstants.UserConstants;
  */
 @Component
 public class CreateEventFactory {
+  private Logger logger = org.slf4j.LoggerFactory.getLogger(CreateEventFactory.class);
 
   @Autowired
   private CreateSalesforceEvent createSalesforceEvent;
@@ -27,6 +29,7 @@ public class CreateEventFactory {
 	 * @return CreateEventFormatterDto
 	 **/
 	public CreateEventFormatterDto createEvent(SalesforceUser user, String accountId, CreateEventDto createEventDto) {
+    logger.info("Create Event Factory started");
 
 		switch(user.getUserKind()) {
 			case UserConstants.SALESFORCE_USER_KIND:

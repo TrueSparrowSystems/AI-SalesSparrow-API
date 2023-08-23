@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +31,8 @@ import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 @Component
 public class CreateSalesforceEvent implements CreateEventInterface {
 
+  private Logger logger = org.slf4j.LoggerFactory.getLogger(CreateSalesforceEvent.class);
+
   @Autowired
   private SalesforceConstants salesforceConstants;
 
@@ -49,6 +52,8 @@ public class CreateSalesforceEvent implements CreateEventInterface {
    * @return CreateEventFormatterDto
    */
   public CreateEventFormatterDto createEvent(SalesforceUser user, String accountId, CreateEventDto createEventDto) {
+    logger.info("Create Salesforce Event started");
+
     String salesforceUserId = user.getExternalUserId();
 
     String eventSubject = getEventSubjectFromDescription(createEventDto);
@@ -84,6 +89,8 @@ public class CreateSalesforceEvent implements CreateEventInterface {
    * @return CreateEventFormatterDto - formatted response
    */
   private CreateEventFormatterDto parseResponse(String createEventResponse) {
+    logger.info("Parsing the response from Salesforce");
+
     Util util = new Util();
     JsonNode rootNode = util.getJsonNode(createEventResponse);
 

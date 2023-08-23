@@ -1,5 +1,6 @@
 package com.salessparrow.api.services.events;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 @Service
 public class CreateEventService {
+  private Logger logger = org.slf4j.LoggerFactory.getLogger(CreateEventService.class);
 
   @Autowired
   private CreateEventFactory createEventFactory;
@@ -29,6 +31,7 @@ public class CreateEventService {
    * @return CreateEventFormatterDto
    */
   public CreateEventFormatterDto createEvent(HttpServletRequest request, String accountId, CreateEventDto createEventDto) {
+    logger.info("Create Event Service started");
 
     SalesforceUser currentUser = (SalesforceUser) request.getAttribute("current_user");
 

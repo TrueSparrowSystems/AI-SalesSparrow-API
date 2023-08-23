@@ -20,8 +20,8 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/v1/accounts/{account_id}/events")
 @Validated
-public class EventController {
-  private Logger logger = org.slf4j.LoggerFactory.getLogger(AccountController.class);
+public class AccountEventController {
+  private Logger logger = org.slf4j.LoggerFactory.getLogger(AccountEventController.class);
 
   @Autowired
   private CreateEventService createEventService;
