@@ -12,20 +12,16 @@ public class CoreConstants {
     return System.getenv("ENVIRONMENT");
   }
 
-  public static String awsAccessKeyId() {
-    return System.getenv("AWS_IAM_ACCESS_KEY_ID");
-  }
-
-  public static String awsSecretAccessKey() {
-    return System.getenv("AWS_IAM_SECRET_ACCESS_KEY");
-  }
-
   public static Boolean isDevEnvironment() {
     return environment().equals("development");
   }
 
   public static Boolean isTestEnvironment() {
     return environment().equals("test");
+  }
+
+  public static Boolean isLocalTestEnvironment() {
+    return environment().equals("local-test");
   }
 
   /* End: Env variables required before spring application context is initialized */
@@ -56,6 +52,10 @@ public class CoreConstants {
 
   public static String salesforceClientSecret() {
     return SecretConstants.salesforceClientSecret();
+  }
+
+  public static String localKmsEndpoint() {
+    return SecretConstants.localKmsEndpoint();
   }
 
   /**

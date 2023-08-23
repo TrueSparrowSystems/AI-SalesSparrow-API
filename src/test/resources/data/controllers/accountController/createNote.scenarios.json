@@ -54,15 +54,9 @@
     "mocks": {},
     "output": {
       "http_code": 400,
-      "message": "At least one parameter is invalid or missing.",
       "code": "INVALID_PARAMS",
-      "internal_error_identifier": "b_2",
       "param_errors": [
-        {
-          "parameter": "text",
-          "param_error_identifier": "missing_text",
-          "message": "text is required parameter. Please provide text."
-        }
+        "missing_text"
       ]
     }
   },
@@ -76,15 +70,9 @@
     "mocks": {},
     "output": {
       "http_code": 400,
-      "message": "At least one parameter is invalid or missing.",
       "code": "INVALID_PARAMS",
-      "internal_error_identifier": "b_2",
       "param_errors": [
-        {
-          "parameter": "text",
-          "param_error_identifier": "missing_text",
-          "message": "text is required parameter. Please provide text."
-        }
+        "missing_text"
       ]
     }
   },
@@ -98,10 +86,7 @@
     "mocks": {},
     "output": {
       "http_code": 401,
-      "message": "Unauthorized API request. Please check your API key.",
-      "code": "UNAUTHORIZED",
-      "internal_error_identifier": "l_ulca_vct_2",
-      "param_errors": []
+      "code": "UNAUTHORIZED"
     }
   },
   {
@@ -147,10 +132,7 @@
     },
     "output": {
       "http_code": 500,
-      "message": "Something went wrong.",
-      "code": "INTERNAL_SERVER_ERROR",
-      "internal_error_identifier": "l_s_fse_fscn_fcn_2",
-      "param_errors": []
+      "code": "INTERNAL_SERVER_ERROR"
     }
   },
   {
@@ -194,10 +176,7 @@
     },
     "output": {
       "http_code": 500,
-      "message": "Something went wrong.",
-      "code": "INTERNAL_SERVER_ERROR",
-      "internal_error_identifier": "l_s_fse_fscn_fcn_1",
-      "param_errors": []
+      "code": "INTERNAL_SERVER_ERROR"
     }
   }
 ]

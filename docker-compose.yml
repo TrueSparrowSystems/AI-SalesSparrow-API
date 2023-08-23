@@ -1,6 +1,5 @@
 version: '3'
 services:
-  # App server provisioning
   api:
     build:
       context: .
@@ -13,7 +12,22 @@ services:
       - './:/app'
     command: bash -c 'sh start_local.sh'
 
-  # Memcached provisioning
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    ports:
+      - '8080:8080'
+    networks:
+      - localdev
+    volumes:
+      - './:/app'
+    command: bash -c 'sh test_start_local.sh'
+    depends_on:
+      - dynamodb
+      - localkms
+      - memcached
+
   memcached:
     image: memcached
     ports:
@@ -21,7 +35,22 @@ services:
     networks:
       - localdev
   
-  # DynamoDB provisioning
+  localkms:
+    image: nsmithuk/local-kms
+    ports:
+      - '4599:8080'
+    volumes:
+      - ./init:/init
+    networks:
+      - localdev
+    environment:
+      - AWS_ACCESS_KEY_ID='local'
+      - AWS_SECRET_ACCESS_KEY='local'
+      - AWS_REGION='us-east-1'
+      - KMS_ACCOUNT_ID='111122223333'
+      - KMS_REGION='us-east-1'
+      - KMS_SEED_PATH=init/seed.yaml
+  
   dynamodb:
     image: amazon/dynamodb-local:latest
     ports:

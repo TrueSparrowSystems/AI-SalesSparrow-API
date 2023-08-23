@@ -2,6 +2,7 @@ package com.salessparrow.api.config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.kms.AWSKMS;
 import com.amazonaws.services.kms.AWSKMSClientBuilder;
 
@@ -24,6 +25,17 @@ public class AwsConfig {
    */
   @Bean
   public AWSKMS kmsClient() {
+    if (CoreConstants.isTestEnvironment() || CoreConstants.isLocalTestEnvironment()) {
+      AwsClientBuilder.EndpointConfiguration endpointConfiguration = new AwsClientBuilder.EndpointConfiguration(
+            CoreConstants.localKmsEndpoint(),
+            CoreConstants.awsRegion()
+        );
+
+      return AWSKMSClientBuilder.standard()
+          .withEndpointConfiguration(endpointConfiguration)
+          .build();
+    }
+    
     return AWSKMSClientBuilder.standard()
         .withRegion(CoreConstants.awsRegion())
         .build();

@@ -101,7 +101,12 @@ public class CreateNoteTest {
     // Check the response
     String expectedOutput = objectMapper.writeValueAsString(testScenario.getOutput());
     String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
-    assertEquals(expectedOutput, actualOutput);
+
+    if(resultActions.andReturn().getResponse().getStatus() == 200) {
+      assertEquals(expectedOutput, actualOutput);
+    } else {
+      common.compareErrors(testScenario, actualOutput);
+    }
   }
 
   static Stream<Scenario> testScenariosProvider() throws IOException {

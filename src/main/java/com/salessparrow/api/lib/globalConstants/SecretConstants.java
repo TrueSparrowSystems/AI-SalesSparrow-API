@@ -40,7 +40,9 @@ public class SecretConstants {
     String secretJson = "";
 
     if (CoreConstants.isDevEnvironment()) {
-      secretJson = getLocalEnvVars();
+      secretJson = getLocalEnvVars("secrets.json");
+    } else if (CoreConstants.isLocalTestEnvironment()) {
+      secretJson = getLocalEnvVars("test.secrets.json");
     } else {
       SecretCache cache = new SecretCache(secretsManagerClientBuilder);
       String secretId = getSecretId();
@@ -65,7 +67,9 @@ public class SecretConstants {
   }
 
   /**
-   * This method returns the secret id that is going to be used to access the secrets manager.
+   * This method returns the secret id that is going to be 
+   * used to access the secrets manager.
+   * 
    * @return
    */
   private static String getSecretId() {
@@ -128,6 +132,10 @@ public class SecretConstants {
     return getSecret("DYNAMO_DB_URL");
   }
 
+  public static String localKmsEndpoint() {
+    return getSecret("LOCAL_KMS_ENDPOINT");
+  }
+
   /* Secrets end */
 
   /**
@@ -135,8 +143,8 @@ public class SecretConstants {
    * 
    * @return String
    */
-  private static String getLocalEnvVars() {
-    try (FileReader fileReader = new FileReader("secrets.json")) {
+  private static String getLocalEnvVars(String filename) {
+    try (FileReader fileReader = new FileReader(filename)) {
       int ch;
       StringBuilder secretJsonBuilder = new StringBuilder();
 
