@@ -7,15 +7,15 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.formatter.GetNotesListFormatterDto;
-import com.salessparrow.api.lib.crmActions.getNotesList.GetNoteListFactory;
+import com.salessparrow.api.lib.crmActions.getAccountNotesList.GetAccountNoteListFactory;
 
 /**
  * GetNotesListService is a service class for the GetNotesList action for the CRM.
  */
 @Service
-public class GetNotesListService {
+public class GetAccountNotesListService {
     @Autowired
-    private GetNoteListFactory getNotesListFactory;
+    private GetAccountNoteListFactory getNotesListFactory;
 
     /**
      * Get the list of notes for a given account

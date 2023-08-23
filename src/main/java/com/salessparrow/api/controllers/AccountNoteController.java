@@ -16,10 +16,10 @@ import com.salessparrow.api.dto.formatter.CreateNoteFormatterDto;
 import com.salessparrow.api.dto.formatter.GetNoteDetailsFormatterDto;
 import com.salessparrow.api.dto.formatter.GetNotesListFormatterDto;
 import com.salessparrow.api.dto.requestMapper.NoteDto;
-import com.salessparrow.api.services.accountNotes.CreateNoteService;
+import com.salessparrow.api.services.accountNotes.CreateAccountNoteService;
 import com.salessparrow.api.services.accountNotes.DeleteAccountNoteService;
-import com.salessparrow.api.services.accountNotes.GetNoteDetailsService;
-import com.salessparrow.api.services.accountNotes.GetNotesListService;
+import com.salessparrow.api.services.accountNotes.GetAccountNoteDetailsService;
+import com.salessparrow.api.services.accountNotes.GetAccountNotesListService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -32,13 +32,13 @@ public class AccountNoteController {
   private Logger logger = org.slf4j.LoggerFactory.getLogger(AccountNoteController.class);
 
   @Autowired
-  private GetNotesListService getNotesListService;
+  private GetAccountNotesListService getNotesListService;
 
   @Autowired
-  private GetNoteDetailsService getNoteDetailsService;
+  private GetAccountNoteDetailsService getNoteDetailsService;
 
   @Autowired
-  private CreateNoteService createNoteService;
+  private CreateAccountNoteService createNoteService;
 
   @Autowired
   private DeleteAccountNoteService deleteAccountNoteService;

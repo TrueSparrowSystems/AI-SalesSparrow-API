@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.formatter.GetNoteDetailsFormatterDto;
-import com.salessparrow.api.lib.crmActions.getNoteDetails.GetNoteDetailsFactory;
+import com.salessparrow.api.lib.crmActions.getAccountNoteDetails.GetAccountNoteDetailsFactory;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -13,9 +13,9 @@ import jakarta.servlet.http.HttpServletRequest;
  * GetNoteDetailsService is a service class for the GetNoteDetails action for the CRM.
  */
 @Service
-public class GetNoteDetailsService {
+public class GetAccountNoteDetailsService {
   @Autowired
-  private GetNoteDetailsFactory getNoteDetailsFactory;
+  private GetAccountNoteDetailsFactory getNoteDetailsFactory;
 
   /**
    * Get the details of a note
