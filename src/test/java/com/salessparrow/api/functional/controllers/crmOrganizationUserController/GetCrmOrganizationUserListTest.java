@@ -45,7 +45,7 @@ import jakarta.servlet.http.Cookie;
 @AutoConfigureMockMvc
 @WebAppConfiguration
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
-public class GetCrmorganizationUsersListTest {
+public class GetCrmOrganizationUserListTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -70,9 +70,9 @@ public class GetCrmorganizationUsersListTest {
         cleanup.perform();
     }
 
-      @ParameterizedTest
+    @ParameterizedTest
     @MethodSource("testScenariosProvider")
-    public void getAccountList(Scenario testScenario) throws Exception {
+    public void getCrmOrganizationUserList(Scenario testScenario) throws Exception {
         // Load fixture data
         String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
         FixtureData fixtureData = common.loadFixture("classpath:fixtures/controllers/crmOrganizationUserController/getCrmOrganizationUserList.fixtures.json", currentFunctionName);
@@ -81,7 +81,7 @@ public class GetCrmorganizationUsersListTest {
         // Read data from the scenario
         ObjectMapper objectMapper = new ObjectMapper();
 
-        String cookieValue = (String) testScenario.getInput().get("cookieValue");
+        String cookieValue = (String) testScenario.getInput().get("cookie");
         String q = (String) testScenario.getInput().get("q");
 
         // Prepare mock responses
@@ -90,7 +90,7 @@ public class GetCrmorganizationUsersListTest {
         when(makeCompositeRequestMock.makePostRequest(any(), any())).thenReturn(getAccountMockResponse);
         
         // Perform the request
-        String url = "/api/v1/crm-organization-user";
+        String url = "/api/v1/crm-organization-users";
 
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(url)
             .cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))

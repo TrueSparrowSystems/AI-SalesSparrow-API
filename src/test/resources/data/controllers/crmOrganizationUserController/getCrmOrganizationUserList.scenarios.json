@@ -39,11 +39,11 @@
         }
       },
       "output": {
-        "account_ids": [
+        "crm_organization_user_ids": [
             "0051e0000047G03AAE",
             "0051e000004NQ6fAAG"
         ],
-        "account_map_by_id": {
+        "crm_organization_user_map_by_id": {
           "0051e0000047G03AAE": {
             "id": "0051e0000047G03AAE",
             "name": "Alpesh Modi"
@@ -95,11 +95,11 @@
           }
       },
       "output": {
-        "account_ids": [
+        "crm_organization_user_ids": [
             "0051e0000047G03AAE",
             "0051e000004NQ6fAAG"
         ],
-        "account_map_by_id": {
+        "crm_organization_user_map_by_id": {
           "0051e0000047G03AAE": {
             "id": "0051e0000047G03AAE",
             "name": "Alpesh Modi"

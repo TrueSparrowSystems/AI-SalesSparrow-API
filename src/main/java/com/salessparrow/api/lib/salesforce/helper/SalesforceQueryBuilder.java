@@ -59,4 +59,11 @@ public class SalesforceQueryBuilder {
     return "SELECT Id, Title, TextPreview, CreatedBy.Name, LastModifiedDate FROM ContentNote WHERE Id = '" + noteId + "'";
   }
 
+  public String getCrmOrganizationUsersQuery(String searchTerm) {
+    if (searchTerm == "") {
+      return "SELECT Id, Name FROM User ORDER BY LastModifiedDate DESC LIMIT 20";
+    } 
+    return "SELECT Id, Name FROM User WHERE Name LIKE '%25"+searchTerm+"%25' ORDER BY LastModifiedDate DESC LIMIT 20";
+  }
+
 }

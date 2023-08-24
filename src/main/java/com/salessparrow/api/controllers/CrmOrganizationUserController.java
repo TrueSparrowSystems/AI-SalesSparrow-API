@@ -5,9 +5,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.constraints.Positive;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import com.salessparrow.api.dto.formatter.GetCrmOrganizationUsersFormatterDto;
+import com.salessparrow.api.dto.requestMapper.GetCrmOrganizationUsersDto;
+import com.salessparrow.api.services.crmOrganizationUsers.GetCrmOrganizationUsersList;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 
 @RestController
@@ -15,11 +23,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class CrmOrganizationUserController {
     Logger logger = LoggerFactory.getLogger(CrmOrganizationUserController.class);
     
-    @PostMapping("")
-    public void createCrmOrganizationUser(
-        @Positive @RequestBody String crmOrganizationUserId
+    @Autowired
+    private GetCrmOrganizationUsersList getCrmOrganizationUsersList;
+
+    @GetMapping("")
+    public ResponseEntity<GetCrmOrganizationUsersFormatterDto> getCrmOrganizationUsers(
+        HttpServletRequest request,
+        @Valid @ModelAttribute GetCrmOrganizationUsersDto CrmOrganizationUsersDto
     ){
-        logger.info("Create crm organization user request received");
+        logger.info("Search crm organization user request received");
+
+        GetCrmOrganizationUsersFormatterDto getCrmOrganizationUsersFormatterDto = getCrmOrganizationUsersList.getCrmOrganizationUsers(request, CrmOrganizationUsersDto);
+
+        return ResponseEntity.ok().body(getCrmOrganizationUsersFormatterDto);
     }
     
 }
