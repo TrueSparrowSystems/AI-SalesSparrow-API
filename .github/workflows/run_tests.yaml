@@ -47,6 +47,13 @@ jobs:
         with:
           java-version: '17'
           distribution: 'adopt'
+        
+      - name: Build Custom docker file for KMS
+        run: |
+          echo "Building docker image"
+          docker build -t local-kms -f Dockerfile.github .
+          echo "Starting docker container for local-kms"
+          docker run -d --name localkms -e AWS_ACCESS_KEY_ID=${{ env.AWS_ACCESS_KEY_ID }} -e AWS_SECRET_ACCESS_KEY=${{ env.AWS_SECRET_ACCESS_KEY }} -e AWS_REGION=us-east-1 -e KMS_ACCOUNT_ID=111122223333 -e KMS_REGION=us-east-1 -e KMS_SEED_PATH=init/seed.yaml local-kms
 
       - name: Log into Docker Container
         run: |
@@ -56,11 +63,6 @@ jobs:
           echo "Checking seed path"
           seed_path=$(docker exec $container_id ls /init)
           echo "Seed path: $seed_path"
-
-      - name: Display Files
-        run: |
-          echo "Files in the container:"
-          docker exec localkms ls /init/
 
       - run: |-
           echo "Start: run test cases"
