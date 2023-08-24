@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -124,10 +125,13 @@ public class GetNoteDetailsTest {
     return testScenarios.stream();
   }
 
-  public static List<Scenario> loadScenarios() throws IOException {
+  private static List<Scenario> loadScenarios() throws IOException {
     String scenariosPath = "classpath:data/controllers/accountController/getNoteDetails.scenarios.json";
     Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
     ObjectMapper objectMapper = new ObjectMapper();
-    return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});
+    
+    try (InputStream inputStream = resource.getInputStream()) {
+        return objectMapper.readValue(inputStream, new TypeReference<List<Scenario>>() {});
+    }
   }
 }
