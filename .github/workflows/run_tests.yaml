@@ -53,7 +53,7 @@ jobs:
           echo "Building docker image"
           docker build -t local-kms -f Dockerfile.github .
           echo "Starting docker container for local-kms"
-          docker run -d --name localkms -e AWS_ACCESS_KEY_ID=${{ env.AWS_ACCESS_KEY_ID }} -e AWS_SECRET_ACCESS_KEY=${{ env.AWS_SECRET_ACCESS_KEY }} -e AWS_REGION=us-east-1 -e KMS_ACCOUNT_ID=111122223333 -e KMS_REGION=us-east-1 -e KMS_SEED_PATH=init/seed.yaml local-kms
+          docker run -d --name localkms -p 4599:8080 -e AWS_ACCESS_KEY_ID=${{ env.AWS_ACCESS_KEY_ID }} -e AWS_SECRET_ACCESS_KEY=${{ env.AWS_SECRET_ACCESS_KEY }} -e AWS_REGION=us-east-1 -e KMS_ACCOUNT_ID=111122223333 -e KMS_REGION=us-east-1 -e KMS_SEED_PATH=init/seed.yaml local-kms
 
       - name: Log into Docker Container
         run: |

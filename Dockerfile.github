@@ -1,5 +1,7 @@
 FROM nsmithuk/local-kms
 
+EXPOSE 8080
+
 # Add a file to the image
 WORKDIR /init
 COPY init/seed.yaml /init
