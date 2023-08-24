@@ -6,8 +6,8 @@ on:
       - master
 env:
   ENVIRONMENT: test
-  AWS_ACCESS_KEY_ID: local
-  AWS_SECRET_ACCESS_KEY: local
+  AWS_ACCESS_KEY_ID: ${{ secrets.PLG_PROD_ACCESS_KEY }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.PLG_PROD_SECRET_KEY }}
   AWS_REGION: us-east-1
 
 jobs:
@@ -46,9 +46,5 @@ jobs:
 
       - run: |-
           echo "Start: run test cases"
-          echo "ENVIRONMENT: $ENVIRONMENT"
-          echo "AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
-          echo "AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
-          echo "AWS_REGION: $AWS_REGION"
           sh ./mvnw clean test
           echo "Done: run test cases"
