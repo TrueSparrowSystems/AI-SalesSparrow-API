@@ -46,5 +46,9 @@ jobs:
 
       - run: |-
           echo "Start: run test cases"
+          echo "ENVIRONMENT: $ENVIRONMENT"
+          echo "AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
+          echo "AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
+          echo "AWS_REGION: $AWS_REGION"
           sh ./mvnw clean test
           echo "Done: run test cases"
