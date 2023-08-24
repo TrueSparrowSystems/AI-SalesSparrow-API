@@ -1,5 +1,0 @@
-FROM nsmithuk/local-kms
-
-# Add a file to the image
-WORKDIR /init
-COPY init/seed.yaml /init 
