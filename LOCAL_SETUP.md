@@ -4,19 +4,9 @@
 
 Before using the *Sales Sparrow* APIs, make sure your development environment meets the following prerequisites and system requirements:
 
-### Using Docker (Recommended)
+### Docker
 
 - Docker version 4.19.0 or newer
-
-### Without Docker
-
-- Java 17
-  - Download it from [Oracle's official website](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html).
-- DynamoDB Local Setup
-  - Download the DynamoDB Local JAR (NoSQL Workbench) from [here](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/workbench.settingup.html).
-  - Install and run the NoSQL Workbench on your local machine.
-  - Toggle the *DDB local* option from the bottom of the left-side menu to turn it on.
-  - Add a local connection from the operation builder tab.
 
 ## Getting Started
 
@@ -82,6 +72,6 @@ $ touch test.secrets.json
 #### Run Test Cases
 
 ```sh
-$ docker-compose run test
+$ docker-compose up test
 ```
 To view the test coverage, simply open the target/site/index.html file in a web browser.
