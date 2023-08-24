@@ -30,3 +30,6 @@ export ERROR_MAIL_TO=''
 
 # Logging
 export LOG_LEVEL='info'
+
+# Cookie
+export COOKIE_DOMAIN='localhost'

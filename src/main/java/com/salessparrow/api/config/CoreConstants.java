@@ -5,6 +5,10 @@ package com.salessparrow.api.config;
  */
 public class CoreConstants {
 
+  public static String cookieDomain(){
+    return System.getenv("COOKIE_DOMAIN");
+  }
+
   public static String encryptionKey() {
     return System.getenv("ENCRYPTION_KEY");
   }
