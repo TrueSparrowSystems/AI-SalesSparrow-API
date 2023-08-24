@@ -54,7 +54,8 @@ jobs:
           container_id=$(docker ps -q -f ancestor=nsmithuk/local-kms)
           echo "Container id: $container_id"
           echo "Checking seed path"
-          docker exec $container_id ls /init
+          seed_path=$(docker exec $container_id ls /init)
+          echo "Seed path: $seed_path"
 
       - name: Display Files
         run: |
