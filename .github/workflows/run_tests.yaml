@@ -48,6 +48,19 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
+      - name: Log into Docker Container
+        run: |
+          echo "Getting container id"
+          container_id=$(docker ps -q -f ancestor=nsmithuk/local-kms)
+          echo "Container id: $container_id"
+          echo "Checking seed path"
+          docker exec -it $container_id ls /init
+
+      - name: Display Files
+        run: |
+          echo "Files in the container:"
+          docker exec localkms ls /init/
+
       - run: |-
           echo "Start: run test cases"
           sh ./mvnw clean test
