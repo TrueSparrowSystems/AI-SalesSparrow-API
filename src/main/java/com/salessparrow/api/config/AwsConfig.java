@@ -45,12 +45,9 @@ public class AwsConfig {
             CoreConstants.awsRegion()
         );
 
-      AWSKMS kms = AWSKMSClientBuilder.standard()
+      return AWSKMSClientBuilder.standard()
           .withEndpointConfiguration(endpointConfiguration)
           .build();
-
-      System.out.println("kms.listKeys(): ======" + kms.listKeys());
-      return kms;
     }
     
     return AWSKMSClientBuilder.standard()

@@ -46,9 +46,6 @@ public class AwsKms {
         .withKeyId(CoreConstants.kmsKeyId())
         .withPlaintext(ByteBuffer.wrap(token.getBytes()));
 
-    System.out.println("kmsKeyId: " + CoreConstants.kmsKeyId());
-    System.out.println("local kms endpoint: " + CoreConstants.localKmsEndpoint());
-
     EncryptResult result = null;
     try {
       result = kmsClient.encrypt(request);

@@ -82,15 +82,11 @@ public class GetNoteDetailsTest {
   @MethodSource("testScenariosProvider")
   public void getNoteDetails(Scenario testScenario) throws Exception{
     String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
-    try {
-      FixtureData fixtureData = common.loadFixture(
+    FixtureData fixtureData = common.loadFixture(
         "classpath:fixtures/controllers/accountController/getNoteDetails.fixtures.json",
         currentFunctionName
       );
       loadFixture.perform(fixtureData);
-    } catch(Exception e) {
-      System.out.println("Exception in fixtures: --- " + e);
-    }
 
     ObjectMapper objectMapper = new ObjectMapper();
 
