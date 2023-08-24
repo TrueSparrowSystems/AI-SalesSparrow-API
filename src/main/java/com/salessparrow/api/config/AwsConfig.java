@@ -49,7 +49,7 @@ public class AwsConfig {
           .withEndpointConfiguration(endpointConfiguration)
           .build();
 
-      System.out.println("kms.listKeys();: ======" + kms.listKeys());
+      System.out.println("kms.listKeys(): ======" + kms.listKeys());
       return kms;
     }
     
