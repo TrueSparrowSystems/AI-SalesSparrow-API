@@ -1,0 +1,252 @@
+[
+  {
+    "description": "Should return the 5 latest Notes",
+    "input": {
+      "accountId": "0011e00000bWSxdAAG"
+    },
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
+          {
+            "body": {
+              "totalSize": 5,
+              "done": true,
+              "records": [
+                {
+                  "attributes": {
+                    "type": "Task",
+                    "url": "/services/data/v58.0/sobjects/Task/00T1e000007mGYaEAM"
+                  },
+                  "Id": "00T1e000007mGYaEAM",
+                  "Description": "Update remaining documentations",
+                  "ActivityDate": "2023-12-01",
+                  "CreatedBy": {
+                    "attributes": {
+                      "type": "User",
+                      "url": "/services/data/v58.0/sobjects/User/0055i00000AUxQHAA1"
+                    },
+                    "Name": "Name2"
+                  },
+                  "Owner": {
+                    "attributes": {
+                      "type": "Name",
+                      "url": "/services/data/v58.0/sobjects/User/0051e0000047G03AAE"
+                    },
+                    "Name": "Name1"
+                  },
+                  "LastModifiedDate": "2023-08-24T12:16:05.000+0000"
+                },
+                {
+                  "attributes": {
+                    "type": "Task",
+                    "url": "/services/data/v58.0/sobjects/Task/00T1e000007mGXXEA2"
+                  },
+                  "Id": "00T1e000007mGXXEA2",
+                  "Description": "Update remaining documentations",
+                  "ActivityDate": "2023-12-01",
+                  "CreatedBy": {
+                    "attributes": {
+                      "type": "User",
+                      "url": "/services/data/v58.0/sobjects/User/0055i00000AUxQHAA1"
+                    },
+                    "Name": "Name2"
+                  },
+                  "Owner": {
+                    "attributes": {
+                      "type": "Name",
+                      "url": "/services/data/v58.0/sobjects/User/0051e0000047G03AAE"
+                    },
+                    "Name": "Name1"
+                  },
+                  "LastModifiedDate": "2023-08-24T12:09:51.000+0000"
+                },
+                {
+                  "attributes": {
+                    "type": "Task",
+                    "url": "/services/data/v58.0/sobjects/Task/00T1e000007mF0oEAE"
+                  },
+                  "Id": "00T1e000007mF0oEAE",
+                  "Description": "Update remaining documentations",
+                  "ActivityDate": "2023-12-01",
+                  "CreatedBy": {
+                    "attributes": {
+                      "type": "User",
+                      "url": "/services/data/v58.0/sobjects/User/0055i00000AUxQHAA1"
+                    },
+                    "Name": "Name2"
+                  },
+                  "Owner": {
+                    "attributes": {
+                      "type": "Name",
+                      "url": "/services/data/v58.0/sobjects/User/0051e0000047G03AAE"
+                    },
+                    "Name": "Name1"
+                  },
+                  "LastModifiedDate": "2023-08-23T13:11:03.000+0000"
+                },
+                {
+                  "attributes": {
+                    "type": "Task",
+                    "url": "/services/data/v58.0/sobjects/Task/00T1e000007mEk9EAE"
+                  },
+                  "Id": "00T1e000007mEk9EAE",
+                  "Description": "Update remaining documentations",
+                  "ActivityDate": "2023-12-01",
+                  "CreatedBy": {
+                    "attributes": {
+                      "type": "User",
+                      "url": "/services/data/v58.0/sobjects/User/0055i00000AUxQHAA1"
+                    },
+                    "Name": "Name2"
+                  },
+                  "Owner": {
+                    "attributes": {
+                      "type": "Name",
+                      "url": "/services/data/v58.0/sobjects/User/0051e0000047G03AAE"
+                    },
+                    "Name": "Name1"
+                  },
+                  "LastModifiedDate": "2023-08-23T07:49:23.000+0000"
+                },
+                {
+                  "attributes": {
+                    "type": "Task",
+                    "url": "/services/data/v58.0/sobjects/Task/00T1e000007mEfuEAE"
+                  },
+                  "Id": "00T1e000007mEfuEAE",
+                  "Description": "Update remaining documentations",
+                  "ActivityDate": "2023-12-01",
+                  "CreatedBy": {
+                    "attributes": {
+                      "type": "User",
+                      "url": "/services/data/v58.0/sobjects/User/0055i00000AUxQHAA1"
+                    },
+                    "Name": "Name2"
+                  },
+                  "Owner": {
+                    "attributes": {
+                      "type": "Name",
+                      "url": "/services/data/v58.0/sobjects/User/0051e0000047G03AAE"
+                    },
+                    "Name": "Name1"
+                  },
+                  "LastModifiedDate": "2023-08-23T07:10:53.000+0000"
+                }
+              ]
+            },
+            "httpHeaders": {},
+            "httpStatusCode": 200,
+            "referenceId": "GetTasksList"
+          }
+        ]
+      }
+    },
+    "output": {
+      "task_ids": [
+        "00T1e000007mGYaEAM",
+        "00T1e000007mGXXEA2",
+        "00T1e000007mF0oEAE",
+        "00T1e000007mEk9EAE",
+        "00T1e000007mEfuEAE"
+      ],
+      "task_map_by_id": {
+        "00T1e000007mGXXEA2": {
+          "id": "00T1e000007mGXXEA2",
+          "creator_name": "Name2",
+          "description": "Update remaining documentations",
+          "due_date": "2023-12-01T00:00:00.000+00:00",
+          "crm_organization_user_name": "Name1",
+          "last_modified_time": "2023-08-24T12:09:51.000+00:00"
+        },
+        "00T1e000007mEk9EAE": {
+          "id": "00T1e000007mEk9EAE",
+          "creator_name": "Name2",
+          "description": "Update remaining documentations",
+          "due_date": "2023-12-01T00:00:00.000+00:00",
+          "crm_organization_user_name": "Name1",
+          "last_modified_time": "2023-08-23T07:49:23.000+00:00"
+        },
+        "00T1e000007mEfuEAE": {
+          "id": "00T1e000007mEfuEAE",
+          "creator_name": "Name2",
+          "description": "Update remaining documentations",
+          "due_date": "2023-12-01T00:00:00.000+00:00",
+          "crm_organization_user_name": "Name1",
+          "last_modified_time": "2023-08-23T07:10:53.000+00:00"
+        },
+        "00T1e000007mF0oEAE": {
+          "id": "00T1e000007mF0oEAE",
+          "creator_name": "Name2",
+          "description": "Update remaining documentations",
+          "due_date": "2023-12-01T00:00:00.000+00:00",
+          "crm_organization_user_name": "Name1",
+          "last_modified_time": "2023-08-23T13:11:03.000+00:00"
+        },
+        "00T1e000007mGYaEAM": {
+          "id": "00T1e000007mGYaEAM",
+          "creator_name": "Name2",
+          "description": "Update remaining documentations",
+          "due_date": "2023-12-01T00:00:00.000+00:00",
+          "crm_organization_user_name": "Name1",
+          "last_modified_time": "2023-08-24T12:16:05.000+00:00"
+        }
+      }
+    }
+  },
+  {
+    "description": "should return empty response when no tasks are present",
+    "input": {
+      "accountId": "0011e00000bWSxdAAG"
+    },
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
+          {
+            "body": {
+              "totalSize": 0,
+              "done": true,
+              "records": []
+            },
+            "httpHeaders": {},
+            "httpStatusCode": 200,
+            "referenceId": "GetTasksList"
+          }
+        ]
+      }
+    },
+    "output": {
+      "task_ids": [],
+      "task_map_by_id": {}
+    }
+  },
+  {
+    "description": "should return error response when account id is invalid",
+    "input": {
+      "accountId": "invalid"
+    },
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
+          {
+            "body": [
+              {
+                "message": "\nLastModifiedDate FROM Task WHERE WhatId='invalid' ORDER BY LastModifiedDate\n                                 ^\nERROR at Row:1:Column:109\ninvalid ID field: abcd",
+                "errorCode": "INVALID_QUERY_FILTER_OPERATOR"
+              }
+            ],
+            "httpHeaders": {},
+            "httpStatusCode": 400,
+            "referenceId": "GetTasksList"
+          }
+        ]
+      }
+    },
+    "output": {
+      "http_code": 500,
+      "message": "Something went wrong.",
+      "code": "INTERNAL_SERVER_ERROR",
+      "internal_error_identifier": "l_ca_gatl_gsatl_pr_1",
+      "param_errors": []
+    }
+  }
+]

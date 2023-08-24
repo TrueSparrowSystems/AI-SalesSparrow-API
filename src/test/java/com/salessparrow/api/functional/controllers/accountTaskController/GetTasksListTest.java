@@ -1,4 +1,4 @@
-package com.salessparrow.api.functional.controllers.accountController;
+package com.salessparrow.api.functional.controllers.accountTaskController;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -26,7 +26,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dynamobee.exception.DynamobeeException;
 import com.salessparrow.api.helper.Cleanup;
@@ -46,8 +45,9 @@ import jakarta.servlet.http.Cookie;
 @AutoConfigureMockMvc
 @WebAppConfiguration
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
-public class GetAccountListTest {
-  @Autowired
+public class GetTasksListTest {
+
+  @Autowired 
   private MockMvc mockMvc;
   @Autowired
   private Common common;
@@ -63,49 +63,44 @@ public class GetAccountListTest {
 
   @BeforeEach
   public void setUp() throws DynamobeeException {
-    setup.perform();
+      setup.perform();
   }
 
   @AfterEach
   public void tearDown() {
-    cleanup.perform();
+      cleanup.perform();
   }
 
   @ParameterizedTest
   @MethodSource("testScenariosProvider")
-  public void getAccountList(Scenario testScenario) throws Exception {
-     // Load fixture data
+  public void getTasksList(Scenario testScenario) throws Exception {
+
+    // Load fixture data
     String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
-    FixtureData fixtureData = common.loadFixture("classpath:fixtures/controllers/accountController/getAccountList.fixtures.json", currentFunctionName);
+    FixtureData fixtureData = common.loadFixture("classpath:fixtures/controllers/accountTaskController/getTasksList.fixtures.json", currentFunctionName);
     loadFixture.perform(fixtureData);
 
     // Read data from the scenario
     ObjectMapper objectMapper = new ObjectMapper();
     String cookieValue = Constants.SALESFORCE_ACTIVE_USET_COOKIE_VALUE;
+    String accountId = (String) testScenario.getInput().get("accountId");
 
     // Prepare mock responses
-    HttpResponse getAccountMockResponse = new HttpResponse();
-    getAccountMockResponse.setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeCompositeRequest")));
-    when(makeCompositeRequestMock.makePostRequest(any(), any())).thenReturn(getAccountMockResponse);
-    
+    HttpResponse getTasksListMockResponse = new HttpResponse();
+    getTasksListMockResponse.setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeCompositeRequest")));
+    when(makeCompositeRequestMock.makePostRequest(any(), any())).thenReturn(getTasksListMockResponse);
+
     // Perform the request
-    String url = "/api/v1/accounts";
-    String q = objectMapper.writeValueAsString(testScenario.getInput().get("q"));
+    String url = "/api/v1/accounts/" + accountId + "/tasks";
 
     ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(url)
       .cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
-      .param("q", q)
       .contentType(MediaType.APPLICATION_JSON));
-    
 
     // Check the response
     String expectedOutput = objectMapper.writeValueAsString(testScenario.getOutput());
     String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
-
-    JsonNode expectedOutputJson = objectMapper.readTree(expectedOutput);
-    JsonNode actualOutputJson = objectMapper.readTree(actualOutput);
-
-    assertEquals(expectedOutputJson, actualOutputJson);
+    assertEquals(expectedOutput, actualOutput);
   }
 
   static Stream<Scenario> testScenariosProvider() throws IOException {
@@ -114,7 +109,7 @@ public class GetAccountListTest {
   }
 
   private static List<Scenario> loadScenarios() throws IOException {
-    String scenariosPath = "classpath:data/controllers/accountController/getAccountList.scenarios.json";
+    String scenariosPath = "classpath:data/controllers/accountTaskController/getTasksList.scenarios.json";
     Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
     ObjectMapper objectMapper = new ObjectMapper();
     return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});

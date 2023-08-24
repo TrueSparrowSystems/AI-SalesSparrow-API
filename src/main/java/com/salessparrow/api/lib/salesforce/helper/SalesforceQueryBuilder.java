@@ -25,6 +25,18 @@ public class SalesforceQueryBuilder {
   }
 
   /**
+   * Get the list of tasks for a given account
+   * 
+   * @param accountId
+   * 
+   * @return String
+   */
+  public String getTasksQuery(String accountId) {
+    return "SELECT Id, Description, ActivityDate, CreatedBy.Name, Owner.Name, LastModifiedDate FROM Task WHERE WhatId='"
+      + accountId + "' ORDER BY LastModifiedDate DESC LIMIT 5";
+  }
+
+  /**
    * Get the list of notes for a given account
    * 
    * @param accountId
