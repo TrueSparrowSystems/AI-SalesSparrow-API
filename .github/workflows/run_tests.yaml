@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - master
+
 env:
   ENVIRONMENT: test
   AWS_ACCESS_KEY_ID: ${{ secrets.PLG_PROD_ACCESS_KEY }}
@@ -31,8 +32,8 @@ jobs:
         volumes:
           - ./init:/init
         env:
-          KMS_ACCOUNT_ID: '111122223333'
-          KMS_REGION: 'us-east-1'
+          KMS_ACCOUNT_ID: 111122223333
+          KMS_REGION: us-east-1
           KMS_SEED_PATH: init/seed.yaml
 
     steps:
