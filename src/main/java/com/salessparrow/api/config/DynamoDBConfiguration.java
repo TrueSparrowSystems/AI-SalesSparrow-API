@@ -51,6 +51,10 @@ public class DynamoDBConfiguration {
 
     @Bean
     DynamoDBMapperConfig dynamoDBMapperConfig() {
+        System.out.println("Environment: --- " + CoreConstants.environment());
+
+        System.out.println("AWS_ACCESS_KEY_ID: --- " + System.getenv("AWS_ACCESS_KEY_ID"));
+
         String prefix = CoreConstants.environment() + "_";
         return new DynamoDBMapperConfig.Builder()
                 .withTableNameOverride(DynamoDBMapperConfig.TableNameOverride.withTableNamePrefix(prefix))
