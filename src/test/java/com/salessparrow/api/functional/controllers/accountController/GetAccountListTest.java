@@ -77,7 +77,6 @@ public class GetAccountListTest {
      // Load fixture data
     String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
     FixtureData fixtureData = common.loadFixture("classpath:fixtures/controllers/accountController/getAccountList.fixtures.json", currentFunctionName);
-    System.out.println("fixtureData++++++ "+fixtureData);
     loadFixture.perform(fixtureData);
 
     // Read data from the scenario
@@ -92,7 +91,6 @@ public class GetAccountListTest {
     // Perform the request
     String url = "/api/v1/accounts";
     String q = objectMapper.writeValueAsString(testScenario.getInput().get("q"));
-    System.out.println("q++++++ "+q);
 
     ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(url)
       .cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))

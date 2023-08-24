@@ -38,10 +38,6 @@ public class DynamoDBConfiguration {
 
 	@Bean
 	public AmazonDynamoDB buildAmazonDynamoDB() {
-		System.out.println("buildAmazonDynamoDB Environment: --- " + CoreConstants.environment());
-		System.out.println("CoreConstants.dynamoDbUrl(): ----- " + CoreConstants.dynamoDbUrl());
-		System.out.println("CoreConstants.awsRegion(): ----- " + CoreConstants.awsRegion());
-		System.out.println("buildAmazonDynamoDB AWS_ACCESS_KEY_ID: --- " + System.getenv("AWS_ACCESS_KEY_ID"));
 		return AmazonDynamoDBClientBuilder
 					.standard()
 					.withEndpointConfiguration(
@@ -53,10 +49,6 @@ public class DynamoDBConfiguration {
 
 	@Bean
 	DynamoDBMapperConfig dynamoDBMapperConfig() {
-		System.out.println("Environment: --- " + CoreConstants.environment());
-
-		System.out.println("AWS_ACCESS_KEY_ID: --- " + System.getenv("AWS_ACCESS_KEY_ID"));
-
 		String prefix = CoreConstants.environment() + "_";
 		return new DynamoDBMapperConfig.Builder()
 						.withTableNameOverride(DynamoDBMapperConfig.TableNameOverride.withTableNamePrefix(prefix))
