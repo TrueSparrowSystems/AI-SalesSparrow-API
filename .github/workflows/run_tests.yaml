@@ -57,11 +57,8 @@ jobs:
 
       - name: Log into Docker Container
         run: |
-          echo "Getting container id"
-          container_id=$(docker ps -q -f ancestor=nsmithuk/local-kms)
-          echo "Container id: $container_id"
           echo "Checking seed path"
-          seed_path=$(docker exec $container_id ls /init)
+          seed_path=$(docker exec localkms ls /init)
           echo "Seed path: $seed_path"
 
       - run: |-
