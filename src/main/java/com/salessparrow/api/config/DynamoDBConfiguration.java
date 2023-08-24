@@ -39,7 +39,8 @@ public class DynamoDBConfiguration {
 	@Bean
 	public AmazonDynamoDB buildAmazonDynamoDB() {
 		System.out.println("buildAmazonDynamoDB Environment: --- " + CoreConstants.environment());
-
+		System.out.println("CoreConstants.dynamoDbUrl(): ----- " + CoreConstants.dynamoDbUrl());
+		System.out.println("CoreConstants.awsRegion(): ----- " + CoreConstants.awsRegion());
 		System.out.println("buildAmazonDynamoDB AWS_ACCESS_KEY_ID: --- " + System.getenv("AWS_ACCESS_KEY_ID"));
 		return AmazonDynamoDBClientBuilder
 					.standard()
