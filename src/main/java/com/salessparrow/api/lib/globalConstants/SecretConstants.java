@@ -27,8 +27,10 @@ public class SecretConstants {
   /**
    * This is the builder that is going to be used to access the secrets manager.
    */
-  public static SecretsManagerClientBuilder secretsManagerClientBuilder = SecretsManagerClient.builder()
-          .credentialsProvider(InstanceProfileCredentialsProvider.builder().build());
+  // public static SecretsManagerClientBuilder secretsManagerClientBuilder = SecretsManagerClient.builder()
+  //         .credentialsProvider(InstanceProfileCredentialsProvider.builder().build());
+
+  public static SecretsManagerClientBuilder secretsManagerClientBuilder = SecretsManagerClient.builder();
 
   /**
    * This method returns the secrets from the secrets manager.

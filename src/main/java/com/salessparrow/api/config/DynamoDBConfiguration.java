@@ -14,51 +14,49 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DynamoDBConfiguration {
 
-    Logger logger = LoggerFactory.getLogger(DynamoDBConfiguration.class);
+	Logger logger = LoggerFactory.getLogger(DynamoDBConfiguration.class);
 
-    @Bean
-    public DynamoDBMapper dynamoDBMapper() {
-        DynamoDBMapper defaultMapper = new DynamoDBMapper(buildAmazonDynamoDB(), dynamoDBMapperConfig());
-        
-        //Override DynamoDb operations to add logging.
-        return new DynamoDBMapper(buildAmazonDynamoDB(), dynamoDBMapperConfig()) {
+	@Bean
+	public DynamoDBMapper dynamoDBMapper() {
+		DynamoDBMapper defaultMapper = new DynamoDBMapper(buildAmazonDynamoDB(), dynamoDBMapperConfig());
+		//Override DynamoDb operations to add logging.
+		return new DynamoDBMapper(buildAmazonDynamoDB(), dynamoDBMapperConfig()) {
+			@Override
+			public <T> T load(Class<T> clazz, Object hashKey) {
+				logger.debug("DBQuery:Load: table-{} hashKey-{}", clazz.getSimpleName(), hashKey);
+				return defaultMapper.load(clazz, hashKey);
+			}
 
-            @Override
-            public <T> T load(Class<T> clazz, Object hashKey) {
-                logger.debug("DBQuery:Load: table-{} hashKey-{}", clazz.getSimpleName(), hashKey);
-                return defaultMapper.load(clazz, hashKey);
-            }
+			@Override
+			public <T> void save(T object) {
+				logger.debug("DBQuery:Save: table-{}", object.getClass().getSimpleName());
+				defaultMapper.save(object);
+			}
+			// Similarly, you can override other used methods like delete, batchSave, etc. similarly
+		};
+	}
 
-            @Override
-            public <T> void save(T object) {
-                logger.debug("DBQuery:Save: table-{}", object.getClass().getSimpleName());
-                defaultMapper.save(object);
-            }
-            // Similarly, you can override other used methods like delete, batchSave, etc. similarly
-        };
-    }
+	@Bean
+	public AmazonDynamoDB buildAmazonDynamoDB() {
+		return AmazonDynamoDBClientBuilder
+					.standard()
+					.withEndpointConfiguration(
+							new AwsClientBuilder.EndpointConfiguration(
+							CoreConstants.dynamoDbUrl(),
+							CoreConstants.awsRegion()))
+					.build();
+	}
 
-    @Bean
-    public AmazonDynamoDB buildAmazonDynamoDB() {
-        return AmazonDynamoDBClientBuilder
-                .standard()
-                .withEndpointConfiguration(
-                   new AwsClientBuilder.EndpointConfiguration(
-                    CoreConstants.dynamoDbUrl(),
-                    CoreConstants.awsRegion()))
-                .build();
-    }
+	@Bean
+	DynamoDBMapperConfig dynamoDBMapperConfig() {
+		System.out.println("Environment: --- " + CoreConstants.environment());
 
-    @Bean
-    DynamoDBMapperConfig dynamoDBMapperConfig() {
-        System.out.println("Environment: --- " + CoreConstants.environment());
+		System.out.println("AWS_ACCESS_KEY_ID: --- " + System.getenv("AWS_ACCESS_KEY_ID"));
 
-        System.out.println("AWS_ACCESS_KEY_ID: --- " + System.getenv("AWS_ACCESS_KEY_ID"));
-
-        String prefix = CoreConstants.environment() + "_";
-        return new DynamoDBMapperConfig.Builder()
-                .withTableNameOverride(DynamoDBMapperConfig.TableNameOverride.withTableNamePrefix(prefix))
-                .build();
-    }
+		String prefix = CoreConstants.environment() + "_";
+		return new DynamoDBMapperConfig.Builder()
+						.withTableNameOverride(DynamoDBMapperConfig.TableNameOverride.withTableNamePrefix(prefix))
+						.build();
+	}
 }
 
