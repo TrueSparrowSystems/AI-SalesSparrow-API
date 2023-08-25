@@ -29,7 +29,7 @@ public class SecretConstants {
    */
   // public static SecretsManagerClientBuilder secretsManagerClientBuilder = SecretsManagerClient.builder()
   //         .credentialsProvider(InstanceProfileCredentialsProvider.builder().build());
-
+  
   public static SecretsManagerClientBuilder secretsManagerClientBuilder = SecretsManagerClient.builder();
 
   /**
@@ -52,6 +52,7 @@ public class SecretConstants {
       cache.close();
     }
 
+    System.out.println("================================secretJson: " + secretJson);
     ObjectMapper objectMapper = new ObjectMapper();
     String specificValue = "";
     try {
