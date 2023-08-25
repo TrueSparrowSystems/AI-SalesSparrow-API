@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dynamobee.exception.DynamobeeException;
 import com.salessparrow.api.helper.Cleanup;
 import com.salessparrow.api.helper.Common;
+import com.salessparrow.api.helper.Constants;
 import com.salessparrow.api.helper.FixtureData;
 import com.salessparrow.api.helper.LoadFixture;
 import com.salessparrow.api.helper.Scenario;
@@ -81,7 +82,7 @@ public class CreateTaskTest {
 
         // Read data from the scenario
         ObjectMapper objectMapper = new ObjectMapper();
-        String cookieValue = (String) testScenario.getInput().get("cookie");
+        String cookieValue = Constants.SALESFORCE_ACTIVE_USET_COOKIE_VALUE;
         String accountId = (String) testScenario.getInput().get("accountId");
 
         // Prepare mock responses
@@ -101,7 +102,12 @@ public class CreateTaskTest {
         // Check the response
         String expectedOutput = objectMapper.writeValueAsString(testScenario.getOutput());
         String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
-        assertEquals(expectedOutput, actualOutput);
+        
+        if(resultActions.andReturn().getResponse().getStatus() == 201) {
+            assertEquals(expectedOutput, actualOutput);
+          } else {
+            common.compareErrors(testScenario, actualOutput);
+          }
     }
 
     static Stream<Scenario> testScenariosProvider() throws IOException {
