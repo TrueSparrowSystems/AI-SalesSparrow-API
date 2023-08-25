@@ -3,7 +3,6 @@
         "description": "Should return the 5 latest Notes", 
         "input": {
           "accountId":"0011e00000bWSxdAAG",
-          "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw==",
           "documentId":
           ["0691e000001WKXSAA4","0691e000001WSt7AAG","0691e000001WSuKAAW","0691e000001WSzFAAW","0691e000001WUBCAA4","0691e000001WWHCAA4","0691e000001WXlcAAG","0691e000001WXzPAAW","0691e000001WY0NAAW","0691e000001WY58AAG","0691e000001WaSzAAK","0691e000001Wc4fAAC","0691e000001Wc4pAAC","0691e000001Wl1GAAS","0691e000001WrxGAAS","0691e000001WrxpAAC","0691e000001WrxuAAC","0691e000001Ws2QAAS","0691e000001WsIxAAK","0691e000001WsJHAA0","0691e000001Wt2HAAS","0691e000001Wt5GAAS","0691e000001WtEXAA0","0691e000001WtRgAAK","0691e000001WtxrAAC","0691e000001Wu8pAAC","0691e000001WuIuAAK","0691e000001WuJ9AAK"]          
         },
@@ -366,7 +365,6 @@
         "description": "should return empty response when no notes are present",
         "input": {
             "account_id": "0011e00000bWSxdAAG",
-            "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw==",
             "document_id":[]
         },
         "mocks":{
@@ -397,7 +395,6 @@
         "description": "should return error response when account id is invalid",
         "input": {
             "account_id": "0011e00000bWSxdAAG",
-            "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw==",
             "document_id":[]
         },
         "mocks":{
