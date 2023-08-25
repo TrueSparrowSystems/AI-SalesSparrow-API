@@ -13,7 +13,7 @@
 	
 	<groupId>com.salessparrow</groupId>
 		<artifactId>salessparrow-api</artifactId>
-		<version>0.0.1</version>
+		<version>0.2.0</version>
 		<name>api</name>
 	<description>Salessparrow apis</description>
 	
@@ -145,7 +145,19 @@
 			<version>0.6</version>
 		</dependency>
 
- 	</dependencies>
+		<dependency>
+			<groupId>com.amazonaws.secretsmanager</groupId>
+			<artifactId>aws-secretsmanager-caching-java</artifactId>
+			<version>2.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>secretsmanager</artifactId>
+			<version>2.20.132</version>
+		</dependency>
+
+ </dependencies>
 
 	<build>
 		<plugins>

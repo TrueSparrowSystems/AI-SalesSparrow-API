@@ -45,6 +45,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     registry.addInterceptor(userAuthInterceptor)
         .addPathPatterns("/**")
-        .excludePathPatterns("/api/v1/auth/salesforce/**");
+        .excludePathPatterns("/api/v1/auth/salesforce/**")
+        .excludePathPatterns("/api/v1/health-check");
   }
 }

@@ -52,7 +52,7 @@ public class ErrorEmailService {
                 + "-" + errorObj.getMessage();
 
         // Send email only if not in dev environment
-        if (!CoreConstants.isDevEnvironment() && !CoreConstants.isTestEnvironment()) {
+        if (!CoreConstants.isDevEnvironment() && !CoreConstants.isTestEnvironment() && !CoreConstants.isLocalTestEnvironment()) {
             sendEmail(CoreConstants.errorEmailFrom(), CoreConstants.errorEmailTo(), subject, body);
         } else {
             logger.info("Skip email for development.\n\n subject {} \n body {}", subject, body);
