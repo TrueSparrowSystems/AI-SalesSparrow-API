@@ -40,20 +40,20 @@ public class GetSalesforceAccountTasksList {
   private MakeCompositeRequest makeCompositeRequest;
 
   /**
-   * Get the list of tasks for a given account
+   * Get the list of tasks for a given account in salesforce
    * 
    * @param user
    * @param accountId
    * 
    * @return GetTasksListFormatterDto
    **/
-  public GetTasksListFormatterDto getTasksList(User user, String accountId) {
-    logger.info("Salesforce getTasksList action");
+  public GetTasksListFormatterDto getAccountTasksList(User user, String accountId) {
+    logger.info("Salesforce getAccountTasksList action called");
 
     String salesforceUserId = user.getExternalUserId();
 
     SalesforceQueryBuilder salesforceQuery = new SalesforceQueryBuilder();
-    String query = salesforceQuery.getTasksQuery(accountId);
+    String query = salesforceQuery.getAccountTasksQuery(accountId);
 
     String url = salesforceConstants.queryUrlPath() + query;
 

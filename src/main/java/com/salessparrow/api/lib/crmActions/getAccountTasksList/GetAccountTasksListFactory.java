@@ -29,12 +29,12 @@ public class GetAccountTasksListFactory {
    * 
    * @return GetTasksListFormatterDto
    **/
-  public GetTasksListFormatterDto getTasksList(User user, String accountId) {
-    logger.info("factory for getTasksList action");
+  public GetTasksListFormatterDto getAccountTasksList(User user, String accountId) {
+    logger.info("factory for getAccountTasksList action");
 
     switch(user.getUserKind()) {
       case UserConstants.SALESFORCE_USER_KIND:
-        return getSalesforceAccountTasksList.getTasksList(user, accountId);
+        return getSalesforceAccountTasksList.getAccountTasksList(user, accountId);
     default:
       throw new CustomException(
         new ErrorObject(

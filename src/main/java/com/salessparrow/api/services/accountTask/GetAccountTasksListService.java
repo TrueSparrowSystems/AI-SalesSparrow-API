@@ -29,10 +29,10 @@ public class GetAccountTasksListService {
    * 
    * @return GetTasksListFormatterDto object
    */
-  public GetTasksListFormatterDto getTasksList(HttpServletRequest request, String accountId) {
-    logger.info("Inside getTasksList Service");
+  public GetTasksListFormatterDto getAccountTasksList(HttpServletRequest request, String accountId) {
+    logger.info("getAccountTasksList Service called");
     
     User currentUser = (User) request.getAttribute("current_user");
-    return getAccountTasksListFactory.getTasksList(currentUser, accountId);
+    return getAccountTasksListFactory.getAccountTasksList(currentUser, accountId);
   }
 }

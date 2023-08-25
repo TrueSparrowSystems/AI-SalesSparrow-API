@@ -53,7 +53,7 @@ public class AccountTaskController {
   ){
     logger.info("Get tasks list request received");
   
-    GetTasksListFormatterDto getTasksListFormatterDto = getAccountTasksListService.getTasksList(request, accountId);
+    GetTasksListFormatterDto getTasksListFormatterDto = getAccountTasksListService.getAccountTasksList(request, accountId);
     return ResponseEntity.status(HttpStatus.OK).body(getTasksListFormatterDto);
   }
 }

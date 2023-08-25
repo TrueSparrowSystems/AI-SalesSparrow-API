@@ -31,7 +31,7 @@ public class SalesforceQueryBuilder {
    * 
    * @return String
    */
-  public String getTasksQuery(String accountId) {
+  public String getAccountTasksQuery(String accountId) {
     return "SELECT Id, Description, ActivityDate, CreatedBy.Name, Owner.Name, LastModifiedDate FROM Task WHERE WhatId='"
       + accountId + "' ORDER BY LastModifiedDate DESC LIMIT 5";
   }
