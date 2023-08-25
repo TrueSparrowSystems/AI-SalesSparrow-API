@@ -82,7 +82,7 @@ public class GetCrmOrganizationUserListTest {
         // Read data from the scenario
         ObjectMapper objectMapper = new ObjectMapper();
 
-        String cookieValue = Constants.SALESFORCE_ACTIVE_USET_COOKIE_VALUE;
+        String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
         String q = (String) testScenario.getInput().get("q");
 
         // Prepare mock responses
