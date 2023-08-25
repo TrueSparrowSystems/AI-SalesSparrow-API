@@ -1,60 +1,78 @@
-### Prerequisites and System Requirements
+# Sales Sparrow APIs: Getting Started Guide
 
-Before using the *Sales Sparrow* apis, make sure your development environment meets the following prerequisites and system requirements:
-* For Docker **(Recommended)**
-    - Docker version 4.19.0 or newer
-* Without Docker
-    - Java 17 
-        - You can download it from [here](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html).
-    - Dynamo DB Local Setup
-        - Download the dynamodb local jar(noSQL Workbench) from [here](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/workbench.settingup.html)
-        - Install and run the noSQL Workbench on your local machine
-        - Toggle *DDB local* option from bottom of the left sidemenu to turn it on.
-        - Add a  local connection from the operation builder tab
+## Prerequisites and System Requirements
+
+Before using the *Sales Sparrow* APIs, make sure your development environment meets the following prerequisites and system requirements:
+
+### Docker
+
+- Docker version 4.19.0 or newer
 
 ## Getting Started
+
 To clone the project and install dependencies, follow these steps:
 
-### Clone the project
+### Clone the Project
 
-```
+```sh
 $ git clone git@github.com:TrueSparrowSystems/AI-SalesSparrow-API.git
+
 $ cd AI-SalesSparrow-API
 ```
 
-### Clone the AI-SalesSparrow-Docs submodule ###
-```
+### Clone the AI-SalesSparrow-Docs Submodule
+
+```sh
 $ git submodule update --init
 ```
 
 ### Set Environment Variables
-1. Copy the contents of set_env_vars-sample.sh to set_env_vars.sh
-2. Update the values of the environment variables in set_env_vars.sh
-     - Salesforce credentials needs to be copied from the salesforce connected app
-     - Aws credentials needs to be copied from the aws account
 
-### Start servers with docker
+1. Copy the contents of `sample.secrets.json` to `secrets.json`.
+2. Update the values of the environment variables in secrets.json:
+    - Copy Salesforce credentials from the Salesforce connected app and update `SALESFORCE_CLIENT_ID`, `SALESFORCE_CLIENT_SECRET`, `SALESFORCE_AUTH_URL`.
+    - Update `KMS_KEY_ID` with value `arn:aws:kms:'us-east-1':'111122223333':key/bc436485-5092-42b8-92a3-0aa8b93536dc`. This local Docker setup uses the [local-kms](https://hub.docker.com/r/nsmithuk/local-kms) Docker image, and the key is already configured using [seed](init/seed.yaml).
+
+### Start the API Server with Docker
+
+```sh
+$ docker-compose up api
 ```
-$ docker-compose up
+
+### Run Test Cases with Docker
+
+#### Set Test-Related Environment Variables
+
+1. Create a `test.secrets.json` file:
+```sh
+$ touch test.secrets.json
 ```
 
-### Start servers without docker   
+2. Add the following environment variables to `test.secrets.json`:
+```json
+{
+    "ENCRYPTION_KEY": "1234567890",
+    "API_COOKIE_SECRET": "1234567890",
+    "AWS_IAM_REGION": "us-east-1",
+    "KMS_KEY_ID": "arn:aws:kms:'us-east-1':'111122223333':key/bc436485-5092-42b8-92a3-0aa8b93536dc",
+    "SALESFORCE_CLIENT_ID": "12345",
+    "SALESFORCE_CLIENT_SECRET": "12345",
+    "SALESFORCE_AUTH_URL": "https://test.salesforce.com",
+    "SALESFORCE_WHITELISTED_REDIRECT_URIS": "http://localhost:3000",
+    "MEMCACHED_CACHE_HOST": "memcached",
+    "MEMCACHED_CACHE_PORT": "11211",
+    "LOG_LEVEL": "debug",
+    "DYNAMO_DB_URL": "http://dynamodb:8000",
+    "LOCAL_KMS_ENDPOINT": "http://localkms:8080",
+    "ERROR_MAIL_FROM": "",
+    "ERROR_MAIL_TO": "",
+    "COOKIE_DOMAIN":""
+}
 ```
-$ source set_env_vars.sh 
-$ ./mvnw spring-boot:run    
- ```
- 
- **To install new dependencies**
- ```
- $ ./mvnw clean install -Dmaven.test.skip
- ```
 
- **To run test cases**
- ```
- $ ./mvnw clean test
- ```
+#### Run Test Cases
 
- **To run test cases and generate coverage report**
- ```
- $ ./mvnw clean test jacoco:report
- ```
+```sh
+$ docker-compose up test
+```
+To view the test coverage, simply open the target/site/index.html file in a web browser.

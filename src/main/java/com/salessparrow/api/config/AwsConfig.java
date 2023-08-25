@@ -2,6 +2,7 @@ package com.salessparrow.api.config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.kms.AWSKMS;
 import com.amazonaws.services.kms.AWSKMSClientBuilder;
 
@@ -18,18 +19,38 @@ import org.springframework.context.annotation.Configuration;
 public class AwsConfig {
 
   /**
-   * Creates and configures an AWS KMS (Key Management Service) client.
-   *
-   * @return An instance of AWSKMS that allows access to AWS KMS operations.
+   * Returns an instance of the AWS Key Management Service (KMS)
+   * client based on the environment.
+   * 
+   * @implNote - Client is configured to use the local KMS endpoint for following environments
+   *    - development
+   *    - test
+   *    - local-test 
+   *    For test and production environments, the client is configured to use the AWS KMS endpoint
+   * 
+   * @return An instance of the AWSKMS client configured 
+   * for the appropriate environment.
+   * 
    */
   @Bean
   public AWSKMS kmsClient() {
-    BasicAWSCredentials awsCredentials = new BasicAWSCredentials(
-        CoreConstants.awsAccessKeyId(),
-        CoreConstants.awsSecretAccessKey());
+    if (
+      CoreConstants.isDevEnvironment() || 
+      CoreConstants.isTestEnvironment() || 
+      CoreConstants.isLocalTestEnvironment()
+    ) {
+      
+      AwsClientBuilder.EndpointConfiguration endpointConfiguration = new AwsClientBuilder.EndpointConfiguration(
+            CoreConstants.localKmsEndpoint(),
+            CoreConstants.awsRegion()
+        );
 
+      return AWSKMSClientBuilder.standard()
+          .withEndpointConfiguration(endpointConfiguration)
+          .build();
+    }
+    
     return AWSKMSClientBuilder.standard()
-        .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
         .withRegion(CoreConstants.awsRegion())
         .build();
   }
@@ -41,12 +62,7 @@ public class AwsConfig {
    */
   @Bean
   public AmazonSimpleEmailService sesClient() {
-    BasicAWSCredentials awsCredentials = new BasicAWSCredentials(
-        CoreConstants.awsAccessKeyId(),
-        CoreConstants.awsSecretAccessKey());
-
       return AmazonSimpleEmailServiceClientBuilder.standard()
-          .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
           .withRegion(CoreConstants.awsRegion())
           .build();
   }

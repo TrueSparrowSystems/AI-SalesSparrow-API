@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -30,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dynamobee.exception.DynamobeeException;
 import com.salessparrow.api.helper.Cleanup;
 import com.salessparrow.api.helper.Common;
+import com.salessparrow.api.helper.Constants;
 import com.salessparrow.api.helper.FixtureData;
 import com.salessparrow.api.helper.LoadFixture;
 import com.salessparrow.api.helper.Scenario;
@@ -81,7 +83,7 @@ public class CreateNoteTest {
 
     // Read data from the scenario
     ObjectMapper objectMapper = new ObjectMapper();
-    String cookieValue = (String) testScenario.getInput().get("cookie");
+    String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
     String accountId = (String) testScenario.getInput().get("accountId");
 
     // Prepare mock responses
@@ -101,7 +103,12 @@ public class CreateNoteTest {
     // Check the response
     String expectedOutput = objectMapper.writeValueAsString(testScenario.getOutput());
     String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
-    assertEquals(expectedOutput, actualOutput);
+
+    if(resultActions.andReturn().getResponse().getStatus() == 200) {
+      assertEquals(expectedOutput, actualOutput);
+    } else {
+      common.compareErrors(testScenario, actualOutput);
+    }
   }
 
   static Stream<Scenario> testScenariosProvider() throws IOException {
@@ -113,6 +120,9 @@ public class CreateNoteTest {
     String scenariosPath = "classpath:data/controllers/accountController/createNote.scenarios.json";
     Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
     ObjectMapper objectMapper = new ObjectMapper();
-    return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});
+
+    try (InputStream inputStream = resource.getInputStream()) {
+      return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});
+    }
   }
 }
