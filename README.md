@@ -3,13 +3,16 @@
 This repository contains salessparrow apis.
 
 ## Local Setup
-Please follow the steps in [LOCAL_SETUP](LOCAL_SETUP.md) to setup the project locally.
+Follow the steps in [LOCAL_SETUP](LOCAL_SETUP.md) to setup the project locally.
 
 ## Environment Variables
-Please refer to [ENVIRONMENT_VARS](ENVIRONMENT_VARS.md) for detailed descriptions for the environment variables.
+Refer to [ENVIRONMENT_VARS](ENVIRONMENT_VARS.md) for detailed descriptions for the environment variables.
 
 ## Project Structure
-Please refer to [PROJECT_STRUCTURE](PROJECT_STRUCTURE.md) for details on the project structure.
+Refer to [PROJECT_STRUCTURE](PROJECT_STRUCTURE.md) for details on the project structure.
+
+## Release Process
+Refer to [RELEASE_PROCESS](RELEASE_PROCESS.md) to ensure smooth and consistent software releases. This process outlines the steps to prepare, package, and distribute new versions of our software.
 
 ## License
 
