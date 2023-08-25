@@ -25,20 +25,6 @@ jobs:
         image: amazon/dynamodb-local:latest
         ports:
           - 8000:8000
-    
-      # localkms:
-      #   image: nsmithuk/local-kms
-      #   ports:
-      #     - 4599:8080
-      #   volumes:
-      #     - ./init:/init
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ env.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY:  ${{ env.AWS_SECRET_ACCESS_KEY }}
-      #     AWS_REGION: us-east-1
-      #     KMS_ACCOUNT_ID: 111122223333
-      #     KMS_REGION: us-east-1
-      #     KMS_SEED_PATH: /init/seed.yaml
 
     steps:
       - uses: actions/checkout@v3
