@@ -91,6 +91,11 @@ public class LoadFixture {
     Resource resource = resourceLoader.getResource(location);
     ObjectMapper objectMapper = new ObjectMapper();
 
+    System.out.println("resource file name: " + resource.getFilename());
+    System.out.println("resource exists: " + resource.exists());
+    System.out.println("resource isFile: " + resource.isFile());
+    System.out.println("resource isOpen: " + resource.isOpen());
+    System.out.println("resource isReadable: " + resource.isReadable());
     try (InputStream inputStream = resource.getInputStream()) {
       return objectMapper.readValue(resource.getInputStream(), new TypeReference<SalesforceOauthToken>() {});
     }
