@@ -1,4 +1,9 @@
 {
+    "invalid_code": {
+        "parameter": "code",
+        "param_error_identifier": "invalid_code",
+        "message": "The code you sent is incorrect. Please double check and try again."
+    },
     "invalid_email": {
         "parameter": "email",
         "param_error_identifier": "invalid_email",
@@ -18,5 +23,15 @@
       "parameter": "pagination_identifier",
       "param_error_identifier": "invalid_pagination_identifier",
       "message": "Invalid pagination identifier. Please double check and try again."
+    },
+    "invalid_due_date":{
+        "parameter": "due_date",
+        "param_error_identifier": "invalid_due_date",
+        "message": "Invalid or missing due date. Please double check and try again."
+    },
+    "description_too_long":{
+        "parameter": "description",
+        "param_error_identifier": "description_too_long",
+        "message": "Description too long. Please shorten and try again."
     }
 }

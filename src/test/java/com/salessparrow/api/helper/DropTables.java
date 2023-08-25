@@ -26,7 +26,7 @@ public class DropTables {
    * This method is used to drop the tables.
    */
   public void perform() {
-    if (!CoreConstants.environment().equals("test")) {
+    if (!CoreConstants.isTestEnvironment() && !CoreConstants.isLocalTestEnvironment()) {
       throw new RuntimeException("Cannot drop tables in non test environment");
     }
 
