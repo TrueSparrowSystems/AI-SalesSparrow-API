@@ -14,6 +14,11 @@
     "code": "NOT_FOUND",
     "message": "Resource not found. Please check if the resource identifier passed in the URL is valid and try again."
   },
+  "unsupported_media_type": {
+    "httpCode": "415",
+    "code": "UNSUPPORTED_MEDIA_TYPE",
+    "message": "Unsupported Media Type. Content-Type header should be application/json."
+  },
   "something_went_wrong": {
     "httpCode": "500",
     "code": "INTERNAL_SERVER_ERROR",

@@ -1,5 +1,6 @@
 package com.salessparrow.api.lib.salesforce.wrappers;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,10 +9,11 @@ import org.springframework.stereotype.Component;
 
 import com.salessparrow.api.config.CoreConstants;
 import com.salessparrow.api.exception.CustomException;
-import com.salessparrow.api.lib.errorLib.ErrorObject;
+import com.salessparrow.api.lib.errorLib.ParamErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
+import java.util.List;
 
 /**
  * SalesforceGetTokens class to get tokens from Salesforce
@@ -51,11 +53,13 @@ public class SalesforceGetTokens {
           requestBody,
           10000);
     } catch (Exception e) {
-      throw new CustomException(
-          new ErrorObject(
-              "l_s_w_sgt_gt_1",
-              "bad_request",
-              e.getMessage()));
+      List<String> paramErrorIdentifiers = Arrays.asList("invalid_code");
+      ParamErrorObject paramErrorObject = new ParamErrorObject(
+        "l_s_w_sgt_gt_1", 
+      e.getMessage(), 
+      paramErrorIdentifiers);
+
+      throw new CustomException(paramErrorObject);
     }
     return response;
   }

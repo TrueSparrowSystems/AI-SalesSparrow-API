@@ -23,8 +23,11 @@ public class UserLoginCookieAuth {
   Logger logger = LoggerFactory.getLogger(UserLoginCookieAuth.class);
 
   private String cookieValue;
+  private String reqApiSource;
+
   private String userId;
   private String userKind;
+  private String cookieApiSource;
   private Integer timestampInCookie;
   private String token;
   private User currentUser;
@@ -44,17 +47,19 @@ public class UserLoginCookieAuth {
    * Validate and set cookie
    *
    * @param cookieValue
-   * @param expireTimestamp
+   * @param reqApiSource
    *
    * @return Map<String, Object>
    */
-  public Map<String, Object> validateAndSetCookie(String cookieValue) {
+  public Map<String, Object> validateAndSetCookie(String cookieValue, String reqApiSource) {
     this.cookieValue = cookieValue;
+    this.reqApiSource = reqApiSource;
 
     logger.info("Validating cookie");
     validate();
     setParts();
     validateTimestamp();
+    validateApiSource();
     fetchAndValidateUser();
     validateCookieToken();
     setCookie();
@@ -88,10 +93,10 @@ public class UserLoginCookieAuth {
    *
    * @throws RuntimeException
    */
-  private void setParts() {
+  private void  setParts() {
     List<String> cookieValueParts = Arrays.asList(cookieValue.split(":"));
 
-    if (cookieValueParts.size() != 5) {
+    if (cookieValueParts.size() != 6) {
       throw new CustomException(
           new ErrorObject(
               "l_ulca_sp_1",
@@ -102,8 +107,9 @@ public class UserLoginCookieAuth {
     if (cookieValueParts.get(0).equals(CookieConstants.LATEST_VERSION)) {
       userId = cookieValueParts.get(1);
       userKind = cookieValueParts.get(2);
-      timestampInCookie = Integer.parseInt(cookieValueParts.get(3));
-      token = cookieValueParts.get(4);
+      cookieApiSource = cookieValueParts.get(3);  
+      timestampInCookie = Integer.parseInt(cookieValueParts.get(4));
+      token = cookieValueParts.get(5);
     } else {
       throw new CustomException(
           new ErrorObject(
@@ -125,6 +131,22 @@ public class UserLoginCookieAuth {
               "l_ulca_vt_1",
               "unauthorized_api_request",
               "Cookie expired"));
+
+    }
+  }
+
+  /**
+   * Validate api source
+   *
+   * @throws RuntimeException
+   */
+  private void validateApiSource() {
+    if (!cookieApiSource.equals(reqApiSource)) {
+      throw new CustomException(
+          new ErrorObject(
+              "l_ulca_vas_1",
+              "unauthorized_api_request",
+              "Cookie api source and request api source mismatch"));
 
     }
   }
@@ -172,7 +194,7 @@ public class UserLoginCookieAuth {
         encryptionSalt);
 
     String generatedToken = cookieHelper.getCookieToken(currentUser,
-        decryptedEncryptionSalt, timestampInCookie);
+        decryptedEncryptionSalt, timestampInCookie, reqApiSource);
     if (!generatedToken.equals(token)) {
       throw new CustomException(
           new ErrorObject(
@@ -189,7 +211,7 @@ public class UserLoginCookieAuth {
    */
   private void setCookie() {
     userLoginCookieValue = cookieHelper.getCookieValue(currentUser, userKind,
-        decryptedEncryptionSalt);
+        decryptedEncryptionSalt, reqApiSource);
   }
 
 }
