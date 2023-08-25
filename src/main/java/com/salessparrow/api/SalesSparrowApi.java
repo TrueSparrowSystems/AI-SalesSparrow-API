@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-
 @SpringBootApplication
 @EnableCaching // This enables caching
 @EnableAsync // This enables asynchronous processing in Spring

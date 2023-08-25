@@ -1,14 +1,9 @@
 FROM openjdk:17-jdk-alpine
-# Set working directory
 
 RUN mkdir -p /app
 WORKDIR /app
 
 COPY . /app
 
-# Expose port 8080 for the app to listen on
 EXPOSE 8080
-# Start the app
 RUN apk add --no-cache bash
-
-CMD ["sh", "-c", "start_local.sh"]

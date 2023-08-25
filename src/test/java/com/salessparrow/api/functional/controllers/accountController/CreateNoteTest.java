@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -101,7 +102,12 @@ public class CreateNoteTest {
     // Check the response
     String expectedOutput = objectMapper.writeValueAsString(testScenario.getOutput());
     String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
-    assertEquals(expectedOutput, actualOutput);
+
+    if(resultActions.andReturn().getResponse().getStatus() == 200) {
+      assertEquals(expectedOutput, actualOutput);
+    } else {
+      common.compareErrors(testScenario, actualOutput);
+    }
   }
 
   static Stream<Scenario> testScenariosProvider() throws IOException {
@@ -113,6 +119,9 @@ public class CreateNoteTest {
     String scenariosPath = "classpath:data/controllers/accountController/createNote.scenarios.json";
     Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
     ObjectMapper objectMapper = new ObjectMapper();
-    return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});
+
+    try (InputStream inputStream = resource.getInputStream()) {
+      return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});
+    }
   }
 }
