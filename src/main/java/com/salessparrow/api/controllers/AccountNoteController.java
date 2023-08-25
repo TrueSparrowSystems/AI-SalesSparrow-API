@@ -89,7 +89,7 @@ public class AccountNoteController {
   ) {
     logger.info("Delete Note request received");
 
-    deleteAccountNoteService.deleteAcountNote(request, accountId, noteId);
+    deleteAccountNoteService.deleteAccountNote(request, accountId, noteId);
     
     return ResponseEntity.noContent().build();
   }

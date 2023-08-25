@@ -27,7 +27,7 @@ public class DeleteAccountNoteService {
    * 
    * @return void
    */
-  public void deleteAcountNote(HttpServletRequest request, String accountId, String noteId) {
+  public void deleteAccountNote(HttpServletRequest request, String accountId, String noteId) {
       logger.info("Delete Account Note Service called");
 
       User currentUser = (User) request.getAttribute("current_user");
