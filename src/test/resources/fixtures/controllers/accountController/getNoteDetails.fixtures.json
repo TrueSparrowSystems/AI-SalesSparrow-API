@@ -7,7 +7,7 @@
     ],
     "salesforce_oauth_tokens": [
       {
-        "filepath": "classpath:fixtures/repositories/salesforceOauthToken/ActiveSalesforceAuthToken.json"
+        "filepath": "classpath:fixtures/repositories/salesforceOauthToken/ActiveSalesforceOauthToken.json"
       }
     ]
   } 
