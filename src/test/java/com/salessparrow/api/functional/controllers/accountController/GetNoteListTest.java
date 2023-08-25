@@ -9,6 +9,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -146,10 +147,13 @@ public class GetNoteListTest {
     return testScenarios.stream();
   }
 
-  public static List<Scenario> loadScenarios() throws IOException {
+  private static List<Scenario> loadScenarios() throws IOException {
     String scenariosPath = "classpath:data/controllers/accountController/getNotesList.scenarios.json";
     Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
     ObjectMapper objectMapper = new ObjectMapper();
-    return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});
+
+    try (InputStream inputStream = resource.getInputStream()) {
+      return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});
+    }
   }
 }
