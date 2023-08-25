@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +18,8 @@ import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
  **/
 @Component
 public class MakeCompositeRequest {
+
+  Logger logger = LoggerFactory.getLogger(MakeCompositeRequest.class);
 
   @Autowired
   private SalesforceRequest salesforceOauthRequest;
@@ -54,6 +58,8 @@ public class MakeCompositeRequest {
     };
 
     HttpClient.HttpResponse response = null;
+
+    logger.info("making composite request to salesforce");
     
     response = salesforceOauthRequest.makeRequest(salesforceUserId, request);
     return response;
