@@ -78,4 +78,14 @@ public class Common {
       }
     }
   }
+
+  // Custom assertion method that treats {} and "" as the same
+  public void assertCustomEquals(String expected, String actual) {
+
+    if (expected.equals("{}")) {
+      expected = "";
+    }
+
+    assertEquals(expected, actual);
+  }
 }

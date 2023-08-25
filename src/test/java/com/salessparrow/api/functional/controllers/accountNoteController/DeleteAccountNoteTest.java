@@ -101,7 +101,7 @@ public class DeleteAccountNoteTest {
     // Check the response
     String expectedOutput = objectMapper.writeValueAsString(testScenario.getOutput());
     String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
-    assertCustomEquals(expectedOutput, actualOutput);
+    common.assertCustomEquals(expectedOutput, actualOutput);
   }
 
   static Stream<Scenario> testScenariosProvider() throws IOException {
@@ -114,15 +114,5 @@ public class DeleteAccountNoteTest {
     Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
     ObjectMapper objectMapper = new ObjectMapper();
     return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});
-  }
-
-  // Custom assertion method that treats <null> and <> as the same
-  public static void assertCustomEquals(String expected, String actual) {
-
-    if (expected.equals("{}")) {
-      expected = "";
-    }
-
-    assertEquals(expected, actual);
   }
 }
