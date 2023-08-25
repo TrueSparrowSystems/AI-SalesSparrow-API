@@ -13,7 +13,6 @@ import com.salessparrow.api.config.CoreConstants;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 
-import software.amazon.awssdk.auth.credentials.InstanceProfileCredentialsProvider;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClientBuilder;
 
@@ -27,9 +26,6 @@ public class SecretConstants {
   /**
    * This is the builder that is going to be used to access the secrets manager.
    */
-  // public static SecretsManagerClientBuilder secretsManagerClientBuilder = SecretsManagerClient.builder()
-  //         .credentialsProvider(InstanceProfileCredentialsProvider.builder().build());
-  
   public static SecretsManagerClientBuilder secretsManagerClientBuilder = SecretsManagerClient.builder();
 
   /**
