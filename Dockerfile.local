@@ -1,9 +1,19 @@
-FROM openjdk:17-jdk-alpine
+# Use the openjdk 17 with alpine as a base image
+FROM openjdk:17-jdk-alpine as builder
 
+# Create and set the working directory inside the container
 RUN mkdir -p /app
 WORKDIR /app
 
-COPY . /app
+# Install bash for Alpine and other necessary tools
+RUN apk add --no-cache bash maven
 
+# Copy the pom.xml and download dependencies
+COPY ./pom.xml ./pom.xml
+RUN mvn dependency:go-offline
+
+# Copy the rest of the application
+COPY ./ ./
+
+# Expose the port 8080 for the application
 EXPOSE 8080
-RUN apk add --no-cache bash

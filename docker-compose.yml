@@ -10,6 +10,7 @@ services:
       - localdev
     volumes:
       - './:/app'
+      - '~/.m2:/root/.m2'
     environment:
       - ENVIRONMENT=development
       - AWS_ACCESS_KEY_ID=local
@@ -31,6 +32,7 @@ services:
       - localdev
     volumes:
       - './:/app'
+      - '~/.m2:/root/.m2'      
     environment:
       - ENVIRONMENT=local-test
       - AWS_ACCESS_KEY_ID=local
