@@ -1,0 +1,110 @@
+[
+  {
+    "description": "Should return correct suggestions for a given text",
+    "input": {
+      "text": "We reviewed the tasks that the team has completed since the last meeting and discussed additional projects.\n\nHere are the main topics we discussed:\n\nJoe updated us on the calendar for editorial, advertorial and social media content.\n"
+    },
+    "mocks":{
+      "makeRequest":{
+        "id": "chatcmpl-0000",
+        "object": "chat.completion",
+        "created": 1692945329,
+        "model": "gpt-3.5-turbo-0613",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": null,
+              "function_call": {
+                "name": "suggest_actions",
+                "arguments": "{\n  \"add_task\": [\n    {\n      \"description\": \"Review calendar for editorial, advertorial, and social media content\",\n      \"due_date\": \"2023-08-30\"\n    }\n  ]\n}"
+              }
+            },
+            "finish_reason": "function_call"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 168,
+          "completion_tokens": 52,
+          "total_tokens": 220
+        }
+      }
+    },
+    "output": {
+      "add_task_suggestions": [
+        {
+          "description": "Review calendar for editorial, advertorial, and social media content",
+          "due_date": "2023-08-30"
+        }
+      ]
+    }
+  },
+  {
+    "description": "Should remove due_date from the response if it is not in correct format",
+    "input": {
+      "text": "We reviewed the tasks that the team has completed since the last meeting and discussed additional projects.\n\nHere are the main topics we discussed:\n\nJoe updated us on the calendar for editorial, advertorial and social media content.\n"
+    },
+    "mocks":{
+      "makeRequest":{
+        "id": "chatcmpl-0000",
+        "object": "chat.completion",
+        "created": 1692945329,
+        "model": "gpt-3.5-turbo-0613",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": null,
+              "function_call": {
+                "name": "suggest_actions",
+                "arguments": "{\n  \"add_task\": [\n    {\n      \"description\": \"Review calendar for editorial, advertorial, and social media content\",\n      \"due_date\": \"next week\"\n    }\n  ]\n}"
+              }
+            },
+            "finish_reason": "function_call"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 168,
+          "completion_tokens": 52,
+          "total_tokens": 220
+        }
+      }
+    },
+    "output": {
+      "add_task_suggestions": [
+        {
+          "description": "Review calendar for editorial, advertorial, and social media content",
+          "due_date": null
+        }
+      ]
+    }
+  },
+  {
+    "description": "Should return error if no text is not provided",
+    "input": {},
+    "mocks": {},
+    "output": {
+      "http_code": 400,
+      "code": "INVALID_PARAMS",
+      "param_errors": [
+        "missing_text"
+      ]
+    }
+  },
+  {
+    "description": "Should return error if text is empty",
+    "input": {
+      "text": ""
+    },
+    "mocks": {},
+    "output": {
+      "http_code": 400,
+      "code": "INVALID_PARAMS",
+      "param_errors": [
+        "missing_text"
+      ]
+    }
+  }
+]
