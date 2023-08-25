@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SalesforceQueryBuilder {
-  
+
   /**
    * Get the list of accounts for a given searchTerm
    * 
@@ -20,8 +20,23 @@ public class SalesforceQueryBuilder {
   public String getAccountsQuery(String searchTerm) {
     if (searchTerm == "") {
       return "SELECT Id, Name FROM Account ORDER BY LastModifiedDate DESC LIMIT 20";
-    } 
-    return "SELECT Id, Name FROM Account WHERE Name LIKE '%25"+searchTerm+"%25' ORDER BY LastModifiedDate DESC LIMIT 20";
+    }
+    return "SELECT Id, Name FROM Account WHERE Name LIKE '%25" + searchTerm
+        + "%25' ORDER BY LastModifiedDate DESC LIMIT 20";
+  }
+
+  /**
+   * Get the accounts feed for a given limit and offset
+   * 
+   * @param limit  int
+   * @param offset int
+   * @return String
+   */
+  public String getAccountFeedQuery(int limit, int offset) {
+
+    return String.format(
+        "SELECT Id, Name, Website, (SELECT Id, Name, Title, Email, Phone FROM Contacts) FROM Account ORDER BY LastModifiedDate ASC LIMIT %d OFFSET %d",
+        limit, offset);
   }
 
   /**
@@ -55,8 +70,9 @@ public class SalesforceQueryBuilder {
     return queryBuilder.toString();
   }
 
-  public String getNoteDetailsUrl(String noteId){
-    return "SELECT Id, Title, TextPreview, CreatedBy.Name, LastModifiedDate FROM ContentNote WHERE Id = '" + noteId + "'";
+  public String getNoteDetailsUrl(String noteId) {
+    return "SELECT Id, Title, TextPreview, CreatedBy.Name, LastModifiedDate FROM ContentNote WHERE Id = '" + noteId
+        + "'";
   }
 
 }

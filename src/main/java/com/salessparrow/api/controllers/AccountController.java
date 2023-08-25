@@ -13,13 +13,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.salessparrow.api.dto.formatter.CreateNoteFormatterDto;
-import com.salessparrow.api.dto.formatter.GetAccountsFormatterDto;
 import com.salessparrow.api.dto.formatter.GetNoteDetailsFormatterDto;
 import com.salessparrow.api.dto.formatter.GetNotesListFormatterDto;
 import com.salessparrow.api.dto.requestMapper.GetAccountsDto;
+import com.salessparrow.api.dto.requestMapper.GetAccountsFeedDto;
 import com.salessparrow.api.dto.requestMapper.NoteDto;
+import com.salessparrow.api.dto.responseMapper.GetAccountListResponseDto;
+import com.salessparrow.api.dto.responseMapper.GetAccountsFeedResponseDto;
 import com.salessparrow.api.services.accounts.CreateNoteService;
 import com.salessparrow.api.services.accounts.GetAccountListService;
+import com.salessparrow.api.services.accounts.GetAccountsFeedService;
 import com.salessparrow.api.services.accounts.GetNoteDetailsService;
 import com.salessparrow.api.services.accounts.GetNotesListService;
 
@@ -37,6 +40,9 @@ public class AccountController {
   private GetAccountListService getAccountListService;
 
   @Autowired
+  private GetAccountsFeedService getAccountsFeedService;
+
+  @Autowired
   private GetNotesListService getNotesListService;
 
   @Autowired
@@ -45,45 +51,56 @@ public class AccountController {
   @Autowired
   private CreateNoteService createNoteService;
 
+  @GetMapping("")
+  public ResponseEntity<GetAccountListResponseDto> getAccounts(
+      HttpServletRequest request,
+      @Valid @ModelAttribute GetAccountsDto getAccountsDto) {
+    logger.info("Request received");
+
+    GetAccountListResponseDto getAccountsResponse = getAccountListService.getAccounts(request, getAccountsDto);
+
+    return ResponseEntity.ok().body(getAccountsResponse);
+  }
+
+  @GetMapping("/feed")
+  public ResponseEntity<GetAccountsFeedResponseDto> getFeed(
+      HttpServletRequest request,
+      @Valid @ModelAttribute GetAccountsFeedDto getAccountsFeedDto) {
+    logger.info("Request received");
+
+    GetAccountsFeedResponseDto getAccountsFeedResponse = getAccountsFeedService.getAccountsFeed(request,
+        getAccountsFeedDto);
+
+    return ResponseEntity.ok().body(getAccountsFeedResponse);
+  }
+
   @PostMapping("/{account_id}/notes")
   public ResponseEntity<CreateNoteFormatterDto> addNoteToAccount(
-    HttpServletRequest request,
-    @PathVariable("account_id") String accountId, 
-    @Valid @RequestBody NoteDto note
-  ) {
+      HttpServletRequest request,
+      @PathVariable("account_id") String accountId,
+      @Valid @RequestBody NoteDto note) {
     CreateNoteFormatterDto createNoteFormatterDto = createNoteService.createNote(request, accountId, note);
 
     return ResponseEntity.ok().body(createNoteFormatterDto);
   }
 
-  @GetMapping("")
-  public ResponseEntity<GetAccountsFormatterDto> getAccounts(
-    HttpServletRequest request, 
-    @Valid @ModelAttribute GetAccountsDto getAccountsDto) {
-    logger.info("Request received");
-
-    GetAccountsFormatterDto getAccountsResponse = getAccountListService.getAccounts(request, getAccountsDto);
-
-    return ResponseEntity.ok().body(getAccountsResponse);
-  }
-
   @GetMapping("/{account_id}/notes")
-  public ResponseEntity<GetNotesListFormatterDto> getNotesList(HttpServletRequest request,@PathVariable("account_id") String accountId) {
+  public ResponseEntity<GetNotesListFormatterDto> getNotesList(HttpServletRequest request,
+      @PathVariable("account_id") String accountId) {
 
     GetNotesListFormatterDto getNotesListResponse = getNotesListService.getNotesList(request, accountId);
 
     return ResponseEntity.ok().body(getNotesListResponse);
   }
-  
+
   @GetMapping("/{account_id}/notes/{note_id}")
   public ResponseEntity<GetNoteDetailsFormatterDto> getNoteFromAccount(
-    HttpServletRequest request,
-    @PathVariable("account_id") String accountId, 
-    @PathVariable("note_id") String noteId
-  ) {
+      HttpServletRequest request,
+      @PathVariable("account_id") String accountId,
+      @PathVariable("note_id") String noteId) {
 
     GetNoteDetailsFormatterDto getNoteDetailsResponse = getNoteDetailsService.getNoteDetails(request, noteId);
-    
+
     return ResponseEntity.ok().body(getNoteDetailsResponse);
   }
 }

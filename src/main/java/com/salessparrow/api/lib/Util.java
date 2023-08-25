@@ -38,20 +38,21 @@ public class Util {
     return jsonNode;
   }
 
-/**
- * Retrieves a string representation of all request headers. For security, 
- * the value of the "authorization, cookie, password" header is obfuscated.
- * 
- * @param request - The HTTP request containing the headers to be logged.
- * @return String - A string representation of the headers in the format "{headerName:headerValue, ...}".
- */
+  /**
+   * Retrieves a string representation of all request headers. For security,
+   * the value of the "authorization, cookie, password" header is obfuscated.
+   * 
+   * @param request - The HTTP request containing the headers to be logged.
+   * @return String - A string representation of the headers in the format
+   *         "{headerName:headerValue, ...}".
+   */
   public static String generateHeaderLogString(HttpServletRequest request) {
     StringBuilder headerBuilder = new StringBuilder("{");
     request.getHeaderNames().asIterator().forEachRemaining(headerName -> {
       // Add any other secret headers here that you don't want logged.
-      if (headerName.equals("authorization") || 
-        headerName.equals("cookie") || 
-        headerName.equals("password")) {
+      if (headerName.equals("authorization") ||
+          headerName.equals("cookie") ||
+          headerName.equals("password")) {
         headerBuilder.append(headerName).append(":**********, ");
       } else {
         headerBuilder.append(headerName).append(":").append(request.getHeader(headerName)).append(", ");
@@ -59,6 +60,51 @@ public class Util {
     });
     headerBuilder.append("}");
 
-    return  headerBuilder.toString();
+    return headerBuilder.toString();
+  }
+
+  /**
+   * Encode plain text to base64
+   * 
+   * @param plainText - String to be encoded
+   * @return String - Encoded string
+   */
+  public String base64Encode(String plainText) {
+    String encodedText = null;
+
+    try {
+      encodedText = java.util.Base64.getEncoder().encodeToString(plainText.getBytes());
+    } catch (Exception e) {
+      throw new CustomException(
+          new ErrorObject(
+              "l_u_b64e_1",
+              "something_went_wrong",
+              e.getMessage()));
+    }
+
+    return encodedText;
+  }
+
+  /**
+   * Decode base64 encoded text
+   * 
+   * @param encodedText - String to be decoded
+   * @return String - Decoded string
+   */
+  public String base64Decode(String encodedText) {
+    String decodedText = null;
+
+    try {
+      byte[] decodedBytes = java.util.Base64.getDecoder().decode(encodedText);
+      decodedText = new String(decodedBytes);
+    } catch (Exception e) {
+      throw new CustomException(
+          new ErrorObject(
+              "l_u_b64d_1",
+              "something_went_wrong",
+              e.getMessage()));
+    }
+
+    return decodedText;
   }
 }

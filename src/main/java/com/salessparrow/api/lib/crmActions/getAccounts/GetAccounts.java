@@ -11,5 +11,5 @@ import com.salessparrow.api.dto.formatter.GetAccountsFormatterDto;
 @Component
 public interface GetAccounts {
 
-  public GetAccountsFormatterDto getAccounts(User user, String searchTerm);
+  public GetAccountsFormatterDto getAccounts(User user, String searchTerm, String viewKind, int offset);
 }

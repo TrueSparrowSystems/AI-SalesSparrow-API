@@ -25,17 +25,17 @@ public class GetAccountsFactory {
    * 
    * @return GetAccountsFormatterDto
    **/
-  public GetAccountsFormatterDto getAccounts(User user, String searchTerm) {
+  public GetAccountsFormatterDto getAccounts(User user, String searchTerm, String viewKind, int offset) {
 
-    switch(user.getUserKind()) {
+    switch (user.getUserKind()) {
       case UserConstants.SALESFORCE_USER_KIND:
-        return getSalesforceAccounts.getAccounts(user, searchTerm);
+        return getSalesforceAccounts.getAccounts(user, searchTerm, viewKind, offset);
       default:
         throw new CustomException(
-          new ErrorObject(
-            "l_ca_ga_gaf_ga_1",
-            "something_went_wrong",
-            "Invalid user kind."));
+            new ErrorObject(
+                "l_ca_ga_gaf_ga_1",
+                "something_went_wrong",
+                "Invalid user kind."));
     }
   }
 }

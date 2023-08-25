@@ -2,6 +2,8 @@ package com.salessparrow.api.functional.controllers.accountController;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -25,10 +27,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dynamobee.exception.DynamobeeException;
+import com.salessparrow.api.dto.formatter.PaginationIdentifierFormatterDto;
 import com.salessparrow.api.helper.Cleanup;
 import com.salessparrow.api.helper.Common;
 import com.salessparrow.api.helper.Constants;
@@ -37,8 +41,10 @@ import com.salessparrow.api.helper.LoadFixture;
 import com.salessparrow.api.helper.Scenario;
 import com.salessparrow.api.helper.Setup;
 import com.salessparrow.api.lib.globalConstants.CookieConstants;
+import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
+import com.salessparrow.api.lib.salesforce.helper.SalesforceRequestInterface;
 
 import jakarta.servlet.http.Cookie;
 
@@ -46,7 +52,7 @@ import jakarta.servlet.http.Cookie;
 @AutoConfigureMockMvc
 @WebAppConfiguration
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
-public class GetAccountListTest {
+public class GetAccountsFeedTest {
   @Autowired
   private MockMvc mockMvc;
   @Autowired
@@ -61,6 +67,9 @@ public class GetAccountListTest {
   @MockBean
   private MakeCompositeRequest makeCompositeRequestMock;
 
+  @MockBean
+  private SalesforceRequestInterface<HttpClient.HttpResponse> salesforceRequestInterfaceMock;
+
   @BeforeEach
   public void setUp() throws DynamobeeException {
     setup.perform();
@@ -73,31 +82,58 @@ public class GetAccountListTest {
 
   @ParameterizedTest
   @MethodSource("testScenariosProvider")
-  public void getAccountList(Scenario testScenario) throws Exception {
+  public void getAccountsFeed(Scenario testScenario) throws Exception {
+    System.out.println("Description: " + testScenario.getDescription());
     // Load fixture data
     String currentFunctionName = new Object() {
     }.getClass().getEnclosingMethod().getName();
     FixtureData fixtureData = common.loadFixture(
-        "classpath:fixtures/controllers/accountController/getAccountList.fixtures.json", currentFunctionName);
+        "classpath:fixtures/controllers/accountController/getAccountsFeed.fixtures.json", currentFunctionName);
     loadFixture.perform(fixtureData);
 
     // Read data from the scenario
     ObjectMapper objectMapper = new ObjectMapper();
     String cookieValue = Constants.SALESFORCE_ACTIVE_USET_COOKIE_VALUE;
 
-    // Prepare mock responses
-    HttpResponse getAccountMockResponse = new HttpResponse();
-    getAccountMockResponse
-        .setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeCompositeRequest")));
-    when(makeCompositeRequestMock.makePostRequest(any(), any())).thenReturn(getAccountMockResponse);
+    // Prepare makeCompositeRequestMock responses
+    if (testScenario.getMocks() != null && testScenario.getMocks().containsKey("makeCompositeRequest")) {
+      HttpResponse getAccountMockResponse = new HttpResponse();
+      getAccountMockResponse
+          .setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeCompositeRequest")));
+      when(makeCompositeRequestMock.makePostRequest(any(), any())).thenReturn(getAccountMockResponse);
+    }
+    if (testScenario.getMocks() != null && testScenario.getMocks().containsKey("writeValueAsString")) {
+      ObjectMapper mapper = mock(ObjectMapper.class);
+
+      String errorMessage = testScenario.getMocks().get("writeValueAsString").toString();
+      when(mapper.writeValueAsString(any()))
+          .thenThrow(new RuntimeException(errorMessage));
+    }
+
+    if (testScenario.getMocks() != null && testScenario.getMocks().containsKey("readValue")) {
+      ObjectMapper mapper = mock(ObjectMapper.class);
+
+      System.out.println("in base64Encode");
+      String errorMessage = testScenario.getMocks().get("readValue").toString();
+      when(mapper.readValue(any(JsonParser.class), eq(PaginationIdentifierFormatterDto.class)))
+          .thenThrow(new RuntimeException(errorMessage));
+    }
+
+    // Prepare salesforceRequestInterfaceMock responses
+    if (testScenario.getMocks() != null && testScenario.getMocks().containsKey("SalesforceRequestInterfaceError")) {
+      String errorMessage = testScenario.getMocks().get("SalesforceRequestInterfaceError").toString();
+
+      when(salesforceRequestInterfaceMock.execute(any(), any()))
+          .thenThrow(new RuntimeException(errorMessage));
+    }
 
     // Perform the request
-    String url = "/api/v1/accounts";
-    String q = objectMapper.writeValueAsString(testScenario.getInput().get("q"));
+    String url = "/api/v1/accounts/feed";
+    String paginationIdentifier = testScenario.getInput().get("pagination_identifier").toString();
 
     ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(url)
         .cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
-        .param("q", q)
+        .param("pagination_identifier", paginationIdentifier)
         .contentType(MediaType.APPLICATION_JSON));
 
     // Check the response
@@ -107,7 +143,11 @@ public class GetAccountListTest {
     JsonNode expectedOutputJson = objectMapper.readTree(expectedOutput);
     JsonNode actualOutputJson = objectMapper.readTree(actualOutput);
 
-    assertEquals(expectedOutputJson, actualOutputJson);
+    if (resultActions.andReturn().getResponse().getStatus() == 200) {
+      assertEquals(expectedOutputJson, actualOutputJson);
+    } else {
+      common.compareErrors(testScenario, actualOutput);
+    }
   }
 
   static Stream<Scenario> testScenariosProvider() throws IOException {
@@ -116,7 +156,7 @@ public class GetAccountListTest {
   }
 
   private static List<Scenario> loadScenarios() throws IOException {
-    String scenariosPath = "classpath:data/controllers/accountController/getAccountList.scenarios.json";
+    String scenariosPath = "classpath:data/controllers/accountController/getAccountsFeed.scenarios.json";
     Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
     ObjectMapper objectMapper = new ObjectMapper();
     return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {
