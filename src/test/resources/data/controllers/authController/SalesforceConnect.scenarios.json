@@ -16,14 +16,14 @@
           "scope": "xyz",
           "id_token": "xyz",
           "instance_url": "xyz",
-          "id": "https://test.salesforce.com/id/00D2v0000012gJjEAI/00112233445566AAA14",
+          "id": "https://test.salesforce.com/id/000Org-id/00112233445566AAA14",
           "token_type": "Bearer",
           "issued_at": "1690520247198"
         },
         "getIdentity": {
-          "sub": "https://test.salesforce.com/id/00D2v0000012gJjEAI/00112233445566AAA14",
+          "sub": "https://test.salesforce.com/id/000Org-id/00112233445566AAA14",
           "user_id": "00112233445566AAA14",
-          "organization_id": "00D2v0000012gJjEAI",
+          "organization_id": "000Org-id",
           "name": "Test User",
           "email": "test@test.com"
         }
@@ -106,21 +106,21 @@
           "scope": "testScope",
           "id_token": "testIdToken",
           "instance_url": "https://test.sandbox.my.salesforce.com",
-          "id": "https://test.salesforce.com/id/00D2v0000012gJjEAI/00112233445566AAA1",
+          "id": "https://test.salesforce.com/id/000Org-id/0055i00000AUxQHAA1",
           "token_type": "Bearer",
           "issued_at": "1690520247198"
         },
         "getIdentity": {
-          "sub": "https://test.salesforce.com/id/00D2v0000012gJjEAI/00112233445566AAA1",
-          "user_id": "00112233445566AAA1",
-          "organization_id": "00D2v0000012gJjEAI",
+          "sub": "https://test.salesforce.com/id/000Org-id/0055i00000AUxQHAA1",
+          "user_id": "0055i00000AUxQHAA1",
+          "organization_id": "000Org-id",
           "name": "Test User",
           "email": "test@test.com"
         }
       },
       "output": {
         "current_user": {
-          "id": "SALESFORCE-00112233445566AAA1",
+          "id": "SALESFORCE-0055i00000AUxQHAA1",
           "name": "Test User",
           "email": "test@test.com"
         }

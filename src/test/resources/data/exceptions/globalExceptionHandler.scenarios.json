@@ -1,0 +1,13 @@
+[
+  {
+    "description": "Should return 404 error",
+    "input": {},
+    "output": {
+      "http_code":404,
+      "message":"Resource not found. Please check if the resource identifier passed in the URL is valid and try again.",
+      "code":"NOT_FOUND",
+      "internal_error_identifier":"a_e_geh_nf_1",
+      "param_errors":[]
+    }
+  }
+]

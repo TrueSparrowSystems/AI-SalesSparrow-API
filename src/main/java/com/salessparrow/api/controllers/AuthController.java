@@ -46,16 +46,16 @@ public class AuthController {
       @Valid @ModelAttribute SalesforceRedirectUrlDto salesforceRedirectUrlDto) {
     
     RedirectUrlFormatterDto redirectUrlFormatterDto = redirectUrlService.getSalesforceOauthUrl(salesforceRedirectUrlDto);
-
+    
     return ResponseEntity.ok().body(redirectUrlFormatterDto);
   }
 
   @PostMapping("/salesforce/connect")
-  public ResponseEntity<SalesforceConnectFormatterDto> connectToSalesforce(
+  public ResponseEntity<SalesforceConnectFormatterDto> connectToSalesforce(HttpServletRequest request,
       @Valid @RequestBody SalesforceConnectDto salesforceConnectDto) {
     logger.info("Salesforce connection request received");
 
-    AuthServiceDto authServiceResponse = authService.connectToSalesforce(salesforceConnectDto);
+    AuthServiceDto authServiceResponse = authService.connectToSalesforce(salesforceConnectDto, request);
 
     HttpHeaders headers = new HttpHeaders();
     headers = cookieHelper.setUserCookie(authServiceResponse.getCurrentUserLoginCookie(), headers);

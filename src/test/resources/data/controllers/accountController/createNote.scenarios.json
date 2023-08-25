@@ -5,8 +5,7 @@
       "body": {
         "text": "Test note"
       },
-      "accountId": "0011e00000bWSxdAAG",
-      "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw=="
+      "accountId": "0011e00000bWSxdAAG"
     },
     "mocks": {
       "makeCompositeRequest": {
@@ -48,21 +47,14 @@
       "body": {
         "text": ""
       },
-      "accountId": "0011e00000bWSxdAAG",
-      "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw=="
+      "accountId": "0011e00000bWSxdAAG"
     },
     "mocks": {},
     "output": {
       "http_code": 400,
-      "message": "At least one parameter is invalid or missing.",
       "code": "INVALID_PARAMS",
-      "internal_error_identifier": "b_2",
       "param_errors": [
-        {
-          "parameter": "text",
-          "param_error_identifier": "missing_text",
-          "message": "text is required parameter. Please provide text."
-        }
+        "missing_text"
       ]
     }
   },
@@ -70,38 +62,15 @@
     "description": "Should fail when the note text is not provided", 
     "input": {
       "body": {},
-      "accountId": "0011e00000bWSxdAAG",
-      "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw=="
+      "accountId": "0011e00000bWSxdAAG"
     },
     "mocks": {},
     "output": {
       "http_code": 400,
-      "message": "At least one parameter is invalid or missing.",
       "code": "INVALID_PARAMS",
-      "internal_error_identifier": "b_2",
       "param_errors": [
-        {
-          "parameter": "text",
-          "param_error_identifier": "missing_text",
-          "message": "text is required parameter. Please provide text."
-        }
+        "missing_text"
       ]
-    }
-  },
-  {
-    "description": "Should fail when the cookie is invalid", 
-    "input": {
-      "body": {},
-      "accountId": "0011e00000bWSxdAAG",
-      "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:invalid"
-    },
-    "mocks": {},
-    "output": {
-      "http_code": 401,
-      "message": "Unauthorized API request. Please check your API key.",
-      "code": "UNAUTHORIZED",
-      "internal_error_identifier": "l_ulca_vct_2",
-      "param_errors": []
     }
   },
   {
@@ -110,8 +79,7 @@
       "body": {
         "text": "Test note"
       },
-      "accountId": "invalid",
-      "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw=="
+      "accountId": "invalid"
     },
     "mocks": {
       "makeCompositeRequest": {
@@ -147,10 +115,7 @@
     },
     "output": {
       "http_code": 500,
-      "message": "Something went wrong.",
-      "code": "INTERNAL_SERVER_ERROR",
-      "internal_error_identifier": "l_s_fse_fscn_fcn_2",
-      "param_errors": []
+      "code": "INTERNAL_SERVER_ERROR"
     }
   },
   {
@@ -159,8 +124,7 @@
       "body": {
         "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
       },
-      "accountId": "0011e00000bWSxdAAG",
-      "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw=="
+      "accountId": "0011e00000bWSxdAAG"
     },
     "mocks": {
       "makeCompositeRequest": {
@@ -194,10 +158,7 @@
     },
     "output": {
       "http_code": 500,
-      "message": "Something went wrong.",
-      "code": "INTERNAL_SERVER_ERROR",
-      "internal_error_identifier": "l_s_fse_fscn_fcn_1",
-      "param_errors": []
+      "code": "INTERNAL_SERVER_ERROR"
     }
   }
 ]

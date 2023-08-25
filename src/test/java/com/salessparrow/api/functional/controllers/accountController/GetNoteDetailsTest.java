@@ -1,18 +1,18 @@
 package com.salessparrow.api.functional.controllers.accountController;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,6 +36,8 @@ import com.salessparrow.api.helper.LoadFixture;
 import com.salessparrow.api.helper.Scenario;
 import com.salessparrow.api.helper.Setup;
 import com.salessparrow.api.lib.globalConstants.CookieConstants;
+import com.salessparrow.api.helper.Constants;
+
 import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 import com.salessparrow.api.lib.salesforce.wrappers.SalesforceGetNoteContent;
@@ -47,26 +49,22 @@ import jakarta.servlet.http.Cookie;
 @WebAppConfiguration
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
 public class GetNoteDetailsTest {
+
   @Autowired
   private MockMvc mockMvc;
-
-  @Autowired
-  private Setup setup;
-
-  @Autowired
-  private Cleanup cleanup;
-
   @Autowired
   private Common common;
-
   @Autowired
   private LoadFixture loadFixture;
+  @Autowired
+  private Setup setup;
+  @Autowired
+  private Cleanup cleanup;
+  @MockBean
+  private SalesforceGetNoteContent salesforceGetNoteContentMock;
 
   @MockBean
   private MakeCompositeRequest makeCompositeRequestMock;
-
-  @MockBean
-  private SalesforceGetNoteContent salesforceGetNoteContentMock;
 
   @BeforeEach
   public void setUp() throws DynamobeeException, IOException {
@@ -80,17 +78,14 @@ public class GetNoteDetailsTest {
 
   @ParameterizedTest
   @MethodSource("testScenariosProvider")
-  public void getNoteDetails(Scenario testScenario) throws Exception{
+  public void getNoteDetails(Scenario testScenario) throws Exception {
     String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
-    FixtureData fixtureData = common.loadFixture(
-      "classpath:fixtures/controllers/accountController/getNoteDetails.fixtures.json",
-      currentFunctionName
-    );
+    FixtureData fixtureData = common.loadFixture("classpath:fixtures/controllers/accountController/getNoteDetails.fixtures.json", currentFunctionName);
     loadFixture.perform(fixtureData);
 
     ObjectMapper objectMapper = new ObjectMapper();
 
-    String cookieValue = (String) testScenario.getInput().get("cookie");
+    String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
     String accountId = (String) testScenario.getInput().get("accountId");
     String noteId = (String) testScenario.getInput().get("noteId");
 
@@ -112,9 +107,14 @@ public class GetNoteDetailsTest {
       .contentType(MediaType.APPLICATION_JSON));
 
     String expectedOutput = objectMapper.writeValueAsString(testScenario.getOutput());
-    
     String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
+
+    if(resultActions.andReturn().getResponse().getStatus() == 200) {
       assertEquals(expectedOutput, actualOutput);
+    } else {
+      common.compareErrors(testScenario, actualOutput);
+    }
+
   }
 
   static Stream<Scenario> testScenariosProvider() throws IOException {
@@ -122,10 +122,13 @@ public class GetNoteDetailsTest {
     return testScenarios.stream();
   }
 
-  public static List<Scenario> loadScenarios() throws IOException {
+  private static List<Scenario> loadScenarios() throws IOException {
     String scenariosPath = "classpath:data/controllers/accountController/getNoteDetails.scenarios.json";
     Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
     ObjectMapper objectMapper = new ObjectMapper();
-    return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});
+    
+    try (InputStream inputStream = resource.getInputStream()) {
+        return objectMapper.readValue(inputStream, new TypeReference<List<Scenario>>() {});
+    }
   }
 }
