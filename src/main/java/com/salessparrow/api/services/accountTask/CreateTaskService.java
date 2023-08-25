@@ -31,9 +31,9 @@ public class CreateTaskService {
      * 
      * @return CreateTaskFormatterDto object
      */
-    public CreateTaskFormatterDto createTask(HttpServletRequest request, String accountId, CreateTaskInAccountDto task) {
+    public CreateTaskFormatterDto createTaskInAccount(HttpServletRequest request, String accountId, CreateTaskInAccountDto task) {
         logger.info("inside createTask Service");
         User currentUser = (User) request.getAttribute("current_user");
-        return createTaskInAccountFactory.createTask(currentUser, accountId, task);
+        return createTaskInAccountFactory.createTaskInAccount(currentUser, accountId, task);
     }
 }

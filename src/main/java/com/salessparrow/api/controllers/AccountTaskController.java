@@ -36,7 +36,7 @@ public class AccountTaskController {
         @Valid @RequestBody CreateTaskInAccountDto task
     ){
         logger.info("Create task request received");
-        CreateTaskFormatterDto createTaskFormatterDto = createTaskService.createTask(request, accountId, task);
+        CreateTaskFormatterDto createTaskFormatterDto = createTaskService.createTaskInAccount(request, accountId, task);
         return ResponseEntity.status(HttpStatus.CREATED).body(createTaskFormatterDto);
     }
 }

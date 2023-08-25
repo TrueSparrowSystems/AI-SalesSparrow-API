@@ -32,11 +32,11 @@ public class CreateTaskInAccountFactory {
      * 
      * @return CreateTaskFormatterDto object
      */
-    public CreateTaskFormatterDto createTask(User user, String accountId, CreateTaskInAccountDto task) {
+    public CreateTaskFormatterDto createTaskInAccount(User user, String accountId, CreateTaskInAccountDto task) {
         switch(user.getUserKind()) {
         case UserConstants.SALESFORCE_USER_KIND:
           logger.info("calling createTask of salesforceCreateTask");
-          return createSalesforceTaskInAccount.createTask(user, accountId, task);
+          return createSalesforceTaskInAccount.createTaskInAccount(user, accountId, task);
         default:
           throw new CustomException(
             new ErrorObject(

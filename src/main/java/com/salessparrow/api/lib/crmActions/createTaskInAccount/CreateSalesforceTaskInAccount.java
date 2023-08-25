@@ -48,7 +48,7 @@ public class CreateSalesforceTaskInAccount implements CreateTaskInAccount{
      * 
      * @return CreateTaskFormatterDto object
      */
-    public CreateTaskFormatterDto createTask(User User, String accountId, CreateTaskInAccountDto task) {
+    public CreateTaskFormatterDto createTaskInAccount(User User, String accountId, CreateTaskInAccountDto task) {
         String salesforceUserId = User.getExternalUserId();
 
         String taskSubject = getTaskSubjectFromDescription(task);
