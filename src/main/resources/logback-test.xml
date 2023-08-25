@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<property name="DEV_HOME" value="logs-test" />
+
+	<!-- Console appender in a simple format for tests, for readability -->
+	<appender name="TEST-STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} %highlight(%-5level) [%X{trackingId}] %logger{36} - %highlight(%msg%n)</pattern>
+		</encoder>
+	</appender>
+	
+	<!-- In testing, you might want to focus only on logs from your application, and at a more detailed level -->
+	<logger name="com.salessparrow.api" level="debug" additivity="false">
+		<appender-ref ref="TEST-STDOUT" />
+	</logger>
+	
+	<!-- You might want to suppress or lower the log level of some noisy or less relevant libraries during testing -->
+	<logger name="org.springframework" level="warn" />
+	<logger name="org.hibernate" level="warn" />
+	
+	<!-- Root logger configuration -->
+	<root level="info">
+		<appender-ref ref="TEST-STDOUT" />
+	</root>
+</configuration>

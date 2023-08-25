@@ -1,0 +1,9 @@
+{
+  "testGetSalesforceOrganizationByExternalOrganizationId": {
+    "salesforce_organizations": [
+      { 
+        "filepath": "classpath:fixtures/repositories/salesforceOrganization/ActiveSalesforceOrganization.json"
+      }
+    ]
+  }
+}

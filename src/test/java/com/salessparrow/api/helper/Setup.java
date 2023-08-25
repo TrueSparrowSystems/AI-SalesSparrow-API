@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Import;
 
 import com.github.dynamobee.Dynamobee;
 import com.github.dynamobee.exception.DynamobeeException;
-import com.salessparrow.api.lib.globalConstants.CacheConstants;
 
 /**
  * This class is used to create the setup.
