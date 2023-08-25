@@ -31,7 +31,7 @@ public class CrmOrganizationUserController {
         HttpServletRequest request,
         @Valid @ModelAttribute GetCrmOrganizationUsersDto CrmOrganizationUsersDto
     ){
-        logger.info("Search crm organization user request received");
+        logger.info("Get list of crm organization users request received");
 
         GetCrmOrganizationUsersFormatterDto getCrmOrganizationUsersFormatterDto = getCrmOrganizationUsersList.getCrmOrganizationUsers(request, CrmOrganizationUsersDto);
 

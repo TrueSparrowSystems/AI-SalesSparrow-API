@@ -13,5 +13,10 @@
       "parameter": "q",
       "param_error_identifier": "search_term_too_long",
       "message": "Search term too long. Please shorten and try again."
+    },
+    "invalid_search_term":{
+        "parameter": "q",
+        "param_error_identifier": "invalid_search_term",
+        "message": "Invalid search term. Please try again."
     }
 }

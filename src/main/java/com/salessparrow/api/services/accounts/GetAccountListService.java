@@ -2,6 +2,8 @@ package com.salessparrow.api.services.accounts;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +11,9 @@ import org.springframework.stereotype.Service;
 import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.formatter.GetAccountsFormatterDto;
 import com.salessparrow.api.dto.requestMapper.GetAccountsDto;
+import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.crmActions.getAccounts.GetAccountsFactory;
+import com.salessparrow.api.lib.errorLib.ParamErrorObject;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -31,7 +35,10 @@ public class GetAccountListService {
   public GetAccountsFormatterDto getAccounts(HttpServletRequest request, GetAccountsDto getAccountsDto) {
     User currentUser = (User) request.getAttribute("current_user");
 
-    String formattedSearchString = formatSearchString(getAccountsDto.getQ());
+    String formattedSearchString = "";
+    if(getAccountsDto.getQ() != null){
+      formattedSearchString = formatSearchString(getAccountsDto.getQ());
+    }
     return getAccountsFactory.getAccounts(currentUser, formattedSearchString);
   }
 
@@ -40,7 +47,17 @@ public class GetAccountListService {
     try {
       return URLEncoder.encode(q, "UTF-8");
     } catch (UnsupportedEncodingException e) {
-      return q;
+
+      List<String> paramError = new ArrayList<>();
+      paramError.add("invalid_search_term");
+
+      throw new CustomException(
+        new ParamErrorObject(
+          "s_a_gals_fss",
+          e.getMessage(),
+          paramError
+        )
+      );
     }
   }
 }

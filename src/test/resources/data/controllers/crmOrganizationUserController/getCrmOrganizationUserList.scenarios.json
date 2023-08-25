@@ -2,8 +2,7 @@
     {
       "description": "Should return the list of crm Users", 
       "input": {
-        "q": "a",
-        "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw=="
+        "q": "a"
       },
       "mocks": {
         "makeCompositeRequest": {
@@ -58,8 +57,7 @@
     {
       "description": "Should return the list of crm users sorted by modified date on empty search string", 
       "input": {
-        "q": "",
-        "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw=="
+        "q": ""
       },
       "mocks": {
         "makeCompositeRequest": {
@@ -114,9 +112,8 @@
     {
       "description": "Should return error if search string length > 200", 
       "input": {
-        "q": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz",
-        "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw=="
-      },
+        "q": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+       },
       "mocks": {},
       "output": {
         "http_code": 400,
@@ -124,26 +121,8 @@
         "code": "INVALID_PARAMS",
         "internal_error_identifier": "b_2",
         "param_errors": [
-          {
-            "parameter": "q",
-            "param_error_identifier": "search_term_too_long",
-            "message": "Search term too long. Please shorten and try again."
-          }
+          "search_term_too_long"
         ]
-      }
-    },
-    {
-      "description": "Should return error if search string is not provided", 
-      "input": {
-        "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw=="
-      },
-      "mocks": {},
-      "output": {
-        "http_code": 500,
-        "message": "Something went wrong.",
-        "code": "INTERNAL_SERVER_ERROR",
-        "internal_error_identifier": "e_geh_hre_1",
-        "param_errors": []
       }
     }
   ]
