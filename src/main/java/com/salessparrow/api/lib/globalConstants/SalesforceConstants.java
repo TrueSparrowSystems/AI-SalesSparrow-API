@@ -57,4 +57,8 @@ public class SalesforceConstants {
   public String salesforceNotesContentUrl(String urlPrefix, String noteId){
     return urlPrefix + "/services/data/v58.0/sobjects/ContentNote/" + noteId + "/Content";
   }
+
+  public String salesforceCreateTaskUrl(){
+    return sObjectsPath() + "/Task";
+  }
 }
