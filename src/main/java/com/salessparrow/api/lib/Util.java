@@ -1,5 +1,8 @@
 package com.salessparrow.api.lib;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -60,5 +63,20 @@ public class Util {
     headerBuilder.append("}");
 
     return  headerBuilder.toString();
+  }
+
+  /**
+   * Get date format from datetime
+   * 
+   * @param date
+   * 
+   * @return String
+   */
+  public String getDateFormatFromDatetime(Date date) {
+    if (date != null) {
+      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+      return dateFormat.format(date);
+    }
+    return null;
   }
 }

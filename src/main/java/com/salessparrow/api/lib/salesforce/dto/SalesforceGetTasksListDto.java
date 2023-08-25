@@ -5,6 +5,7 @@ import java.util.Date;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.salessparrow.api.dto.entities.TaskEntity;
+import com.salessparrow.api.lib.Util;
 
 import lombok.Data;
 
@@ -31,13 +32,18 @@ public class SalesforceGetTasksListDto {
   }
 
   public TaskEntity taskEntity(){
+    Util util = new Util();
+
     TaskEntity taskEntity = new TaskEntity();
     taskEntity.setId(this.id);
     taskEntity.setCreatorName(this.createdBy.name);
     taskEntity.setDescription(this.description);
-    taskEntity.setDueDate(this.activityDate);
     taskEntity.setCrmOrganizationUserName(this.owner.name);
     taskEntity.setLastModifiedTime(this.lastModifiedDate);
+
+    String dueDate = util.getDateFormatFromDatetime(this.activityDate);
+
+    taskEntity.setDueDate(dueDate);
     return taskEntity;
   }
 }

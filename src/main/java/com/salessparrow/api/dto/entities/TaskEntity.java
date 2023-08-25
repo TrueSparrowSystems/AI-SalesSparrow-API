@@ -16,7 +16,7 @@ public class TaskEntity {
   private String id;
   private String creatorName;
   private String description;
-  private Date dueDate;
+  private String dueDate;
   private String crmOrganizationUserName;
   private Date lastModifiedTime;
 }
