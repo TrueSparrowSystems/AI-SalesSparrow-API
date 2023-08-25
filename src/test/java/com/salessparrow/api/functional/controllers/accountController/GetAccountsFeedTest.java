@@ -93,7 +93,7 @@ public class GetAccountsFeedTest {
 
     // Read data from the scenario
     ObjectMapper objectMapper = new ObjectMapper();
-    String cookieValue = Constants.SALESFORCE_ACTIVE_USET_COOKIE_VALUE;
+    String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
 
     // Prepare makeCompositeRequestMock responses
     if (testScenario.getMocks() != null && testScenario.getMocks().containsKey("makeCompositeRequest")) {
