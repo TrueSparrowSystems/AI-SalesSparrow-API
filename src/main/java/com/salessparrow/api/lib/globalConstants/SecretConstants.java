@@ -48,7 +48,6 @@ public class SecretConstants {
       cache.close();
     }
 
-    System.out.println("================================secretJson: " + secretJson);
     ObjectMapper objectMapper = new ObjectMapper();
     String specificValue = "";
     try {
