@@ -1,5 +1,8 @@
 package com.salessparrow.api.lib;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -60,5 +63,36 @@ public class Util {
     headerBuilder.append("}");
 
     return  headerBuilder.toString();
+  }
+
+  /**
+   * Escape special characters in a string for use in a regular expression.
+   * 
+   * @param input
+   * 
+   * @return String
+   */
+  public static String escapeSpecialChars(String input) {
+    String[] specialChars = {"\\", "%", "'", "\"", "_"};
+    
+    for (String specialChar : specialChars) {
+        input = input.replace(specialChar, "\\" + specialChar);
+    }
+
+    return input;
+  }
+
+  public static String urlEncoder(String input){
+    try {
+      return URLEncoder.encode(input, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new CustomException(
+        new ErrorObject(
+          "u_u_ue_1",
+          "something_went_wrong",
+          e.getMessage()
+        )
+      );
+    }
   }
 }

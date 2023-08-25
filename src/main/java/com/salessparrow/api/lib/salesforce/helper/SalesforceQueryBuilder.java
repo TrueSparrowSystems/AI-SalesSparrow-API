@@ -4,11 +4,22 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.salessparrow.api.lib.Util;
+
 /**
  * SalesforceQueries is a class for building the Salesforce queries.
  */
 @Component
 public class SalesforceQueryBuilder {
+  public String formatStringForSoqlQueries(String input){
+    // escaping special characters of SOQL queries Like ( ', ", \, %, _)
+    input = Util.escapeSpecialChars(input);
+
+    // encoding the input to UrlEncoder
+    input = Util.urlEncoder(input);
+
+    return input;
+  }
   
   /**
    * Get the list of accounts for a given searchTerm
@@ -21,6 +32,8 @@ public class SalesforceQueryBuilder {
     if (searchTerm == "") {
       return "SELECT Id, Name FROM Account ORDER BY LastModifiedDate DESC LIMIT 20";
     } 
+    searchTerm = formatStringForSoqlQueries(searchTerm);
+    
     return "SELECT Id, Name FROM Account WHERE Name LIKE '%25"+searchTerm+"%25' ORDER BY LastModifiedDate DESC LIMIT 20";
   }
 
@@ -31,6 +44,8 @@ public class SalesforceQueryBuilder {
    * @return String
    */
   public String getContentDocumentIdUrl(String accountId) {
+    accountId = Util.urlEncoder(accountId);
+
     return "SELECT ContentDocumentId FROM ContentDocumentLink WHERE LinkedEntityId = '"
         + accountId + "'";
   }
@@ -44,11 +59,14 @@ public class SalesforceQueryBuilder {
   public String getNoteListIdUrl(List<String> documentIds) {
     StringBuilder queryBuilder = new StringBuilder(
         "SELECT Id, Title, TextPreview, CreatedBy.Name, LastModifiedDate FROM ContentNote WHERE Id IN (");
+
     for (int i = 0; i < documentIds.size(); i++) {
       if (i > 0) {
         queryBuilder.append(", ");
       }
-      queryBuilder.append("'").append(documentIds.get(i)).append("'");
+
+      String documentId = Util.urlEncoder(documentIds.get(i));
+      queryBuilder.append("'").append(documentId).append("'");
     }
     queryBuilder.append(") ORDER BY LastModifiedDate DESC LIMIT 5");
 
@@ -56,6 +74,8 @@ public class SalesforceQueryBuilder {
   }
 
   public String getNoteDetailsUrl(String noteId){
+    noteId = Util.urlEncoder(noteId);
+
     return "SELECT Id, Title, TextPreview, CreatedBy.Name, LastModifiedDate FROM ContentNote WHERE Id = '" + noteId + "'";
   }
 
@@ -63,6 +83,8 @@ public class SalesforceQueryBuilder {
     if (searchTerm == "") {
       return "SELECT Id, Name FROM User ORDER BY LastModifiedDate DESC LIMIT 20";
     } 
+    searchTerm = formatStringForSoqlQueries(searchTerm);
+
     return "SELECT Id, Name FROM User WHERE Name LIKE '%25"+searchTerm+"%25' ORDER BY LastModifiedDate DESC LIMIT 20";
   }
 
