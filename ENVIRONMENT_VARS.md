@@ -76,3 +76,8 @@ This document provides descriptions for the environment variables used in the co
 
 - **Description:** Logging level for the application.
 - **Example Value:** `debug`
+
+## COOKIE_DOMAIN
+
+- **Description:** Domain for the API cookies.
+- **Example Value:** `localhost`

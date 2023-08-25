@@ -36,6 +36,8 @@ import com.salessparrow.api.helper.LoadFixture;
 import com.salessparrow.api.helper.Scenario;
 import com.salessparrow.api.helper.Setup;
 import com.salessparrow.api.lib.globalConstants.CookieConstants;
+import com.salessparrow.api.helper.Constants;
+
 import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 import com.salessparrow.api.lib.salesforce.wrappers.SalesforceGetNoteContent;
@@ -83,7 +85,7 @@ public class GetNoteDetailsTest {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
-    String cookieValue = (String) testScenario.getInput().get("cookie");
+    String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
     String accountId = (String) testScenario.getInput().get("accountId");
     String noteId = (String) testScenario.getInput().get("noteId");
 
