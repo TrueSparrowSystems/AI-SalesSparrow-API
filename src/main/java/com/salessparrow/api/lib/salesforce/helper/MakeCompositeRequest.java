@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.salessparrow.api.controllers.AccountTaskController;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
@@ -20,7 +19,7 @@ import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
 @Component
 public class MakeCompositeRequest {
 
-  Logger logger = LoggerFactory.getLogger(AccountTaskController.class);
+  Logger logger = LoggerFactory.getLogger(MakeCompositeRequest.class);
 
   @Autowired
   private SalesforceRequest salesforceOauthRequest;

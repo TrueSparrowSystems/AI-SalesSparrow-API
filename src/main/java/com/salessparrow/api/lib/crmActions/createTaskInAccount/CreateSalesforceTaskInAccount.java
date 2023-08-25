@@ -13,10 +13,9 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.salessparrow.api.controllers.AccountTaskController;
 import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.formatter.CreateTaskFormatterDto;
-import com.salessparrow.api.dto.requestMapper.CreateTaskDto;
+import com.salessparrow.api.dto.requestMapper.CreateTaskInAccountDto;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.Util;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
@@ -30,9 +29,9 @@ import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
  * CreateSalesforceTask class is responsible for creating a task in Salesforce
  */
 @Component
-public class CreateSalesforceTask implements CreateTaskInAccount{
+public class CreateSalesforceTaskInAccount implements CreateTaskInAccount{
 
-    Logger logger = LoggerFactory.getLogger(AccountTaskController.class);
+    Logger logger = LoggerFactory.getLogger(CreateSalesforceTaskInAccount.class);
 
     @Autowired
     private SalesforceConstants salesforceConstants;
@@ -49,7 +48,7 @@ public class CreateSalesforceTask implements CreateTaskInAccount{
      * 
      * @return CreateTaskFormatterDto object
      */
-    public CreateTaskFormatterDto createTask(User User, String accountId, CreateTaskDto task) {
+    public CreateTaskFormatterDto createTask(User User, String accountId, CreateTaskInAccountDto task) {
         String salesforceUserId = User.getExternalUserId();
 
         String taskSubject = getTaskSubjectFromDescription(task);
@@ -124,7 +123,7 @@ public class CreateSalesforceTask implements CreateTaskInAccount{
      * 
      * @return String task subject
      */
-    private String getTaskSubjectFromDescription(CreateTaskDto task) {
+    private String getTaskSubjectFromDescription(CreateTaskInAccountDto task) {
         logger.info("getting task subject from description");
         if (task.getDescription().length() < 60) {
             return task.getDescription();

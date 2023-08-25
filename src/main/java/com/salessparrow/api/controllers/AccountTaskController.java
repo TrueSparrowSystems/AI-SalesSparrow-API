@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.salessparrow.api.dto.formatter.CreateTaskFormatterDto;
-import com.salessparrow.api.dto.requestMapper.CreateTaskDto;
+import com.salessparrow.api.dto.requestMapper.CreateTaskInAccountDto;
 import com.salessparrow.api.services.accountTask.CreateTaskService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,7 +33,7 @@ public class AccountTaskController {
     public ResponseEntity<CreateTaskFormatterDto> createTask(
         HttpServletRequest request,
         @PathVariable("account_id") String accountId,
-        @Valid @RequestBody CreateTaskDto task
+        @Valid @RequestBody CreateTaskInAccountDto task
     ){
         logger.info("Create task request received");
         CreateTaskFormatterDto createTaskFormatterDto = createTaskService.createTask(request, accountId, task);
