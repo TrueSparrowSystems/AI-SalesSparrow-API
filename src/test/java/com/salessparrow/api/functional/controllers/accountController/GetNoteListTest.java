@@ -98,7 +98,7 @@ public class GetNoteListTest {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
-    String cookieValue = Constants.SALESFORCE_ACTIVE_USET_COOKIE_VALUE;
+    String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
     String accountId = (String) testScenario.getInput().get("accountId");
     List<String> documentIds = (List<String>) testScenario.getInput().get("documentId");
 

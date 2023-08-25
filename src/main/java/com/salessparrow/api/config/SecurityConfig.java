@@ -71,7 +71,8 @@ public class SecurityConfig {
 
 
     // Enable for production and staging
-    if (!CoreConstants.isDevEnvironment() && !CoreConstants.isTestEnvironment()) {
+    if (!CoreConstants.isDevEnvironment() && !CoreConstants.isTestEnvironment() &&
+        !CoreConstants.isLocalTestEnvironment()) {
         // All requests must be secure
         http.requiresChannel(channel -> channel.anyRequest().requiresSecure());
     }

@@ -65,7 +65,8 @@ $ touch test.secrets.json
     "DYNAMO_DB_URL": "http://dynamodb:8000",
     "LOCAL_KMS_ENDPOINT": "http://localkms:8080",
     "ERROR_MAIL_FROM": "",
-    "ERROR_MAIL_TO": ""
+    "ERROR_MAIL_TO": "",
+    "COOKIE_DOMAIN":""
 }
 ```
 

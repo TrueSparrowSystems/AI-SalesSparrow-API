@@ -5,8 +5,7 @@
       "body": {
         "text": "Test note"
       },
-      "accountId": "0011e00000bWSxdAAG",
-      "cookie": "1:0055i00000AUxQHAA1:SALESFORCE:app:1692878227:a2xOxjcPChK/YsKCWRuY50J3gH21/tqcGlv7sWU/aPw3/UFVFPbvWn2LLzY5B5kVPXjj1gELRqa4B4ds6uuqIw=="
+      "accountId": "0011e00000bWSxdAAG"
     },
     "mocks": {
       "makeCompositeRequest": {
@@ -48,8 +47,7 @@
       "body": {
         "text": ""
       },
-      "accountId": "0011e00000bWSxdAAG",
-      "cookie": "1:0055i00000AUxQHAA1:SALESFORCE:app:1692878227:a2xOxjcPChK/YsKCWRuY50J3gH21/tqcGlv7sWU/aPw3/UFVFPbvWn2LLzY5B5kVPXjj1gELRqa4B4ds6uuqIw=="
+      "accountId": "0011e00000bWSxdAAG"
     },
     "mocks": {},
     "output": {
@@ -64,8 +62,7 @@
     "description": "Should fail when the note text is not provided", 
     "input": {
       "body": {},
-      "accountId": "0011e00000bWSxdAAG",
-      "cookie": "1:0055i00000AUxQHAA1:SALESFORCE:app:1692878227:a2xOxjcPChK/YsKCWRuY50J3gH21/tqcGlv7sWU/aPw3/UFVFPbvWn2LLzY5B5kVPXjj1gELRqa4B4ds6uuqIw=="
+      "accountId": "0011e00000bWSxdAAG"
     },
     "mocks": {},
     "output": {
@@ -77,28 +74,12 @@
     }
   },
   {
-    "description": "Should fail when the cookie is invalid", 
-    "input": {
-      "body": {
-        "text": "Test note"
-      },
-      "accountId": "0011e00000bWSxdAAG",
-      "cookie": "1:0055i00000AUxQHAA1:SALESFORCE:app:1692878227:a2xOxjcPChK/YsKCWRuY50J3gH21/tqcGlv7sWU/aPw3/UFVFPbvWn2LLzY5B5kVPXjj1gELRqds6uuq=="
-    },
-    "mocks": {},
-    "output": {
-      "http_code": 401,
-      "code": "UNAUTHORIZED"
-    }
-  },
-  {
     "description": "Should fail when the account id invalid", 
     "input": {
       "body": {
         "text": "Test note"
       },
-      "accountId": "invalid",
-      "cookie": "1:0055i00000AUxQHAA1:SALESFORCE:app:1692878227:a2xOxjcPChK/YsKCWRuY50J3gH21/tqcGlv7sWU/aPw3/UFVFPbvWn2LLzY5B5kVPXjj1gELRqa4B4ds6uuqIw=="
+      "accountId": "invalid"
     },
     "mocks": {
       "makeCompositeRequest": {
@@ -143,8 +124,7 @@
       "body": {
         "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
       },
-      "accountId": "0011e00000bWSxdAAG",
-      "cookie": "1:0055i00000AUxQHAA1:SALESFORCE:app:1692878227:a2xOxjcPChK/YsKCWRuY50J3gH21/tqcGlv7sWU/aPw3/UFVFPbvWn2LLzY5B5kVPXjj1gELRqa4B4ds6uuqIw=="
+      "accountId": "0011e00000bWSxdAAG"
     },
     "mocks": {
       "makeCompositeRequest": {

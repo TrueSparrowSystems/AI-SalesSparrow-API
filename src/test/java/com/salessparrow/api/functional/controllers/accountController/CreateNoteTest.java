@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dynamobee.exception.DynamobeeException;
 import com.salessparrow.api.helper.Cleanup;
 import com.salessparrow.api.helper.Common;
+import com.salessparrow.api.helper.Constants;
 import com.salessparrow.api.helper.FixtureData;
 import com.salessparrow.api.helper.LoadFixture;
 import com.salessparrow.api.helper.Scenario;
@@ -82,7 +83,7 @@ public class CreateNoteTest {
 
     // Read data from the scenario
     ObjectMapper objectMapper = new ObjectMapper();
-    String cookieValue = (String) testScenario.getInput().get("cookie");
+    String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
     String accountId = (String) testScenario.getInput().get("accountId");
 
     // Prepare mock responses

@@ -82,6 +82,10 @@ public class SecretConstants {
 
   /* Secrets start */
 
+  public static String cookieDomain() {
+    return getSecret("COOKIE_DOMAIN");
+  }
+
   public static String awsRegion() {
     return getSecret("AWS_IAM_REGION");
   }
