@@ -5,10 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.salessparrow.api.controllers.AccountTaskController;
 import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.formatter.CreateTaskFormatterDto;
-import com.salessparrow.api.dto.requestMapper.CreateTaskDto;
+import com.salessparrow.api.dto.requestMapper.CreateTaskInAccountDto;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.globalConstants.UserConstants;
@@ -19,10 +18,10 @@ import com.salessparrow.api.lib.globalConstants.UserConstants;
 @Component
 public class CreateTaskInAccountFactory {
 
-    Logger logger = LoggerFactory.getLogger(AccountTaskController.class);
+    Logger logger = LoggerFactory.getLogger(CreateTaskInAccountFactory.class);
 
     @Autowired
-    CreateSalesforceTask createSalesforceTask;
+    CreateSalesforceTaskInAccount createSalesforceTaskInAccount;
 
     /**
      * Create a task in CRM
@@ -33,11 +32,11 @@ public class CreateTaskInAccountFactory {
      * 
      * @return CreateTaskFormatterDto object
      */
-    public CreateTaskFormatterDto createTask(User user, String accountId, CreateTaskDto task) {
+    public CreateTaskFormatterDto createTaskInAccount(User user, String accountId, CreateTaskInAccountDto task) {
         switch(user.getUserKind()) {
         case UserConstants.SALESFORCE_USER_KIND:
           logger.info("calling createTask of salesforceCreateTask");
-          return createSalesforceTask.createTask(user, accountId, task);
+          return createSalesforceTaskInAccount.createTaskInAccount(user, accountId, task);
         default:
           throw new CustomException(
             new ErrorObject(

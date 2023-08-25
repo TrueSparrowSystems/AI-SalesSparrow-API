@@ -84,6 +84,56 @@
       }
     },
     {
+      "description": "Should fail when the task due_date is not provided", 
+      "input": {
+        "body": {
+            "crm_organization_user_id":"0011e00000bWSxdAA1",
+            "description":"Update remaining documentations"
+        },
+        "accountId": "0011e00000bWSxdAAG",
+        "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw=="
+      },
+      "mocks": {},
+      "output": {
+        "http_code": 400,
+        "message": "At least one parameter is invalid or missing.",
+        "code": "INVALID_PARAMS",
+        "internal_error_identifier": "b_2",
+        "param_errors": [
+          {
+            "parameter": "due_date",
+            "param_error_identifier": "invalid_due_date",
+            "message": "Invalid or missing due date. Please double check and try again."
+          } 
+        ]
+      }
+    },
+    {
+      "description": "Should fail when the task crm_organization_user_id is not provided", 
+      "input": {
+        "body": {
+            "description":"Update remaining documentations",
+            "due_date":"2023-12-01"
+        },
+        "accountId": "0011e00000bWSxdAAG",
+        "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw=="
+      },
+      "mocks": {},
+      "output": {
+        "http_code": 400,
+        "message": "At least one parameter is invalid or missing.",
+        "code": "INVALID_PARAMS",
+        "internal_error_identifier": "b_2",
+        "param_errors": [
+          {
+            "parameter": "crm_organization_user_id",
+            "param_error_identifier": "missing_crm_organization_user_id",
+            "message": "crm_organization_user_id is required parameter. Please provide crm_organization_user_id."
+          }
+        ]
+      }
+    },
+    {
       "description": "Should fail when the task Due is not valid", 
       "input": {
         "body": {
@@ -104,7 +154,7 @@
           {
             "parameter": "due_date",
             "param_error_identifier": "invalid_due_date",
-            "message": "Invalid due date. Please double check and try again."
+            "message": "Invalid or missing due date. Please double check and try again."
           } 
         ]
       }
