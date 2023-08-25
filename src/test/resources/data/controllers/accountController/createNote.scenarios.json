@@ -5,8 +5,7 @@
       "body": {
         "text": "Test note"
       },
-      "accountId": "0011e00000bWSxdAAG",
-      "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw=="
+      "accountId": "0011e00000bWSxdAAG"
     },
     "mocks": {
       "makeCompositeRequest": {
@@ -48,8 +47,7 @@
       "body": {
         "text": ""
       },
-      "accountId": "0011e00000bWSxdAAG",
-      "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw=="
+      "accountId": "0011e00000bWSxdAAG"
     },
     "mocks": {},
     "output": {
@@ -64,8 +62,7 @@
     "description": "Should fail when the note text is not provided", 
     "input": {
       "body": {},
-      "accountId": "0011e00000bWSxdAAG",
-      "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw=="
+      "accountId": "0011e00000bWSxdAAG"
     },
     "mocks": {},
     "output": {
@@ -77,26 +74,12 @@
     }
   },
   {
-    "description": "Should fail when the cookie is invalid", 
-    "input": {
-      "body": {},
-      "accountId": "0011e00000bWSxdAAG",
-      "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:invalid"
-    },
-    "mocks": {},
-    "output": {
-      "http_code": 401,
-      "code": "UNAUTHORIZED"
-    }
-  },
-  {
     "description": "Should fail when the account id invalid", 
     "input": {
       "body": {
         "text": "Test note"
       },
-      "accountId": "invalid",
-      "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw=="
+      "accountId": "invalid"
     },
     "mocks": {
       "makeCompositeRequest": {
@@ -141,8 +124,7 @@
       "body": {
         "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
       },
-      "accountId": "0011e00000bWSxdAAG",
-      "cookie": "1:00112233445566AAA1:SALESFORCE:1899000000:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw=="
+      "accountId": "0011e00000bWSxdAAG"
     },
     "mocks": {
       "makeCompositeRequest": {

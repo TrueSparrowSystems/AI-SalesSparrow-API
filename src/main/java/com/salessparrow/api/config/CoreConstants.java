@@ -26,6 +26,10 @@ public class CoreConstants {
 
   /* End: Env variables required before spring application context is initialized */
 
+  public static String cookieDomain(){
+    return SecretConstants.cookieDomain();
+  }
+
   public static String awsRegion() {
     return SecretConstants.awsRegion();
   }
