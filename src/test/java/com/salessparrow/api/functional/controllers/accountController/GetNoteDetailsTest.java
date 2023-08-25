@@ -1,8 +1,5 @@
 package com.salessparrow.api.functional.controllers.accountController;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -14,6 +11,8 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,26 +47,22 @@ import jakarta.servlet.http.Cookie;
 @WebAppConfiguration
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
 public class GetNoteDetailsTest {
+
   @Autowired
   private MockMvc mockMvc;
-
-  @Autowired
-  private Setup setup;
-
-  @Autowired
-  private Cleanup cleanup;
-
   @Autowired
   private Common common;
-
   @Autowired
   private LoadFixture loadFixture;
+  @Autowired
+  private Setup setup;
+  @Autowired
+  private Cleanup cleanup;
+  @MockBean
+  private SalesforceGetNoteContent salesforceGetNoteContentMock;
 
   @MockBean
   private MakeCompositeRequest makeCompositeRequestMock;
-
-  @MockBean
-  private SalesforceGetNoteContent salesforceGetNoteContentMock;
 
   @BeforeEach
   public void setUp() throws DynamobeeException, IOException {
@@ -81,7 +76,7 @@ public class GetNoteDetailsTest {
 
   @ParameterizedTest
   @MethodSource("testScenariosProvider")
-  public void getNoteDetails(Scenario testScenario) throws Exception{
+  public void getNoteDetails(Scenario testScenario) throws Exception {
     String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
     FixtureData fixtureData = common.loadFixture("classpath:fixtures/controllers/accountController/getNoteDetails.fixtures.json", currentFunctionName);
     loadFixture.perform(fixtureData);
