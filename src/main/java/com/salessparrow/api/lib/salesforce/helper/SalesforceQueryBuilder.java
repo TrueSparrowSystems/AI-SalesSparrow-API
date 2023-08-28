@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.salessparrow.api.lib.Util;
+
 /**
  * SalesforceQueries is a class for building the Salesforce queries.
  */
@@ -18,10 +20,16 @@ public class SalesforceQueryBuilder {
    * @return String
    */
   public String getAccountsQuery(String searchTerm) {
+    searchTerm = Util.escapeSpecialChars(searchTerm);
+
+    String query = "";
     if (searchTerm == "") {
-      return "SELECT Id, Name FROM Account ORDER BY LastModifiedDate DESC LIMIT 20";
-    } 
-    return "SELECT Id, Name FROM Account WHERE Name LIKE '%25"+searchTerm+"%25' ORDER BY LastModifiedDate DESC LIMIT 20";
+      query = "SELECT Id, Name FROM Account ORDER BY LastModifiedDate DESC LIMIT 20";
+    } else {
+      query = "SELECT Id, Name FROM Account WHERE Name LIKE '%"+searchTerm+"%' ORDER BY LastModifiedDate DESC LIMIT 20";
+    }
+    
+    return Util.urlEncoder(query);
   }
 
   /**
@@ -32,8 +40,10 @@ public class SalesforceQueryBuilder {
    * @return String
    */
   public String getAccountTasksQuery(String accountId) {
-    return "SELECT Id, Description, ActivityDate, CreatedBy.Name, Owner.Name, LastModifiedDate FROM Task WHERE WhatId='"
-      + accountId + "' ORDER BY LastModifiedDate DESC LIMIT 5";
+    accountId = Util.escapeSpecialChars(accountId);
+
+    return Util.urlEncoder("SELECT Id, Description, ActivityDate, CreatedBy.Name, Owner.Name, LastModifiedDate FROM Task WHERE WhatId='"
+      + accountId + "' ORDER BY LastModifiedDate DESC LIMIT 5");
   }
 
   /**
@@ -43,8 +53,10 @@ public class SalesforceQueryBuilder {
    * @return String
    */
   public String getContentDocumentIdUrl(String accountId) {
-    return "SELECT ContentDocumentId FROM ContentDocumentLink WHERE LinkedEntityId = '"
-        + accountId + "'";
+    accountId = Util.escapeSpecialChars(accountId);
+
+    return Util.urlEncoder("SELECT ContentDocumentId FROM ContentDocumentLink WHERE LinkedEntityId = '"
+        + accountId + "'");
   }
 
   /**
@@ -56,19 +68,36 @@ public class SalesforceQueryBuilder {
   public String getNoteListIdUrl(List<String> documentIds) {
     StringBuilder queryBuilder = new StringBuilder(
         "SELECT Id, Title, TextPreview, CreatedBy.Name, LastModifiedDate FROM ContentNote WHERE Id IN (");
+
     for (int i = 0; i < documentIds.size(); i++) {
       if (i > 0) {
         queryBuilder.append(", ");
       }
-      queryBuilder.append("'").append(documentIds.get(i)).append("'");
+
+      String documentId = Util.escapeSpecialChars(documentIds.get(i));
+      queryBuilder.append("'").append(documentId).append("'");
     }
     queryBuilder.append(") ORDER BY LastModifiedDate DESC LIMIT 5");
 
-    return queryBuilder.toString();
+    return Util.urlEncoder(queryBuilder.toString());
   }
 
   public String getNoteDetailsUrl(String noteId){
-    return "SELECT Id, Title, TextPreview, CreatedBy.Name, LastModifiedDate FROM ContentNote WHERE Id = '" + noteId + "'";
+    noteId = Util.escapeSpecialChars(noteId);
+
+    return Util.urlEncoder("SELECT Id, Title, TextPreview, CreatedBy.Name, LastModifiedDate FROM ContentNote WHERE Id = '" + noteId + "'");
   }
 
+  public String getCrmOrganizationUsersQuery(String searchTerm) {
+    searchTerm = Util.escapeSpecialChars(searchTerm);
+    String query = "";
+
+    if (searchTerm == "") {
+      query = "SELECT Id, Name FROM User ORDER BY LastModifiedDate DESC LIMIT 20";
+    } else {
+      query = "SELECT Id, Name FROM User WHERE Name LIKE '%"+searchTerm+"%' ORDER BY LastModifiedDate DESC LIMIT 20";
+    }
+
+    return Util.urlEncoder(query);
+  }
 }
