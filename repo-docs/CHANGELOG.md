@@ -7,7 +7,6 @@
 - API - Disconnect Salesforce Endpoint [#9](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/9)
 - API - Get Recommended Actions from Text Endpoint [#13](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/13)
 - API - Delete Note Endpoint [#28](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/28)
-- API - Create Event for an Account [#30](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/30)
 - API - Get a list of Tasks in an account [#33](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/33)
 - API - Create Task in an Account Endpoint [#34](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/34)
 - API - Get a list of CRM Organization Users Endpoint [#35](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/35)
