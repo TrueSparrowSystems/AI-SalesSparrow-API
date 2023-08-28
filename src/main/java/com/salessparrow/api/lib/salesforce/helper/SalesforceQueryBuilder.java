@@ -40,8 +40,10 @@ public class SalesforceQueryBuilder {
    * @return String
    */
   public String getAccountTasksQuery(String accountId) {
-    return "SELECT Id, Description, ActivityDate, CreatedBy.Name, Owner.Name, LastModifiedDate FROM Task WHERE WhatId='"
-      + accountId + "' ORDER BY LastModifiedDate DESC LIMIT 5";
+    accountId = Util.escapeSpecialChars(accountId);
+
+    return Util.urlEncoder("SELECT Id, Description, ActivityDate, CreatedBy.Name, Owner.Name, LastModifiedDate FROM Task WHERE WhatId='"
+      + accountId + "' ORDER BY LastModifiedDate DESC LIMIT 5");
   }
 
   /**
