@@ -11,15 +11,6 @@ import com.salessparrow.api.lib.Util;
  */
 @Component
 public class SalesforceQueryBuilder {
-  public String formatStringForSoqlQueries(String input){
-    // escaping special characters of SOQL queries Like ( ', ", \, %, _)
-    input = Util.escapeSpecialChars(input);
-
-    // encoding the input to UrlEncoder
-    input = Util.urlEncoder(input);
-
-    return input;
-  }
   
   /**
    * Get the list of accounts for a given searchTerm
@@ -29,12 +20,16 @@ public class SalesforceQueryBuilder {
    * @return String
    */
   public String getAccountsQuery(String searchTerm) {
+    searchTerm = Util.escapeSpecialChars(searchTerm);
+
+    String query = "";
     if (searchTerm == "") {
-      return "SELECT Id, Name FROM Account ORDER BY LastModifiedDate DESC LIMIT 20";
-    } 
-    searchTerm = formatStringForSoqlQueries(searchTerm);
+      query = "SELECT Id, Name FROM Account ORDER BY LastModifiedDate DESC LIMIT 20";
+    } else {
+      query = "SELECT Id, Name FROM Account WHERE Name LIKE '%"+searchTerm+"%' ORDER BY LastModifiedDate DESC LIMIT 20";
+    }
     
-    return "SELECT Id, Name FROM Account WHERE Name LIKE '%25"+searchTerm+"%25' ORDER BY LastModifiedDate DESC LIMIT 20";
+    return Util.urlEncoder(query);
   }
 
   /**
@@ -44,10 +39,10 @@ public class SalesforceQueryBuilder {
    * @return String
    */
   public String getContentDocumentIdUrl(String accountId) {
-    accountId = Util.urlEncoder(accountId);
+    accountId = Util.escapeSpecialChars(accountId);
 
-    return "SELECT ContentDocumentId FROM ContentDocumentLink WHERE LinkedEntityId = '"
-        + accountId + "'";
+    return Util.urlEncoder("SELECT ContentDocumentId FROM ContentDocumentLink WHERE LinkedEntityId = '"
+        + accountId + "'");
   }
 
   /**
@@ -65,27 +60,30 @@ public class SalesforceQueryBuilder {
         queryBuilder.append(", ");
       }
 
-      String documentId = Util.urlEncoder(documentIds.get(i));
+      String documentId = Util.escapeSpecialChars(documentIds.get(i));
       queryBuilder.append("'").append(documentId).append("'");
     }
     queryBuilder.append(") ORDER BY LastModifiedDate DESC LIMIT 5");
 
-    return queryBuilder.toString();
+    return Util.urlEncoder(queryBuilder.toString());
   }
 
   public String getNoteDetailsUrl(String noteId){
-    noteId = Util.urlEncoder(noteId);
+    noteId = Util.escapeSpecialChars(noteId);
 
-    return "SELECT Id, Title, TextPreview, CreatedBy.Name, LastModifiedDate FROM ContentNote WHERE Id = '" + noteId + "'";
+    return Util.urlEncoder("SELECT Id, Title, TextPreview, CreatedBy.Name, LastModifiedDate FROM ContentNote WHERE Id = '" + noteId + "'");
   }
 
   public String getCrmOrganizationUsersQuery(String searchTerm) {
+    searchTerm = Util.escapeSpecialChars(searchTerm);
+    String query = "";
+
     if (searchTerm == "") {
-      return "SELECT Id, Name FROM User ORDER BY LastModifiedDate DESC LIMIT 20";
-    } 
-    searchTerm = formatStringForSoqlQueries(searchTerm);
+      query = "SELECT Id, Name FROM User ORDER BY LastModifiedDate DESC LIMIT 20";
+    } else {
+      query = "SELECT Id, Name FROM User WHERE Name LIKE '%"+searchTerm+"%' ORDER BY LastModifiedDate DESC LIMIT 20";
+    }
 
-    return "SELECT Id, Name FROM User WHERE Name LIKE '%25"+searchTerm+"%25' ORDER BY LastModifiedDate DESC LIMIT 20";
+    return Util.urlEncoder(query);
   }
-
 }
