@@ -1,6 +1,7 @@
 package com.salessparrow.api.lib.crmActions.deleteAccountNote;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -11,7 +12,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salessparrow.api.domain.User;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.Util;
-import com.salessparrow.api.lib.errorLib.ErrorObject;
+import com.salessparrow.api.lib.errorLib.ParamErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
@@ -74,10 +75,12 @@ public class DeleteSalesforceAccountNote implements DeleteAccountNoteInterface {
       String errorBody = deleteNoteCompositeResponse.get("body").asText();
 
       throw new CustomException(
-        new ErrorObject(
-          "l_ca_dan_dasn_pr_1",
-          "internal_server_error",
-          errorBody));
+        new ParamErrorObject(
+          "l_ca_dan_dasn_pr_1", 
+          errorBody, 
+          Arrays.asList("invalid_note_id")
+        )
+      );
     }
   }
 }

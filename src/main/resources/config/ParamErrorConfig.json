@@ -28,5 +28,10 @@
         "parameter": "description",
         "param_error_identifier": "description_too_long",
         "message": "Description too long. Please shorten and try again."
+    },
+    "invalid_note_id": {
+      "parameter": "note_id",
+      "param_error_identifier": "invalid_note_id",
+      "message": "The note id you sent is incorrect. Please double check and try again."
     }
 }
