@@ -1,6 +1,7 @@
 package com.salessparrow.api.lib.crmActions.getAccountTasksList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,7 @@ import com.salessparrow.api.dto.entities.TaskEntity;
 import com.salessparrow.api.dto.formatter.GetTasksListFormatterDto;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.Util;
-import com.salessparrow.api.lib.errorLib.ErrorObject;
+import com.salessparrow.api.lib.errorLib.ParamErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
@@ -89,10 +90,12 @@ public class GetSalesforceAccountTasksList {
       String errorBody = getTasksCompositeResponse.get("body").asText();
 
       throw new CustomException(
-        new ErrorObject(
-          "l_ca_gatl_gsatl_pr_1",
-          "something_went_wrong",
-          errorBody));
+        new ParamErrorObject(
+          "l_ca_gatl_gsatl_pr_1", 
+          errorBody, 
+          Arrays.asList("invalid_account_id")
+        )
+      );
     }
 
     JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");;

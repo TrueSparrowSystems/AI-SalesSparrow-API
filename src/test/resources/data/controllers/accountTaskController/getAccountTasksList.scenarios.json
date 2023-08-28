@@ -242,11 +242,17 @@
       }
     },
     "output": {
-      "http_code": 500,
-      "message": "Something went wrong.",
-      "code": "INTERNAL_SERVER_ERROR",
+      "http_code": 400,
+      "message": "At least one parameter is invalid or missing.",
+      "code": "INVALID_PARAMS",
       "internal_error_identifier": "l_ca_gatl_gsatl_pr_1",
-      "param_errors": []
+      "param_errors": [
+        {
+          "parameter": "account_id",
+          "param_error_identifier": "invalid_account_id",
+          "message": "The account id you sent is incorrect. Please double check and try again."
+        }
+      ]
     }
   }
 ]
