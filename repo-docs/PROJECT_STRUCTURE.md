@@ -29,6 +29,9 @@ This is a Markdown file that usually contains important information about your p
 
 This directory serves as a submodule linked to [ai-salesparrow-docs](https://github.com/TrueSparrowSystems/AI-SalesSparrow-docs) repository that holds comprehensive documentation for the project. Instead of duplicating documentation within the main repository, this submodule approach allows you to maintain documentation separately, ensuring consistency and easier management.
 
+### repo-docs/
+This directory contains documentation that serves as a reference for various aspects of the project. This directory is intended to store informative documents that provide insights, explanations, and guidelines related to the project.
+
 ## src/ Directory:
 
 ```
