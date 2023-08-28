@@ -2,7 +2,7 @@
   "testGetSalesforceOauthTokenByExternalUserId": {
     "salesforce_oauth_tokens": [
       { 
-        "filepath": "classpath:fixtures/repositories/salesforceOauthToken/ActiveSalesforceOauthToken.json"
+        "filepath": "classpath:fixtures/common/repositories/salesforceOauthToken/ActiveSalesforceOauthToken.json"
       }
     ]
   }

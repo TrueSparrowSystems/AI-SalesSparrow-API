@@ -2,20 +2,16 @@ package com.salessparrow.api.unit.repositories;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.boot.test.mock.mockito.MockBean;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import java.io.IOException;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.github.dynamobee.exception.DynamobeeException;
 import com.salessparrow.api.domain.SalesforceOrganization;
@@ -53,9 +49,6 @@ public class SalesforceOrganizationRepositoryTest {
     public void tearDown() {
         cleanup.perform();
     }
-    
-    @MockBean
-    private DynamoDBMapper dynamoDBMapper;
 
    @Autowired
    private SalesforceOrganizationRepository salesforceOrganizationRepository;
@@ -71,6 +64,10 @@ public class SalesforceOrganizationRepositoryTest {
             // Invalid Save Db Query without partition key
             SalesforceOrganization salesforceOrganizationInvalid = new SalesforceOrganization();
             salesforceOrganizationInvalid.setExternalOrganizationId("externalUserId-2");
+
+            // mock the DynamoDBMapper
+            DynamoDBMapper dynamoDBMapper = mock(DynamoDBMapper.class);
+            SalesforceOrganizationRepository salesforceOrganizationRepository = new SalesforceOrganizationRepository(dynamoDBMapper);
 
             // Mock the behavior to throw an exception when save is called
             doThrow(new CustomException(new ErrorObject("test:r_sor_tssfo_1", "something_went_wrong", "mock db save error")))
@@ -88,18 +85,19 @@ public class SalesforceOrganizationRepositoryTest {
 
         @Test
         public void testGetSalesforceOrganizationByExternalOrganizationId() throws Exception{{
-
-            // String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
-            // FixtureData fixtureData = common.loadFixture("classpath:fixtures/unit/repositories/salesforceOrganizationRepository.json", currentFunctionName);
-            // loadFixture.perform(fixtureData);
+            String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
+            FixtureData fixtureData = common.loadFixture("classpath:fixtures/unit/repositories/salesforceOrganizationRepository.json", currentFunctionName);
+            loadFixture.perform(fixtureData);
             
-            // //Valid Get Db Query
-            // SalesforceOrganization salesforceOrganizationResp = salesforceOrganizationRepository.getSalesforceOrganizationByExternalOrganizationId("000Org-id");
-            // System.out.println("salesfo===========: " + salesforceOrganizationResp);
-
-            // assertEquals("000Org-id", salesforceOrganizationResp.getExternalOrganizationId());
+            //Valid Get Db Query
+            SalesforceOrganization salesforceOrganizationResp = salesforceOrganizationRepository.getSalesforceOrganizationByExternalOrganizationId("000Org-id");
+            assertEquals("000Org-id", salesforceOrganizationResp.getExternalOrganizationId());
 
             String testExternalOrganizationId = "externalUserId-2";
+
+            //  mock the DynamoDBMapper
+            DynamoDBMapper dynamoDBMapper = mock(DynamoDBMapper.class);
+            SalesforceOrganizationRepository salesforceOrganizationRepository = new SalesforceOrganizationRepository(dynamoDBMapper);
 
             // Mock the behavior to throw an exception when load is called
             when(dynamoDBMapper.load(SalesforceOrganization.class, testExternalOrganizationId)).thenThrow(

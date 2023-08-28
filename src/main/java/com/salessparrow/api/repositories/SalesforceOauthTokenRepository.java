@@ -17,8 +17,12 @@ import com.salessparrow.api.lib.globalConstants.CacheConstants;
 @Repository
 public class SalesforceOauthTokenRepository {
 
+  private final DynamoDBMapper dynamoDBMapper;
+
   @Autowired
-  private DynamoDBMapper dynamoDBMapper;
+  public SalesforceOauthTokenRepository(DynamoDBMapper dynamoDBMapper) {
+      this.dynamoDBMapper = dynamoDBMapper;
+  }
 
   /**
    * Saves a SalesforceOauthToken to the salesforce_oauth_tokens table.

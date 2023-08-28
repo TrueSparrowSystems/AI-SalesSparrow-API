@@ -17,9 +17,12 @@ import com.salessparrow.api.lib.globalConstants.CacheConstants;
 @Repository
 public class SalesforceUserRepository {
 
-  @Autowired
-  private DynamoDBMapper dynamoDBMapper;
+  private final DynamoDBMapper dynamoDBMapper;
 
+  @Autowired
+  public SalesforceUserRepository(DynamoDBMapper dynamoDBMapper) {
+      this.dynamoDBMapper = dynamoDBMapper;
+  }
   /**
    * Saves a SalesforceUser to the salesforce_users table.
    * 

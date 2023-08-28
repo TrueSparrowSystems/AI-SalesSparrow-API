@@ -14,9 +14,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class SalesforceOrganizationRepository {
 
-    @Autowired
-    private DynamoDBMapper dynamoDBMapper;
+    private final DynamoDBMapper dynamoDBMapper;
 
+    @Autowired
+    public SalesforceOrganizationRepository(DynamoDBMapper dynamoDBMapper) {
+        this.dynamoDBMapper = dynamoDBMapper;
+    }
+    
     /**
      * Saves a SalesforceOrganization to the salesforce_organizations table.
      * 

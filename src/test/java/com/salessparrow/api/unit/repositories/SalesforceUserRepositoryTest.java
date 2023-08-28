@@ -2,11 +2,11 @@ package com.salessparrow.api.unit.repositories;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -53,9 +53,6 @@ public class SalesforceUserRepositoryTest {
     public void tearDown() {
         cleanup.perform();
     }
-    
-    @MockBean
-    private DynamoDBMapper dynamoDBMapper;
 
    @Autowired
    private SalesforceUserRepository salesforceUserRepository;
@@ -71,6 +68,10 @@ public class SalesforceUserRepositoryTest {
             // Invalid Save Db Query without partition key
             SalesforceUser salesforceUserInvalid = new SalesforceUser();
             salesforceUserInvalid.setExternalUserId("externalUserId-test2");
+            
+            // mock the DynamoDBMapper
+            DynamoDBMapper dynamoDBMapper = mock(DynamoDBMapper.class);
+            SalesforceUserRepository salesforceUserRepository = new SalesforceUserRepository(dynamoDBMapper);
 
             // Mock the behavior to throw an exception when save is called
             doThrow(new CustomException(new ErrorObject("test:r_sotr_tssfu_1", "something_went_wrong", "mock db save error")))
@@ -98,6 +99,11 @@ public class SalesforceUserRepositoryTest {
             assertEquals("0055i00000AUxQHAA1", salesforceUserResp.getExternalUserId());
 
             String testExternalUserId = "externalUserId-test3";
+
+            // mock the DynamoDBMapper
+            DynamoDBMapper dynamoDBMapper = mock(DynamoDBMapper.class);
+            SalesforceUserRepository salesforceUserRepository = new SalesforceUserRepository(dynamoDBMapper);
+
 
             // Mock the behavior to throw an exception when load is called
             when(dynamoDBMapper.load(SalesforceUser.class, testExternalUserId)).thenThrow(

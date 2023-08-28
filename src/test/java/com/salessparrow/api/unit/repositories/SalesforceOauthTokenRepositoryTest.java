@@ -2,20 +2,16 @@ package com.salessparrow.api.unit.repositories;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.boot.test.mock.mockito.MockBean;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import java.io.IOException;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.github.dynamobee.exception.DynamobeeException;
 import com.salessparrow.api.domain.SalesforceOauthToken;
@@ -53,9 +49,6 @@ public class SalesforceOauthTokenRepositoryTest {
     public void tearDown() {
         cleanup.perform();
     }
-    
-    @MockBean
-    private DynamoDBMapper dynamoDBMapper;
 
    @Autowired
    private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
@@ -71,6 +64,10 @@ public class SalesforceOauthTokenRepositoryTest {
             // Invalid Save Db Query without partition key
             SalesforceOauthToken salesforceOauthTokenInvalid = new SalesforceOauthToken();
             salesforceOauthTokenInvalid.setExternalUserId("externalUserId-2");
+
+            // mock the DynamoDBMapper
+            DynamoDBMapper dynamoDBMapper = mock(DynamoDBMapper.class);
+            SalesforceOauthTokenRepository salesforceOauthTokenRepository = new SalesforceOauthTokenRepository(dynamoDBMapper);
 
             // Mock the behavior to throw an exception when save is called
             doThrow(new CustomException(new ErrorObject("test:r_sotr_tssfot_1", "something_went_wrong", "mock db save error")))
@@ -98,6 +95,10 @@ public class SalesforceOauthTokenRepositoryTest {
             assertEquals("0055i00000AUxQHAA1", salesforceOauthTokenResp.getExternalUserId());
 
             String testExternalUserId = "externalUserId-3";
+
+            // mock the DynamoDBMapper
+            DynamoDBMapper dynamoDBMapper = mock(DynamoDBMapper.class);
+            SalesforceOauthTokenRepository salesforceOauthTokenRepository = new SalesforceOauthTokenRepository(dynamoDBMapper);
 
             // Mock the behavior to throw an exception when load is called
             when(dynamoDBMapper.load(SalesforceOauthToken.class, testExternalUserId)).thenThrow(

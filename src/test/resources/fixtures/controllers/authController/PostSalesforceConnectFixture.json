@@ -2,23 +2,23 @@
   "testPostSalesforceConnectLogin": {
     "salesforce_users": [
       {
-        "filepath": "classpath:fixtures/repositories/salesforceUser/ActiveSalesforceUser.json"
+        "filepath": "classpath:fixtures/common/repositories/salesforceUser/ActiveSalesforceUser.json"
       },
       {
-        "filepath": "classpath:fixtures/repositories/salesforceUser/ActiveSalesforceUserForLogin.json"
+        "filepath": "classpath:fixtures/common/repositories/salesforceUser/ActiveSalesforceUserForLogin.json"
       }
     ],
     "salesforce_oauth_tokens": [
       {
-        "filepath": "classpath:fixtures/repositories/salesforceOauthToken/ActiveSalesforceOauthToken.json"
+        "filepath": "classpath:fixtures/common/repositories/salesforceOauthToken/ActiveSalesforceOauthToken.json"
       }
     ],
     "salesforce_organizations": [
       {
-      "filepath": "classpath:fixtures/repositories/salesforceOrganization/ActiveSalesforceOrganization.json"
+      "filepath": "classpath:fixtures/common/repositories/salesforceOrganization/ActiveSalesforceOrganization.json"
       },
       {
-        "filepath": "classpath:fixtures/repositories/salesforceOrganization/DeletedSalesforceOrganization.json"
+        "filepath": "classpath:fixtures/common/repositories/salesforceOrganization/DeletedSalesforceOrganization.json"
       }
     ]
   }
