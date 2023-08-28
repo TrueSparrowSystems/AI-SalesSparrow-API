@@ -83,6 +83,8 @@ public class Util {
   }
 
   public static String urlEncoder(String input){
+    if(input == null || input == "") 
+      return input;
     try {
       return URLEncoder.encode(input, "UTF-8");
     } catch (UnsupportedEncodingException e) {
