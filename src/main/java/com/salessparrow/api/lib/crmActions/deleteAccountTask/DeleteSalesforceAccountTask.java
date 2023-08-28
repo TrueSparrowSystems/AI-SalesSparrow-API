@@ -19,6 +19,9 @@ import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 
+/**
+ * DeleteSalesforceAccountTask is a class that handles the deleting a task in an account for salesforce.
+ */
 @Component
 public class DeleteSalesforceAccountTask implements DeleteAccountTask{
     Logger logger = LoggerFactory.getLogger(DeleteSalesforceAccountTask.class);
@@ -29,6 +32,15 @@ public class DeleteSalesforceAccountTask implements DeleteAccountTask{
     @Autowired
     private MakeCompositeRequest makeCompositeRequest;
 
+    /**
+     * Deletes a task in an account for salesforce.
+     * 
+     * @param user
+     * @param accountId
+     * @param taskId
+     * 
+     * @return void
+     */
     public void deleteAccountTask(User user, String accountId, String taskId) {
         logger.info("Delete Salesforce Account Task called");
 
@@ -47,6 +59,13 @@ public class DeleteSalesforceAccountTask implements DeleteAccountTask{
         
     }
 
+    /**
+     * Parses the response from salesforce.
+     * 
+     * @param responseBody
+     * 
+     * @return void
+     */
     private void parseResponse(String responseBody) {
         logger.info("Parsing response body");
         Util util = new Util();

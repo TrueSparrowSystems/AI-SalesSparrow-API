@@ -10,6 +10,9 @@ import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.globalConstants.UserConstants;
 
+/**
+ * DeleteAccountTaskFactory is a factory class that handles the deleting a task in an account.
+ */
 @Component
 public class DeleteAccountTaskFactory {
 
@@ -18,6 +21,15 @@ public class DeleteAccountTaskFactory {
     @Autowired
     DeleteSalesforceAccountTask deleteSalesforceAccountTask;
     
+    /**
+     * Deletes a task in an account.
+     * 
+     * @param user
+     * @param accountId
+     * @param taskId
+     * 
+     * @return void
+     */
     public void deleteAccountTask(User user, String accountId, String taskId) {
         logger.info("Delete Account Task Factory called");
         switch(user.getUserKind()) {

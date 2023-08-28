@@ -10,6 +10,9 @@ import com.salessparrow.api.lib.crmActions.deleteAccountTask.DeleteAccountTaskFa
 
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * DeleteTaskService is a service class that handles the deleting a task in an account.
+ */
 @Service
 public class DeleteTaskService {
     
@@ -18,6 +21,15 @@ public class DeleteTaskService {
     @Autowired
     private DeleteAccountTaskFactory deleteAccountTaskFactory;
 
+    /**
+     * Deletes a task in an account.
+     * 
+     * @param request
+     * @param accountId
+     * @param taskId
+     * 
+     * @return void
+     */
     public void deleteAccountTask(HttpServletRequest request, String accountId, String taskId) {
         logger.info("Delete task in account service called");
 
