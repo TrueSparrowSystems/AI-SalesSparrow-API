@@ -1,7 +1,7 @@
 package com.salessparrow.api.repositories;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
@@ -27,7 +27,7 @@ public class SalesforceOauthTokenRepository {
    * 
    * @return SalesforceOauthToken
    */
-  @CachePut(value = CacheConstants.SS_SALESFORCE_OAUTH_TOKEN_CACHE, key = "#salesforceOauthToken.externalUserId")
+  @CacheEvict(value = CacheConstants.SS_SALESFORCE_OAUTH_TOKEN_CACHE, key = "#salesforceOauthToken.externalUserId")
   public SalesforceOauthToken saveSalesforceOauthToken(SalesforceOauthToken salesforceOauthToken) {
     try {
       dynamoDBMapper.save(salesforceOauthToken);

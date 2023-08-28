@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salessparrow.api.domain.SalesforceOauthToken;
 import com.salessparrow.api.domain.SalesforceOrganization;
 import com.salessparrow.api.domain.SalesforceUser;
+import com.salessparrow.api.lib.Util;
 import com.salessparrow.api.repositories.SalesforceOauthTokenRepository;
 import com.salessparrow.api.repositories.SalesforceOrganizationRepository;
 import com.salessparrow.api.repositories.SalesforceUserRepository;
@@ -31,6 +32,9 @@ public class LoadFixture {
   @Autowired
   private SalesforceOrganizationRepository salesforceOrganizationRepository;
 
+  @Autowired
+  private Util util;
+
   /**
    * Load the fixture data.
    * 
@@ -43,6 +47,7 @@ public class LoadFixture {
     if (fixtureData.getSalesforce_users() != null) {
       for (FilePathData filePathData : fixtureData.getSalesforce_users()) {
         SalesforceUser salesforceUser = loadSalesForceUserFixture(filePathData.getFilepath());
+        salesforceUser.setCreatedAt(util.getCurrentTimeInDateFormat());
         salesforceUserRepository.saveSalesforceUser(salesforceUser);
       }
     }
@@ -50,6 +55,7 @@ public class LoadFixture {
     if (fixtureData.getSalesforce_oauth_tokens() != null) {
       for (FilePathData filePathData : fixtureData.getSalesforce_oauth_tokens()) {
         SalesforceOauthToken salesforceOauth = loadSalesForceOAuthTokenFixture(filePathData.getFilepath());
+        salesforceOauth.setCreatedAt(util.getCurrentTimeInDateFormat());
         salesforceOauthTokenRepository.saveSalesforceOauthToken(salesforceOauth);
       }
     }
@@ -57,6 +63,7 @@ public class LoadFixture {
     if (fixtureData.getSalesforce_organizations() != null) {
       for (FilePathData filePathData : fixtureData.getSalesforce_organizations()) {
         SalesforceOrganization salesforceOrganization = loadSalesForceOrganizationFixture(filePathData.getFilepath());
+        salesforceOrganization.setCreatedAt(util.getCurrentTimeInDateFormat());
         salesforceOrganizationRepository.saveSalesforceOrganization(salesforceOrganization);
       }
     }

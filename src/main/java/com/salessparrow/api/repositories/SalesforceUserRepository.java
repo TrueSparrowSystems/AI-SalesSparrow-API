@@ -1,7 +1,7 @@
 package com.salessparrow.api.repositories;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
@@ -27,7 +27,7 @@ public class SalesforceUserRepository {
    * 
    * @return SalesforceUser
    */
-  @CachePut(value=CacheConstants.SS_SALESFORCE_USER_CACHE, key="#salesforceUser.externalUserId")
+  @CacheEvict(value = CacheConstants.SS_SALESFORCE_USER_CACHE, key = "#salesforceUser.externalUserId")
   public SalesforceUser saveSalesforceUser(SalesforceUser salesforceUser) {
     try {
       dynamoDBMapper.save(salesforceUser);
@@ -49,7 +49,7 @@ public class SalesforceUserRepository {
    * 
    * @return SalesforceUser
    */
-  @Cacheable(value=CacheConstants.SS_SALESFORCE_USER_CACHE, key="#externalUserId")
+  @Cacheable(value = CacheConstants.SS_SALESFORCE_USER_CACHE, key = "#externalUserId")
   public SalesforceUser getSalesforceUserByExternalUserId(String externalUserId) {
     try {
       return dynamoDBMapper.load(SalesforceUser.class, externalUserId);
