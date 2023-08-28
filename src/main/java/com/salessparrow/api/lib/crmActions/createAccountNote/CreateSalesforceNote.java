@@ -1,4 +1,4 @@
-package com.salessparrow.api.lib.crmActions.createNote;
+package com.salessparrow.api.lib.crmActions.createAccountNote;
 
 import java.util.ArrayList;
 import java.util.HashMap;

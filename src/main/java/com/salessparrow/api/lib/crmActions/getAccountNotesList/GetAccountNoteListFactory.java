@@ -1,4 +1,4 @@
-package com.salessparrow.api.lib.crmActions.getNotesList;
+package com.salessparrow.api.lib.crmActions.getAccountNotesList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,9 +14,9 @@ import com.salessparrow.api.lib.globalConstants.UserConstants;
  * CRM.
  */
 @Component
-public class GetNoteListFactory {
+public class GetAccountNoteListFactory {
     @Autowired
-    private GetSalesforceNotesList getSalesforceNotesList;
+    private GetSalesforceAccountNotesList getSalesforceNotesList;
 
     /**
      * Get the list of notes for a given account.

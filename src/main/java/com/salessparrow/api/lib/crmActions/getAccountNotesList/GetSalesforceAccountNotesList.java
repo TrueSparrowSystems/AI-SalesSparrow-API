@@ -1,4 +1,4 @@
-package com.salessparrow.api.lib.crmActions.getNotesList;
+package com.salessparrow.api.lib.crmActions.getAccountNotesList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +29,7 @@ import com.salessparrow.api.lib.salesforce.helper.SalesforceQueryBuilder;
  * GetSalesforceNotesList is a class for the GetNotesList service for the Salesforce CRM.
  */
 @Component
-public class GetSalesforceNotesList implements GetNotesList{
+public class GetSalesforceAccountNotesList implements GetAccountNotesList{
     @Autowired
     private SalesforceConstants salesforceConstants;
 

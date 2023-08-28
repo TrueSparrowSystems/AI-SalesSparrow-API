@@ -1,4 +1,4 @@
-package com.salessparrow.api.lib.crmActions.createNote;
+package com.salessparrow.api.lib.crmActions.createAccountNote;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.salessparrow.api.lib.crmActions.getNoteDetails;
+package com.salessparrow.api.lib.crmActions.getAccountNoteDetails;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,9 +13,9 @@ import com.salessparrow.api.lib.globalConstants.UserConstants;
  * GetNoteDetailsFactory is a factory class for the GetNoteDetails action for the CRM.
  */
 @Component
-public class GetNoteDetailsFactory {
+public class GetAccountNoteDetailsFactory {
   @Autowired 
-  GetSalesforceNoteDetails getSalesforceNoteDetails;
+  GetSalesforceAccountNoteDetails getSalesforceNoteDetails;
 
   /**
    * getNoteDetails is a method that returns the details of a note.

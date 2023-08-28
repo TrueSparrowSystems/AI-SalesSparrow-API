@@ -1,4 +1,4 @@
-package com.salessparrow.api.lib.crmActions.getNoteDetails;
+package com.salessparrow.api.lib.crmActions.getAccountNoteDetails;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ import com.salessparrow.api.lib.salesforce.wrappers.SalesforceGetNoteContent;
 import com.salessparrow.api.lib.salesforce.helper.SalesforceQueryBuilder;
 
 @Component
-public class GetSalesforceNoteDetails implements GetNoteDetails {
+public class GetSalesforceAccountNoteDetails implements GetAccountNoteDetails {
 
     @Autowired
     private SalesforceConstants salesforceConstants;
