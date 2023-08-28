@@ -28,5 +28,10 @@
         "parameter": "description",
         "param_error_identifier": "description_too_long",
         "message": "Description too long. Please shorten and try again."
+    },
+    "invalid_task_id":{
+        "parameter": "task_id",
+        "param_error_identifier": "invalid_task_id",
+        "message": "Invalid task ID. Please double check and try again."
     }
 }
