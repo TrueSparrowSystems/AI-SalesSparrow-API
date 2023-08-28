@@ -11,6 +11,8 @@ Refer to [ENVIRONMENT_VARS](repo-docs/ENVIRONMENT_VARS.md) for detailed descript
 ## Project Structure
 Refer to [PROJECT_STRUCTURE](repo-docs/PROJECT_STRUCTURE.md) for details on the project structure.
 
+## Changelog
+Stay up-to-date with the latest changes and improvements in our API by referring to our [CHANGELOG](repo-docs/CHANGELOG.md).
 
 ## Release Process
 Refer to [RELEASE_PROCESS](repo-docs/RELEASE_PROCESS.md) to ensure smooth and consistent software releases. This process outlines the steps to prepare, package, and distribute new versions of our software.
