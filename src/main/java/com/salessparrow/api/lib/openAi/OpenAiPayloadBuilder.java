@@ -52,8 +52,7 @@ public class OpenAiPayloadBuilder {
     "              \"required\": [\"description\", \"due_date\"]\n" + 
     "            }\n" +
     "          }\n" +
-    "        },\n" +
-    "        \"required\": [\"add_task\"]\n" +
+    "        }\n" +
     "      }\n" +
     "    }\n" +
     "  ]\n" +

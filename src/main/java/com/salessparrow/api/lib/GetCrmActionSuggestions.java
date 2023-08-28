@@ -3,9 +3,6 @@ package com.salessparrow.api.lib;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,6 +18,7 @@ import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.openAi.OpenAiPayloadBuilder;
 import com.salessparrow.api.lib.openAi.OpenAiRequest;
+import com.salessparrow.api.lib.validators.DateFormatValidator;
 
 /**
  * GetCrmActionSuggestions is a class for getting the crm action suggestions.
@@ -32,6 +30,8 @@ public class GetCrmActionSuggestions {
 
   @Autowired
   private OpenAiPayloadBuilder openAiPayloadBuilder;
+
+  private DateFormatValidator dateFormatValidator = new DateFormatValidator(); 
 
   private Logger logger = org.slf4j.LoggerFactory.getLogger(SuggestionsController.class);
   
@@ -80,13 +80,9 @@ public class GetCrmActionSuggestions {
 
           // Format the response check if duedate format is YYYY-MM-DD else remove duedate
           String dueDate = addTask.getDueDate();
-          if (dueDate != null && dueDate.length() > 0) {
-            Pattern pattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
-            Matcher matcher = pattern.matcher(dueDate);
-            if (matcher.find()) {
-              addTaskSuggestionEntityDto.setDueDate(dueDate);
-            }
-          }
+          if (dateFormatValidator.isValid(dueDate, null)) {
+            addTaskSuggestionEntityDto.setDueDate(dueDate);
+          } 
 
           formattedTaskSuggestionEntityDtos.add(addTaskSuggestionEntityDto);
         }
@@ -97,7 +93,7 @@ public class GetCrmActionSuggestions {
     } catch (Exception e) {
         throw new CustomException(
             new ErrorObject(
-                "l_c_gnl_gsnl_1",
+                "l_gcas_p_1",
                 "something_went_wrong",
                 e.getMessage()
             )
