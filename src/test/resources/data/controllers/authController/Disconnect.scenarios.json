@@ -1,0 +1,9 @@
+{
+  "testPostLogout": [
+    {
+      "description": "Should disconnect user for valid cookie",
+      "input": {},
+      "output": {}
+    }
+  ]
+}
