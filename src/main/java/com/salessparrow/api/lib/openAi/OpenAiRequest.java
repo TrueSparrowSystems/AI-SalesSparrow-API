@@ -25,6 +25,11 @@ public class OpenAiRequest {
 
   private Logger logger = org.slf4j.LoggerFactory.getLogger(SuggestionsController.class);
   
+  /**
+   * Make a request to the OpenAI API.
+   * @param payload
+   * @return
+   */
   public HttpClient.HttpResponse makeRequest(Object payload) {
     String httpReqUrl = openAiConstants.chatCompletionUrl();
 

@@ -35,6 +35,11 @@ public class GetCrmActionSuggestions {
 
   private Logger logger = org.slf4j.LoggerFactory.getLogger(SuggestionsController.class);
   
+  /**
+   * Get the crm action suggestions.
+   * @param text
+   * @return
+   */
   public CrmActionSuggestionsFormatterDto getTaskSuggestions(String text) {
     logger.info("Crm actions suggestions lib called");
     
@@ -46,6 +51,11 @@ public class GetCrmActionSuggestions {
     return parseResponse(response);
   }
 
+  /**
+   * Parse the response from openai.
+   * @param responseBody
+   * @return
+   */
   private CrmActionSuggestionsFormatterDto parseResponse(String responseBody){
     CrmActionSuggestionsFormatterDto crmActionSuggestionsFormatterDto = new CrmActionSuggestionsFormatterDto();
     
