@@ -1,0 +1,68 @@
+[
+  {
+    "description": "Should return correct result",
+    "input": {
+      "payload": {
+        "model": "model",
+        "messages": [
+          {
+            "role": "user",
+            "content": "hello"
+          }
+        ]
+      }
+    },
+    "mocks":{
+      "makeRequest":{
+        "id": "chatcmpl-0000",
+        "object": "chat.completion",
+        "created": 1692945329,
+        "model": "gpt-3.5-turbo-0613",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": null,
+              "function_call": {
+                "name": "suggest_actions",
+                "arguments": "{\n  \"add_task\": [\n    {\n      \"description\": \"Review calendar for editorial, advertorial, and social media content\",\n      \"due_date\": \"2023-08-30\"\n    }\n  ]\n}"
+              }
+            },
+            "finish_reason": "function_call"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 168,
+          "completion_tokens": 52,
+          "total_tokens": 220
+        }
+      }
+    },
+    "output": {
+      "id": "chatcmpl-0000",
+      "object": "chat.completion",
+      "created": 1692945329,
+      "model": "gpt-3.5-turbo-0613",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": null,
+            "function_call": {
+              "name": "suggest_actions",
+              "arguments": "{\n  \"add_task\": [\n    {\n      \"description\": \"Review calendar for editorial, advertorial, and social media content\",\n      \"due_date\": \"2023-08-30\"\n    }\n  ]\n}"
+            }
+          },
+          "finish_reason": "function_call"
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 168,
+        "completion_tokens": 52,
+        "total_tokens": 220
+      }
+    }
+  }
+]
