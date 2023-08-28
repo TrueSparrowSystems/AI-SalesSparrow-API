@@ -3,11 +3,13 @@ package com.salessparrow.api.lib.openAi;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import com.salessparrow.api.config.CoreConstants;
+import com.salessparrow.api.controllers.SuggestionsController;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.globalConstants.OpenAiConstants;
@@ -20,6 +22,8 @@ import com.salessparrow.api.lib.httpLib.HttpClient;
 public class OpenAiRequest {
   @Autowired
   private OpenAiConstants openAiConstants;
+
+  private Logger logger = org.slf4j.LoggerFactory.getLogger(SuggestionsController.class);
   
   public HttpClient.HttpResponse makeRequest(Object payload) {
     String httpReqUrl = openAiConstants.chatCompletionUrl();
@@ -29,6 +33,7 @@ public class OpenAiRequest {
 
     Integer timeoutMillis = openAiConstants.timeoutMillis();
     try {
+      logger.info("Making request to OpenAI API");
       HttpClient.HttpResponse response = HttpClient.makePostRequest(
         httpReqUrl,
         headers,

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.salessparrow.api.controllers.SuggestionsController;
 import com.salessparrow.api.dto.entities.AddTaskSuggestionEntityDto;
 import com.salessparrow.api.dto.formatter.CrmActionSuggestionsFormatterDto;
 import com.salessparrow.api.exception.CustomException;
@@ -30,8 +32,12 @@ public class GetCrmActionSuggestions {
 
   @Autowired
   private OpenAiPayloadBuilder openAiPayloadBuilder;
+
+  private Logger logger = org.slf4j.LoggerFactory.getLogger(SuggestionsController.class);
   
   public CrmActionSuggestionsFormatterDto getTaskSuggestions(String text) {
+    logger.info("Crm actions suggestions lib called");
+    
     String escapedText = escapeForJson(text);
     String payload = openAiPayloadBuilder.payloadForCrmActionsSuggestions(escapedText);
     
@@ -89,6 +95,11 @@ public class GetCrmActionSuggestions {
     }
   }
 
+  /**
+   * Escape the input string for json.
+   * @param input
+   * @return
+   */
   private String escapeForJson(String input) {
     return input.replace("\"", "\\\"").replace("\n", "\\n");
   }
