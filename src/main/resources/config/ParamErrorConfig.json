@@ -38,5 +38,10 @@
         "parameter": "text",
         "param_error_identifier": "text_too_long",
         "message": "Text too long. Please shorten and try again."
+    },
+    "invalid_account_id": {
+        "parameter": "account_id",
+        "param_error_identifier": "invalid_account_id",
+        "message": "The account id you sent is incorrect. Please double check and try again."
     }
 }
