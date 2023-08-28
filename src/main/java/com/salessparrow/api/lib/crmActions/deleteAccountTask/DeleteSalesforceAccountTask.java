@@ -79,7 +79,7 @@ public class DeleteSalesforceAccountTask implements DeleteAccountTask{
             String errorBody = deleteNoteCompositeResponse.get("body").asText();
 
             // MALFORMED_ID or NOT_FOUND
-            if (deleteNoteStatusCode == 400 || deleteNoteStatusCode != 404) {
+            if (deleteNoteStatusCode == 400 || deleteNoteStatusCode == 404) {
 
                 throw new CustomException(
                     new ParamErrorObject(
