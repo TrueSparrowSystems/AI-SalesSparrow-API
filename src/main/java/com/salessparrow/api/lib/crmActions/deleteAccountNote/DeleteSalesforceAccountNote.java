@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.salessparrow.api.domain.User;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.Util;
+import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.errorLib.ParamErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
@@ -74,13 +75,20 @@ public class DeleteSalesforceAccountNote implements DeleteAccountNoteInterface {
     if (deleteNoteStatusCode != 200 && deleteNoteStatusCode != 201 && deleteNoteStatusCode != 204) {
       String errorBody = deleteNoteCompositeResponse.get("body").asText();
 
-      throw new CustomException(
-        new ParamErrorObject(
-          "l_ca_dan_dasn_pr_1", 
-          errorBody, 
-          Arrays.asList("invalid_note_id")
-        )
-      );
+      // MALFORMED_ID or NOT_FOUND
+      if (deleteNoteStatusCode == 400 || deleteNoteStatusCode == 404) {
+        throw new CustomException(
+          new ParamErrorObject(
+            "l_ca_dan_dasn_pr_1", 
+            errorBody, 
+            Arrays.asList("invalid_note_id")));
+      } else {
+        throw new CustomException(
+          new ErrorObject(
+            "l_ca_dan_dasn_pr_2",
+            "something_went_wrong",
+            errorBody));
+      }
     }
   }
 }
