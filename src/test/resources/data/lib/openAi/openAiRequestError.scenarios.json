@@ -1,0 +1,56 @@
+[
+  {
+    "description": "Test 401 response",
+    "input": {
+      "payload": {
+        "model": "model",
+        "messages": [
+          {
+            "role": "user",
+            "content": "hello"
+          }
+        ]
+      },
+      "statusCode": 401
+    },
+    "output": {
+      "apiErrorIdentifier": "something_went_wrong"
+    }
+  },
+  {
+    "description": "Test 400 response",
+    "input": {
+      "payload": {
+        "model": "model",
+        "messages": [
+          {
+            "role": "user",
+            "content": "hello"
+          }
+        ]
+      },
+      "statusCode": 400
+    },
+    "output": {
+      "apiErrorIdentifier": "something_went_wrong"
+    }
+  },
+  {
+    "description": "Test 500 response",
+    "input": {
+      "payload": {
+        "model": "model",
+        "messages": [
+          {
+            "role": "user",
+            "content": "hello"
+          }
+        ]
+      },
+      "statusCode": 500
+    },
+    "output": {
+      "apiErrorIdentifier": "something_went_wrong"
+    }
+  }
+]

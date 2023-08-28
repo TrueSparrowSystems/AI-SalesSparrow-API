@@ -2,6 +2,8 @@ package com.salessparrow.api.lib;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
@@ -96,5 +98,19 @@ public class Util {
         )
       );
     }
+  }
+  
+  /** Get date format from datetime
+   * 
+   * @param date
+   * 
+   * @return String
+   */
+  public String getDateFormatFromDatetime(Date date) {
+    if (date != null) {
+      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+      return dateFormat.format(date);
+    }
+    return null;
   }
 }
