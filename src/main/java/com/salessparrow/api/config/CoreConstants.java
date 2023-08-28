@@ -88,7 +88,7 @@ public class CoreConstants {
    * @return String
    */
   public static String openAiApiKey() {
-    return System.getenv("OPENAI_API_KEY");
+    return SecretConstants.openAiApiKey();
   }
 
   /**

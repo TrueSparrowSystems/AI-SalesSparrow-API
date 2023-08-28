@@ -84,7 +84,7 @@ public class PostCrmActionsSuggestionsTest {
       when(openAiRequestMock.makeRequest(any())).thenReturn(getAccountMockResponse);
 
       String expectedOutput = objectMapper.writeValueAsString(testDataItem.getOutput());
-      String cookieValue = Constants.SALESFORCE_ACTIVE_USET_COOKIE_VALUE;
+      String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
       
       ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/suggestions/crm-actions")
         .content(objectMapper.writeValueAsString(testDataItem.getInput()))
