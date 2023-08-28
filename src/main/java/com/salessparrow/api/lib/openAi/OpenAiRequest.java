@@ -27,7 +27,7 @@ public class OpenAiRequest {
     Map<String, String> headers = new HashMap<>();
     headers.put("Authorization", "Bearer " + CoreConstants.openAiApiKey());
 
-    Integer timeoutMillis = 30000;
+    Integer timeoutMillis = openAiConstants.timeoutMillis();
     try {
       HttpClient.HttpResponse response = HttpClient.makePostRequest(
         httpReqUrl,

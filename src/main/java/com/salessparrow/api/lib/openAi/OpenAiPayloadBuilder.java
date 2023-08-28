@@ -23,7 +23,7 @@ public class OpenAiPayloadBuilder {
     "  \"messages\": [\n" +
     "    {\n" +
     "      \"role\": \"user\",\n" +
-    "      \"content\": \"You are an AI assistant which gives suggestion on creating task using the input message.Only use the functions you have been provided with. \\nInput message: \\n" + text + "\\n\"\n" +
+    "      \"content\": \"You are an AI assistant which gives suggestion on creating task in crm using the input message.Only use the functions you have been provided with. \\nInput message: \\n" + text + "\\n\"\n" +
     "    }\n" +
     "  ],\n" +
     "  \"functions\": [\n" +
@@ -46,7 +46,7 @@ public class OpenAiPayloadBuilder {
     "                },\n" +
     "                \"due_date\": {\n" +
     "                  \"type\": \"string\",\n" +
-    "                  \"description\": \"Due date for task. Must be in YYYY-MM-DD format. This is mandatory.\" \n" +
+    "                  \"description\": \"Due date for task in YYYY-MM-DD format. Today's date is " + getTodaysDate() + ". This is mandatory\"\n" +
     "                }\n" +
     "              },\n" +
     "              \"required\": [\"description\", \"due_date\"]\n" + 
@@ -60,7 +60,10 @@ public class OpenAiPayloadBuilder {
     "}";
   }
 
-  // get todays date in YYYY-MM-DD format
+  /**
+   * Todays date in yyyy-MM-dd format.
+   * @return
+   */
   public String getTodaysDate() {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     return sdf.format(new Date());
