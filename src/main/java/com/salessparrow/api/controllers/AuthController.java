@@ -44,9 +44,10 @@ public class AuthController {
   @GetMapping("/salesforce/redirect-url")
   public ResponseEntity<RedirectUrlFormatterDto> getSalesforceRedirectUrl(
       @Valid @ModelAttribute SalesforceRedirectUrlDto salesforceRedirectUrlDto) {
-    
-    RedirectUrlFormatterDto redirectUrlFormatterDto = redirectUrlService.getSalesforceOauthUrl(salesforceRedirectUrlDto);
-    
+
+    RedirectUrlFormatterDto redirectUrlFormatterDto = redirectUrlService
+        .getSalesforceOauthUrl(salesforceRedirectUrlDto);
+
     return ResponseEntity.ok().body(redirectUrlFormatterDto);
   }
 
@@ -74,5 +75,15 @@ public class AuthController {
     headers = cookieHelper.clearUserCookie(headers);
 
     return ResponseEntity.ok().headers(headers).body(null);
+  }
+
+  @PostMapping("/disconnect")
+  public ResponseEntity<String> disconnect(HttpServletRequest request) {
+    logger.info("User disconnect request received");
+
+    HttpHeaders headers = new HttpHeaders();
+    headers = cookieHelper.clearUserCookie(headers);
+
+    return ResponseEntity.noContent().headers(headers).build();
   }
 }
