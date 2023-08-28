@@ -7,7 +7,9 @@ import org.junit.jupiter.api.Test;
 import com.salessparrow.api.lib.globalConstants.UserConstants;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 public class UserConstantsTest {
     @Test
     void testGetName() {

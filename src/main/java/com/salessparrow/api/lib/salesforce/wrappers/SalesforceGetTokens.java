@@ -1,6 +1,6 @@
 package com.salessparrow.api.lib.salesforce.wrappers;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,13 +53,13 @@ public class SalesforceGetTokens {
           requestBody,
           10000);
     } catch (Exception e) {
-      List<String> paramErrorIdentifiers = Arrays.asList("invalid_code");
-      ParamErrorObject paramErrorObject = new ParamErrorObject(
+      List<String> paramErrorIdentifiers = new ArrayList<>();
+      paramErrorIdentifiers.add("invalid_code");
+      
+      throw new CustomException(new ParamErrorObject(
         "l_s_w_sgt_gt_1", 
       e.getMessage(), 
-      paramErrorIdentifiers);
-
-      throw new CustomException(paramErrorObject);
+      paramErrorIdentifiers));
     }
     return response;
   }

@@ -2,8 +2,10 @@ package com.salessparrow.api.unit.globalConstants;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 
+@SpringBootTest
 public class SalesforceConstantsTest {
 
     @Test
