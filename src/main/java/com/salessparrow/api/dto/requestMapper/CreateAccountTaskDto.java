@@ -10,7 +10,7 @@ import lombok.Data;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class CreateTaskInAccountDto {
+public class CreateAccountTaskDto {
 
     @NotBlank(message = "missing_crm_organization_user_id")
     private String crmOrganizationUserId;

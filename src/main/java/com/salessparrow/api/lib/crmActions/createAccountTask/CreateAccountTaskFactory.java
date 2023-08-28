@@ -1,4 +1,4 @@
-package com.salessparrow.api.lib.crmActions.createTaskInAccount;
+package com.salessparrow.api.lib.crmActions.createAccountTask;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.formatter.CreateTaskFormatterDto;
-import com.salessparrow.api.dto.requestMapper.CreateTaskInAccountDto;
+import com.salessparrow.api.dto.requestMapper.CreateAccountTaskDto;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.globalConstants.UserConstants;
@@ -16,12 +16,12 @@ import com.salessparrow.api.lib.globalConstants.UserConstants;
  * CreateTaskFactory class is responsible for creating a task in CRM
  */
 @Component
-public class CreateTaskInAccountFactory {
+public class CreateAccountTaskFactory {
 
-    Logger logger = LoggerFactory.getLogger(CreateTaskInAccountFactory.class);
+    Logger logger = LoggerFactory.getLogger(CreateAccountTaskFactory.class);
 
     @Autowired
-    CreateSalesforceTaskInAccount createSalesforceTaskInAccount;
+    CreateSalesforceAccountTask createSalesforceAccountTask;
 
     /**
      * Create a task in CRM
@@ -32,11 +32,11 @@ public class CreateTaskInAccountFactory {
      * 
      * @return CreateTaskFormatterDto object
      */
-    public CreateTaskFormatterDto createTaskInAccount(User user, String accountId, CreateTaskInAccountDto task) {
+    public CreateTaskFormatterDto createAccountTask(User user, String accountId, CreateAccountTaskDto task) {
         switch(user.getUserKind()) {
         case UserConstants.SALESFORCE_USER_KIND:
           logger.info("calling createTask of salesforceCreateTask");
-          return createSalesforceTaskInAccount.createTaskInAccount(user, accountId, task);
+          return createSalesforceAccountTask.createAccountTask(user, accountId, task);
         default:
           throw new CustomException(
             new ErrorObject(
