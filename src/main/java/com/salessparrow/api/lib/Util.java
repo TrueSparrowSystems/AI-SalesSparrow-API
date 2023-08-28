@@ -69,6 +69,8 @@ public class Util {
 
   /**
    * Escape special characters in a string for use in a regular expression.
+   * SOQL is important from security point of view.
+   * Refer https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_select_quotedstringescapes.htm for more details.
    * 
    * @param input
    * 
@@ -84,6 +86,13 @@ public class Util {
     return input;
   }
 
+  /**
+   * URL encode a string
+   * 
+   * @param input
+   * 
+   * @return String
+   */
   public static String urlEncoder(String input){
     if(input == null || input == "") 
       return input;
