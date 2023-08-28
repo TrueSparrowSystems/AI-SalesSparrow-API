@@ -19,6 +19,7 @@ import com.salessparrow.api.dto.entities.TaskEntity;
 import com.salessparrow.api.dto.formatter.GetTasksListFormatterDto;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.Util;
+import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.errorLib.ParamErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
@@ -89,13 +90,19 @@ public class GetSalesforceAccountTasksList {
     if (getTasksStatusCode != 200 && getTasksStatusCode != 201) {
       String errorBody = getTasksCompositeResponse.get("body").asText();
 
-      throw new CustomException(
-        new ParamErrorObject(
-          "l_ca_gatl_gsatl_pr_1", 
-          errorBody, 
-          Arrays.asList("invalid_account_id")
-        )
-      );
+      if (getTasksStatusCode == 400) {
+        throw new CustomException(
+          new ParamErrorObject(
+            "l_ca_gatl_gsatl_pr_1", 
+            errorBody, 
+            Arrays.asList("invalid_account_id")));
+      } else {
+        throw new CustomException(
+          new ErrorObject(
+            "l_ca_gatl_gsatl_pr_2",
+            "something_went_wrong",
+            errorBody));
+      }
     }
 
     JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");;
