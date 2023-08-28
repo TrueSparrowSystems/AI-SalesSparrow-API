@@ -1,4 +1,4 @@
-package com.salessparrow.api.lib.crmActions.createTaskInAccount;
+package com.salessparrow.api.lib.crmActions.createAccountTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.formatter.CreateTaskFormatterDto;
-import com.salessparrow.api.dto.requestMapper.CreateTaskInAccountDto;
+import com.salessparrow.api.dto.requestMapper.CreateAccountTaskDto;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.Util;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
@@ -29,9 +29,9 @@ import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
  * CreateSalesforceTask class is responsible for creating a task in Salesforce
  */
 @Component
-public class CreateSalesforceTaskInAccount implements CreateTaskInAccount{
+public class CreateSalesforceAccountTask implements CreateAccountTask{
 
-    Logger logger = LoggerFactory.getLogger(CreateSalesforceTaskInAccount.class);
+    Logger logger = LoggerFactory.getLogger(CreateSalesforceAccountTask.class);
 
     @Autowired
     private SalesforceConstants salesforceConstants;
@@ -48,7 +48,7 @@ public class CreateSalesforceTaskInAccount implements CreateTaskInAccount{
      * 
      * @return CreateTaskFormatterDto object
      */
-    public CreateTaskFormatterDto createTaskInAccount(User User, String accountId, CreateTaskInAccountDto task) {
+    public CreateTaskFormatterDto createAccountTask(User User, String accountId, CreateAccountTaskDto task) {
         String salesforceUserId = User.getExternalUserId();
 
         String taskSubject = getTaskSubjectFromDescription(task);
@@ -123,7 +123,7 @@ public class CreateSalesforceTaskInAccount implements CreateTaskInAccount{
      * 
      * @return String task subject
      */
-    private String getTaskSubjectFromDescription(CreateTaskInAccountDto task) {
+    private String getTaskSubjectFromDescription(CreateAccountTaskDto task) {
         logger.info("getting task subject from description");
         if (task.getDescription().length() < 60) {
             return task.getDescription();
