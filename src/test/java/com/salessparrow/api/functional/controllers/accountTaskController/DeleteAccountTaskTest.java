@@ -93,7 +93,7 @@ public class DeleteAccountTaskTest {
 
         // Perform the request
         String requestBody = objectMapper.writeValueAsString(testScenario.getInput().get("body"));
-        String url = "/api/v1/accounts/" + accountId + "/tasks" + taskId;
+        String url = "/api/v1/accounts/" + accountId + "/tasks/" + taskId;
 
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete(url)
                 .cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
@@ -105,6 +105,9 @@ public class DeleteAccountTaskTest {
         String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
         
         if(resultActions.andReturn().getResponse().getStatus() == 204) {
+            if (expectedOutput.equals("{}")) {
+                expectedOutput = "";
+            }
             assertEquals(expectedOutput, actualOutput);
         } else {
             common.compareErrors(testScenario, actualOutput);

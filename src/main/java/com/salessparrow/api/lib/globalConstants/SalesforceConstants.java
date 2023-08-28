@@ -61,4 +61,8 @@ public class SalesforceConstants {
   public String salesforceCreateTaskUrl(){
     return sObjectsPath() + "/Task";
   }
+
+  public String salesforceDeleteAccountTaskUrl(String taskId){
+    return sObjectsPath() + "/Task/" + taskId;
+  }
 }
