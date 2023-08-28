@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -77,12 +78,11 @@ public class GetAccountListTest {
      // Load fixture data
     String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
     FixtureData fixtureData = common.loadFixture("classpath:fixtures/controllers/accountController/getAccountList.fixtures.json", currentFunctionName);
-    System.out.println("fixtureData++++++ "+fixtureData);
     loadFixture.perform(fixtureData);
 
     // Read data from the scenario
     ObjectMapper objectMapper = new ObjectMapper();
-    String cookieValue = Constants.SALESFORCE_ACTIVE_USET_COOKIE_VALUE;
+    String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
 
     // Prepare mock responses
     HttpResponse getAccountMockResponse = new HttpResponse();
@@ -92,7 +92,6 @@ public class GetAccountListTest {
     // Perform the request
     String url = "/api/v1/accounts";
     String q = objectMapper.writeValueAsString(testScenario.getInput().get("q"));
-    System.out.println("q++++++ "+q);
 
     ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(url)
       .cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
@@ -119,6 +118,9 @@ public class GetAccountListTest {
     String scenariosPath = "classpath:data/controllers/accountController/getAccountList.scenarios.json";
     Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
     ObjectMapper objectMapper = new ObjectMapper();
-    return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});
+
+    try (InputStream inputStream = resource.getInputStream()) {
+      return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});
+    }
   }
 }

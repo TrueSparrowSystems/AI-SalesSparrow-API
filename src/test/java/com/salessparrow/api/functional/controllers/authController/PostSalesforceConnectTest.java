@@ -117,6 +117,7 @@ public class PostSalesforceConnectTest {
           .contentType(MediaType.APPLICATION_JSON));
 
       String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
+      System.out.println("actualOutput: " + actualOutput);
 
       if (resultActions.andReturn().getResponse().getStatus() == 200) {
         assertEquals(objectMapper.writeValueAsString(testDataItem.getOutput()), actualOutput);

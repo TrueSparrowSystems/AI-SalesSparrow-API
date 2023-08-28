@@ -38,6 +38,8 @@ build/
 ### Environment Variables ###
 .env
 set*_env_vars.sh
+secrets.json
+test.secrets.json
 
 ### Logs files ###
 *.log

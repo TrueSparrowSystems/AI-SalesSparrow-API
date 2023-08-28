@@ -9,6 +9,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -38,6 +39,8 @@ import com.salessparrow.api.helper.LoadFixture;
 import com.salessparrow.api.helper.Scenario;
 import com.salessparrow.api.helper.Setup;
 import com.salessparrow.api.lib.globalConstants.CookieConstants;
+import com.salessparrow.api.helper.Constants;
+
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
 import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
@@ -95,7 +98,7 @@ public class GetNoteListTest {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
-    String cookieValue = (String) testScenario.getInput().get("cookie");
+    String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
     String accountId = (String) testScenario.getInput().get("accountId");
     List<String> documentIds = (List<String>) testScenario.getInput().get("documentId");
 
@@ -146,10 +149,13 @@ public class GetNoteListTest {
     return testScenarios.stream();
   }
 
-  public static List<Scenario> loadScenarios() throws IOException {
+  private static List<Scenario> loadScenarios() throws IOException {
     String scenariosPath = "classpath:data/controllers/accountController/getNotesList.scenarios.json";
     Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
     ObjectMapper objectMapper = new ObjectMapper();
-    return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});
+
+    try (InputStream inputStream = resource.getInputStream()) {
+      return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});
+    }
   }
 }

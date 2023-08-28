@@ -29,10 +29,13 @@ import com.salessparrow.api.lib.salesforce.wrappers.SalesforceGetTokens;
 import com.salessparrow.api.repositories.SalesforceOauthTokenRepository;
 import com.salessparrow.api.repositories.SalesforceOrganizationRepository;
 import com.salessparrow.api.repositories.SalesforceUserRepository;
+import jakarta.servlet.http.HttpServletRequest;
+
 
 @Service
 public class AuthService {
 
+  private String reqApiSource;
   private String code;
   private String redirectUri;
 
@@ -76,12 +79,14 @@ public class AuthService {
    * Connect to Salesforce and create user if not exists.
    * 
    * @param params
+   * @param request
    * 
    * @return AuthServiceDto
    */
-  public AuthServiceDto connectToSalesforce(SalesforceConnectDto params) {
-    this.isNewUser = true; // setting default value true to this variable, this will be updated based on
-                           // conditions in further processing
+  public AuthServiceDto connectToSalesforce(SalesforceConnectDto params, HttpServletRequest request) {
+    this.reqApiSource = (String) request.getAttribute("api_source");
+
+    this.isNewUser = true; // setting default value true to this variable, this will be updated based on conditions in further processing
 
     code = params.getCode();
     redirectUri = params.getRedirect_uri();
@@ -294,7 +299,7 @@ public class AuthService {
 
     String userLoginCookieValue = cookieHelper.getCookieValue(this.salesforceUser,
         UserConstants.SALESFORCE_USER_KIND,
-        this.decryptedSalt);
+        this.decryptedSalt, reqApiSource);
 
     authServiceDto.setCurrentUser(currentUserEntityDto);
     authServiceDto.setCurrentUserLoginCookie(userLoginCookieValue);

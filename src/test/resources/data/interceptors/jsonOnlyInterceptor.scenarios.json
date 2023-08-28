@@ -1,0 +1,13 @@
+[
+  {
+    "description": "Should return 415 content type error",
+    "input": {},
+    "output": {
+      "http_code":415,
+      "message":"Unsupported Media Type. Content-Type header should be application/json.",
+      "code":"UNSUPPORTED_MEDIA_TYPE",
+      "internal_error_identifier":"i_joi_ph_1",
+      "param_errors":[]
+    }
+  }
+]

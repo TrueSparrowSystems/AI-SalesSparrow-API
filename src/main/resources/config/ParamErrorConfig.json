@@ -1,17 +1,37 @@
 {
+    "invalid_code": {
+        "parameter": "code",
+        "param_error_identifier": "invalid_code",
+        "message": "The code you sent is incorrect. Please double check and try again."
+    },
     "invalid_email": {
         "parameter": "email",
         "param_error_identifier": "invalid_email",
         "message": "The email address you entered is incorrect. Please double check and try again."
     },
-    "invalid_redirect_uri":{
+    "invalid_redirect_uri": {
         "parameter": "redirect_uri",
         "param_error_identifier": "invalid_redirect_uri",
         "message": "Invalid redirect URI. Please double check and try again."
     },
-    "search_term_too_long":{
+    "search_term_too_long": {
       "parameter": "q",
       "param_error_identifier": "search_term_too_long",
       "message": "Search term too long. Please shorten and try again."
+    },
+    "invalid_due_date": {
+        "parameter": "due_date",
+        "param_error_identifier": "invalid_due_date",
+        "message": "Invalid or missing due date. Please double check and try again."
+    },
+    "description_too_long": {
+        "parameter": "description",
+        "param_error_identifier": "description_too_long",
+        "message": "Description too long. Please shorten and try again."
+    },
+    "text_too_long": {
+        "parameter": "text",
+        "param_error_identifier": "text_too_long",
+        "message": "Text too long. Please shorten and try again."
     }
 }

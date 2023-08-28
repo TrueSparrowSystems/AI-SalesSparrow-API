@@ -7,6 +7,7 @@ import java.util.Collection;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.globalConstants.CacheConstants;
+import com.salessparrow.api.utility.CacheKeyGenerator;
 import com.salessparrow.api.utility.Memcached;
 
 import net.spy.memcached.AddrUtil;
@@ -22,7 +23,6 @@ import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.cache.interceptor.CacheResolver;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.cache.interceptor.SimpleCacheErrorHandler;
-import org.springframework.cache.interceptor.SimpleKeyGenerator;
 import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -95,13 +95,13 @@ public class MemcachedConfig implements CachingConfigurer {
   } 
 
   /**
-   * Key Generator
+   * Key Generator is overriden to include a prefix that can be different for different environments.
    * 
    * @return KeyGenerator
    */
   @Override
   public KeyGenerator keyGenerator() {
-    return new SimpleKeyGenerator();
+    return new CacheKeyGenerator();
   }
 
   /**
