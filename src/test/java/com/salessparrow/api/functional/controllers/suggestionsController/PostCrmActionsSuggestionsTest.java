@@ -72,11 +72,11 @@ public class PostCrmActionsSuggestionsTest {
   @Test
   public void testPostCrmActionsSuggestions() throws Exception {
     String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
-    FixtureData fixtureData = common.loadFixture("classpath:fixtures/controllers/suggestionsController/postCrmActionsSuggestions.fixtures.json",
+    FixtureData fixtureData = common.loadFixture("classpath:fixtures/functional/controllers/suggestionsController/postCrmActionsSuggestions.fixtures.json",
       currentFunctionName);
     loadFixture.perform(fixtureData);
 
-    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/controllers/suggestionsController/crmActionsSuggestions.scenarios.json");
+    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/functional/controllers/suggestionsController/crmActionsSuggestions.scenarios.json");
     for (Scenario testDataItem : testDataItems) {
       ObjectMapper objectMapper = new ObjectMapper();
       HttpResponse getAccountMockResponse = new HttpResponse();

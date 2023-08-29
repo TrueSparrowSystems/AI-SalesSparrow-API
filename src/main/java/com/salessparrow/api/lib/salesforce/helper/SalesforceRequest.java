@@ -19,7 +19,7 @@ public class SalesforceRequest {
   private SalesforceOAuthToken getAccessTokenService;
 
   @Autowired
-  private SalesforceOauthTokenRepository sfOauthTokenRepository;
+  private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
 
   /**
    * Make a request to the Salesforce API.
@@ -30,7 +30,7 @@ public class SalesforceRequest {
    * @return T
    */
   public <T> T makeRequest(String salesforceUserId, SalesforceRequestInterface<T> request) {
-    SalesforceOauthToken sfOAuthToken = sfOauthTokenRepository
+    SalesforceOauthToken sfOAuthToken = salesforceOauthTokenRepository
         .getSalesforceOauthTokenByExternalUserId(salesforceUserId);
 
     String decryptedAccessToken = getAccessTokenService.fetchAccessToken(sfOAuthToken);

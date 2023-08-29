@@ -5,7 +5,6 @@ import com.salessparrow.api.domain.SalesforceOrganization;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -14,9 +13,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class SalesforceOrganizationRepository {
 
-    @Autowired
-    private DynamoDBMapper dynamoDBMapper;
+    private final DynamoDBMapper dynamoDBMapper;
 
+    public SalesforceOrganizationRepository(DynamoDBMapper dynamoDBMapper) {
+        this.dynamoDBMapper = dynamoDBMapper;
+    }
+    
     /**
      * Saves a SalesforceOrganization to the salesforce_organizations table.
      * 

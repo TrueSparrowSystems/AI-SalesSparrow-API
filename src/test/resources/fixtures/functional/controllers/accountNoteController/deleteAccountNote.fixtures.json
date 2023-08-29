@@ -1,0 +1,14 @@
+{
+  "deleteAccountNote": {
+    "salesforce_users": [
+      { 
+        "filepath": "classpath:fixtures/common/repositories/salesforceUser/ActiveSalesforceUser.json"
+      }
+    ],
+    "salesforce_oauth_tokens": [
+      {
+        "filepath": "classpath:fixtures/common/repositories/salesforceOauthToken/ActiveSalesforceOauthToken.json"
+      }
+    ]
+  } 
+}

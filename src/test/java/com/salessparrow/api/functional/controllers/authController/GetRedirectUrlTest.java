@@ -32,7 +32,7 @@ public class GetRedirectUrlTest {
 
   @Test
   public void getRedirectUrl() throws Exception{
-    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/controllers/authController/redirectUrl.scenarios.json");
+    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/functional/controllers/authController/redirectUrl.scenarios.json");
 
     for (Scenario testDataItem : testDataItems) {
       ObjectMapper objectMapper = new ObjectMapper();

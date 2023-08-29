@@ -77,7 +77,7 @@ public class GetAccountListTest {
   public void getAccountList(Scenario testScenario) throws Exception {
      // Load fixture data
     String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
-    FixtureData fixtureData = common.loadFixture("classpath:fixtures/controllers/accountController/getAccountList.fixtures.json", currentFunctionName);
+    FixtureData fixtureData = common.loadFixture("classpath:fixtures/functional/controllers/accountController/getAccountList.fixtures.json", currentFunctionName);
     loadFixture.perform(fixtureData);
 
     // Read data from the scenario
@@ -115,7 +115,7 @@ public class GetAccountListTest {
   }
 
   private static List<Scenario> loadScenarios() throws IOException {
-    String scenariosPath = "classpath:data/controllers/accountController/getAccountList.scenarios.json";
+    String scenariosPath = "classpath:data/functional/controllers/accountController/getAccountList.scenarios.json";
     Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
     ObjectMapper objectMapper = new ObjectMapper();
 

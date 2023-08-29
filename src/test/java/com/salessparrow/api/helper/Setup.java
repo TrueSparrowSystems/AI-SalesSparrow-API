@@ -1,5 +1,6 @@
 package com.salessparrow.api.helper;
 
+import org.springframework.cache.CacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class Setup {
   @Autowired
   private Dynamobee dynamobee;
   
+  @Autowired
+  private CacheManager cacheManager;
+
   /**
    * Create the setup.
    * - Flush the cache
@@ -44,7 +48,9 @@ public class Setup {
    */
   private void flushCache(){
     logger.info("Setup: Flushing cache");
-  }
+    cacheManager.getCacheNames().stream().forEach(cacheName -> {
+      cacheManager.getCache(cacheName).clear();
+  });  }
 
   /**
    * Drop dynamodb tables.
