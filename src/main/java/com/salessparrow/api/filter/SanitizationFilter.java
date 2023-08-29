@@ -15,7 +15,11 @@ import com.salessparrow.api.lib.wrappers.SanitizedRequestWrapper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Class to sanitize the request
@@ -61,6 +65,9 @@ public class SanitizationFilter implements Filter {
 			ServletResponse servletResponse, 
 			FilterChain chain
 		) throws IOException, ServletException {
+			if (!(servletRequest instanceof HttpServletRequest)) {
+				throw new ServletException("Can only process HttpServletRequest");
+			}
 			HttpServletRequest request = (HttpServletRequest) servletRequest;
 			sanitizeRequestBody(request);
 			sanitizeRequestParams();
@@ -88,7 +95,8 @@ public class SanitizationFilter implements Filter {
 		 * @return void
 		 */
 		private void sanitizeRequestParams() {
-			this.sanitizedRequest.getParameterMap().forEach((key, value) -> {
+			Map<String, String[]> parameterMapCopy = new HashMap<>(this.sanitizedRequest.getParameterMap());
+			parameterMapCopy.forEach((key, value) -> {
 				String sanitizedValue = sanitizeHtml(value[0]);
 				this.sanitizedRequest.setParameter(key, sanitizedValue);
 			});
@@ -103,7 +111,8 @@ public class SanitizationFilter implements Filter {
 			Enumeration<String> headerNames = this.sanitizedRequest.getHeaderNames();
 
 			if (headerNames != null && headerNames.hasMoreElements()) {
-				this.sanitizedRequest.getHeaderNames().asIterator().forEachRemaining(headerName -> {
+				List<String> headerNamesCopy = Collections.list(this.sanitizedRequest.getHeaderNames());
+				headerNamesCopy.forEach(headerName -> {
 					String sanitizedValue = sanitizeHtml(this.sanitizedRequest.getHeader(headerName));
 					this.sanitizedRequest.setHeader(headerName, sanitizedValue);
 				});
@@ -126,8 +135,7 @@ public class SanitizationFilter implements Filter {
 				}
 				return requestBody.toString();
 			} catch (IOException e) {
-				e.printStackTrace();
-				return "";
+				throw new RuntimeException("Error reading request body", e);
 			}
     }
 
