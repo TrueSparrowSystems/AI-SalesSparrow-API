@@ -89,17 +89,24 @@ public class GetSalesforceAccountTasksList {
     
     if (getTasksStatusCode != 200 && getTasksStatusCode != 201) {
       String errorBody = getTasksCompositeResponse.get("body").asText();
+      String errorCode = getTasksCompositeResponse.get("body").get(0).get("errorCode").asText();
 
-      if (getTasksStatusCode == 400) {
+      if (errorCode.equals("INVALID_QUERY_FILTER_OPERATOR")) {
         throw new CustomException(
           new ParamErrorObject(
             "l_ca_gatl_gsatl_pr_1", 
             errorBody, 
             Arrays.asList("invalid_account_id")));
-      } else {
+      } else if (errorCode.equals("INVALID_TYPE")) {
         throw new CustomException(
           new ErrorObject(
             "l_ca_gatl_gsatl_pr_2",
+            "forbidden_api_request",
+            errorBody));
+      } else {
+        throw new CustomException(
+          new ErrorObject(
+            "l_ca_gatl_gsatl_pr_3",
             "something_went_wrong",
             errorBody));
       }

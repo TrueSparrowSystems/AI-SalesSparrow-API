@@ -74,18 +74,25 @@ public class DeleteSalesforceAccountNote implements DeleteAccountNoteInterface {
     
     if (deleteNoteStatusCode != 200 && deleteNoteStatusCode != 201 && deleteNoteStatusCode != 204) {
       String errorBody = deleteNoteCompositeResponse.get("body").asText();
+      String errorCode = deleteNoteCompositeResponse.get("body").get(0).get("errorCode").asText();
 
-      // MALFORMED_ID or NOT_FOUND
-      if (deleteNoteStatusCode == 400 || deleteNoteStatusCode == 404) {
+      // Error handling
+      if (errorCode.equals("ENTITY_IS_DELETED") || errorCode.equals("NOT_FOUND") || errorCode.equals("MALFORMED_ID")) {
         throw new CustomException(
           new ParamErrorObject(
             "l_ca_dan_dasn_pr_1", 
             errorBody, 
             Arrays.asList("invalid_note_id")));
-      } else {
+      } else if (errorCode.equals("INSUFFICIENT_ACCESS_OR_READONLY")) {
         throw new CustomException(
           new ErrorObject(
             "l_ca_dan_dasn_pr_2",
+            "forbidden_api_request",
+            errorBody));
+      } else {
+        throw new CustomException(
+          new ErrorObject(
+            "l_ca_dan_dasn_pr_3",
             "something_went_wrong",
             errorBody));
       }
