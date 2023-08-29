@@ -1,0 +1,128 @@
+[
+    {
+      "description": "Should return the list of crm Users", 
+      "input": {
+        "q": "a"
+      },
+      "mocks": {
+        "makeCompositeRequest": {
+          "compositeResponse": [
+            {
+              "body": {
+                "totalSize": 2,
+                "done": true,
+                "records": [
+                    {
+                        "attributes": {
+                            "type": "User",
+                            "url": "/services/data/v58.0/sobjects/User/0051e0000047G03AAE"
+                        },
+                        "Id": "0051e0000047G03AAE",
+                        "Name": "Alpesh Modi"
+                    },
+                    {
+                        "attributes": {
+                            "type": "User",
+                            "url": "/services/data/v58.0/sobjects/User/0051e000004NQ6fAAG"
+                        },
+                        "Id": "0051e000004NQ6fAAG",
+                        "Name": "Aman Barbaria"
+                    }
+                ]
+              },
+              "httpHeaders": {},
+              "httpStatusCode": 200,
+              "referenceId": "getAccounts"
+            }
+          ]
+        }
+      },
+      "output": {
+        "crm_organization_user_ids": [
+            "0051e0000047G03AAE",
+            "0051e000004NQ6fAAG"
+        ],
+        "crm_organization_user_map_by_id": {
+          "0051e0000047G03AAE": {
+            "id": "0051e0000047G03AAE",
+            "name": "Alpesh Modi"
+          },
+          "0051e000004NQ6fAAG": {
+            "id": "0051e000004NQ6fAAG",
+            "name": "Aman Barbaria"
+          }
+        }
+      }
+    },
+    {
+      "description": "Should return the list of crm users sorted by modified date on empty search string", 
+      "input": {
+        "q": ""
+      },
+      "mocks": {
+        "makeCompositeRequest": {
+            "compositeResponse": [
+              {
+                "body": {
+                  "totalSize": 2,
+                  "done": true,
+                  "records": [
+                      {
+                          "attributes": {
+                              "type": "User",
+                              "url": "/services/data/v58.0/sobjects/User/0051e0000047G03AAE"
+                          },
+                          "Id": "0051e0000047G03AAE",
+                          "Name": "Alpesh Modi"
+                      },
+                      {
+                          "attributes": {
+                              "type": "User",
+                              "url": "/services/data/v58.0/sobjects/User/0051e000004NQ6fAAG"
+                          },
+                          "Id": "0051e000004NQ6fAAG",
+                          "Name": "Aman Barbaria"
+                      }
+                  ]
+                },
+                "httpHeaders": {},
+                "httpStatusCode": 200,
+                "referenceId": "getAccounts"
+              }
+            ]
+          }
+      },
+      "output": {
+        "crm_organization_user_ids": [
+            "0051e0000047G03AAE",
+            "0051e000004NQ6fAAG"
+        ],
+        "crm_organization_user_map_by_id": {
+          "0051e0000047G03AAE": {
+            "id": "0051e0000047G03AAE",
+            "name": "Alpesh Modi"
+          },
+          "0051e000004NQ6fAAG": {
+            "id": "0051e000004NQ6fAAG",
+            "name": "Aman Barbaria"
+          }
+        }
+      }
+    },
+    {
+      "description": "Should return error if search string length > 200", 
+      "input": {
+        "q": "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+       },
+      "mocks": {},
+      "output": {
+        "http_code": 400,
+        "message": "At least one parameter is invalid or missing.",
+        "code": "INVALID_PARAMS",
+        "internal_error_identifier": "b_2",
+        "param_errors": [
+          "search_term_too_long"
+        ]
+      }
+    }
+  ]

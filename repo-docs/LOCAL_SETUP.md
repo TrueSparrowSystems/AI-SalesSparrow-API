@@ -66,7 +66,8 @@ $ touch test.secrets.json
     "LOCAL_KMS_ENDPOINT": "http://localkms:8080",
     "ERROR_MAIL_FROM": "",
     "ERROR_MAIL_TO": "",
-    "COOKIE_DOMAIN":""
+    "COOKIE_DOMAIN": "",
+    "OPENAI_API_KEY: ""
 }
 ```
 

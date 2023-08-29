@@ -7,6 +7,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig.SaveBehavior;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -24,14 +25,34 @@ public class DynamoDBConfiguration {
 		return new DynamoDBMapper(buildAmazonDynamoDB(), dynamoDBMapperConfig()) {
 			@Override
 			public <T> T load(Class<T> clazz, Object hashKey) {
-				logger.debug("DBQuery:Load: table-{} hashKey-{}", clazz.getSimpleName(), hashKey);
-				return defaultMapper.load(clazz, hashKey);
+				T response = null;
+				long startTimestamp = System.currentTimeMillis();
+				try{
+					response = defaultMapper.load(clazz, hashKey);
+				} catch (Exception e) {
+					logger.debug("DBQuery:Load: table-{} hashKey-{}", clazz.getSimpleName(), hashKey);
+					logger.error("DBQuery:Load: exception-{}", e);
+					throw new RuntimeException("Error during load database operation", e);
+				}
+				
+				long duration =  System.currentTimeMillis() - startTimestamp;
+				logger.debug("({} ms)DBQuery:Load: table-{} hashKey-{}", duration, clazz.getSimpleName(), hashKey);
+				return response;
 			}
 
 			@Override
 			public <T> void save(T object) {
-				logger.debug("DBQuery:Save: table-{}", object.getClass().getSimpleName());
-				defaultMapper.save(object);
+			long startTimestamp = System.currentTimeMillis();
+				try {
+					defaultMapper.save(object);
+				} catch (Exception e) {
+					logger.debug("DBQuery:Save: table-{}", object.getClass().getSimpleName());
+					logger.error("DBQuery:Save: exception-{}", e);
+					throw new RuntimeException("Error during save database operation", e);
+				}
+
+				long duration =  System.currentTimeMillis() - startTimestamp;						
+				logger.debug("({} ms)DBQuery:Save: table-{}", duration, object.getClass().getSimpleName());
 			}
 			// Similarly, you can override other used methods like delete, batchSave, etc. similarly
 		};

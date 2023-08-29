@@ -1,6 +1,5 @@
 package com.salessparrow.api.repositories;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
@@ -17,8 +16,11 @@ import com.salessparrow.api.lib.globalConstants.CacheConstants;
 @Repository
 public class SalesforceOauthTokenRepository {
 
-  @Autowired
-  private DynamoDBMapper dynamoDBMapper;
+  private final DynamoDBMapper dynamoDBMapper;
+
+  public SalesforceOauthTokenRepository(DynamoDBMapper dynamoDBMapper) {
+      this.dynamoDBMapper = dynamoDBMapper;
+  }
 
   /**
    * Saves a SalesforceOauthToken to the salesforce_oauth_tokens table.

@@ -82,7 +82,7 @@ public class GetSalesforceAccounts implements GetAccounts{
       throw new CustomException(
         new ErrorObject(
           "l_ca_ga_gsa_pr_1",
-          "bad_request",
+          "something_went_wrong",
           "Error in fetching accounts from salesforce"));
     }
 

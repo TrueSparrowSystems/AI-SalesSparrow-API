@@ -26,10 +26,12 @@ public class LoadFixture {
 
   @Autowired
   private SalesforceUserRepository salesforceUserRepository;
-
+  
+  
   @Autowired
   private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
-
+  
+  
   @Autowired
   private SalesforceOrganizationRepository salesforceOrganizationRepository;
 

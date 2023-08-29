@@ -81,3 +81,8 @@ This document provides descriptions for the environment variables used in the co
 
 - **Description:** Domain for the API cookies.
 - **Example Value:** `localhost`
+
+## OPENAI_API_KEY
+
+- **Description:** API key for the OpenAI API.
+- **Example Value:** `sk-12345asdf`

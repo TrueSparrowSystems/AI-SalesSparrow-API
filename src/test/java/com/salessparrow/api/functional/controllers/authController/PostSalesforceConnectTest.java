@@ -135,7 +135,7 @@ public class PostSalesforceConnectTest {
     }.getClass().getEnclosingMethod().getName();
 
     FixtureData fixtureData = common.loadFixture(
-        "classpath:fixtures/controllers/authController/PostSalesforceConnectFixture.json",
+        "classpath:fixtures/functional/controllers/authController/PostSalesforceConnectFixture.json",
         currentFunctionName);
     loadFixture.perform(fixtureData);
 
@@ -171,7 +171,7 @@ public class PostSalesforceConnectTest {
   }
 
   public List<Scenario> loadTestData(String key) throws IOException {
-    String scenariosPath = "classpath:data/controllers/authController/SalesforceConnect.scenarios.json";
+    String scenariosPath = "classpath:data/functional/controllers/authController/SalesforceConnect.scenarios.json";
     Resource resource = resourceLoader.getResource(scenariosPath);
     ObjectMapper objectMapper = new ObjectMapper();
 

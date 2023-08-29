@@ -55,11 +55,11 @@ public class AuthService {
   private Util util;
 
   @Autowired
-  private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
-
-  @Autowired
   private SalesforceUserRepository salesforceUserRepository;
 
+  @Autowired
+  private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
+  
   @Autowired
   private SalesforceOrganizationRepository salesforceOrganizationRepository;
 

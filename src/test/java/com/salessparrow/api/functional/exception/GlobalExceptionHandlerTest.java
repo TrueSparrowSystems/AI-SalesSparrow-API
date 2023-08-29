@@ -55,7 +55,7 @@ public class GlobalExceptionHandlerTest {
 
   @Test
   public void handleNoHandlerFoundException() throws Exception{
-    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/exceptions/globalExceptionHandler.scenarios.json");
+    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/functional/exceptions/globalExceptionHandler.scenarios.json");
     for (Scenario testDataItem : testDataItems) {
 
       ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/unknown-route")
