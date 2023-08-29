@@ -78,7 +78,7 @@ public class CreateNoteTest {
 
     // Load fixture data
     String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
-    FixtureData fixtureData = common.loadFixture("classpath:fixtures/controllers/accountController/createNote.fixtures.json", currentFunctionName);
+    FixtureData fixtureData = common.loadFixture("classpath:fixtures/functional/controllers/accountController/createNote.fixtures.json", currentFunctionName);
     loadFixture.perform(fixtureData);
 
     // Read data from the scenario
@@ -117,7 +117,7 @@ public class CreateNoteTest {
   }
 
   private static List<Scenario> loadScenarios() throws IOException {
-    String scenariosPath = "classpath:data/controllers/accountController/createNote.scenarios.json";
+    String scenariosPath = "classpath:data/functional/controllers/accountController/createNote.scenarios.json";
     Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
     ObjectMapper objectMapper = new ObjectMapper();
 

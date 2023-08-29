@@ -73,7 +73,7 @@ public class PostLogoutTest {
     }.getClass().getEnclosingMethod().getName();
 
     FixtureData fixtureData = common.loadFixture(
-        "classpath:fixtures/controllers/authController/PostLogoutFixture.json",
+        "classpath:fixtures/functional/controllers/authController/PostLogoutFixture.json",
         currentFunctionName);
     loadFixture.perform(fixtureData);
 
@@ -101,7 +101,7 @@ public class PostLogoutTest {
   }
 
   public List<Scenario> loadTestData(String key) throws IOException {
-    String scenariosPath = "classpath:data/controllers/authController/Logout.scenarios.json";
+    String scenariosPath = "classpath:data/functional/controllers/authController/Logout.scenarios.json";
     Resource resource = resourceLoader.getResource(scenariosPath);
     ObjectMapper objectMapper = new ObjectMapper();
 

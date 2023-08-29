@@ -87,7 +87,7 @@ public class SalesforceOauthTokenRepositoryTest {
         public void testGetSalesforceOauthTokenByExternalUserId() throws Exception{{
 
             String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
-            FixtureData fixtureData = common.loadFixture("classpath:fixtures/repositories/salesforceOauthTokenRepository.json", currentFunctionName);
+            FixtureData fixtureData = common.loadFixture("classpath:fixtures/unit/repositories/salesforceOauthTokenRepository.json", currentFunctionName);
             loadFixture.perform(fixtureData);
             
             //Valid Get Db Query

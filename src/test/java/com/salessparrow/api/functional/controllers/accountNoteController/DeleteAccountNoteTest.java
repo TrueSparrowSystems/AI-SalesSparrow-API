@@ -77,7 +77,7 @@ public class DeleteAccountNoteTest {
 
     // Load fixture data
     String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
-    FixtureData fixtureData = common.loadFixture("classpath:fixtures/controllers/accountNoteController/deleteAccountNote.fixtures.json", currentFunctionName);
+    FixtureData fixtureData = common.loadFixture("classpath:fixtures/functional/controllers/accountNoteController/deleteAccountNote.fixtures.json", currentFunctionName);
     loadFixture.perform(fixtureData);
 
     // Read data from the scenario
@@ -110,7 +110,7 @@ public class DeleteAccountNoteTest {
   }
 
   private static List<Scenario> loadScenarios() throws IOException {
-    String scenariosPath = "classpath:data/controllers/accountNoteController/deleteAccountNote.scenarios.json";
+    String scenariosPath = "classpath:data/functional/controllers/accountNoteController/deleteAccountNote.scenarios.json";
     Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
     ObjectMapper objectMapper = new ObjectMapper();
     return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});

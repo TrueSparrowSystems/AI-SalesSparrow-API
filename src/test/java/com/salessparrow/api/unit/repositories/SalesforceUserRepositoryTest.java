@@ -91,7 +91,7 @@ public class SalesforceUserRepositoryTest {
         public void testGetSalesforceUserByExternalUserId() throws Exception{{
 
             String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
-            FixtureData fixtureData = common.loadFixture("classpath:fixtures/repositories/salesforceUserRepository.json", currentFunctionName);
+            FixtureData fixtureData = common.loadFixture("classpath:fixtures/unit/repositories/salesforceUserRepository.json", currentFunctionName);
             loadFixture.perform(fixtureData);
             
             //Valid Get Db Query
