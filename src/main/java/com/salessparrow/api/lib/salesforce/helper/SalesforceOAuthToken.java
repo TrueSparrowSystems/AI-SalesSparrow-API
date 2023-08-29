@@ -21,7 +21,7 @@ public class SalesforceOAuthToken {
   private AwsKms awsKms;
 
   @Autowired
-  private SalesforceOauthTokenRepository sfOauthTokenRepository;
+  private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
 
   @Autowired
   private SalesforceGetRefreshedAccessToken salesforceGetRefreshedAccessToken;
@@ -66,7 +66,7 @@ public class SalesforceOAuthToken {
     String encryptedAccessToken = awsKms.encryptToken(decryptedAccessToken);
 
     sfOAuthToken.setAccessToken(encryptedAccessToken);
-    sfOauthTokenRepository.saveSalesforceOauthToken(sfOAuthToken);
+    salesforceOauthTokenRepository.saveSalesforceOauthToken(sfOAuthToken);
 
     return decryptedAccessToken;
   }

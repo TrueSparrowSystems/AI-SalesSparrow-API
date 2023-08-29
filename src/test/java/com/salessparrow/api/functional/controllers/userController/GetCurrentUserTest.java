@@ -61,11 +61,11 @@ public class GetCurrentUserTest {
   @Test
   public void getCurrentUser() throws Exception{
     String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
-    FixtureData fixtureData = common.loadFixture("classpath:fixtures/controllers/userController/getCurrentUser.fixtures.json",
+    FixtureData fixtureData = common.loadFixture("classpath:fixtures/functional/controllers/userController/getCurrentUser.fixtures.json",
       currentFunctionName);
     loadFixture.perform(fixtureData);
 
-    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/controllers/userController/getCurrentUser.scenarios.json");
+    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/functional/controllers/userController/getCurrentUser.scenarios.json");
     for (Scenario testDataItem : testDataItems) {
       ObjectMapper objectMapper = new ObjectMapper();
       String expectedOutput = objectMapper.writeValueAsString(testDataItem.getOutput());
