@@ -40,9 +40,12 @@ public class SalesforceOrganizationRepositoryTest {
     @Autowired
     private LoadFixture loadFixture;
 
+    private SalesforceOrganizationRepository salesforceOrganizationRepository;
+
     @BeforeEach
     public void setUp() throws DynamobeeException, IOException {
         setup.perform();
+        this.salesforceOrganizationRepository =  new SalesforceOrganizationRepository(dynamoDBMapper);
     }
 
     @AfterEach
@@ -58,8 +61,7 @@ public class SalesforceOrganizationRepositoryTest {
             //Valid Save Db Query
             SalesforceOrganization salesforceOrganizationValid = new SalesforceOrganization();
             salesforceOrganizationValid.setExternalOrganizationId("externalUserId-1");
-            SalesforceOrganizationRepository salesforceOrganizationRepository = new SalesforceOrganizationRepository(dynamoDBMapper);
-            SalesforceOrganization salesforceOrganizationResp = salesforceOrganizationRepository.saveSalesforceOrganization(salesforceOrganizationValid);
+            SalesforceOrganization salesforceOrganizationResp = this.salesforceOrganizationRepository.saveSalesforceOrganization(salesforceOrganizationValid);
             assertEquals(salesforceOrganizationValid.getExternalOrganizationId(), salesforceOrganizationResp.getExternalOrganizationId());
 
             // Invalid Save Db Query without partition key
@@ -91,8 +93,7 @@ public class SalesforceOrganizationRepositoryTest {
             loadFixture.perform(fixtureData);
             
             //Valid Get Db Query
-            SalesforceOrganizationRepository salesforceOrganizationRepository = new SalesforceOrganizationRepository(dynamoDBMapper);
-            SalesforceOrganization salesforceOrganizationResp = salesforceOrganizationRepository.getSalesforceOrganizationByExternalOrganizationId("000Org-id");
+            SalesforceOrganization salesforceOrganizationResp = this.salesforceOrganizationRepository.getSalesforceOrganizationByExternalOrganizationId("000Org-id");
             assertEquals("000Org-id", salesforceOrganizationResp.getExternalOrganizationId());
 
             String testExternalOrganizationId = "externalUserId-2";

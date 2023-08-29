@@ -40,9 +40,13 @@ public class SalesforceOauthTokenRepositoryTest {
     @Autowired
     private LoadFixture loadFixture;
 
+    private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
+
     @BeforeEach
     public void setUp() throws DynamobeeException, IOException {
         setup.perform();
+        this.salesforceOauthTokenRepository =  new SalesforceOauthTokenRepository(dynamoDBMapper);
+
     }
 
     @AfterEach
@@ -58,8 +62,8 @@ public class SalesforceOauthTokenRepositoryTest {
             //Valid Save Db Query
             SalesforceOauthToken salesforceOauthTokenValid = new SalesforceOauthToken();
             salesforceOauthTokenValid.setExternalUserId("externalUserId-1");
-            SalesforceOauthTokenRepository salesforceOauthTokenRepository = new SalesforceOauthTokenRepository(dynamoDBMapper);
-            SalesforceOauthToken salesforceOauthTokenResp = salesforceOauthTokenRepository.saveSalesforceOauthToken(salesforceOauthTokenValid);
+
+            SalesforceOauthToken salesforceOauthTokenResp = this.salesforceOauthTokenRepository.saveSalesforceOauthToken(salesforceOauthTokenValid);
             assertEquals(salesforceOauthTokenValid.getExternalUserId(), salesforceOauthTokenResp.getExternalUserId());
 
             // Invalid Save Db Query without partition key
@@ -92,8 +96,7 @@ public class SalesforceOauthTokenRepositoryTest {
             loadFixture.perform(fixtureData);
             
             //Valid Get Db Query
-            SalesforceOauthTokenRepository salesforceOauthTokenRepository = new SalesforceOauthTokenRepository(dynamoDBMapper);
-            SalesforceOauthToken salesforceOauthTokenResp = salesforceOauthTokenRepository.getSalesforceOauthTokenByExternalUserId("0055i00000AUxQHAA1");
+            SalesforceOauthToken salesforceOauthTokenResp = this.salesforceOauthTokenRepository.getSalesforceOauthTokenByExternalUserId("0055i00000AUxQHAA1");
             assertEquals("0055i00000AUxQHAA1", salesforceOauthTokenResp.getExternalUserId());
 
             String testExternalUserId = "externalUserId-3";

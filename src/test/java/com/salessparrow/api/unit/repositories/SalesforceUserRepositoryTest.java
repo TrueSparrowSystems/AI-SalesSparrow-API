@@ -44,9 +44,15 @@ public class SalesforceUserRepositoryTest {
     @Autowired
     private LoadFixture loadFixture;
 
+    @Autowired
+    private DynamoDBMapper dynamoDBMapper;
+
+    private SalesforceUserRepository salesforceUserRepository;
+
     @BeforeEach
     public void setUp() throws DynamobeeException, IOException {
         setup.perform();
+        this.salesforceUserRepository =  new SalesforceUserRepository(dynamoDBMapper);
     }
 
     @AfterEach
@@ -54,16 +60,13 @@ public class SalesforceUserRepositoryTest {
         cleanup.perform();
     }
 
-    @Autowired
-    private DynamoDBMapper dynamoDBMapper;
 
         @Test
         public void testSaveSalesforceUser() {
             //Valid Save Db Query
             SalesforceUser salesforceUserValid = new SalesforceUser();
             salesforceUserValid.setExternalUserId("externalUserId-test1");
-            SalesforceUserRepository salesforceUserRepository = new SalesforceUserRepository(dynamoDBMapper);
-            SalesforceUser salesforceUserResp = salesforceUserRepository.saveSalesforceUser(salesforceUserValid);
+            SalesforceUser salesforceUserResp = this.salesforceUserRepository.saveSalesforceUser(salesforceUserValid);
             assertEquals(salesforceUserValid.getExternalUserId(), salesforceUserResp.getExternalUserId());
 
             // Invalid Save Db Query without partition key
@@ -96,8 +99,7 @@ public class SalesforceUserRepositoryTest {
             loadFixture.perform(fixtureData);
             
             //Valid Get Db Query
-            SalesforceUserRepository salesforceUserRepository = new SalesforceUserRepository(dynamoDBMapper);
-            SalesforceUser salesforceUserResp = salesforceUserRepository.getSalesforceUserByExternalUserId("0055i00000AUxQHAA1");
+            SalesforceUser salesforceUserResp = this.salesforceUserRepository.getSalesforceUserByExternalUserId("0055i00000AUxQHAA1");
             assertEquals("0055i00000AUxQHAA1", salesforceUserResp.getExternalUserId());
 
             String testExternalUserId = "externalUserId-test3";
