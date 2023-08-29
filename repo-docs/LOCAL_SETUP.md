@@ -67,7 +67,7 @@ $ touch test.secrets.json
     "ERROR_MAIL_FROM": "",
     "ERROR_MAIL_TO": "",
     "COOKIE_DOMAIN": "",
-    "OPENAI_API_KEY: ""
+    "OPENAI_API_KEY": ""
 }
 ```
 
