@@ -19,6 +19,7 @@ import com.salessparrow.api.dto.requestMapper.CreateAccountTaskDto;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.Util;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
+import com.salessparrow.api.lib.errorLib.ParamErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
@@ -95,13 +96,36 @@ public class CreateSalesforceAccountTask implements CreateAccountTask{
 
         if (!createTaskStatusCode.equals("200") && !createTaskStatusCode.equals("201")) {
             String errorBody = createTaskCompositeResponse.get("body").asText();
+            String errorCode = createTaskCompositeResponse.get("body").get(0).get("errorCode").asText();
 
-            throw new CustomException(
-            new ErrorObject(
-                "l_ca_ct_cst_1",
-                "internal_server_error",
-                errorBody
-            )); 
+            if(errorCode.equals("MALFORMED_ID")){
+                String errorField = createTaskCompositeResponse.get("body").get(0).get("fields").get(0).asText();
+                List<String> errorFields = new ArrayList<String>();
+                if(errorField.equals("OwnerId")){
+                    errorFields.add("invalid_crm_organization_user_id");
+                }else if(errorField.equals("WhatId")){
+                    errorFields.add("invalid_account_id");
+                }
+                throw new CustomException(
+                    new ParamErrorObject(
+                        "l_ca_ct_cst_1", 
+                        errorBody, 
+                        errorFields));
+            }
+
+            if(errorCode.equals("NOT_FOUND")){
+                throw new CustomException(
+                new ErrorObject(
+                    "l_ca_ct_cst_2",
+                    "resource_not_found",
+                    errorBody));
+            }else{
+                throw new CustomException(
+                    new ErrorObject(
+                        "l_ca_ct_cst_3",
+                        "internal_server_error",
+                        errorBody)); 
+            }
         }
 
         JsonNode createTaskNodeResponseBody = rootNode.get("compositeResponse").get(0).get("body");
