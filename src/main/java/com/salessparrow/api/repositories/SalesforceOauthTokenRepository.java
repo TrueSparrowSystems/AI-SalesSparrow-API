@@ -1,6 +1,5 @@
 package com.salessparrow.api.repositories;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
@@ -19,7 +18,6 @@ public class SalesforceOauthTokenRepository {
 
   private final DynamoDBMapper dynamoDBMapper;
 
-  @Autowired
   public SalesforceOauthTokenRepository(DynamoDBMapper dynamoDBMapper) {
       this.dynamoDBMapper = dynamoDBMapper;
   }

@@ -3,6 +3,7 @@ package com.salessparrow.api.lib.salesforce.helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salessparrow.api.domain.SalesforceOauthToken;
 import com.salessparrow.api.lib.AwsKms;
@@ -21,7 +22,7 @@ public class SalesforceOAuthToken {
   private AwsKms awsKms;
 
   @Autowired
-  private SalesforceOauthTokenRepository sfOauthTokenRepository;
+  private DynamoDBMapper dynamoDBMapper;
 
   @Autowired
   private SalesforceGetRefreshedAccessToken salesforceGetRefreshedAccessToken;
@@ -66,7 +67,8 @@ public class SalesforceOAuthToken {
     String encryptedAccessToken = awsKms.encryptToken(decryptedAccessToken);
 
     sfOAuthToken.setAccessToken(encryptedAccessToken);
-    sfOauthTokenRepository.saveSalesforceOauthToken(sfOAuthToken);
+    SalesforceOauthTokenRepository salesforceOauthTokenRepository = new SalesforceOauthTokenRepository(dynamoDBMapper);
+    salesforceOauthTokenRepository.saveSalesforceOauthToken(sfOAuthToken);
 
     return decryptedAccessToken;
   }

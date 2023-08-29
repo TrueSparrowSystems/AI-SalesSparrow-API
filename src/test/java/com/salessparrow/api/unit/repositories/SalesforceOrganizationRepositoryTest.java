@@ -50,14 +50,15 @@ public class SalesforceOrganizationRepositoryTest {
         cleanup.perform();
     }
 
-   @Autowired
-   private SalesforceOrganizationRepository salesforceOrganizationRepository;
+    @Autowired
+    private DynamoDBMapper dynamoDBMapper;
 
         @Test
         public void testSaveSalesforceOrganization() {
             //Valid Save Db Query
             SalesforceOrganization salesforceOrganizationValid = new SalesforceOrganization();
             salesforceOrganizationValid.setExternalOrganizationId("externalUserId-1");
+            SalesforceOrganizationRepository salesforceOrganizationRepository = new SalesforceOrganizationRepository(dynamoDBMapper);
             SalesforceOrganization salesforceOrganizationResp = salesforceOrganizationRepository.saveSalesforceOrganization(salesforceOrganizationValid);
             assertEquals(salesforceOrganizationValid.getExternalOrganizationId(), salesforceOrganizationResp.getExternalOrganizationId());
 
@@ -67,7 +68,7 @@ public class SalesforceOrganizationRepositoryTest {
 
             // mock the DynamoDBMapper
             DynamoDBMapper dynamoDBMapper = mock(DynamoDBMapper.class);
-            SalesforceOrganizationRepository salesforceOrganizationRepository = new SalesforceOrganizationRepository(dynamoDBMapper);
+            SalesforceOrganizationRepository mockSalesforceOrganizationRepository = new SalesforceOrganizationRepository(dynamoDBMapper);
 
             // Mock the behavior to throw an exception when save is called
             doThrow(new CustomException(new ErrorObject("test:r_sor_tssfo_1", "something_went_wrong", "mock db save error")))
@@ -77,7 +78,7 @@ public class SalesforceOrganizationRepositoryTest {
             // Test if CustomException is thrown with the expected error code
             CustomException thrownException = assertThrows(
                 CustomException.class, 
-                () -> salesforceOrganizationRepository.saveSalesforceOrganization(salesforceOrganizationInvalid)
+                () -> mockSalesforceOrganizationRepository.saveSalesforceOrganization(salesforceOrganizationInvalid)
             );
             // Validate the error identifier to be a 500 error
             assertEquals("something_went_wrong", thrownException.getErrorObject().getApiErrorIdentifier());
@@ -90,6 +91,7 @@ public class SalesforceOrganizationRepositoryTest {
             loadFixture.perform(fixtureData);
             
             //Valid Get Db Query
+            SalesforceOrganizationRepository salesforceOrganizationRepository = new SalesforceOrganizationRepository(dynamoDBMapper);
             SalesforceOrganization salesforceOrganizationResp = salesforceOrganizationRepository.getSalesforceOrganizationByExternalOrganizationId("000Org-id");
             assertEquals("000Org-id", salesforceOrganizationResp.getExternalOrganizationId());
 
@@ -97,7 +99,7 @@ public class SalesforceOrganizationRepositoryTest {
 
             //  mock the DynamoDBMapper
             DynamoDBMapper dynamoDBMapper = mock(DynamoDBMapper.class);
-            SalesforceOrganizationRepository salesforceOrganizationRepository = new SalesforceOrganizationRepository(dynamoDBMapper);
+            SalesforceOrganizationRepository mockSalesforceOrganizationRepository = new SalesforceOrganizationRepository(dynamoDBMapper);
 
             // Mock the behavior to throw an exception when load is called
             when(dynamoDBMapper.load(SalesforceOrganization.class, testExternalOrganizationId)).thenThrow(
@@ -108,7 +110,7 @@ public class SalesforceOrganizationRepositoryTest {
             // Test if CustomException is thrown with the expected error code
             CustomException thrownException = assertThrows(
                 CustomException.class, 
-                () -> salesforceOrganizationRepository.getSalesforceOrganizationByExternalOrganizationId(testExternalOrganizationId)
+                () -> mockSalesforceOrganizationRepository.getSalesforceOrganizationByExternalOrganizationId(testExternalOrganizationId)
             );
             // Validate the error identifier to be a 500 error
             assertEquals("something_went_wrong", thrownException.getErrorObject().getApiErrorIdentifier());

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.salessparrow.api.config.CoreConstants;
 import com.salessparrow.api.domain.User;
 import com.salessparrow.api.exception.CustomException;
@@ -41,7 +42,7 @@ public class UserLoginCookieAuth {
   private CookieHelper cookieHelper;
 
   @Autowired
-  private SalesforceUserRepository salesforceUserRepository;
+  private DynamoDBMapper dynamoDBMapper;
 
   /**
    * Validate and set cookie
@@ -170,6 +171,7 @@ public class UserLoginCookieAuth {
   }
 
   private void fetchAndValidateSalesforceUser() {
+    SalesforceUserRepository salesforceUserRepository = new SalesforceUserRepository(dynamoDBMapper);
     User userObj = salesforceUserRepository.getSalesforceUserByExternalUserId(userId);
 
     if (userObj == null) {

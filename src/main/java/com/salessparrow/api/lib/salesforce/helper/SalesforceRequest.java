@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.salessparrow.api.domain.SalesforceOauthToken;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
@@ -19,7 +20,7 @@ public class SalesforceRequest {
   private SalesforceOAuthToken getAccessTokenService;
 
   @Autowired
-  private SalesforceOauthTokenRepository sfOauthTokenRepository;
+  private DynamoDBMapper dynamoDBMapper;
 
   /**
    * Make a request to the Salesforce API.
@@ -30,7 +31,8 @@ public class SalesforceRequest {
    * @return T
    */
   public <T> T makeRequest(String salesforceUserId, SalesforceRequestInterface<T> request) {
-    SalesforceOauthToken sfOAuthToken = sfOauthTokenRepository
+    SalesforceOauthTokenRepository salesforceOauthTokenRepository = new SalesforceOauthTokenRepository(dynamoDBMapper);
+    SalesforceOauthToken sfOAuthToken = salesforceOauthTokenRepository
         .getSalesforceOauthTokenByExternalUserId(salesforceUserId);
 
     String decryptedAccessToken = getAccessTokenService.fetchAccessToken(sfOAuthToken);

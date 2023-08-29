@@ -50,14 +50,15 @@ public class SalesforceOauthTokenRepositoryTest {
         cleanup.perform();
     }
 
-   @Autowired
-   private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
+    @Autowired
+    private DynamoDBMapper dynamoDBMapper;
 
         @Test
         public void testSaveSalesforceOauthToken() {
             //Valid Save Db Query
             SalesforceOauthToken salesforceOauthTokenValid = new SalesforceOauthToken();
             salesforceOauthTokenValid.setExternalUserId("externalUserId-1");
+            SalesforceOauthTokenRepository salesforceOauthTokenRepository = new SalesforceOauthTokenRepository(dynamoDBMapper);
             SalesforceOauthToken salesforceOauthTokenResp = salesforceOauthTokenRepository.saveSalesforceOauthToken(salesforceOauthTokenValid);
             assertEquals(salesforceOauthTokenValid.getExternalUserId(), salesforceOauthTokenResp.getExternalUserId());
 
@@ -67,7 +68,7 @@ public class SalesforceOauthTokenRepositoryTest {
 
             // mock the DynamoDBMapper
             DynamoDBMapper dynamoDBMapper = mock(DynamoDBMapper.class);
-            SalesforceOauthTokenRepository salesforceOauthTokenRepository = new SalesforceOauthTokenRepository(dynamoDBMapper);
+            SalesforceOauthTokenRepository mockSalesforceOauthTokenRepository = new SalesforceOauthTokenRepository(dynamoDBMapper);
 
             // Mock the behavior to throw an exception when save is called
             doThrow(new CustomException(new ErrorObject("test:r_sotr_tssfot_1", "something_went_wrong", "mock db save error")))
@@ -77,7 +78,7 @@ public class SalesforceOauthTokenRepositoryTest {
             // Test if CustomException is thrown with the expected error code
             CustomException thrownException = assertThrows(
                 CustomException.class, 
-                () -> salesforceOauthTokenRepository.saveSalesforceOauthToken(salesforceOauthTokenInvalid)
+                () -> mockSalesforceOauthTokenRepository.saveSalesforceOauthToken(salesforceOauthTokenInvalid)
             );
             // Validate the error identifier to be a 500 error
             assertEquals("something_went_wrong", thrownException.getErrorObject().getApiErrorIdentifier());
@@ -91,6 +92,7 @@ public class SalesforceOauthTokenRepositoryTest {
             loadFixture.perform(fixtureData);
             
             //Valid Get Db Query
+            SalesforceOauthTokenRepository salesforceOauthTokenRepository = new SalesforceOauthTokenRepository(dynamoDBMapper);
             SalesforceOauthToken salesforceOauthTokenResp = salesforceOauthTokenRepository.getSalesforceOauthTokenByExternalUserId("0055i00000AUxQHAA1");
             assertEquals("0055i00000AUxQHAA1", salesforceOauthTokenResp.getExternalUserId());
 
@@ -98,7 +100,7 @@ public class SalesforceOauthTokenRepositoryTest {
 
             // mock the DynamoDBMapper
             DynamoDBMapper dynamoDBMapper = mock(DynamoDBMapper.class);
-            SalesforceOauthTokenRepository salesforceOauthTokenRepository = new SalesforceOauthTokenRepository(dynamoDBMapper);
+            SalesforceOauthTokenRepository mockSalesforceOauthTokenRepository = new SalesforceOauthTokenRepository(dynamoDBMapper);
 
             // Mock the behavior to throw an exception when load is called
             when(dynamoDBMapper.load(SalesforceOauthToken.class, testExternalUserId)).thenThrow(
@@ -109,7 +111,7 @@ public class SalesforceOauthTokenRepositoryTest {
             // Test if CustomException is thrown with the expected error code
             CustomException thrownException = assertThrows(
                 CustomException.class, 
-                () -> salesforceOauthTokenRepository.getSalesforceOauthTokenByExternalUserId(testExternalUserId)
+                () -> mockSalesforceOauthTokenRepository.getSalesforceOauthTokenByExternalUserId(testExternalUserId)
             );
             // Validate the error identifier to be a 500 error
             assertEquals("something_went_wrong", thrownException.getErrorObject().getApiErrorIdentifier());

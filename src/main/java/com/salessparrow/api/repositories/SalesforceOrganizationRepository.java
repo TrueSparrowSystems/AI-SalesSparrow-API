@@ -5,7 +5,6 @@ import com.salessparrow.api.domain.SalesforceOrganization;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -16,7 +15,6 @@ public class SalesforceOrganizationRepository {
 
     private final DynamoDBMapper dynamoDBMapper;
 
-    @Autowired
     public SalesforceOrganizationRepository(DynamoDBMapper dynamoDBMapper) {
         this.dynamoDBMapper = dynamoDBMapper;
     }

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,13 +56,7 @@ public class AuthService {
   private Util util;
 
   @Autowired
-  private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
-
-  @Autowired
-  private SalesforceUserRepository salesforceUserRepository;
-
-  @Autowired
-  private SalesforceOrganizationRepository salesforceOrganizationRepository;
+  private DynamoDBMapper dynamoDBMapper;
 
   @Autowired
   private LocalCipher localCipher;
@@ -138,6 +133,7 @@ public class AuthService {
 
     String salesforceOrganizationId = this.tokensData.getSalesforceOrganizationId();
 
+    SalesforceOrganizationRepository salesforceOrganizationRepository = new SalesforceOrganizationRepository(dynamoDBMapper);
     SalesforceOrganization existingOrganizationData = salesforceOrganizationRepository
         .getSalesforceOrganizationByExternalOrganizationId(salesforceOrganizationId);
 
@@ -159,8 +155,7 @@ public class AuthService {
     salesforceOrganization.setExternalOrganizationId(salesforceOrganizationId);
     salesforceOrganization.setStatus(SalesforceOrganization.Status.ACTIVE);
 
-    salesforceOrganizationRepository
-        .saveSalesforceOrganization(salesforceOrganization);
+    salesforceOrganizationRepository.saveSalesforceOrganization(salesforceOrganization);
   }
 
   /**
@@ -192,6 +187,7 @@ public class AuthService {
     salesforceOauthToken.setStatus(SalesforceOauthToken.Status.ACTIVE);
     salesforceOauthToken.setIssuedAt(Long.parseLong(this.tokensData.getIssuedAt()));
 
+    SalesforceOauthTokenRepository salesforceOauthTokenRepository = new SalesforceOauthTokenRepository(dynamoDBMapper);
     this.salesforceOauthToken = salesforceOauthTokenRepository
         .saveSalesforceOauthToken(salesforceOauthToken);
   }
@@ -203,6 +199,7 @@ public class AuthService {
    */
   private void verifyExistingSalesforceUser() {
     String salesforceUserId = this.tokensData.getSalesforceUserId();
+    SalesforceUserRepository salesforceUserRepository = new SalesforceUserRepository(dynamoDBMapper);
     SalesforceUser salesforceUser = salesforceUserRepository.getSalesforceUserByExternalUserId(salesforceUserId);
 
     if (salesforceUser != null) {
@@ -257,7 +254,8 @@ public class AuthService {
     salesforceUser.setCookieToken(encryptedCookieToken);
     salesforceUser.setEncryptionSalt(encryptedSalt);
     salesforceUser.setStatus(SalesforceUser.Status.ACTIVE);
-
+    
+    SalesforceUserRepository salesforceUserRepository = new SalesforceUserRepository(dynamoDBMapper);
     this.salesforceUser = salesforceUserRepository.saveSalesforceUser(salesforceUser);
     this.decryptedSalt = decryptedSalt;
   }

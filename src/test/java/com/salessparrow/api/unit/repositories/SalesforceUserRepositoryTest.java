@@ -54,14 +54,15 @@ public class SalesforceUserRepositoryTest {
         cleanup.perform();
     }
 
-   @Autowired
-   private SalesforceUserRepository salesforceUserRepository;
+    @Autowired
+    private DynamoDBMapper dynamoDBMapper;
 
         @Test
         public void testSaveSalesforceUser() {
             //Valid Save Db Query
             SalesforceUser salesforceUserValid = new SalesforceUser();
             salesforceUserValid.setExternalUserId("externalUserId-test1");
+            SalesforceUserRepository salesforceUserRepository = new SalesforceUserRepository(dynamoDBMapper);
             SalesforceUser salesforceUserResp = salesforceUserRepository.saveSalesforceUser(salesforceUserValid);
             assertEquals(salesforceUserValid.getExternalUserId(), salesforceUserResp.getExternalUserId());
 
@@ -71,7 +72,7 @@ public class SalesforceUserRepositoryTest {
             
             // mock the DynamoDBMapper
             DynamoDBMapper dynamoDBMapper = mock(DynamoDBMapper.class);
-            SalesforceUserRepository salesforceUserRepository = new SalesforceUserRepository(dynamoDBMapper);
+            SalesforceUserRepository mockSalesforceUserRepository = new SalesforceUserRepository(dynamoDBMapper);
 
             // Mock the behavior to throw an exception when save is called
             doThrow(new CustomException(new ErrorObject("test:r_sotr_tssfu_1", "something_went_wrong", "mock db save error")))
@@ -81,7 +82,7 @@ public class SalesforceUserRepositoryTest {
             // Test if CustomException is thrown with the expected error code
             CustomException thrownException = assertThrows(
                 CustomException.class, 
-                () -> salesforceUserRepository.saveSalesforceUser(salesforceUserInvalid)
+                () -> mockSalesforceUserRepository.saveSalesforceUser(salesforceUserInvalid)
             );
             // Validate the error identifier to be a 500 error
             assertEquals("something_went_wrong", thrownException.getErrorObject().getApiErrorIdentifier());
@@ -95,6 +96,7 @@ public class SalesforceUserRepositoryTest {
             loadFixture.perform(fixtureData);
             
             //Valid Get Db Query
+            SalesforceUserRepository salesforceUserRepository = new SalesforceUserRepository(dynamoDBMapper);
             SalesforceUser salesforceUserResp = salesforceUserRepository.getSalesforceUserByExternalUserId("0055i00000AUxQHAA1");
             assertEquals("0055i00000AUxQHAA1", salesforceUserResp.getExternalUserId());
 
@@ -102,7 +104,7 @@ public class SalesforceUserRepositoryTest {
 
             // mock the DynamoDBMapper
             DynamoDBMapper dynamoDBMapper = mock(DynamoDBMapper.class);
-            SalesforceUserRepository salesforceUserRepository = new SalesforceUserRepository(dynamoDBMapper);
+            SalesforceUserRepository mockSalesforceUserRepository = new SalesforceUserRepository(dynamoDBMapper);
 
 
             // Mock the behavior to throw an exception when load is called
@@ -114,7 +116,7 @@ public class SalesforceUserRepositoryTest {
             // Test if CustomException is thrown with the expected error code
             CustomException thrownException = assertThrows(
                 CustomException.class, 
-                () -> salesforceUserRepository.getSalesforceUserByExternalUserId(testExternalUserId)
+                () -> mockSalesforceUserRepository.getSalesforceUserByExternalUserId(testExternalUserId)
             );
             // Validate the error identifier to be a 500 error
             assertEquals("something_went_wrong", thrownException.getErrorObject().getApiErrorIdentifier());
