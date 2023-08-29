@@ -1,11 +1,12 @@
 package com.salessparrow.api.repositories;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
 import com.salessparrow.api.domain.SalesforceUser;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
@@ -17,8 +18,11 @@ import com.salessparrow.api.lib.globalConstants.CacheConstants;
 @Repository
 public class SalesforceUserRepository {
 
-  @Autowired
-  private DynamoDBMapper dynamoDBMapper;
+  private final DynamoDBMapper dynamoDBMapper;
+
+  public SalesforceUserRepository(DynamoDBMapper dynamoDBMapper) {
+    this.dynamoDBMapper = dynamoDBMapper;
+  }
 
   /**
    * Saves a SalesforceUser to the salesforce_users table.
@@ -27,7 +31,7 @@ public class SalesforceUserRepository {
    * 
    * @return SalesforceUser
    */
-  @CachePut(value=CacheConstants.SS_SALESFORCE_USER_CACHE, key="#salesforceUser.externalUserId")
+  @CachePut(value = CacheConstants.SS_SALESFORCE_USER_CACHE, key = "#salesforceUser.externalUserId")
   public SalesforceUser saveSalesforceUser(SalesforceUser salesforceUser) {
     try {
       dynamoDBMapper.save(salesforceUser);
@@ -49,7 +53,7 @@ public class SalesforceUserRepository {
    * 
    * @return SalesforceUser
    */
-  @Cacheable(value=CacheConstants.SS_SALESFORCE_USER_CACHE, key="#externalUserId")
+  @Cacheable(value = CacheConstants.SS_SALESFORCE_USER_CACHE, key = "#externalUserId")
   public SalesforceUser getSalesforceUserByExternalUserId(String externalUserId) {
     try {
       return dynamoDBMapper.load(SalesforceUser.class, externalUserId);
@@ -61,4 +65,30 @@ public class SalesforceUserRepository {
               e.getMessage()));
     }
   }
+
+  @CacheEvict(value = CacheConstants.SS_SALESFORCE_USER_CACHE, key = "#externalUserId")
+  public void removeSalesforceUserData(String externalUserId) {
+    SalesforceUser salesforceUser = getSalesforceUserByExternalUserId(externalUserId);
+    salesforceUser.setIdentityUrl(null);
+    salesforceUser.setExternalOrganizationId(null);
+    salesforceUser.setName(null);
+    salesforceUser.setEmail(null);
+    salesforceUser.setUserKind(null);
+    salesforceUser.setCookieToken(null);
+    salesforceUser.setEncryptionSalt(null);
+    salesforceUser.setStatus(SalesforceUser.Status.DELETED);
+
+    try {
+      dynamoDBMapper.save(salesforceUser, new DynamoDBMapperConfig.Builder()
+          .withSaveBehavior(DynamoDBMapperConfig.SaveBehavior.UPDATE)
+          .build());
+    } catch (Exception e) {
+      throw new CustomException(
+          new ErrorObject(
+              "r_sur_r_1",
+              "something_went_wrong",
+              e.getMessage()));
+    }
+  }
+
 }

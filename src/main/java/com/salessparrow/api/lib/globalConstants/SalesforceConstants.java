@@ -30,8 +30,16 @@ public class SalesforceConstants {
     return CoreConstants.salesforceAuthUrl() + "/services/oauth2/token";
   }
 
+  public String revokeTokensUrl() {
+    return "/services/oauth2/revoke";
+  }
+
   public String salesforceCreateNoteUrl() {
     return sObjectsPath() + "/ContentNote";
+  }
+
+  public String salesforceDeleteNoteUrl(String noteId) {
+    return sObjectsPath() + "/ContentNote/" + noteId;
   }
 
   public String salesforceAttachNoteUrl() {
@@ -54,11 +62,15 @@ public class SalesforceConstants {
     return 10000;
   }
 
-  public String salesforceNotesContentUrl(String urlPrefix, String noteId){
+  public String salesforceNotesContentUrl(String urlPrefix, String noteId) {
     return urlPrefix + "/services/data/v58.0/sobjects/ContentNote/" + noteId + "/Content";
   }
 
-  public String salesforceCreateTaskUrl(){
+  public String salesforceCreateTaskUrl() {
     return sObjectsPath() + "/Task";
+  }
+
+  public String salesforceDeleteAccountTaskUrl(String taskId){
+    return sObjectsPath() + "/Task/" + taskId;
   }
 }

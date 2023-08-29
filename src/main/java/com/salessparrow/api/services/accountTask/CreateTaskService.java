@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.formatter.CreateTaskFormatterDto;
-import com.salessparrow.api.dto.requestMapper.CreateTaskInAccountDto;
-import com.salessparrow.api.lib.crmActions.createTaskInAccount.CreateTaskInAccountFactory;
+import com.salessparrow.api.dto.requestMapper.CreateAccountTaskDto;
+import com.salessparrow.api.lib.crmActions.createAccountTask.CreateAccountTaskFactory;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -20,7 +20,7 @@ public class CreateTaskService {
     Logger logger = LoggerFactory.getLogger(CreateTaskService.class);
 
     @Autowired
-    private CreateTaskInAccountFactory createTaskInAccountFactory;
+    private CreateAccountTaskFactory createAccountTaskFactory;
     
     /**
      * Create a task in CRM
@@ -31,9 +31,9 @@ public class CreateTaskService {
      * 
      * @return CreateTaskFormatterDto object
      */
-    public CreateTaskFormatterDto createTaskInAccount(HttpServletRequest request, String accountId, CreateTaskInAccountDto task) {
+    public CreateTaskFormatterDto createAccountTask(HttpServletRequest request, String accountId, CreateAccountTaskDto task) {
         logger.info("inside createTask Service");
         User currentUser = (User) request.getAttribute("current_user");
-        return createTaskInAccountFactory.createTaskInAccount(currentUser, accountId, task);
+        return createAccountTaskFactory.createAccountTask(currentUser, accountId, task);
     }
 }

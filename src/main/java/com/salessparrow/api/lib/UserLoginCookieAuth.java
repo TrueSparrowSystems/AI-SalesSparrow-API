@@ -93,7 +93,7 @@ public class UserLoginCookieAuth {
    *
    * @throws RuntimeException
    */
-  private void  setParts() {
+  private void setParts() {
     List<String> cookieValueParts = Arrays.asList(cookieValue.split(":"));
 
     if (cookieValueParts.size() != 6) {
@@ -107,7 +107,7 @@ public class UserLoginCookieAuth {
     if (cookieValueParts.get(0).equals(CookieConstants.LATEST_VERSION)) {
       userId = cookieValueParts.get(1);
       userKind = cookieValueParts.get(2);
-      cookieApiSource = cookieValueParts.get(3);  
+      cookieApiSource = cookieValueParts.get(3);
       timestampInCookie = Integer.parseInt(cookieValueParts.get(4));
       token = cookieValueParts.get(5);
     } else {

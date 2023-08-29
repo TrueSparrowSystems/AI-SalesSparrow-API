@@ -1,8 +1,5 @@
 package com.salessparrow.api.services.accounts;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,16 +28,15 @@ public class GetAccountListService {
   public GetAccountsFormatterDto getAccounts(HttpServletRequest request, GetAccountsDto getAccountsDto) {
     User currentUser = (User) request.getAttribute("current_user");
 
-    String formattedSearchString = formatSearchString(getAccountsDto.getQ());
+    String formattedSearchString = "";
+    if(getAccountsDto.getQ() != null){
+      formattedSearchString = formatSearchString(getAccountsDto.getQ());
+    }
     return getAccountsFactory.getAccounts(currentUser, formattedSearchString);
   }
 
   private String formatSearchString(String q) {
     q = q.trim();
-    try {
-      return URLEncoder.encode(q, "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      return q;
-    }
+    return q;
   }
 }

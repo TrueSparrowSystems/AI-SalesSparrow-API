@@ -1,0 +1,9 @@
+{
+  "testValidGetSalesforceOauthTokenByExternalUserId": {
+    "salesforce_oauth_tokens": [
+      { 
+        "filepath": "classpath:fixtures/common/repositories/salesforceOauthToken/ActiveSalesforceOauthToken.json"
+      }
+    ]
+  }
+}

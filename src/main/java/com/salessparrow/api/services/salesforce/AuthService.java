@@ -25,12 +25,11 @@ import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
 import com.salessparrow.api.lib.salesforce.dto.SalesforceGetIdentityDto;
 import com.salessparrow.api.lib.salesforce.dto.SalesforceGetTokensDto;
 import com.salessparrow.api.lib.salesforce.wrappers.SalesforceGetIdentity;
-import com.salessparrow.api.lib.salesforce.wrappers.SalesforceGetTokens;
+import com.salessparrow.api.lib.salesforce.wrappers.SalesforceTokens;
 import com.salessparrow.api.repositories.SalesforceOauthTokenRepository;
 import com.salessparrow.api.repositories.SalesforceOrganizationRepository;
 import com.salessparrow.api.repositories.SalesforceUserRepository;
 import jakarta.servlet.http.HttpServletRequest;
-
 
 @Service
 public class AuthService {
@@ -55,11 +54,11 @@ public class AuthService {
   private Util util;
 
   @Autowired
-  private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
-
-  @Autowired
   private SalesforceUserRepository salesforceUserRepository;
 
+  @Autowired
+  private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
+  
   @Autowired
   private SalesforceOrganizationRepository salesforceOrganizationRepository;
 
@@ -70,7 +69,7 @@ public class AuthService {
   private CookieHelper cookieHelper;
 
   @Autowired
-  private SalesforceGetTokens salesforceGetTokens;
+  private SalesforceTokens salesforceTokens;
 
   @Autowired
   private SalesforceGetIdentity salesforceGetIdentity;
@@ -86,8 +85,8 @@ public class AuthService {
   public AuthServiceDto connectToSalesforce(SalesforceConnectDto params, HttpServletRequest request) {
     this.reqApiSource = (String) request.getAttribute("api_source");
 
-    this.isNewUser = true; // setting default value true to this variable, this will be updated based on conditions in further processing
-
+    this.isNewUser = true; // setting default value true to this variable, this will be updated based on
+                           // conditions in further processing
 
     code = params.getCode();
     redirectUri = params.getRedirect_uri();
@@ -116,7 +115,7 @@ public class AuthService {
   private void fetchOauthTokensFromSalesforce() {
     logger.info("Fetching OAuth Tokens from Salesforce");
 
-    HttpResponse response = salesforceGetTokens.getTokens(this.code, this.redirectUri);
+    HttpResponse response = salesforceTokens.getTokens(this.code, this.redirectUri);
 
     JsonNode jsonNode = util.getJsonNode(response.getResponseBody());
 
@@ -159,8 +158,7 @@ public class AuthService {
     salesforceOrganization.setExternalOrganizationId(salesforceOrganizationId);
     salesforceOrganization.setStatus(SalesforceOrganization.Status.ACTIVE);
 
-    salesforceOrganizationRepository
-        .saveSalesforceOrganization(salesforceOrganization);
+    salesforceOrganizationRepository.saveSalesforceOrganization(salesforceOrganization);
   }
 
   /**
@@ -257,7 +255,7 @@ public class AuthService {
     salesforceUser.setCookieToken(encryptedCookieToken);
     salesforceUser.setEncryptionSalt(encryptedSalt);
     salesforceUser.setStatus(SalesforceUser.Status.ACTIVE);
-
+    
     this.salesforceUser = salesforceUserRepository.saveSalesforceUser(salesforceUser);
     this.decryptedSalt = decryptedSalt;
   }

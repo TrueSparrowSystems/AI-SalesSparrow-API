@@ -1,9 +1,27 @@
 {
-  "testPostLogout": [
+  "testPostDisconnectSuccess": [
     {
       "description": "Should disconnect user for valid cookie",
       "input": {},
-      "output": {}
+      "mocks": {
+        "revokeTokens": {}
+      },
+      "output": {
+        "success": true
+      }
+    }
+  ],
+  "testPostDisconnectNoTokens": [
+    {
+      "description": "Should return error if no data present ",
+      "input": {},
+      "mocks": {
+        "revokeTokens": {}
+      },
+      "output": {
+          "http_code": 500,
+          "code": "INTERNAL_SERVER_ERROR"
+      }
     }
   ]
 }

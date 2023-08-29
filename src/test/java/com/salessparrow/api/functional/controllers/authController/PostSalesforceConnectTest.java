@@ -41,7 +41,7 @@ import com.salessparrow.api.helper.LoadFixture;
 import com.salessparrow.api.helper.Scenario;
 import com.salessparrow.api.helper.Setup;
 import com.salessparrow.api.lib.salesforce.wrappers.SalesforceGetIdentity;
-import com.salessparrow.api.lib.salesforce.wrappers.SalesforceGetTokens;
+import com.salessparrow.api.lib.salesforce.wrappers.SalesforceTokens;
 import com.salessparrow.api.services.salesforce.AuthService;
 import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
 
@@ -69,7 +69,7 @@ public class PostSalesforceConnectTest {
   private LoadFixture loadFixture;
 
   @MockBean
-  private SalesforceGetTokens mockGetTokens;
+  private SalesforceTokens mockGetTokens;
 
   @MockBean
   private SalesforceGetIdentity mockGetIdentity;
@@ -135,7 +135,7 @@ public class PostSalesforceConnectTest {
     }.getClass().getEnclosingMethod().getName();
 
     FixtureData fixtureData = common.loadFixture(
-        "classpath:fixtures/controllers/authController/PostSalesforceConnectFixture.json",
+        "classpath:fixtures/functional/controllers/authController/PostSalesforceConnectFixture.json",
         currentFunctionName);
     loadFixture.perform(fixtureData);
 
@@ -171,7 +171,7 @@ public class PostSalesforceConnectTest {
   }
 
   public List<Scenario> loadTestData(String key) throws IOException {
-    String scenariosPath = "classpath:data/controllers/authController/SalesforceConnect.scenarios.json";
+    String scenariosPath = "classpath:data/functional/controllers/authController/SalesforceConnect.scenarios.json";
     Resource resource = resourceLoader.getResource(scenariosPath);
     ObjectMapper objectMapper = new ObjectMapper();
 

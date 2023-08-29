@@ -55,7 +55,7 @@ public class JsonOnlyInterceptorTest {
 
   @Test
   public void preHandle() throws Exception{
-    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/interceptors/jsonOnlyInterceptor.scenarios.json");
+    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/functional/interceptors/jsonOnlyInterceptor.scenarios.json");
     for (Scenario testDataItem : testDataItems) {
       ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/auth/salesforce/redirect-url")
         .contentType(MediaType.ALL_VALUE));

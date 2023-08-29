@@ -1,5 +1,5 @@
 {
-  "testPostLogout": {
+  "testPostDisconnectSuccess": {
     "salesforce_users": [
       {
         "filepath": "classpath:fixtures/repositories/salesforceUser/ActiveSalesforceUser.json"
@@ -8,6 +8,13 @@
     "salesforce_oauth_tokens": [
       {
         "filepath": "classpath:fixtures/repositories/salesforceOauthToken/ActiveSalesforceOauthToken.json"
+      }
+    ]
+  },
+  "testPostDisconnectNoTokens": {
+    "salesforce_users": [
+      {
+        "filepath": "classpath:fixtures/repositories/salesforceUser/ActiveSalesforceUser.json"
       }
     ]
   }

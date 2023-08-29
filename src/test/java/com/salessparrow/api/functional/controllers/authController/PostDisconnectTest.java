@@ -1,19 +1,34 @@
 package com.salessparrow.api.functional.controllers.authController;
 
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.dynamobee.exception.DynamobeeException;
 import com.salessparrow.api.helper.Cleanup;
 import com.salessparrow.api.helper.Common;
 import com.salessparrow.api.helper.Constants;
@@ -22,6 +37,8 @@ import com.salessparrow.api.helper.LoadFixture;
 import com.salessparrow.api.helper.Scenario;
 import com.salessparrow.api.helper.Setup;
 import com.salessparrow.api.lib.globalConstants.CookieConstants;
+import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
+import com.salessparrow.api.lib.salesforce.wrappers.SalesforceTokens;
 
 import jakarta.servlet.http.Cookie;
 
@@ -32,28 +49,56 @@ import jakarta.servlet.http.Cookie;
 public class PostDisconnectTest {
 
   @Autowired
+  private ResourceLoader resourceLoader;
+
+  @Autowired
   private MockMvc mockMvc;
 
   @Autowired
   private Common common;
 
   @Autowired
+  private Setup setup;
+
+  @Autowired
+  private Cleanup cleanup;
+
+  @Autowired
   private LoadFixture loadFixture;
 
+  @MockBean
+  private SalesforceTokens mockGetTokens;
+
+  @BeforeEach
+  public void setUp() throws DynamobeeException, IOException {
+    MockitoAnnotations.openMocks(this);
+    setup.perform();
+  }
+
+  @AfterEach
+  public void tearDown() {
+    cleanup.perform();
+  }
+
   @Test
-  public void testPostDisconnect() throws Exception{
-    String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
+  public void testPostDisconnectSuccess() throws Exception {
+    String currentFunctionName = new Object() {
+    }.getClass().getEnclosingMethod().getName();
     FixtureData fixtureData = common.loadFixture(
         "classpath:fixtures/controllers/authController/PostDisconnectFixture.json",
         currentFunctionName);
     loadFixture.perform(fixtureData);
 
-    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/controllers/authController/PostDisconnectScenarios.json");
+    List<Scenario> testDataItems = loadTestData(currentFunctionName);
 
     for (Scenario testDataItem : testDataItems) {
       ObjectMapper objectMapper = new ObjectMapper();
-      String expectedOutput = objectMapper.writeValueAsString(testDataItem.getOutput());
       String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
+
+      HttpResponse getTokensMockRes = new HttpResponse();
+      getTokensMockRes.setResponseBody(objectMapper.writeValueAsString(testDataItem.getMocks().get("revokeTokens")));
+
+      when(mockGetTokens.getTokens(anyString(), anyString())).thenReturn(getTokensMockRes);
 
       ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/disconnect")
           .cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
@@ -61,13 +106,56 @@ public class PostDisconnectTest {
 
       String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
 
-      if (resultActions.andReturn().getResponse().getStatus() != 200) {
-        System.out.println("Expected output: " + expectedOutput);
-        System.out.println("Actual output: " + actualOutput);
-        System.out.println("Status code: " + resultActions.andReturn().getResponse().getStatus());
+      if (testDataItem.getOutput().get("success").equals(true)) {
+        assertEquals(204, resultActions.andReturn().getResponse().getStatus());
+      } else {
         common.compareErrors(testDataItem, actualOutput);
-      } 
+      }
     }
   }
-  
+
+  @Test
+  public void testPostDisconnectNoTokens() throws Exception {
+    String currentFunctionName = new Object() {
+    }.getClass().getEnclosingMethod().getName();
+    FixtureData fixtureData = common.loadFixture(
+        "classpath:fixtures/controllers/authController/PostDisconnectFixture.json",
+        currentFunctionName);
+    loadFixture.perform(fixtureData);
+
+    List<Scenario> testDataItems = loadTestData(currentFunctionName);
+
+    for (Scenario testDataItem : testDataItems) {
+      ObjectMapper objectMapper = new ObjectMapper();
+      String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
+
+      HttpResponse getTokensMockRes = new HttpResponse();
+      getTokensMockRes.setResponseBody(objectMapper.writeValueAsString(testDataItem.getMocks().get("revokeTokens")));
+
+      when(mockGetTokens.getTokens(anyString(), anyString())).thenReturn(getTokensMockRes);
+
+      ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/disconnect")
+          .cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
+          .contentType(MediaType.APPLICATION_JSON));
+
+      String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
+
+      if (resultActions.andReturn().getResponse().getStatus() != 204) {
+        common.compareErrors(testDataItem, actualOutput);
+      }
+    }
+  }
+
+  public List<Scenario> loadTestData(String key) throws IOException {
+    String scenariosPath = "classpath:data/controllers/authController/Disconnect.scenarios.json";
+    Resource resource = resourceLoader.getResource(scenariosPath);
+    ObjectMapper objectMapper = new ObjectMapper();
+
+    Map<String, List<Scenario>> scenariosMap = new HashMap<>();
+    scenariosMap = objectMapper.readValue(resource.getInputStream(),
+        new TypeReference<HashMap<String, List<Scenario>>>() {
+        });
+    return scenariosMap.get(key);
+  }
+
 }

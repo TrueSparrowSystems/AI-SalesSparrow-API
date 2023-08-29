@@ -73,8 +73,10 @@ public class HttpClient {
     int statusCode = responseEntity.getStatusCode().value();
     String responseBody = responseEntity.getBody();
     Map<String, List<String>> responseHeaders = new HashMap<>(responseEntity.getHeaders());
-    String contentType = responseEntity.getHeaders().getContentType().toString();
-
+    String contentType = "";
+    if (responseEntity.getHeaders().getContentType() != null) {
+      contentType = responseEntity.getHeaders().getContentType().toString();
+    }
     return new HttpResponse(statusCode, responseBody, responseHeaders, contentType);
   }
 
@@ -102,8 +104,10 @@ public class HttpClient {
     int statusCode = responseEntity.getStatusCode().value();
     String responseBody = responseEntity.getBody();
     Map<String, List<String>> responseHeaders = new HashMap<>(responseEntity.getHeaders());
-    String contentType = responseEntity.getHeaders().getContentType().toString();
-
+    String contentType = "";
+    if (responseEntity.getHeaders().getContentType() != null) {
+      contentType = responseEntity.getHeaders().getContentType().toString();
+    }
     return new HttpResponse(statusCode, responseBody, responseHeaders, contentType);
   }
 }

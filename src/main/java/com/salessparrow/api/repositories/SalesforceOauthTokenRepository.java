@@ -1,6 +1,6 @@
 package com.salessparrow.api.repositories;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
@@ -17,8 +17,11 @@ import com.salessparrow.api.lib.globalConstants.CacheConstants;
 @Repository
 public class SalesforceOauthTokenRepository {
 
-  @Autowired
-  private DynamoDBMapper dynamoDBMapper;
+  private final DynamoDBMapper dynamoDBMapper;
+
+  public SalesforceOauthTokenRepository(DynamoDBMapper dynamoDBMapper) {
+    this.dynamoDBMapper = dynamoDBMapper;
+  }
 
   /**
    * Saves a SalesforceOauthToken to the salesforce_oauth_tokens table.
@@ -56,7 +59,28 @@ public class SalesforceOauthTokenRepository {
     } catch (Exception e) {
       throw new CustomException(
           new ErrorObject(
-              "r_sotr_gsotbsfui_1",
+              "r_sotr_gsotbeui_1",
+              "something_went_wrong",
+              e.getMessage()));
+    }
+  }
+
+  /**
+   * Deletes a SalesforceOauthToken from the salesforce_oauth_tokens table based
+   * on the provided SalesforceOauthToken.
+   * 
+   * @param salesforceOauthToken
+   * 
+   * @return void
+   */
+  @CacheEvict(value = CacheConstants.SS_SALESFORCE_OAUTH_TOKEN_CACHE, key = "#salesforceOauthToken.externalUserId")
+  public void deleteSalesforceOauthTokenBySalesforceOauthToken(SalesforceOauthToken salesforceOauthToken) {
+    try {
+      dynamoDBMapper.delete(salesforceOauthToken);
+    } catch (Exception e) {
+      throw new CustomException(
+          new ErrorObject(
+              "r_sotr_dsotbeui_1",
               "something_went_wrong",
               e.getMessage()));
     }

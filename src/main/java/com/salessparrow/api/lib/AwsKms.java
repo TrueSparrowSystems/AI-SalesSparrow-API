@@ -78,6 +78,7 @@ public class AwsKms {
     try {
       result = kmsClient.decrypt(request);
     } catch (Exception e) {
+      System.out.println(e.getMessage());
       throw new CustomException(
           new ErrorObject(
               "l_ak_dt_1",

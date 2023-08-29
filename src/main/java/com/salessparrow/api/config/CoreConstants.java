@@ -83,6 +83,15 @@ public class CoreConstants {
   }
 
   /**
+   * This method returns api key for OpenAI.
+   *
+   * @return String
+   */
+  public static String openAiApiKey() {
+    return SecretConstants.openAiApiKey();
+  }
+
+  /**
    * This method returns the email address that will be used to send error emails.
    * This email address or its domain must be verified in AWS SES.
    *

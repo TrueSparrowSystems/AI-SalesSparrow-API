@@ -1,0 +1,59 @@
+[
+  {
+    "description": "Should successfully delete the note for given note id", 
+    "input": {
+      "accountId": "0011e00000bWSxdAAG",
+      "noteId":"0691e000001X1yTAAS"
+    },
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
+          {
+            "body": null,
+            "httpHeaders": {},
+            "httpStatusCode": 204,
+            "referenceId": "DeleteNote"
+          }
+        ]
+      }
+    },
+    "output": {}
+  },
+  {
+    "description": "should return error response when note id is invalid", 
+    "input": {
+      "accountId": "0011e00000bWSxdAAG",
+      "noteId":"invalidNoteId"
+    },
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
+        {
+          "body": [
+            {
+              "errorCode": "NOT_FOUND",
+              "message": "Provided external ID field does not exist or is not accessible: INVALID_NOTE_ID"
+            }
+          ],
+          "httpHeaders": {},
+          "httpStatusCode": 404,
+          "referenceId": "DeleteNote"
+        }
+      ]
+    }
+    },
+    "output": {
+      "http_code": 400,
+      "message": "At least one parameter is invalid or missing.",
+      "code": "INVALID_PARAMS",
+      "internal_error_identifier": "l_ca_dan_dasn_pr_1",
+      "param_errors": [
+        {
+          "parameter": "note_id",
+          "param_error_identifier": "invalid_note_id",
+          "message": "The note id you sent is incorrect. Please double check and try again."
+        }
+      ]
+    }
+  }
+]
