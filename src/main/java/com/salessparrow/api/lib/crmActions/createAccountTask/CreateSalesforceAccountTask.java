@@ -101,24 +101,26 @@ public class CreateSalesforceAccountTask implements CreateAccountTask{
             if(errorCode.equals("MALFORMED_ID")){
                 String errorField = createTaskCompositeResponse.get("body").get(0).get("fields").get(0).asText();
                 List<String> errorFields = new ArrayList<String>();
+
                 if(errorField.equals("OwnerId")){
                     errorFields.add("invalid_crm_organization_user_id");
                 }else if(errorField.equals("WhatId")){
                     errorFields.add("invalid_account_id");
                 }
+
                 throw new CustomException(
                     new ParamErrorObject(
                         "l_ca_ct_cst_1", 
                         errorBody, 
                         errorFields));
-            }
 
-            if(errorCode.equals("NOT_FOUND")){
+            }else if(errorCode.equals("NOT_FOUND")){
                 throw new CustomException(
                 new ErrorObject(
                     "l_ca_ct_cst_2",
                     "resource_not_found",
                     errorBody));
+                    
             }else{
                 throw new CustomException(
                     new ErrorObject(
