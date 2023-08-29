@@ -58,7 +58,7 @@ public class AuthService {
 
   @Autowired
   private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
-  
+
   @Autowired
   private SalesforceOrganizationRepository salesforceOrganizationRepository;
 
@@ -85,9 +85,7 @@ public class AuthService {
   public AuthServiceDto connectToSalesforce(SalesforceConnectDto params, HttpServletRequest request) {
     this.reqApiSource = (String) request.getAttribute("api_source");
 
-    this.isNewUser = true; // setting default value true to this variable, this will be updated based on
-                           // conditions in further processing
-
+    this.isNewUser = true; // setting default value true to this variable
     code = params.getCode();
     redirectUri = params.getRedirect_uri();
 
@@ -206,8 +204,12 @@ public class AuthService {
     if (salesforceUser != null) {
       logger.info("Salesforce User already exists");
       this.salesforceUser = salesforceUser;
-      this.isNewUser = false;
-      this.decryptedSalt = localCipher.decrypt(CoreConstants.encryptionKey(), salesforceUser.getEncryptionSalt());
+
+      if (salesforceUser.getStatus() == SalesforceUser.Status.ACTIVE) {
+        logger.info("Salesforce User is active");
+        this.isNewUser = false;
+        this.decryptedSalt = localCipher.decrypt(CoreConstants.encryptionKey(), salesforceUser.getEncryptionSalt());
+      }
     }
   }
 
@@ -237,7 +239,6 @@ public class AuthService {
    * @return void
    */
   private void createSalesforceUser() {
-    logger.info("Creating Salesforce User");
 
     String decryptedSalt = localCipher.generateRandomSalt();
     String cookieToken = localCipher.generateRandomIv(32);
@@ -245,6 +246,23 @@ public class AuthService {
     String encryptedSalt = localCipher.encrypt(CoreConstants.encryptionKey(), decryptedSalt);
     String encryptedCookieToken = localCipher.encrypt(decryptedSalt, cookieToken);
 
+    if (this.salesforceUser != null && this.salesforceUser.getStatus() == SalesforceUser.Status.DELETED) {
+      logger.info("Updating Salesforce User");
+      this.salesforceUser.setIdentityUrl(this.userData.getSub());
+      this.salesforceUser.setExternalOrganizationId(this.userData.getOrganizationId());
+      this.salesforceUser.setName(this.userData.getName());
+      this.salesforceUser.setEmail(this.userData.getEmail());
+      this.salesforceUser.setUserKind(UserConstants.SALESFORCE_USER_KIND);
+      this.salesforceUser.setCookieToken(encryptedCookieToken);
+      this.salesforceUser.setEncryptionSalt(encryptedSalt);
+      this.salesforceUser.setStatus(SalesforceUser.Status.ACTIVE);
+
+      this.salesforceUser = salesforceUserRepository.saveSalesforceUser(this.salesforceUser);
+      this.decryptedSalt = decryptedSalt;
+      return;
+    }
+
+    logger.info("Creating Salesforce User");
     SalesforceUser salesforceUser = new SalesforceUser();
     salesforceUser.setExternalUserId(this.userData.getUserId());
     salesforceUser.setIdentityUrl(this.userData.getSub());
@@ -255,7 +273,7 @@ public class AuthService {
     salesforceUser.setCookieToken(encryptedCookieToken);
     salesforceUser.setEncryptionSalt(encryptedSalt);
     salesforceUser.setStatus(SalesforceUser.Status.ACTIVE);
-    
+
     this.salesforceUser = salesforceUserRepository.saveSalesforceUser(salesforceUser);
     this.decryptedSalt = decryptedSalt;
   }

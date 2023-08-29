@@ -19,13 +19,13 @@ import java.util.List;
  * SalesforceGetTokens class to get tokens from Salesforce
  */
 @Component
-public class SalesforceGetTokens {
+public class SalesforceTokens {
 
   @Autowired
   private SalesforceConstants salesforceConstants;
 
   /**
-   * Get tokens from Salesforce
+   * Get tokens from Salesforce using the authorization code.
    * 
    * @param code
    * @param redirectUri
@@ -55,11 +55,49 @@ public class SalesforceGetTokens {
     } catch (Exception e) {
       List<String> paramErrorIdentifiers = new ArrayList<>();
       paramErrorIdentifiers.add("invalid_code");
-      
+
       throw new CustomException(new ParamErrorObject(
-        "l_s_w_sgt_gt_1", 
-      e.getMessage(), 
-      paramErrorIdentifiers));
+          "l_s_w_sgt_gt_1",
+          e.getMessage(),
+          paramErrorIdentifiers));
+    }
+    return response;
+  }
+
+  /**
+   * Revokes tokens from Salesforce using the access/refresh token.
+   * 
+   * @param instanceUrl Instance URL
+   * @param token       Refresh token
+   * 
+   * @return HttpResponse
+   */
+  public HttpResponse revokeTokens(String instanceUrl, String token) {
+    String salesforceRevokeTokensEndpoint = instanceUrl + salesforceConstants.revokeTokensUrl();
+
+    String requestBody = "token=" + token;
+
+    System.out.println("requestBody: " + requestBody);
+
+    Map<String, String> headers = new HashMap<>();
+    headers.put("content-type", "application/x-www-form-urlencoded");
+
+    System.out.println("headers: " + headers);
+    HttpResponse response = null;
+    try {
+      response = HttpClient.makePostRequest(
+          salesforceRevokeTokensEndpoint,
+          headers,
+          requestBody,
+          10000);
+    } catch (Exception e) {
+      List<String> paramErrorIdentifiers = new ArrayList<>();
+      paramErrorIdentifiers.add("invalid_code");
+
+      throw new CustomException(new ParamErrorObject(
+          "l_s_w_sgt_gt_1",
+          e.getMessage(),
+          paramErrorIdentifiers));
     }
     return response;
   }

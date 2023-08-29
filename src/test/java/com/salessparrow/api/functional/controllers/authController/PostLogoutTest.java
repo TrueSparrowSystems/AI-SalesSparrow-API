@@ -1,9 +1,7 @@
 package com.salessparrow.api.functional.controllers.authController;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,15 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dynamobee.exception.DynamobeeException;
 import com.salessparrow.api.helper.Cleanup;
@@ -39,8 +34,6 @@ import jakarta.servlet.http.Cookie;
 @WebAppConfiguration
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
 public class PostLogoutTest {
-  @Autowired
-  private ResourceLoader resourceLoader;
 
   @Autowired
   private MockMvc mockMvc;
@@ -77,7 +70,8 @@ public class PostLogoutTest {
         currentFunctionName);
     loadFixture.perform(fixtureData);
 
-    List<Scenario> testDataItems = loadTestData(currentFunctionName);
+    List<Scenario> testDataItems = common.loadScenariosData(
+        "classpath:data/functional/controllers/authController/Logout.scenarios.json", currentFunctionName);
 
     for (Scenario testDataItem : testDataItems) {
       System.out.println("Test description: " + testDataItem.getDescription());
@@ -98,17 +92,5 @@ public class PostLogoutTest {
         common.compareErrors(testDataItem, actualOutput);
       }
     }
-  }
-
-  public List<Scenario> loadTestData(String key) throws IOException {
-    String scenariosPath = "classpath:data/functional/controllers/authController/Logout.scenarios.json";
-    Resource resource = resourceLoader.getResource(scenariosPath);
-    ObjectMapper objectMapper = new ObjectMapper();
-
-    Map<String, List<Scenario>> scenariosMap = new HashMap<>();
-    scenariosMap = objectMapper.readValue(resource.getInputStream(),
-        new TypeReference<HashMap<String, List<Scenario>>>() {
-        });
-    return scenariosMap.get(key);
   }
 }
