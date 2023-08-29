@@ -66,7 +66,7 @@ public class SalesforceOAuthToken {
     String encryptedAccessToken = awsKms.encryptToken(decryptedAccessToken);
 
     sfOAuthToken.setAccessToken(encryptedAccessToken);
-    salesforceOauthTokenRepository.saveSalesforceOauthToken(sfOAuthToken);
+    salesforceOauthTokenRepository.updateSalesforceOauthToken(sfOAuthToken);
 
     return decryptedAccessToken;
   }

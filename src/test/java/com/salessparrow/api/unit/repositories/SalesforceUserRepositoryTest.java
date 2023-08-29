@@ -68,25 +68,25 @@ public class SalesforceUserRepositoryTest {
     }
 
     /**
-     * Test Valid Save Db Query
+     * Test Valid Create Db Query
      * 
      */
     @Test
-    public void testValidSaveSalesforceUser() {
-        //Valid Save Db Query
+    public void testValidCreateSalesforceUser() {
+        //Valid Create Db Query
         SalesforceUser salesforceUserValid = new SalesforceUser();
         salesforceUserValid.setExternalUserId("externalUserId-test1");
-        SalesforceUser salesforceUserResp = this.realSalesforceUserRepository.saveSalesforceUser(salesforceUserValid);
+        SalesforceUser salesforceUserResp = this.realSalesforceUserRepository.createSalesforceUser(salesforceUserValid);
         assertEquals(salesforceUserValid.getExternalUserId(), salesforceUserResp.getExternalUserId());
     }
 
     /**
-     * Test Invalid Save Db Query
+     * Test Invalid Create Db Query
      * 
      */   
     @Test
-    public void testInvalidSaveSalesforceUser() {
-        // Invalid Save Db Query without partition key
+    public void testInvalidCreateSalesforceUser() {
+        // Invalid Create Db Query without partition key
         SalesforceUser salesforceUserInvalid = new SalesforceUser();
         salesforceUserInvalid.setExternalUserId("externalUserId-test2");
 
@@ -98,7 +98,44 @@ public class SalesforceUserRepositoryTest {
         // Test if CustomException is thrown with the expected error code
         CustomException thrownException = assertThrows(
             CustomException.class, 
-            () -> mockSalesforceUserRepository.saveSalesforceUser(salesforceUserInvalid)
+            () -> mockSalesforceUserRepository.createSalesforceUser(salesforceUserInvalid)
+        );
+        // Validate the error identifier to be a 500 error
+        assertEquals("something_went_wrong", thrownException.getErrorObject().getApiErrorIdentifier());
+    }
+
+    /**
+     * Test Valid Update Db Query
+     * 
+     */
+    @Test
+    public void testValidUpdateSalesforceUser() {
+        //Valid Update Db Query
+        SalesforceUser salesforceUserValid = new SalesforceUser();
+        salesforceUserValid.setExternalUserId("externalUserId-test1");
+        SalesforceUser salesforceUserResp = this.realSalesforceUserRepository.updateSalesforceUser(salesforceUserValid);
+        assertEquals(salesforceUserValid.getExternalUserId(), salesforceUserResp.getExternalUserId());
+    }
+
+    /**
+     * Test Invalid Update Db Query
+     * 
+     */   
+    @Test
+    public void testInvalidUpdateSalesforceUser() {
+        // Invalid Update Db Query without partition key
+        SalesforceUser salesforceUserInvalid = new SalesforceUser();
+        salesforceUserInvalid.setExternalUserId("externalUserId-test2");
+
+        // Mock the behavior to throw an exception when save is called
+        doThrow(new AmazonDynamoDBException("mock db save error"))
+        .when(mockDynamoDBMapper)
+        .save(salesforceUserInvalid);
+
+        // Test if CustomException is thrown with the expected error code
+        CustomException thrownException = assertThrows(
+            CustomException.class, 
+            () -> mockSalesforceUserRepository.updateSalesforceUser(salesforceUserInvalid)
         );
         // Validate the error identifier to be a 500 error
         assertEquals("something_went_wrong", thrownException.getErrorObject().getApiErrorIdentifier());

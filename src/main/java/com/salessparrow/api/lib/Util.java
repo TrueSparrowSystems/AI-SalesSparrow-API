@@ -75,7 +75,7 @@ public class Util {
    * 
    * @return Date
    */
-  public Date getCurrentTimeInDateFormat() {
+  public static Date getCurrentTimeInDateFormat() {
     Instant currentTimestamp = Instant.now();
     return Date.from(currentTimestamp.atOffset(ZoneOffset.UTC).toInstant());
   }

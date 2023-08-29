@@ -86,25 +86,25 @@ public class SalesforceOauthTokenRepositoryTest {
         cleanup.perform();
     }
 
-    /**
-     * Test valid case for saveSalesforceOauthToken method
+   /**
+     * Test valid case for createSalesforceOauthToken method
      */
     @Test
-    public void testValidSaveSalesforceOauthToken() {
-        //Valid Save Db Query
+    public void testValidCreateSalesforceOauthToken() {
+        //Valid Create Db Query
         SalesforceOauthToken salesforceOauthTokenValid = new SalesforceOauthToken();
         salesforceOauthTokenValid.setExternalUserId("externalUserId-1");
 
-        SalesforceOauthToken salesforceOauthTokenResp = this.realSalesforceOauthTokenRepository.saveSalesforceOauthToken(salesforceOauthTokenValid);
+        SalesforceOauthToken salesforceOauthTokenResp = this.realSalesforceOauthTokenRepository.createSalesforceOauthToken(salesforceOauthTokenValid);
         assertEquals(salesforceOauthTokenValid.getExternalUserId(), salesforceOauthTokenResp.getExternalUserId());
     }
 
     /**
-     * Test invlaid case for saveSalesforceOauthToken method
+     * Test invlaid case for createSalesforceOauthToken method
      */
     @Test
-    public void testInvalidSaveSalesforceOauthToken() {
-        // Invalid Save Db Query without partition key
+    public void testInvalidCreateSalesforceOauthToken() {
+        // Invalid Create Db Query without partition key
         SalesforceOauthToken salesforceOauthTokenInvalid = new SalesforceOauthToken();
         salesforceOauthTokenInvalid.setExternalUserId("externalUserId-2");
 
@@ -116,7 +116,43 @@ public class SalesforceOauthTokenRepositoryTest {
         // Test if CustomException is thrown with the expected error code
         CustomException thrownException = assertThrows(
             CustomException.class, 
-            () -> mockSalesforceOauthTokenRepository.saveSalesforceOauthToken(salesforceOauthTokenInvalid)
+            () -> mockSalesforceOauthTokenRepository.createSalesforceOauthToken(salesforceOauthTokenInvalid)
+        );
+        // Validate the error identifier to be a 500 error
+        assertEquals("something_went_wrong", thrownException.getErrorObject().getApiErrorIdentifier());
+    } 
+
+    /**
+     * Test valid case for updateSalesforceOauthToken method
+     */
+    @Test
+    public void testValidUpdateSalesforceOauthToken() {
+        //Valid Update Db Query
+        SalesforceOauthToken salesforceOauthTokenValid = new SalesforceOauthToken();
+        salesforceOauthTokenValid.setExternalUserId("externalUserId-1");
+
+        SalesforceOauthToken salesforceOauthTokenResp = this.realSalesforceOauthTokenRepository.updateSalesforceOauthToken(salesforceOauthTokenValid);
+        assertEquals(salesforceOauthTokenValid.getExternalUserId(), salesforceOauthTokenResp.getExternalUserId());
+    }
+
+    /**
+     * Test invlaid case for updateSalesforceOauthToken method
+     */
+    @Test
+    public void testInvalidUpdateSalesforceOauthToken() {
+        // Invalid Update Db Query without partition key
+        SalesforceOauthToken salesforceOauthTokenInvalid = new SalesforceOauthToken();
+        salesforceOauthTokenInvalid.setExternalUserId("externalUserId-2");
+
+        // Mock the behavior to throw an exception when save is called
+        doThrow(new AmazonDynamoDBException("mock db save error"))
+        .when(mockDynamoDBMapper)
+        .save(salesforceOauthTokenInvalid);
+
+        // Test if CustomException is thrown with the expected error code
+        CustomException thrownException = assertThrows(
+            CustomException.class, 
+            () -> mockSalesforceOauthTokenRepository.updateSalesforceOauthToken(salesforceOauthTokenInvalid)
         );
         // Validate the error identifier to be a 500 error
         assertEquals("something_went_wrong", thrownException.getErrorObject().getApiErrorIdentifier());
@@ -159,6 +195,11 @@ public class SalesforceOauthTokenRepositoryTest {
         assertEquals("something_went_wrong", thrownException.getErrorObject().getApiErrorIdentifier());
     } 
     
+    /**
+     * Test valid case for insert method and verify the inserted data
+     *
+     * @throws Exception
+     */
     @Test
     public void testInsert() throws Exception {
         String currentFunctionName = new Object() {}.getClass()
@@ -174,10 +215,10 @@ public class SalesforceOauthTokenRepositoryTest {
             objectMapper.writeValueAsString(testDataItem.getInput()),
             new TypeReference<SalesforceOauthToken>() {
             });
-        salesforceOauthToken.setCreatedAt(util.getCurrentTimeInDateFormat());
+        salesforceOauthToken.setCreatedAt(Util.getCurrentTimeInDateFormat());
 
         SalesforceOauthToken insertedSalesforceOauthToken = this.realSalesforceOauthTokenRepository
-            .saveSalesforceOauthToken(salesforceOauthToken);
+            .updateSalesforceOauthToken(salesforceOauthToken);
 
         assertNotNull(insertedSalesforceOauthToken);
         assertNotNull(insertedSalesforceOauthToken.getExternalUserId());
@@ -186,6 +227,10 @@ public class SalesforceOauthTokenRepositoryTest {
     }
   }
 
+  /**
+   * Test valid case for update method and verify the updated data
+   * @throws Exception
+   */
   @Test
   public void testUpdate() throws Exception {
     String currentFunctionName = new Object() {}.getClass()    
@@ -199,26 +244,22 @@ public class SalesforceOauthTokenRepositoryTest {
     List<Scenario> testDataItems = loadTestData(currentFunctionName);
 
     for (Scenario testDataItem : testDataItems) {
-      System.out.println("Test description: " + testDataItem.getDescription());
 
       ObjectMapper objectMapper = new ObjectMapper();
       SalesforceOauthToken salesforceOauthToken = objectMapper.readValue(
           objectMapper.writeValueAsString(testDataItem.getInput()),
           new TypeReference<SalesforceOauthToken>() {
           });
-
+          
       SalesforceOauthToken existingSalesforceOauthToken = this.realSalesforceOauthTokenRepository
           .getSalesforceOauthTokenByExternalUserId(salesforceOauthToken.getExternalUserId());
 
-      System.out.println("existingSalesforceOauthToken: " + existingSalesforceOauthToken);
 
       this.realSalesforceOauthTokenRepository
-          .saveSalesforceOauthToken(salesforceOauthToken);
+          .updateSalesforceOauthToken(salesforceOauthToken);
 
       SalesforceOauthToken updatedSalesforceOauthToken = this.realSalesforceOauthTokenRepository
           .getSalesforceOauthTokenByExternalUserId(salesforceOauthToken.getExternalUserId());
-
-      System.out.println("updatedSalesforceOauthToken: " + updatedSalesforceOauthToken);
 
       assertNotNull(updatedSalesforceOauthToken);
       assertNotNull(updatedSalesforceOauthToken.getUpdatedAt());
@@ -229,24 +270,23 @@ public class SalesforceOauthTokenRepositoryTest {
     }
   }
 
+  /**
+   * Test valid case for update with null attributes
+   * 
+   * @throws Exception
+   */
   @Test
   public void testUpdateWithNullAttributes() throws Exception {
     String currentFunctionName = new Object() {
     }.getClass().getEnclosingMethod().getName();
 
     FixtureData fixtureData = common.loadFixture(
-        "classpath:fixtures/repositories/salesforceOauthTokenRepository.fixture.json",
+        "classpath:fixtures/unit/repositories/salesforceOauthTokenRepository.fixture.json",
         currentFunctionName);
     loadFixture.perform(fixtureData);
 
-    System.out.println("Test description: " + "Update with null attributes");
-
     List<Scenario> testDataItems = loadTestData(currentFunctionName);
-
-    System.out.println("Test description: " + "After Update with null attributes");
-
     for (Scenario testDataItem : testDataItems) {
-      System.out.println("Test description: " + testDataItem.getDescription());
 
       ObjectMapper objectMapper = new ObjectMapper();
       SalesforceOauthToken salesforceOauthToken = objectMapper.readValue(
@@ -257,20 +297,22 @@ public class SalesforceOauthTokenRepositoryTest {
       SalesforceOauthToken existingSalesforceOauthToken = this.realSalesforceOauthTokenRepository
           .getSalesforceOauthTokenByExternalUserId(salesforceOauthToken.getExternalUserId());
 
-      System.out.println("existingSalesforceOauthToken: " + existingSalesforceOauthToken);
-
       this.realSalesforceOauthTokenRepository
-          .saveSalesforceOauthToken(salesforceOauthToken);
+          .updateSalesforceOauthToken(salesforceOauthToken);
 
       SalesforceOauthToken updatedSalesforceOauthToken = this.realSalesforceOauthTokenRepository
           .getSalesforceOauthTokenByExternalUserId(salesforceOauthToken.getExternalUserId());
-      System.out.println("updatedSalesforceOauthToken: " + updatedSalesforceOauthToken);
 
       assertEquals(updatedSalesforceOauthToken.getAccessToken(), salesforceOauthToken.getAccessToken());
       assertEquals(updatedSalesforceOauthToken.getIdToken(), existingSalesforceOauthToken.getIdToken());
     }
   }
 
+  /**
+   * Load test data scenarios from json file
+   * 
+   * @throws Exception
+   */
   public List<Scenario> loadTestData(String key) throws IOException {
     String scenariosPath = "classpath:data/unit/repositories/salesforceOauthTokenRepository.scenarios.json";
     Resource resource = resourceLoader.getResource(scenariosPath);

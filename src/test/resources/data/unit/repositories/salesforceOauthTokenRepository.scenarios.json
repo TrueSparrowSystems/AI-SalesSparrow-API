@@ -10,7 +10,7 @@
         "idToken": "eyJraWQiOiI",
         "identityUrl": "https://test.salesforce.com/id/00D1e0000000NRYEA2/0055i00000AUxQHAA1",
         "issuedAt": "1692265987212",
-        "externalUserId": "00112233445566AAA1",
+        "externalUserId": "0055i00000AUxQHAA1",
         "status": "ACTIVE"
       },
       "output": {}
@@ -20,7 +20,7 @@
     {
       "description": "Update Existing Item",
       "input": {
-        "externalUserId": "00112233445566AAA1",
+        "externalUserId": "0055i00000AUxQHAA1",
         "accessToken": "updatedAccessToken",
         "refreshToken": "updatedRefreshToken"
       },
@@ -31,7 +31,7 @@
     {
       "description": "Skip Null Attributes During Update",
       "input": {
-        "externalUserId": "00112233445566AAA1",
+        "externalUserId": "0055i00000AUxQHAA1",
         "accessToken": "newAccessToken",
         "idToken": null
       },

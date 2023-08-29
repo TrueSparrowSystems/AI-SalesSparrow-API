@@ -62,16 +62,51 @@ public class SalesforceOrganizationRepositoryTest {
     public void tearDown() {
         cleanup.perform();
     }
+    
+    /**
+     * Test Valid Save Db Query
+     */
+    @Test
+    public void testValidCreateSalesforceOrganization() {
+        //Valid Create Db Query
+        SalesforceOrganization salesforceOrganizationValid = new SalesforceOrganization();
+        salesforceOrganizationValid.setExternalOrganizationId("externalUserId-1");
+        SalesforceOrganization salesforceOrganizationResp = this.realSalesforceOrganizationRepository.createSalesforceOrganization(salesforceOrganizationValid);
+        assertEquals(salesforceOrganizationValid.getExternalOrganizationId(), salesforceOrganizationResp.getExternalOrganizationId());
+    }
+
+    /**
+     * Test Invalid Create Db Query
+     */
+    @Test
+    public void testInvalidCreateSalesforceOrganization() {
+        // Invalid Create Db Query without partition key
+        SalesforceOrganization salesforceOrganizationInvalid = new SalesforceOrganization();
+        salesforceOrganizationInvalid.setExternalOrganizationId("externalUserId-2");
+
+        // Mock the behavior to throw an exception when save is called
+        doThrow(new AmazonDynamoDBException("mock db save error"))
+        .when(mockDynamoDBMapper)
+        .save(salesforceOrganizationInvalid);
+
+        // Test if CustomException is thrown with the expected error code
+        CustomException thrownException = assertThrows(
+            CustomException.class, 
+            () -> mockSalesforceOrganizationRepository.createSalesforceOrganization(salesforceOrganizationInvalid)
+        );
+        // Validate the error identifier to be a 500 error
+        assertEquals("something_went_wrong", thrownException.getErrorObject().getApiErrorIdentifier());
+    }     
 
     /**
      * Test Valid Save Db Query
      */
     @Test
-    public void testValidSaveSalesforceOrganization() {
+    public void testValidUpdateSalesforceOrganization() {
         //Valid Save Db Query
         SalesforceOrganization salesforceOrganizationValid = new SalesforceOrganization();
         salesforceOrganizationValid.setExternalOrganizationId("externalUserId-1");
-        SalesforceOrganization salesforceOrganizationResp = this.realSalesforceOrganizationRepository.saveSalesforceOrganization(salesforceOrganizationValid);
+        SalesforceOrganization salesforceOrganizationResp = this.realSalesforceOrganizationRepository.updateSalesforceOrganization(salesforceOrganizationValid);
         assertEquals(salesforceOrganizationValid.getExternalOrganizationId(), salesforceOrganizationResp.getExternalOrganizationId());
     }
 
@@ -79,7 +114,7 @@ public class SalesforceOrganizationRepositoryTest {
      * Test Invalid Save Db Query
      */
     @Test
-    public void testInvalidSaveSalesforceOrganization() {
+    public void testInvalidUpdateSalesforceOrganization() {
         // Invalid Save Db Query without partition key
         SalesforceOrganization salesforceOrganizationInvalid = new SalesforceOrganization();
         salesforceOrganizationInvalid.setExternalOrganizationId("externalUserId-2");
@@ -92,7 +127,7 @@ public class SalesforceOrganizationRepositoryTest {
         // Test if CustomException is thrown with the expected error code
         CustomException thrownException = assertThrows(
             CustomException.class, 
-            () -> mockSalesforceOrganizationRepository.saveSalesforceOrganization(salesforceOrganizationInvalid)
+            () -> mockSalesforceOrganizationRepository.updateSalesforceOrganization(salesforceOrganizationInvalid)
         );
         // Validate the error identifier to be a 500 error
         assertEquals("something_went_wrong", thrownException.getErrorObject().getApiErrorIdentifier());

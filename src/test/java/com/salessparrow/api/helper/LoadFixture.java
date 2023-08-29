@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salessparrow.api.domain.SalesforceOauthToken;
@@ -23,6 +24,9 @@ import com.salessparrow.api.repositories.SalesforceUserRepository;
 public class LoadFixture {
   @Autowired
   private ResourceLoader resourceLoader;
+
+  @Autowired
+  private DynamoDBMapper dynamoDBMapper;
 
   @Autowired
   private SalesforceUserRepository salesforceUserRepository;
@@ -50,24 +54,21 @@ public class LoadFixture {
     if (fixtureData.getSalesforce_users() != null) {
       for (FilePathData filePathData : fixtureData.getSalesforce_users()) {
         SalesforceUser salesforceUser = loadSalesForceUserFixture(filePathData.getFilepath());
-        salesforceUser.setCreatedAt(util.getCurrentTimeInDateFormat());
-        salesforceUserRepository.saveSalesforceUser(salesforceUser);
+        dynamoDBMapper.save(salesforceUser);
       }
     }
 
     if (fixtureData.getSalesforce_oauth_tokens() != null) {
       for (FilePathData filePathData : fixtureData.getSalesforce_oauth_tokens()) {
         SalesforceOauthToken salesforceOauth = loadSalesForceOAuthTokenFixture(filePathData.getFilepath());
-        salesforceOauth.setCreatedAt(util.getCurrentTimeInDateFormat());
-        salesforceOauthTokenRepository.saveSalesforceOauthToken(salesforceOauth);
+        dynamoDBMapper.save(salesforceOauth);
       }
     }
 
     if (fixtureData.getSalesforce_organizations() != null) {
       for (FilePathData filePathData : fixtureData.getSalesforce_organizations()) {
         SalesforceOrganization salesforceOrganization = loadSalesForceOrganizationFixture(filePathData.getFilepath());
-        salesforceOrganization.setCreatedAt(util.getCurrentTimeInDateFormat());
-        salesforceOrganizationRepository.saveSalesforceOrganization(salesforceOrganization);
+        dynamoDBMapper.save(salesforceOrganization);
       }
     }
 
