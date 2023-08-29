@@ -1,5 +1,10 @@
 package com.salessparrow.api.lib;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -106,5 +111,65 @@ public class Util {
     }
 
     return decodedText;
+  }
+
+  /**
+   * Escape special characters in a string for use in a regular expression.
+   * SOQL is important from security point of view.
+   * Refer https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_select_quotedstringescapes.htm for more details.
+   * 
+   * @param input
+   * 
+   * @return String
+   */
+  public static String escapeSpecialChars(String input) {
+    if(input == null || input == "") 
+      return input;
+
+    String[] specialChars = {"\\", "%", "'", "\"", "_"};
+    
+    for (String specialChar : specialChars) {
+        input = input.replace(specialChar, "\\" + specialChar);
+    }
+
+    return input;
+  }
+
+  /**
+   * URL encode a string
+   * 
+   * @param input
+   * 
+   * @return String
+   */
+  public static String urlEncoder(String input){
+    if(input == null || input == "") 
+      return input;
+      
+    try {
+      return URLEncoder.encode(input, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new CustomException(
+        new ErrorObject(
+          "u_u_ue_1",
+          "something_went_wrong",
+          e.getMessage()
+        )
+      );
+    }
+  }
+  
+  /** Get date format from datetime
+   * 
+   * @param date
+   * 
+   * @return String
+   */
+  public String getDateFormatFromDatetime(Date date) {
+    if (date != null) {
+      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+      return dateFormat.format(date);
+    }
+    return null;
   }
 }

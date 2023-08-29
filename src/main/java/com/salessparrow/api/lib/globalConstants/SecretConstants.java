@@ -122,6 +122,10 @@ public class SecretConstants {
     return getSecret("SALESFORCE_WHITELISTED_REDIRECT_URIS");
   }
 
+  public static String openAiApiKey() {
+    return getSecret("OPENAI_API_KEY");
+  }
+
   public static String errorEmailFrom() {
     return getSecret("ERROR_EMAIL_FROM");
   }

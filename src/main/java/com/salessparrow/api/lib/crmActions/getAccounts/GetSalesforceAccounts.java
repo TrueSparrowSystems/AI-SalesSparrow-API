@@ -105,10 +105,10 @@ public class GetSalesforceAccounts implements GetAccounts {
 
     if (httpStatusCodeNode.asInt() != 200 && httpStatusCodeNode.asInt() != 201) {
       throw new CustomException(
-          new ErrorObject(
-              "l_ca_ga_gsa_pr_1",
-              "bad_request",
-              "Error in fetching accounts from salesforce"));
+        new ErrorObject(
+          "l_ca_ga_gsa_pr_1",
+          "something_went_wrong",
+          "Error in fetching accounts from salesforce"));
     }
 
     JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");

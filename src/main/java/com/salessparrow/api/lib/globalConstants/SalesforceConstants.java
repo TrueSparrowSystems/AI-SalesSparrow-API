@@ -34,6 +34,10 @@ public class SalesforceConstants {
     return sObjectsPath() + "/ContentNote";
   }
 
+  public String salesforceDeleteNoteUrl(String noteId) {
+    return sObjectsPath() + "/ContentNote/" + noteId;
+  }
+
   public String salesforceAttachNoteUrl() {
     return sObjectsPath() + "/ContentDocumentLink";
   }
@@ -60,5 +64,9 @@ public class SalesforceConstants {
 
   public String salesforceCreateTaskUrl(){
     return sObjectsPath() + "/Task";
+  }
+
+  public String salesforceDeleteAccountTaskUrl(String taskId){
+    return sObjectsPath() + "/Task/" + taskId;
   }
 }
