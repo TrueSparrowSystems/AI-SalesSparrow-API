@@ -16,50 +16,42 @@ import com.salessparrow.api.lib.globalConstants.CacheConstants;
 @Repository
 public class SalesforceUserRepository {
 
-  private final DynamoDBMapper dynamoDBMapper;
+	private final DynamoDBMapper dynamoDBMapper;
 
-  public SalesforceUserRepository(DynamoDBMapper dynamoDBMapper) {
-      this.dynamoDBMapper = dynamoDBMapper;
-  }
-  /**
-   * Saves a SalesforceUser to the salesforce_users table.
-   * 
-   * @param salesforceUser
-   * 
-   * @return SalesforceUser
-   */
-  @CachePut(value=CacheConstants.SS_SALESFORCE_USER_CACHE, key="#salesforceUser.externalUserId")
-  public SalesforceUser saveSalesforceUser(SalesforceUser salesforceUser) {
-    try {
-      dynamoDBMapper.save(salesforceUser);
-    } catch (Exception e) {
-      throw new CustomException(
-          new ErrorObject(
-              "r_sur_ssu_1",
-              "something_went_wrong",
-              e.getMessage()));
-    }
-    return salesforceUser;
-  }
+	public SalesforceUserRepository(DynamoDBMapper dynamoDBMapper) {
+		this.dynamoDBMapper = dynamoDBMapper;
+	}
 
-  /**
-   * Retrieves a SalesforceUser from the salesforce_users table based on the
-   * provided id.
-   * 
-   * @param id
-   * 
-   * @return SalesforceUser
-   */
-  @Cacheable(value=CacheConstants.SS_SALESFORCE_USER_CACHE, key="#externalUserId")
-  public SalesforceUser getSalesforceUserByExternalUserId(String externalUserId) {
-    try {
-      return dynamoDBMapper.load(SalesforceUser.class, externalUserId);
-    } catch (Exception e) {
-      throw new CustomException(
-          new ErrorObject(
-              "r_sur_gsubi_1",
-              "something_went_wrong",
-              e.getMessage()));
-    }
-  }
+	/**
+	 * Saves a SalesforceUser to the salesforce_users table.
+	 * @param salesforceUser
+	 * @return SalesforceUser
+	 */
+	@CachePut(value = CacheConstants.SS_SALESFORCE_USER_CACHE, key = "#salesforceUser.externalUserId")
+	public SalesforceUser saveSalesforceUser(SalesforceUser salesforceUser) {
+		try {
+			dynamoDBMapper.save(salesforceUser);
+		}
+		catch (Exception e) {
+			throw new CustomException(new ErrorObject("r_sur_ssu_1", "something_went_wrong", e.getMessage()));
+		}
+		return salesforceUser;
+	}
+
+	/**
+	 * Retrieves a SalesforceUser from the salesforce_users table based on the provided
+	 * id.
+	 * @param id
+	 * @return SalesforceUser
+	 */
+	@Cacheable(value = CacheConstants.SS_SALESFORCE_USER_CACHE, key = "#externalUserId")
+	public SalesforceUser getSalesforceUserByExternalUserId(String externalUserId) {
+		try {
+			return dynamoDBMapper.load(SalesforceUser.class, externalUserId);
+		}
+		catch (Exception e) {
+			throw new CustomException(new ErrorObject("r_sur_gsubi_1", "something_went_wrong", e.getMessage()));
+		}
+	}
+
 }

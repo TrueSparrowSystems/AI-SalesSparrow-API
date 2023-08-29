@@ -17,23 +17,24 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 @Service
 public class CreateTaskService {
-    Logger logger = LoggerFactory.getLogger(CreateTaskService.class);
 
-    @Autowired
-    private CreateAccountTaskFactory createAccountTaskFactory;
-    
-    /**
-     * Create a task in CRM
-     * 
-     * @param request HttpServletRequest object
-     * @param accountId CRM account id
-     * @param task CreateTaskDto object
-     * 
-     * @return CreateTaskFormatterDto object
-     */
-    public CreateTaskFormatterDto createAccountTask(HttpServletRequest request, String accountId, CreateAccountTaskDto task) {
-        logger.info("inside createTask Service");
-        User currentUser = (User) request.getAttribute("current_user");
-        return createAccountTaskFactory.createAccountTask(currentUser, accountId, task);
-    }
+	Logger logger = LoggerFactory.getLogger(CreateTaskService.class);
+
+	@Autowired
+	private CreateAccountTaskFactory createAccountTaskFactory;
+
+	/**
+	 * Create a task in CRM
+	 * @param request HttpServletRequest object
+	 * @param accountId CRM account id
+	 * @param task CreateTaskDto object
+	 * @return CreateTaskFormatterDto object
+	 */
+	public CreateTaskFormatterDto createAccountTask(HttpServletRequest request, String accountId,
+			CreateAccountTaskDto task) {
+		logger.info("inside createTask Service");
+		User currentUser = (User) request.getAttribute("current_user");
+		return createAccountTaskFactory.createAccountTask(currentUser, accountId, task);
+	}
+
 }

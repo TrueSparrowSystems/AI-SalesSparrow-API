@@ -14,20 +14,20 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 @Service
 public class GetAccountNoteDetailsService {
-  @Autowired
-  private GetAccountNoteDetailsFactory getNoteDetailsFactory;
 
-  /**
-   * Get the details of a note
-   * 
-   * @param accountId
-   * @param noteId
-   * 
-   * @return GetNoteDetailsFormatterDto
-   */
-  public GetNoteDetailsFormatterDto getNoteDetails(HttpServletRequest request, String noteId) {
-      User currentUser = (User) request.getAttribute("current_user");
-      
-      return getNoteDetailsFactory.getNoteDetails(currentUser, noteId);
-  }
+	@Autowired
+	private GetAccountNoteDetailsFactory getNoteDetailsFactory;
+
+	/**
+	 * Get the details of a note
+	 * @param accountId
+	 * @param noteId
+	 * @return GetNoteDetailsFormatterDto
+	 */
+	public GetNoteDetailsFormatterDto getNoteDetails(HttpServletRequest request, String noteId) {
+		User currentUser = (User) request.getAttribute("current_user");
+
+		return getNoteDetailsFactory.getNoteDetails(currentUser, noteId);
+	}
+
 }

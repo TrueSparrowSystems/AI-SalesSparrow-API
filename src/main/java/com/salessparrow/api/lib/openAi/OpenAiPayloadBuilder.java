@@ -11,60 +11,41 @@ import org.springframework.stereotype.Component;
 @Component
 public class OpenAiPayloadBuilder {
 
-  /**
-   * Payload for crm actions suggestions.
-   * @param text
-   * @return
-   */
-  public String payloadForCrmActionsSuggestions(String text) {
-    
-    return "{\n" +
-    "  \"model\": \"gpt-3.5-turbo-0613\",\n" +
-    "  \"messages\": [\n" +
-    "    {\n" +
-    "      \"role\": \"user\",\n" +
-    "      \"content\": \"You are an AI assistant which gives suggestion on creating task in crm using the input message.Only use the functions you have been provided with. \\nInput message: \\n" + text + "\\n\"\n" +
-    "    }\n" +
-    "  ],\n" +
-    "  \"functions\": [\n" +
-    "    {\n" +
-    "      \"name\": \"suggest_actions\",\n" +
-    "      \"description\": \"This is function for suggesting actions in crm(example salesforce, freshsales) based on input message.\",\n" +
-    "      \"parameters\": {\n" +
-    "        \"type\": \"object\",\n" +
-    "        \"properties\": {\n" +
-    "          \"add_task\": {\n" +
-    "            \"name\": \"add_task\",\n" +
-    "            \"description\": \"Tasks using input message.\",\n" +
-    "            \"type\": \"array\",\n" +
-    "            \"items\": {\n" +
-    "              \"type\": \"object\",\n" +
-    "               \"properties\": {\n" +
-    "                \"description\": {\n" +
-    "                  \"type\": \"string\",\n" +
-    "                  \"description\": \"Description for task to add. This is mandatory\"\n" +
-    "                },\n" +
-    "                \"due_date\": {\n" +
-    "                  \"type\": \"string\",\n" +
-    "                  \"description\": \"Due date for task in YYYY-MM-DD format. Today's date is " + getTodaysDate() + ". This is mandatory\"\n" +
-    "                }\n" +
-    "              },\n" +
-    "              \"required\": [\"description\", \"due_date\"]\n" + 
-    "            }\n" +
-    "          }\n" +
-    "        }\n" +
-    "      }\n" +
-    "    }\n" +
-    "  ]\n" +
-    "}";
-  }
+	/**
+	 * Payload for crm actions suggestions.
+	 * @param text
+	 * @return
+	 */
+	public String payloadForCrmActionsSuggestions(String text) {
 
-  /**
-   * Todays date in yyyy-MM-dd format.
-   * @return
-   */
-  public String getTodaysDate() {
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    return sdf.format(new Date());
-  }
+		return "{\n" + "  \"model\": \"gpt-3.5-turbo-0613\",\n" + "  \"messages\": [\n" + "    {\n"
+				+ "      \"role\": \"user\",\n"
+				+ "      \"content\": \"You are an AI assistant which gives suggestion on creating task in crm using the input message.Only use the functions you have been provided with. \\nInput message: \\n"
+				+ text + "\\n\"\n" + "    }\n" + "  ],\n" + "  \"functions\": [\n" + "    {\n"
+				+ "      \"name\": \"suggest_actions\",\n"
+				+ "      \"description\": \"This is function for suggesting actions in crm(example salesforce, freshsales) based on input message.\",\n"
+				+ "      \"parameters\": {\n" + "        \"type\": \"object\",\n" + "        \"properties\": {\n"
+				+ "          \"add_task\": {\n" + "            \"name\": \"add_task\",\n"
+				+ "            \"description\": \"Tasks using input message.\",\n"
+				+ "            \"type\": \"array\",\n" + "            \"items\": {\n"
+				+ "              \"type\": \"object\",\n" + "               \"properties\": {\n"
+				+ "                \"description\": {\n" + "                  \"type\": \"string\",\n"
+				+ "                  \"description\": \"Description for task to add. This is mandatory\"\n"
+				+ "                },\n" + "                \"due_date\": {\n"
+				+ "                  \"type\": \"string\",\n"
+				+ "                  \"description\": \"Due date for task in YYYY-MM-DD format. Today's date is "
+				+ getTodaysDate() + ". This is mandatory\"\n" + "                }\n" + "              },\n"
+				+ "              \"required\": [\"description\", \"due_date\"]\n" + "            }\n" + "          }\n"
+				+ "        }\n" + "      }\n" + "    }\n" + "  ]\n" + "}";
+	}
+
+	/**
+	 * Todays date in yyyy-MM-dd format.
+	 * @return
+	 */
+	public String getTodaysDate() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		return sdf.format(new Date());
+	}
+
 }

@@ -10,39 +10,37 @@ import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.globalConstants.UserConstants;
 
 /**
- * DeleteAccountNoteFactory is a factory class for the DeleteAccountNote action for the CRM.
+ * DeleteAccountNoteFactory is a factory class for the DeleteAccountNote action for the
+ * CRM.
  */
 @Component
 public class DeleteAccountNoteFactory {
-  private Logger logger = org.slf4j.LoggerFactory.getLogger(DeleteAccountNoteFactory.class);
 
-  @Autowired 
-  DeleteSalesforceAccountNote getSalesforceNoteDetails;
+	private Logger logger = org.slf4j.LoggerFactory.getLogger(DeleteAccountNoteFactory.class);
 
-  @Autowired
-  DeleteSalesforceAccountNote deleteAccountSalesforceNote;
+	@Autowired
+	DeleteSalesforceAccountNote getSalesforceNoteDetails;
 
-  /**
-   * deleteAccountNote is a method that makes call to delete note based on user kind.
-   * 
-   * @param user
-   * @param noteId
-   * 
-   * @return void
-   */
-  public void deleteAccountNote(User user, String noteId) {
-    logger.info("Delete Account Note Factory called");
+	@Autowired
+	DeleteSalesforceAccountNote deleteAccountSalesforceNote;
 
-    switch(user.getUserKind()) {
-    case UserConstants.SALESFORCE_USER_KIND:
-      deleteAccountSalesforceNote.deleteAccountNote(user, noteId);
-      break;
-    default:
-      throw new CustomException(
-        new ErrorObject(
-          "l_ca_dan_danf_dn_1",
-          "something_went_wrong",
-          "Invalid user kind."));
-    }
-  }
+	/**
+	 * deleteAccountNote is a method that makes call to delete note based on user kind.
+	 * @param user
+	 * @param noteId
+	 * @return void
+	 */
+	public void deleteAccountNote(User user, String noteId) {
+		logger.info("Delete Account Note Factory called");
+
+		switch (user.getUserKind()) {
+			case UserConstants.SALESFORCE_USER_KIND:
+				deleteAccountSalesforceNote.deleteAccountNote(user, noteId);
+				break;
+			default:
+				throw new CustomException(
+						new ErrorObject("l_ca_dan_danf_dn_1", "something_went_wrong", "Invalid user kind."));
+		}
+	}
+
 }

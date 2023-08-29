@@ -17,53 +17,52 @@ import com.github.dynamobee.exception.DynamobeeException;
 @Import({ DropTables.class })
 public class Setup {
 
-  Logger logger = LoggerFactory.getLogger(Setup.class);
+	Logger logger = LoggerFactory.getLogger(Setup.class);
 
-  @Autowired
-  private DropTables dropTables;
-  
-  @Autowired
-  private Dynamobee dynamobee;
-  
-  @Autowired
-  private CacheManager cacheManager;
+	@Autowired
+	private DropTables dropTables;
 
-  /**
-   * Create the setup.
-   * - Flush the cache
-   * - Drop dynamodb tables
-   * - Run migrations
-   * @throws DynamobeeException
-   */
-  public void perform() throws DynamobeeException {
-    logger.info("Creating setup");
+	@Autowired
+	private Dynamobee dynamobee;
 
-    flushCache();
-    dropTables();
-    runMigrations();
-  }
+	@Autowired
+	private CacheManager cacheManager;
 
-  /**
-   * Flush the cache.
-   */
-  private void flushCache(){
-    logger.info("Setup: Flushing cache");
-    cacheManager.getCacheNames().stream().forEach(cacheName -> {
-      cacheManager.getCache(cacheName).clear();
-  });  }
+	/**
+	 * Create the setup. - Flush the cache - Drop dynamodb tables - Run migrations
+	 * @throws DynamobeeException
+	 */
+	public void perform() throws DynamobeeException {
+		logger.info("Creating setup");
 
-  /**
-   * Drop dynamodb tables.
-   */
-  private void dropTables() {
-    dropTables.perform();
-  }
+		flushCache();
+		dropTables();
+		runMigrations();
+	}
 
-  /**
-   * Run migrations.
-   * @throws DynamobeeException
-   */
-  public void runMigrations() throws DynamobeeException {
-    dynamobee.execute();
-  }
+	/**
+	 * Flush the cache.
+	 */
+	private void flushCache() {
+		logger.info("Setup: Flushing cache");
+		cacheManager.getCacheNames().stream().forEach(cacheName -> {
+			cacheManager.getCache(cacheName).clear();
+		});
+	}
+
+	/**
+	 * Drop dynamodb tables.
+	 */
+	private void dropTables() {
+		dropTables.perform();
+	}
+
+	/**
+	 * Run migrations.
+	 * @throws DynamobeeException
+	 */
+	public void runMigrations() throws DynamobeeException {
+		dynamobee.execute();
+	}
+
 }

@@ -24,114 +24,115 @@ import com.salessparrow.api.helper.FixtureData;
 import com.salessparrow.api.helper.LoadFixture;
 import com.salessparrow.api.helper.Setup;
 import com.salessparrow.api.repositories.SalesforceOauthTokenRepository;
+
 @SpringBootTest
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
 public class SalesforceOauthTokenRepositoryTest {
 
-    @Autowired
-    private Setup setup;
+	@Autowired
+	private Setup setup;
 
-    @Autowired
-    private Cleanup cleanup;
+	@Autowired
+	private Cleanup cleanup;
 
-    @Autowired
-    private Common common;
+	@Autowired
+	private Common common;
 
-    @Autowired
-    private LoadFixture loadFixture;
+	@Autowired
+	private LoadFixture loadFixture;
 
-    private DynamoDBMapper mockDynamoDBMapper;
-    
-    private SalesforceOauthTokenRepository realSalesforceOauthTokenRepository;
+	private DynamoDBMapper mockDynamoDBMapper;
 
-    private SalesforceOauthTokenRepository mockSalesforceOauthTokenRepository;
+	private SalesforceOauthTokenRepository realSalesforceOauthTokenRepository;
 
-    @BeforeEach
-    public void setUp() throws DynamobeeException, IOException {
-        setup.perform();
-        // Use your Spring bean here
-        DynamoDBMapper dynamoDBMapper = new DynamoDBConfiguration().dynamoDBMapper();
-        this.realSalesforceOauthTokenRepository = new SalesforceOauthTokenRepository(dynamoDBMapper);
+	private SalesforceOauthTokenRepository mockSalesforceOauthTokenRepository;
 
-        this.mockDynamoDBMapper = mock(DynamoDBMapper.class); // Mocked instance
-        this.mockSalesforceOauthTokenRepository = new SalesforceOauthTokenRepository(mockDynamoDBMapper);
-    }
+	@BeforeEach
+	public void setUp() throws DynamobeeException, IOException {
+		setup.perform();
+		// Use your Spring bean here
+		DynamoDBMapper dynamoDBMapper = new DynamoDBConfiguration().dynamoDBMapper();
+		this.realSalesforceOauthTokenRepository = new SalesforceOauthTokenRepository(dynamoDBMapper);
 
-    @AfterEach
-    public void tearDown() {
-        cleanup.perform();
-    }
+		this.mockDynamoDBMapper = mock(DynamoDBMapper.class); // Mocked instance
+		this.mockSalesforceOauthTokenRepository = new SalesforceOauthTokenRepository(mockDynamoDBMapper);
+	}
 
-    /**
-     * Test valid case for saveSalesforceOauthToken method
-     */
-    @Test
-    public void testValidSaveSalesforceOauthToken() {
-        //Valid Save Db Query
-        SalesforceOauthToken salesforceOauthTokenValid = new SalesforceOauthToken();
-        salesforceOauthTokenValid.setExternalUserId("externalUserId-1");
+	@AfterEach
+	public void tearDown() {
+		cleanup.perform();
+	}
 
-        SalesforceOauthToken salesforceOauthTokenResp = this.realSalesforceOauthTokenRepository.saveSalesforceOauthToken(salesforceOauthTokenValid);
-        assertEquals(salesforceOauthTokenValid.getExternalUserId(), salesforceOauthTokenResp.getExternalUserId());
-    }
+	/**
+	 * Test valid case for saveSalesforceOauthToken method
+	 */
+	@Test
+	public void testValidSaveSalesforceOauthToken() {
+		// Valid Save Db Query
+		SalesforceOauthToken salesforceOauthTokenValid = new SalesforceOauthToken();
+		salesforceOauthTokenValid.setExternalUserId("externalUserId-1");
 
-    /**
-     * Test invlaid case for saveSalesforceOauthToken method
-     */
-    @Test
-    public void testInvalidSaveSalesforceOauthToken() {
-        // Invalid Save Db Query without partition key
-        SalesforceOauthToken salesforceOauthTokenInvalid = new SalesforceOauthToken();
-        salesforceOauthTokenInvalid.setExternalUserId("externalUserId-2");
+		SalesforceOauthToken salesforceOauthTokenResp = this.realSalesforceOauthTokenRepository
+			.saveSalesforceOauthToken(salesforceOauthTokenValid);
+		assertEquals(salesforceOauthTokenValid.getExternalUserId(), salesforceOauthTokenResp.getExternalUserId());
+	}
 
-        // Mock the behavior to throw an exception when save is called
-        doThrow(new AmazonDynamoDBException("mock db save error"))
-        .when(mockDynamoDBMapper)
-        .save(salesforceOauthTokenInvalid);
+	/**
+	 * Test invlaid case for saveSalesforceOauthToken method
+	 */
+	@Test
+	public void testInvalidSaveSalesforceOauthToken() {
+		// Invalid Save Db Query without partition key
+		SalesforceOauthToken salesforceOauthTokenInvalid = new SalesforceOauthToken();
+		salesforceOauthTokenInvalid.setExternalUserId("externalUserId-2");
 
-        // Test if CustomException is thrown with the expected error code
-        CustomException thrownException = assertThrows(
-            CustomException.class, 
-            () -> mockSalesforceOauthTokenRepository.saveSalesforceOauthToken(salesforceOauthTokenInvalid)
-        );
-        // Validate the error identifier to be a 500 error
-        assertEquals("something_went_wrong", thrownException.getErrorObject().getApiErrorIdentifier());
-    } 
+		// Mock the behavior to throw an exception when save is called
+		doThrow(new AmazonDynamoDBException("mock db save error")).when(mockDynamoDBMapper)
+			.save(salesforceOauthTokenInvalid);
 
-    /**
-     * Test valid case for getSalesforceOauthTokenByExternalUserId method
-     */
-    @Test
-    public void testValidGetSalesforceOauthTokenByExternalUserId() throws Exception{
+		// Test if CustomException is thrown with the expected error code
+		CustomException thrownException = assertThrows(CustomException.class,
+				() -> mockSalesforceOauthTokenRepository.saveSalesforceOauthToken(salesforceOauthTokenInvalid));
+		// Validate the error identifier to be a 500 error
+		assertEquals("something_went_wrong", thrownException.getErrorObject().getApiErrorIdentifier());
+	}
 
-        String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
-        FixtureData fixtureData = common.loadFixture("classpath:fixtures/unit/repositories/salesforceOauthTokenRepository.json", currentFunctionName);
-        loadFixture.perform(fixtureData);
-        
-        //Valid Get Db Query
-        SalesforceOauthToken salesforceOauthTokenResp = this.realSalesforceOauthTokenRepository.getSalesforceOauthTokenByExternalUserId("0055i00000AUxQHAA1");
-        assertEquals("0055i00000AUxQHAA1", salesforceOauthTokenResp.getExternalUserId());
-    }
+	/**
+	 * Test valid case for getSalesforceOauthTokenByExternalUserId method
+	 */
+	@Test
+	public void testValidGetSalesforceOauthTokenByExternalUserId() throws Exception {
 
-    /**
-     * Test invalid case for getSalesforceOauthTokenByExternalUserId method
-     */
-    @Test
-    public void testInvalidGetSalesforceOauthTokenByExternalUserId() throws Exception{
+		String currentFunctionName = new Object() {
+		}.getClass().getEnclosingMethod().getName();
+		FixtureData fixtureData = common.loadFixture(
+				"classpath:fixtures/unit/repositories/salesforceOauthTokenRepository.json", currentFunctionName);
+		loadFixture.perform(fixtureData);
 
-        String testExternalUserId = "externalUserId-3";
+		// Valid Get Db Query
+		SalesforceOauthToken salesforceOauthTokenResp = this.realSalesforceOauthTokenRepository
+			.getSalesforceOauthTokenByExternalUserId("0055i00000AUxQHAA1");
+		assertEquals("0055i00000AUxQHAA1", salesforceOauthTokenResp.getExternalUserId());
+	}
 
-        // Mock the behavior to throw an exception when load is called
-        when(mockDynamoDBMapper.load(SalesforceOauthToken.class, testExternalUserId)).thenThrow(
-            new AmazonDynamoDBException("mock db get error"));
+	/**
+	 * Test invalid case for getSalesforceOauthTokenByExternalUserId method
+	 */
+	@Test
+	public void testInvalidGetSalesforceOauthTokenByExternalUserId() throws Exception {
 
-        // Mock Invalid Get Db Query
-        // Test if CustomException is thrown with the expected error code
-        CustomException thrownException = assertThrows(
-            CustomException.class, 
-            () -> mockSalesforceOauthTokenRepository.getSalesforceOauthTokenByExternalUserId(testExternalUserId)
-        );
-        // Validate the error identifier to be a 500 error
-        assertEquals("something_went_wrong", thrownException.getErrorObject().getApiErrorIdentifier());
-    }    
+		String testExternalUserId = "externalUserId-3";
+
+		// Mock the behavior to throw an exception when load is called
+		when(mockDynamoDBMapper.load(SalesforceOauthToken.class, testExternalUserId))
+			.thenThrow(new AmazonDynamoDBException("mock db get error"));
+
+		// Mock Invalid Get Db Query
+		// Test if CustomException is thrown with the expected error code
+		CustomException thrownException = assertThrows(CustomException.class,
+				() -> mockSalesforceOauthTokenRepository.getSalesforceOauthTokenByExternalUserId(testExternalUserId));
+		// Validate the error identifier to be a 500 error
+		assertEquals("something_went_wrong", thrownException.getErrorObject().getApiErrorIdentifier());
+	}
+
 }

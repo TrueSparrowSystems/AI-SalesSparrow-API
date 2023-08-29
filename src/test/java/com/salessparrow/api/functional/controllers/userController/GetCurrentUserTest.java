@@ -33,54 +33,60 @@ import jakarta.servlet.http.Cookie;
 @WebAppConfiguration
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
 public class GetCurrentUserTest {
-  @Autowired
-  private MockMvc mockMvc;
 
-  @Autowired
-  private Setup setup;
+	@Autowired
+	private MockMvc mockMvc;
 
-  @Autowired
-  private Cleanup cleanup;
+	@Autowired
+	private Setup setup;
 
-  @Autowired
-  private Common common;
+	@Autowired
+	private Cleanup cleanup;
 
-  @Autowired
-  private LoadFixture loadFixture;
+	@Autowired
+	private Common common;
 
-  @BeforeEach
-  public void setUp() throws DynamobeeException, IOException {
-    setup.perform();
-  }
+	@Autowired
+	private LoadFixture loadFixture;
 
-  @AfterEach
-  public void tearDown() {
-    cleanup.perform();
-  }
+	@BeforeEach
+	public void setUp() throws DynamobeeException, IOException {
+		setup.perform();
+	}
 
-  @Test
-  public void getCurrentUser() throws Exception{
-    String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
-    FixtureData fixtureData = common.loadFixture("classpath:fixtures/functional/controllers/userController/getCurrentUser.fixtures.json",
-      currentFunctionName);
-    loadFixture.perform(fixtureData);
+	@AfterEach
+	public void tearDown() {
+		cleanup.perform();
+	}
 
-    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/functional/controllers/userController/getCurrentUser.scenarios.json");
-    for (Scenario testDataItem : testDataItems) {
-      ObjectMapper objectMapper = new ObjectMapper();
-      String expectedOutput = objectMapper.writeValueAsString(testDataItem.getOutput());
-      String cookieValue = (String) testDataItem.getInput().get("cookie");
+	@Test
+	public void getCurrentUser() throws Exception {
+		String currentFunctionName = new Object() {
+		}.getClass().getEnclosingMethod().getName();
+		FixtureData fixtureData = common.loadFixture(
+				"classpath:fixtures/functional/controllers/userController/getCurrentUser.fixtures.json",
+				currentFunctionName);
+		loadFixture.perform(fixtureData);
 
-      ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/current")
-        .cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
-        .contentType(MediaType.APPLICATION_JSON));
+		List<Scenario> testDataItems = common
+			.loadScenariosData("classpath:data/functional/controllers/userController/getCurrentUser.scenarios.json");
+		for (Scenario testDataItem : testDataItems) {
+			ObjectMapper objectMapper = new ObjectMapper();
+			String expectedOutput = objectMapper.writeValueAsString(testDataItem.getOutput());
+			String cookieValue = (String) testDataItem.getInput().get("cookie");
 
-      String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
-      if(resultActions.andReturn().getResponse().getStatus() == 200) {
-        assertEquals(expectedOutput, actualOutput);
-      } else {
-        common.compareErrors(testDataItem, actualOutput);
-      }
-    }
-  }
+			ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/current")
+				.cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
+				.contentType(MediaType.APPLICATION_JSON));
+
+			String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
+			if (resultActions.andReturn().getResponse().getStatus() == 200) {
+				assertEquals(expectedOutput, actualOutput);
+			}
+			else {
+				common.compareErrors(testDataItem, actualOutput);
+			}
+		}
+	}
+
 }

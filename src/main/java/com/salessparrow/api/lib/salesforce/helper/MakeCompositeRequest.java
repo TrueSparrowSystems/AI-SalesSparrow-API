@@ -19,49 +19,44 @@ import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
 @Component
 public class MakeCompositeRequest {
 
-  Logger logger = LoggerFactory.getLogger(MakeCompositeRequest.class);
+	Logger logger = LoggerFactory.getLogger(MakeCompositeRequest.class);
 
-  @Autowired
-  private SalesforceRequest salesforceOauthRequest;
+	@Autowired
+	private SalesforceRequest salesforceOauthRequest;
 
-  @Autowired
-  private SalesforceConstants salesforceConstants;
+	@Autowired
+	private SalesforceConstants salesforceConstants;
 
-  /**
-   * Make composite post request to the Salesforce API.
-   * 
-   * @param compositeRequests
-   * @param salesforceUserId
-   * 
-   * @return HttpClient.HttpResponse
-   **/
-  public HttpClient.HttpResponse makePostRequest(
-      List<CompositeRequestDto> compositeRequests,
-      String salesforceUserId) {
-    Map<String, List<CompositeRequestDto>> compositeRequestsMap = new HashMap<>();
-    compositeRequestsMap.put("compositeRequest", compositeRequests);
+	/**
+	 * Make composite post request to the Salesforce API.
+	 * @param compositeRequests
+	 * @param salesforceUserId
+	 * @return HttpClient.HttpResponse
+	 **/
+	public HttpClient.HttpResponse makePostRequest(List<CompositeRequestDto> compositeRequests,
+			String salesforceUserId) {
+		Map<String, List<CompositeRequestDto>> compositeRequestsMap = new HashMap<>();
+		compositeRequestsMap.put("compositeRequest", compositeRequests);
 
-    Integer timeoutMillis = salesforceConstants.timeoutMillis();
+		Integer timeoutMillis = salesforceConstants.timeoutMillis();
 
-    SalesforceRequestInterface<HttpClient.HttpResponse> request = (token, instanceUrl) -> {
-      String httpReqUrl = salesforceConstants.salesforceCompositeUrl(instanceUrl);
-      
-      Map<String, String> headers = new HashMap<>();
-      headers.put("Authorization", "Bearer " + token);
+		SalesforceRequestInterface<HttpClient.HttpResponse> request = (token, instanceUrl) -> {
+			String httpReqUrl = salesforceConstants.salesforceCompositeUrl(instanceUrl);
 
-      HttpClient.HttpResponse response = HttpClient.makePostRequest(
-          httpReqUrl,
-          headers,
-          compositeRequestsMap,
-          timeoutMillis);
-      return response;
-    };
+			Map<String, String> headers = new HashMap<>();
+			headers.put("Authorization", "Bearer " + token);
 
-    HttpClient.HttpResponse response = null;
+			HttpClient.HttpResponse response = HttpClient.makePostRequest(httpReqUrl, headers, compositeRequestsMap,
+					timeoutMillis);
+			return response;
+		};
 
-    logger.info("making composite request to salesforce");
-    
-    response = salesforceOauthRequest.makeRequest(salesforceUserId, request);
-    return response;
-  }
+		HttpClient.HttpResponse response = null;
+
+		logger.info("making composite request to salesforce");
+
+		response = salesforceOauthRequest.makeRequest(salesforceUserId, request);
+		return response;
+	}
+
 }

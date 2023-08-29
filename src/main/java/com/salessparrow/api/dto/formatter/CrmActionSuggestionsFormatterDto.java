@@ -9,10 +9,13 @@ import com.salessparrow.api.dto.entities.AddTaskSuggestionEntityDto;
 import lombok.Data;
 
 /**
- * CrmActionSuggestionsFormatterDto is a class for the formatter of the crm action suggestions.
+ * CrmActionSuggestionsFormatterDto is a class for the formatter of the crm action
+ * suggestions.
  */
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CrmActionSuggestionsFormatterDto {
-  private List<AddTaskSuggestionEntityDto> addTaskSuggestions;
+
+	private List<AddTaskSuggestionEntityDto> addTaskSuggestions;
+
 }

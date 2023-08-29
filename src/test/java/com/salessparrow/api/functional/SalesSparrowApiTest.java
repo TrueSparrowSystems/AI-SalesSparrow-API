@@ -10,11 +10,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 public class SalesSparrowApiTest {
 
-    @Autowired
-    private ApplicationContext ctx;
+	@Autowired
+	private ApplicationContext ctx;
 
-    @Test
-    public void contextLoads() {
-        assertThat(ctx).isNotNull();
-    }
+	@Test
+	public void contextLoads() {
+		assertThat(ctx).isNotNull();
+	}
+
 }

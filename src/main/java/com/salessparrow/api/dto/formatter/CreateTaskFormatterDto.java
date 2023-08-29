@@ -8,5 +8,7 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CreateTaskFormatterDto {
-    private String taskId;
+
+	private String taskId;
+
 }

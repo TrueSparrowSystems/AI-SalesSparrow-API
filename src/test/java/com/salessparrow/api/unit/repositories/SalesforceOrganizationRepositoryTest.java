@@ -29,107 +29,108 @@ import com.salessparrow.api.repositories.SalesforceOrganizationRepository;
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
 public class SalesforceOrganizationRepositoryTest {
 
-    @Autowired
-    private Setup setup;
+	@Autowired
+	private Setup setup;
 
-    @Autowired
-    private Cleanup cleanup;
+	@Autowired
+	private Cleanup cleanup;
 
-    @Autowired
-    private Common common;
+	@Autowired
+	private Common common;
 
-    @Autowired
-    private LoadFixture loadFixture;
+	@Autowired
+	private LoadFixture loadFixture;
 
-    private DynamoDBMapper mockDynamoDBMapper;
-    
-    private SalesforceOrganizationRepository realSalesforceOrganizationRepository;
+	private DynamoDBMapper mockDynamoDBMapper;
 
-    private SalesforceOrganizationRepository mockSalesforceOrganizationRepository;
+	private SalesforceOrganizationRepository realSalesforceOrganizationRepository;
 
-    @BeforeEach
-    public void setUp() throws DynamobeeException, IOException {
-        setup.perform();   
-        // Use your Spring bean here
-        DynamoDBMapper dynamoDBMapper = new DynamoDBConfiguration().dynamoDBMapper();     
-        this.realSalesforceOrganizationRepository = new SalesforceOrganizationRepository(dynamoDBMapper);
+	private SalesforceOrganizationRepository mockSalesforceOrganizationRepository;
 
-        this.mockDynamoDBMapper = mock(DynamoDBMapper.class); // Mocked instance
-        this.mockSalesforceOrganizationRepository = new SalesforceOrganizationRepository(mockDynamoDBMapper);
-    }
+	@BeforeEach
+	public void setUp() throws DynamobeeException, IOException {
+		setup.perform();
+		// Use your Spring bean here
+		DynamoDBMapper dynamoDBMapper = new DynamoDBConfiguration().dynamoDBMapper();
+		this.realSalesforceOrganizationRepository = new SalesforceOrganizationRepository(dynamoDBMapper);
 
-    @AfterEach
-    public void tearDown() {
-        cleanup.perform();
-    }
+		this.mockDynamoDBMapper = mock(DynamoDBMapper.class); // Mocked instance
+		this.mockSalesforceOrganizationRepository = new SalesforceOrganizationRepository(mockDynamoDBMapper);
+	}
 
-    /**
-     * Test Valid Save Db Query
-     */
-    @Test
-    public void testValidSaveSalesforceOrganization() {
-        //Valid Save Db Query
-        SalesforceOrganization salesforceOrganizationValid = new SalesforceOrganization();
-        salesforceOrganizationValid.setExternalOrganizationId("externalUserId-1");
-        SalesforceOrganization salesforceOrganizationResp = this.realSalesforceOrganizationRepository.saveSalesforceOrganization(salesforceOrganizationValid);
-        assertEquals(salesforceOrganizationValid.getExternalOrganizationId(), salesforceOrganizationResp.getExternalOrganizationId());
-    }
+	@AfterEach
+	public void tearDown() {
+		cleanup.perform();
+	}
 
-    /**
-     * Test Invalid Save Db Query
-     */
-    @Test
-    public void testInvalidSaveSalesforceOrganization() {
-        // Invalid Save Db Query without partition key
-        SalesforceOrganization salesforceOrganizationInvalid = new SalesforceOrganization();
-        salesforceOrganizationInvalid.setExternalOrganizationId("externalUserId-2");
+	/**
+	 * Test Valid Save Db Query
+	 */
+	@Test
+	public void testValidSaveSalesforceOrganization() {
+		// Valid Save Db Query
+		SalesforceOrganization salesforceOrganizationValid = new SalesforceOrganization();
+		salesforceOrganizationValid.setExternalOrganizationId("externalUserId-1");
+		SalesforceOrganization salesforceOrganizationResp = this.realSalesforceOrganizationRepository
+			.saveSalesforceOrganization(salesforceOrganizationValid);
+		assertEquals(salesforceOrganizationValid.getExternalOrganizationId(),
+				salesforceOrganizationResp.getExternalOrganizationId());
+	}
 
-        // Mock the behavior to throw an exception when save is called
-        doThrow(new AmazonDynamoDBException("mock db save error"))
-        .when(mockDynamoDBMapper)
-        .save(salesforceOrganizationInvalid);
+	/**
+	 * Test Invalid Save Db Query
+	 */
+	@Test
+	public void testInvalidSaveSalesforceOrganization() {
+		// Invalid Save Db Query without partition key
+		SalesforceOrganization salesforceOrganizationInvalid = new SalesforceOrganization();
+		salesforceOrganizationInvalid.setExternalOrganizationId("externalUserId-2");
 
-        // Test if CustomException is thrown with the expected error code
-        CustomException thrownException = assertThrows(
-            CustomException.class, 
-            () -> mockSalesforceOrganizationRepository.saveSalesforceOrganization(salesforceOrganizationInvalid)
-        );
-        // Validate the error identifier to be a 500 error
-        assertEquals("something_went_wrong", thrownException.getErrorObject().getApiErrorIdentifier());
-    }    
+		// Mock the behavior to throw an exception when save is called
+		doThrow(new AmazonDynamoDBException("mock db save error")).when(mockDynamoDBMapper)
+			.save(salesforceOrganizationInvalid);
 
-    /**
-     * Test Valid Get Db Query
-     */
-    @Test
-    public void testValidGetSalesforceOrganizationByExternalOrganizationId() throws Exception{
-        String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
-        FixtureData fixtureData = common.loadFixture("classpath:fixtures/unit/repositories/salesforceOrganizationRepository.json", currentFunctionName);
-        loadFixture.perform(fixtureData);
-        
-        //Valid Get Db Query
-        SalesforceOrganization salesforceOrganizationResp = this.realSalesforceOrganizationRepository.getSalesforceOrganizationByExternalOrganizationId("000Org-id");
-        assertEquals("000Org-id", salesforceOrganizationResp.getExternalOrganizationId());
-    }
+		// Test if CustomException is thrown with the expected error code
+		CustomException thrownException = assertThrows(CustomException.class,
+				() -> mockSalesforceOrganizationRepository.saveSalesforceOrganization(salesforceOrganizationInvalid));
+		// Validate the error identifier to be a 500 error
+		assertEquals("something_went_wrong", thrownException.getErrorObject().getApiErrorIdentifier());
+	}
 
-    /**
-     * Test Invalid Get Db Query
-     */
-    @Test
-    public void testInvalidGetSalesforceOrganizationByExternalOrganizationId() throws Exception{
-        String testExternalOrganizationId = "externalUserId-2";
+	/**
+	 * Test Valid Get Db Query
+	 */
+	@Test
+	public void testValidGetSalesforceOrganizationByExternalOrganizationId() throws Exception {
+		String currentFunctionName = new Object() {
+		}.getClass().getEnclosingMethod().getName();
+		FixtureData fixtureData = common.loadFixture(
+				"classpath:fixtures/unit/repositories/salesforceOrganizationRepository.json", currentFunctionName);
+		loadFixture.perform(fixtureData);
 
-        // Mock the behavior to throw an exception when load is called
-        when(mockDynamoDBMapper.load(SalesforceOrganization.class, testExternalOrganizationId)).thenThrow(
-            new AmazonDynamoDBException("mock db get error"));
+		// Valid Get Db Query
+		SalesforceOrganization salesforceOrganizationResp = this.realSalesforceOrganizationRepository
+			.getSalesforceOrganizationByExternalOrganizationId("000Org-id");
+		assertEquals("000Org-id", salesforceOrganizationResp.getExternalOrganizationId());
+	}
 
-        // Mock Invalid Get Db Query
-        // Test if CustomException is thrown with the expected error code
-        CustomException thrownException = assertThrows(
-            CustomException.class, 
-            () -> mockSalesforceOrganizationRepository.getSalesforceOrganizationByExternalOrganizationId(testExternalOrganizationId)
-        );
-        // Validate the error identifier to be a 500 error
-        assertEquals("something_went_wrong", thrownException.getErrorObject().getApiErrorIdentifier());
-    }    
+	/**
+	 * Test Invalid Get Db Query
+	 */
+	@Test
+	public void testInvalidGetSalesforceOrganizationByExternalOrganizationId() throws Exception {
+		String testExternalOrganizationId = "externalUserId-2";
+
+		// Mock the behavior to throw an exception when load is called
+		when(mockDynamoDBMapper.load(SalesforceOrganization.class, testExternalOrganizationId))
+			.thenThrow(new AmazonDynamoDBException("mock db get error"));
+
+		// Mock Invalid Get Db Query
+		// Test if CustomException is thrown with the expected error code
+		CustomException thrownException = assertThrows(CustomException.class, () -> mockSalesforceOrganizationRepository
+			.getSalesforceOrganizationByExternalOrganizationId(testExternalOrganizationId));
+		// Validate the error identifier to be a 500 error
+		assertEquals("something_went_wrong", thrownException.getErrorObject().getApiErrorIdentifier());
+	}
+
 }

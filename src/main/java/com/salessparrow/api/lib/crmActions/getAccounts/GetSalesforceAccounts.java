@@ -28,80 +28,75 @@ import com.salessparrow.api.lib.salesforce.helper.SalesforceQueryBuilder;
  * GetSalesforceAccounts is a class for the GetAccounts service for the Salesforce CRM.
  **/
 @Component
-public class GetSalesforceAccounts implements GetAccounts{
-  @Autowired
-  private SalesforceConstants salesforceConstants;
+public class GetSalesforceAccounts implements GetAccounts {
 
-  @Autowired
-  private MakeCompositeRequest makeCompositeRequest;
+	@Autowired
+	private SalesforceConstants salesforceConstants;
 
-  /**
-   * Get the list of accounts for a given search term
-   * 
-   * @param user
-   * @param searchTerm
-   * 
-   * @return GetAccountsFormatterDto
-  **/
-  public GetAccountsFormatterDto getAccounts(User user, String searchTerm) {
-    String salesforceUserId = user.getExternalUserId();
+	@Autowired
+	private MakeCompositeRequest makeCompositeRequest;
 
-    SalesforceQueryBuilder salesforceQuery = new SalesforceQueryBuilder();
-    String query = salesforceQuery.getAccountsQuery(searchTerm);
+	/**
+	 * Get the list of accounts for a given search term
+	 * @param user
+	 * @param searchTerm
+	 * @return GetAccountsFormatterDto
+	 **/
+	public GetAccountsFormatterDto getAccounts(User user, String searchTerm) {
+		String salesforceUserId = user.getExternalUserId();
 
-    String url = salesforceConstants.queryUrlPath() + query;
+		SalesforceQueryBuilder salesforceQuery = new SalesforceQueryBuilder();
+		String query = salesforceQuery.getAccountsQuery(searchTerm);
 
-    CompositeRequestDto compositeReq = new CompositeRequestDto("GET", url, "getAccounts");
+		String url = salesforceConstants.queryUrlPath() + query;
 
-    List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
-    compositeRequests.add(compositeReq);
+		CompositeRequestDto compositeReq = new CompositeRequestDto("GET", url, "getAccounts");
 
-    HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId);
+		List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
+		compositeRequests.add(compositeReq);
 
-    return parseResponse(response.getResponseBody());
-  }
+		HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId);
 
-  /**
-   * Parse Response
-   * 
-   * @param responseBody
-   * 
-   * @return GetAccountsFormatterDto
-  **/
-  public GetAccountsFormatterDto parseResponse(String responseBody) {
-    
-    List<String> accountIds = new ArrayList<String>();
-    Map<String, AccountEntity> accountIdToEntityMap = new HashMap<>();
+		return parseResponse(response.getResponseBody());
+	}
 
-    Util util = new Util();
-    JsonNode rootNode = util.getJsonNode(responseBody);
+	/**
+	 * Parse Response
+	 * @param responseBody
+	 * @return GetAccountsFormatterDto
+	 **/
+	public GetAccountsFormatterDto parseResponse(String responseBody) {
 
-    JsonNode httpStatusCodeNode = rootNode.get("compositeResponse").get(0).get("httpStatusCode");
-    
-    if (httpStatusCodeNode.asInt() != 200 && httpStatusCodeNode.asInt() != 201) {
-      throw new CustomException(
-        new ErrorObject(
-          "l_ca_ga_gsa_pr_1",
-          "something_went_wrong",
-          "Error in fetching accounts from salesforce"));
-    }
+		List<String> accountIds = new ArrayList<String>();
+		Map<String, AccountEntity> accountIdToEntityMap = new HashMap<>();
 
-    JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");
+		Util util = new Util();
+		JsonNode rootNode = util.getJsonNode(responseBody);
 
-    for (JsonNode recordNode : recordsNode) {
-      ObjectMapper mapper = new ObjectMapper();
-      mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-      SalesforceAccountDto salesforceAccount = mapper.convertValue(recordNode, SalesforceAccountDto.class);
-      AccountEntity accountEntity = salesforceAccount.getAccountEntity();
+		JsonNode httpStatusCodeNode = rootNode.get("compositeResponse").get(0).get("httpStatusCode");
 
-      accountIds.add(accountEntity.getId());
-      accountIdToEntityMap.put(accountEntity.getId(), accountEntity);
-    }
+		if (httpStatusCodeNode.asInt() != 200 && httpStatusCodeNode.asInt() != 201) {
+			throw new CustomException(new ErrorObject("l_ca_ga_gsa_pr_1", "something_went_wrong",
+					"Error in fetching accounts from salesforce"));
+		}
 
-    GetAccountsFormatterDto getAccountsResponse = new GetAccountsFormatterDto();
-    getAccountsResponse.setAccountMapById(accountIdToEntityMap);
-    getAccountsResponse.setAccountIds(accountIds);
+		JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");
 
-    return getAccountsResponse;
-  }
+		for (JsonNode recordNode : recordsNode) {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+			SalesforceAccountDto salesforceAccount = mapper.convertValue(recordNode, SalesforceAccountDto.class);
+			AccountEntity accountEntity = salesforceAccount.getAccountEntity();
+
+			accountIds.add(accountEntity.getId());
+			accountIdToEntityMap.put(accountEntity.getId(), accountEntity);
+		}
+
+		GetAccountsFormatterDto getAccountsResponse = new GetAccountsFormatterDto();
+		getAccountsResponse.setAccountMapById(accountIdToEntityMap);
+		getAccountsResponse.setAccountIds(accountIds);
+
+		return getAccountsResponse;
+	}
+
 }

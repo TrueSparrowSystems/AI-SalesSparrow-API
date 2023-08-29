@@ -29,68 +29,58 @@ import jakarta.validation.Valid;
 @Validated
 public class AccountNoteController {
 
-  private Logger logger = org.slf4j.LoggerFactory.getLogger(AccountNoteController.class);
+	private Logger logger = org.slf4j.LoggerFactory.getLogger(AccountNoteController.class);
 
-  @Autowired
-  private GetAccountNotesListService getNotesListService;
+	@Autowired
+	private GetAccountNotesListService getNotesListService;
 
-  @Autowired
-  private GetAccountNoteDetailsService getNoteDetailsService;
+	@Autowired
+	private GetAccountNoteDetailsService getNoteDetailsService;
 
-  @Autowired
-  private CreateAccountNoteService createNoteService;
+	@Autowired
+	private CreateAccountNoteService createNoteService;
 
-  @Autowired
-  private DeleteAccountNoteService deleteAccountNoteService;
+	@Autowired
+	private DeleteAccountNoteService deleteAccountNoteService;
 
-  @PostMapping("")
-  public ResponseEntity<CreateNoteFormatterDto> addNoteToAccount(
-    HttpServletRequest request,
-    @PathVariable("account_id") String accountId, 
-    @Valid @RequestBody NoteDto note
-  ) {
-    logger.info("Create Note request received");
+	@PostMapping("")
+	public ResponseEntity<CreateNoteFormatterDto> addNoteToAccount(HttpServletRequest request,
+			@PathVariable("account_id") String accountId, @Valid @RequestBody NoteDto note) {
+		logger.info("Create Note request received");
 
-    CreateNoteFormatterDto createNoteFormatterDto = createNoteService.createNote(request, accountId, note);
+		CreateNoteFormatterDto createNoteFormatterDto = createNoteService.createNote(request, accountId, note);
 
-    return ResponseEntity.ok().body(createNoteFormatterDto);
-  }
+		return ResponseEntity.ok().body(createNoteFormatterDto);
+	}
 
-  @GetMapping("")
-  public ResponseEntity<GetNotesListFormatterDto> getNotesList(
-    HttpServletRequest request,
-    @PathVariable("account_id") String accountId
-  ) {
-    logger.info("Get Note List request received");
+	@GetMapping("")
+	public ResponseEntity<GetNotesListFormatterDto> getNotesList(HttpServletRequest request,
+			@PathVariable("account_id") String accountId) {
+		logger.info("Get Note List request received");
 
-    GetNotesListFormatterDto getNotesListResponse = getNotesListService.getNotesList(request, accountId);
+		GetNotesListFormatterDto getNotesListResponse = getNotesListService.getNotesList(request, accountId);
 
-    return ResponseEntity.ok().body(getNotesListResponse);
-  }
-  
-  @GetMapping("/{note_id}")
-  public ResponseEntity<GetNoteDetailsFormatterDto> getNoteFromAccount(
-    HttpServletRequest request,
-    @PathVariable("account_id") String accountId, 
-    @PathVariable("note_id") String noteId
-  ) {
-    logger.info("Get Note request received");
+		return ResponseEntity.ok().body(getNotesListResponse);
+	}
 
-    GetNoteDetailsFormatterDto getNoteDetailsResponse = getNoteDetailsService.getNoteDetails(request, noteId);
-    
-    return ResponseEntity.ok().body(getNoteDetailsResponse);
-  }
+	@GetMapping("/{note_id}")
+	public ResponseEntity<GetNoteDetailsFormatterDto> getNoteFromAccount(HttpServletRequest request,
+			@PathVariable("account_id") String accountId, @PathVariable("note_id") String noteId) {
+		logger.info("Get Note request received");
 
-  @DeleteMapping("/{note_id}")
-  public ResponseEntity<GetNoteDetailsFormatterDto> deleteNote(
-    HttpServletRequest request,
-    @PathVariable("account_id") String accountId, 
-    @PathVariable("note_id") String noteId
-  ) {
-    logger.info("Delete Note request received");
+		GetNoteDetailsFormatterDto getNoteDetailsResponse = getNoteDetailsService.getNoteDetails(request, noteId);
 
-    deleteAccountNoteService.deleteAccountNote(request, accountId, noteId);
-    
-    return ResponseEntity.noContent().build();
-  }
+		return ResponseEntity.ok().body(getNoteDetailsResponse);
+	}
+
+	@DeleteMapping("/{note_id}")
+	public ResponseEntity<GetNoteDetailsFormatterDto> deleteNote(HttpServletRequest request,
+			@PathVariable("account_id") String accountId, @PathVariable("note_id") String noteId) {
+		logger.info("Delete Note request received");
+
+		deleteAccountNoteService.deleteAccountNote(request, accountId, noteId);
+
+		return ResponseEntity.noContent().build();
+	}
+
 }

@@ -14,28 +14,25 @@ import com.salessparrow.api.lib.globalConstants.UserConstants;
  */
 @Component
 public class GetAccountNoteDetailsFactory {
-  @Autowired 
-  GetSalesforceAccountNoteDetails getSalesforceNoteDetails;
 
-  /**
-   * getNoteDetails is a method that returns the details of a note.
-   * 
-   * @param user
-   * @param noteId
-   * 
-   * @return GetNoteDetailsFormatterDto
-   */
-  public GetNoteDetailsFormatterDto getNoteDetails(User user, String noteId) {
+	@Autowired
+	GetSalesforceAccountNoteDetails getSalesforceNoteDetails;
 
-    switch(user.getUserKind()) {
-    case UserConstants.SALESFORCE_USER_KIND:
-      return getSalesforceNoteDetails.getNoteDetails(user, noteId);
-    default:
-      throw new CustomException(
-        new ErrorObject(
-          "l_ca_gnd_gndf_gnd_1",
-          "something_went_wrong",
-          "Invalid user kind."));
-    }
-  }
+	/**
+	 * getNoteDetails is a method that returns the details of a note.
+	 * @param user
+	 * @param noteId
+	 * @return GetNoteDetailsFormatterDto
+	 */
+	public GetNoteDetailsFormatterDto getNoteDetails(User user, String noteId) {
+
+		switch (user.getUserKind()) {
+			case UserConstants.SALESFORCE_USER_KIND:
+				return getSalesforceNoteDetails.getNoteDetails(user, noteId);
+			default:
+				throw new CustomException(
+						new ErrorObject("l_ca_gnd_gndf_gnd_1", "something_went_wrong", "Invalid user kind."));
+		}
+	}
+
 }

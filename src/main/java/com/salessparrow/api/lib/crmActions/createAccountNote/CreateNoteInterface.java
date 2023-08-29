@@ -11,6 +11,7 @@ import com.salessparrow.api.dto.requestMapper.NoteDto;
  */
 @Component
 public interface CreateNoteInterface {
-    public CreateNoteFormatterDto createNote(SalesforceUser user, String accountId, NoteDto note);
-}
 
+	public CreateNoteFormatterDto createNote(SalesforceUser user, String accountId, NoteDto note);
+
+}

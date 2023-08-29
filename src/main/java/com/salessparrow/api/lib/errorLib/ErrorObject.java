@@ -5,17 +5,19 @@ import lombok.Data;
 @Data
 public class ErrorObject {
 
-  private String internalErrorIdentifier;
-  private String apiErrorIdentifier;
-  private String message;
+	private String internalErrorIdentifier;
 
-  public ErrorObject() {
-  }
+	private String apiErrorIdentifier;
 
-  public ErrorObject(String internalErrorIdentifier, String apiErrorIdentifier, String message) {
-    this.internalErrorIdentifier = internalErrorIdentifier;
-    this.apiErrorIdentifier = apiErrorIdentifier;
-    this.message = message;
-  }
+	private String message;
+
+	public ErrorObject() {
+	}
+
+	public ErrorObject(String internalErrorIdentifier, String apiErrorIdentifier, String message) {
+		this.internalErrorIdentifier = internalErrorIdentifier;
+		this.apiErrorIdentifier = apiErrorIdentifier;
+		this.message = message;
+	}
 
 }

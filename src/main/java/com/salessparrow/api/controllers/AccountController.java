@@ -21,19 +21,19 @@ import jakarta.validation.Valid;
 @Validated
 public class AccountController {
 
-  private Logger logger = org.slf4j.LoggerFactory.getLogger(AccountController.class);
+	private Logger logger = org.slf4j.LoggerFactory.getLogger(AccountController.class);
 
-  @Autowired
-  private GetAccountListService getAccountListService;
+	@Autowired
+	private GetAccountListService getAccountListService;
 
-  @GetMapping("")
-  public ResponseEntity<GetAccountsFormatterDto> getAccounts(
-    HttpServletRequest request, 
-    @Valid @ModelAttribute GetAccountsDto getAccountsDto) {
-    logger.info("Request received");
+	@GetMapping("")
+	public ResponseEntity<GetAccountsFormatterDto> getAccounts(HttpServletRequest request,
+			@Valid @ModelAttribute GetAccountsDto getAccountsDto) {
+		logger.info("Request received");
 
-    GetAccountsFormatterDto getAccountsResponse = getAccountListService.getAccounts(request, getAccountsDto);
+		GetAccountsFormatterDto getAccountsResponse = getAccountListService.getAccounts(request, getAccountsDto);
 
-    return ResponseEntity.ok().body(getAccountsResponse);
-  }
+		return ResponseEntity.ok().body(getAccountsResponse);
+	}
+
 }

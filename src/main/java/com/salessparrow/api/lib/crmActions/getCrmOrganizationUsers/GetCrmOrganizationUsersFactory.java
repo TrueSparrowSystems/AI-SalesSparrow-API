@@ -13,34 +13,31 @@ import com.salessparrow.api.lib.globalConstants.UserConstants;
 
 /**
  * GetCrmOrganizationUsersFactory class for the getCrmOrganizationUsers action.
- * 
+ *
  */
 @Component
 public class GetCrmOrganizationUsersFactory {
 
-    Logger logger = LoggerFactory.getLogger(GetCrmOrganizationUsersFactory.class);
-    
-    @Autowired
-    private GetSalesforceCrmOrganizationUsers getSalesforceCrmOrganizationUsers;
+	Logger logger = LoggerFactory.getLogger(GetCrmOrganizationUsersFactory.class);
 
-    /**
-     * getCrmOrganizationUsers method for the getCrmOrganizationUsers action.
-     * 
-     * @param user
-     * @param searchTerm
-     * @return GetCrmOrganizationUsersFormatterDto
-     */
-    public GetCrmOrganizationUsersFormatterDto getCrmOrganizationUsers(User user, String searchTerm){
-        switch(user.getUserKind()) {
-            case UserConstants.SALESFORCE_USER_KIND:
-                logger.info("Executing salesforce get CrmOrganizationUser Service");
-                return getSalesforceCrmOrganizationUsers.getCrmOrganizationUsers(user, searchTerm);
-            default:
-                throw new CustomException(
-                new ErrorObject(
-                    "l_ca_gcou_gcouf_gcou_1",
-                    "something_went_wrong",
-                    "Invalid user kind."));
-        }
-    }
+	@Autowired
+	private GetSalesforceCrmOrganizationUsers getSalesforceCrmOrganizationUsers;
+
+	/**
+	 * getCrmOrganizationUsers method for the getCrmOrganizationUsers action.
+	 * @param user
+	 * @param searchTerm
+	 * @return GetCrmOrganizationUsersFormatterDto
+	 */
+	public GetCrmOrganizationUsersFormatterDto getCrmOrganizationUsers(User user, String searchTerm) {
+		switch (user.getUserKind()) {
+			case UserConstants.SALESFORCE_USER_KIND:
+				logger.info("Executing salesforce get CrmOrganizationUser Service");
+				return getSalesforceCrmOrganizationUsers.getCrmOrganizationUsers(user, searchTerm);
+			default:
+				throw new CustomException(
+						new ErrorObject("l_ca_gcou_gcouf_gcou_1", "something_went_wrong", "Invalid user kind."));
+		}
+	}
+
 }

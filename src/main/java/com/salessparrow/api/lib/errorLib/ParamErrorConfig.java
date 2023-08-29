@@ -8,25 +8,26 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ParamErrorConfig {
-    private String parameter;
-    private String paramErrorIdentifier;
-    private String message;
 
-    public ParamErrorConfig() {
-    }
+	private String parameter;
 
-    public ParamErrorConfig(String parameter, String paramErrorIdentifier, String message) {
-        this.parameter = parameter;
-        this.paramErrorIdentifier = paramErrorIdentifier;
-        this.message = message;
-    }
+	private String paramErrorIdentifier;
 
-    @Override
-    public String toString() {
-        return "{" +
-                "parameter='" + parameter + '\'' +
-                ", paramErrorIdentifier='" + paramErrorIdentifier + '\'' +
-                ", message='" + message + '\'' +
-                '}';
-    }
+	private String message;
+
+	public ParamErrorConfig() {
+	}
+
+	public ParamErrorConfig(String parameter, String paramErrorIdentifier, String message) {
+		this.parameter = parameter;
+		this.paramErrorIdentifier = paramErrorIdentifier;
+		this.message = message;
+	}
+
+	@Override
+	public String toString() {
+		return "{" + "parameter='" + parameter + '\'' + ", paramErrorIdentifier='" + paramErrorIdentifier + '\''
+				+ ", message='" + message + '\'' + '}';
+	}
+
 }
