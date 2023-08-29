@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.cache.CacheManager;
 
 /**
  * This class is used to clean the setup after each test.
@@ -15,6 +16,9 @@ public class Cleanup {
 
   @Autowired
   private DropTables dropTables;
+
+  @Autowired
+  private CacheManager cacheManager;
 
   /**
    * Clean the setup after each test.
@@ -32,8 +36,10 @@ public class Cleanup {
    * Flush the cache.
    */
   private void flushCache(){
-    logger.info("Cleanup: Flushing cache");
-  }
+    logger.info("Setup: Flushing cache");
+    cacheManager.getCacheNames().stream().forEach(cacheName -> {
+      cacheManager.getCache(cacheName).clear();
+  });  }
 
   /**
    * Drop the tables.

@@ -76,7 +76,7 @@ public class GetCrmOrganizationUserListTest {
     public void getCrmOrganizationUserList(Scenario testScenario) throws Exception {
         // Load fixture data
         String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
-        FixtureData fixtureData = common.loadFixture("classpath:fixtures/controllers/crmOrganizationUserController/getCrmOrganizationUserList.fixtures.json", currentFunctionName);
+        FixtureData fixtureData = common.loadFixture("classpath:fixtures/functional/controllers/crmOrganizationUserController/getCrmOrganizationUserList.fixtures.json", currentFunctionName);
         loadFixture.perform(fixtureData);
 
         // Read data from the scenario
@@ -119,7 +119,7 @@ public class GetCrmOrganizationUserListTest {
     }
 
     private static List<Scenario> loadScenarios() throws IOException {
-        String scenariosPath = "classpath:data/controllers/crmOrganizationUserController/getCrmOrganizationUserList.scenarios.json";
+        String scenariosPath = "classpath:data/functional/controllers/crmOrganizationUserController/getCrmOrganizationUserList.scenarios.json";
         Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});

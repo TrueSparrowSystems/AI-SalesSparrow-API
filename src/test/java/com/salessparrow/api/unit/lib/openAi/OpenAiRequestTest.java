@@ -39,7 +39,7 @@ public class OpenAiRequestTest {
 
   @Test
   void testOpenAiRequest() throws IOException {
-    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/lib/openAi/openAiRequest.scenarios.json");
+    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/unit/lib/openAi/openAiRequest.scenarios.json");
     MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class);
 
     for (Scenario testDataItem : testDataItems) {
@@ -60,7 +60,7 @@ public class OpenAiRequestTest {
 
   @Test
   void testOpenAiRequestError() throws IOException {
-    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/lib/openAi/openAiRequestError.scenarios.json");
+    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/unit/lib/openAi/openAiRequestError.scenarios.json");
     MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class);
 
     for (Scenario testDataItem : testDataItems) {
