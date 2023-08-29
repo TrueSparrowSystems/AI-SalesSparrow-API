@@ -27,32 +27,32 @@ public class DynamoDBConfiguration {
 			@Override
 			public <T> T load(Class<T> clazz, Object hashKey) {
 				T response = null;
-				Instant startTimestamp = Instant.now();
+				long startTimestamp = System.currentTimeMillis();
 				try{
 					response = defaultMapper.load(clazz, hashKey);
 				} catch (Exception e) {
 					logger.debug("DBQuery:Load: table-{} hashKey-{}", clazz.getSimpleName(), hashKey);
 					logger.error("DBQuery:Load: exception-{}", e);
-					throw e;
+					throw new RuntimeException("Error during load database operation", e);
 				}
 				
-				Integer duration = (int) (Instant.now().toEpochMilli() - startTimestamp.toEpochMilli());
+				long duration =  System.currentTimeMillis() - startTimestamp;
 				logger.debug("({} ms)DBQuery:Load: table-{} hashKey-{}", duration, clazz.getSimpleName(), hashKey);
 				return response;
 			}
 
 			@Override
 			public <T> void save(T object) {
-				Instant startTimestamp = Instant.now();
+			long startTimestamp = System.currentTimeMillis();
 				try {
 					defaultMapper.save(object);
 				} catch (Exception e) {
 					logger.debug("DBQuery:Save: table-{}", object.getClass().getSimpleName());
 					logger.error("DBQuery:Save: exception-{}", e);
-					throw e;
+					throw new RuntimeException("Error during save database operation", e);
 				}
 
-				Integer duration = (int) (Instant.now().toEpochMilli() - startTimestamp.toEpochMilli());						
+				long duration =  System.currentTimeMillis() - startTimestamp;						
 				logger.debug("({} ms)DBQuery:Save: table-{}", duration, object.getClass().getSimpleName());
 			}
 			// Similarly, you can override other used methods like delete, batchSave, etc. similarly
