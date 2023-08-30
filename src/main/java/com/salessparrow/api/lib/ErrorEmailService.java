@@ -74,7 +74,7 @@ public class ErrorEmailService {
 	 * @param body - body of email
 	 * @return void
 	 */
-	@Async
+	// @Async
 	public void sendEmail(String from, String to, String subject, String body) {
 		logger.info("send SES Email");
 		try {
