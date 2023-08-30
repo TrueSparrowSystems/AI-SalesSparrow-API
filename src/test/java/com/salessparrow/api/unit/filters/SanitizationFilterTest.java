@@ -1,7 +1,6 @@
 package com.salessparrow.api.unit.filters;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -59,7 +58,6 @@ class SanitizationFilterTest {
 		mockCommonRequestBehaviors();
 		sanitizationFilter.doFilter(request, response, filterChain);
 		verify(request).getReader();
-		assertTrue(true, "Request body should be read without exceptions.");
 	}
 
 	@Test
@@ -67,7 +65,6 @@ class SanitizationFilterTest {
 		mockCommonRequestBehaviors();
 		sanitizationFilter.doFilter(request, response, filterChain);
 		verify(request).getParameterMap();
-		assertTrue(true, "Request parameters should be read without exceptions.");
 	}
 
 	@Test
@@ -75,7 +72,6 @@ class SanitizationFilterTest {
 		mockCommonRequestBehaviors();
 		sanitizationFilter.doFilter(request, response, filterChain);
 		verify(request).getHeaderNames();
-		assertTrue(true, "Request headers should be read without exceptions.");
 	}
 
 	@Test
