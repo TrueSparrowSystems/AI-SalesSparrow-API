@@ -84,16 +84,27 @@ public class GetAccountsFeedTest {
   @MethodSource("testScenariosProvider")
   public void getAccountsFeed(Scenario testScenario) throws Exception {
     System.out.println("Description: " + testScenario.getDescription());
-    // Load fixture data
+
     String currentFunctionName = new Object() {
     }.getClass().getEnclosingMethod().getName();
+    // Load fixture data and set up mocks
+    loadFixtureDataAndSetUpMocks(testScenario, currentFunctionName);
+
+    // Perform the request
+    ResultActions resultActions = performRequest(testScenario);
+
+    // Check the response
+    checkResponse(testScenario, resultActions);
+  }
+
+  private void loadFixtureDataAndSetUpMocks(Scenario testScenario, String currentFunctionName) throws Exception {
+
     FixtureData fixtureData = common.loadFixture(
         "classpath:fixtures/controllers/accountController/getAccountsFeed.fixtures.json", currentFunctionName);
     loadFixture.perform(fixtureData);
 
     // Read data from the scenario
     ObjectMapper objectMapper = new ObjectMapper();
-    String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
 
     // Prepare makeCompositeRequestMock responses
     if (testScenario.getMocks() != null && testScenario.getMocks().containsKey("makeCompositeRequest")) {
@@ -102,6 +113,7 @@ public class GetAccountsFeedTest {
           .setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeCompositeRequest")));
       when(makeCompositeRequestMock.makePostRequest(any(), any())).thenReturn(getAccountMockResponse);
     }
+
     if (testScenario.getMocks() != null && testScenario.getMocks().containsKey("writeValueAsString")) {
       ObjectMapper mapper = mock(ObjectMapper.class);
 
@@ -126,9 +138,13 @@ public class GetAccountsFeedTest {
       when(salesforceRequestInterfaceMock.execute(any(), any()))
           .thenThrow(new RuntimeException(errorMessage));
     }
+  }
 
-    // Perform the request
+  private ResultActions performRequest(Scenario testScenario) throws Exception {
+    // existing code for performing the request
+
     String url = "/api/v1/accounts/feed";
+    String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
     String paginationIdentifier = testScenario.getInput().get("pagination_identifier").toString();
 
     ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(url)
@@ -136,7 +152,12 @@ public class GetAccountsFeedTest {
         .param("pagination_identifier", paginationIdentifier)
         .contentType(MediaType.APPLICATION_JSON));
 
-    // Check the response
+    return resultActions;
+  }
+
+  private void checkResponse(Scenario testScenario, ResultActions resultActions) throws Exception {
+    // existing code for checking the response
+    ObjectMapper objectMapper = new ObjectMapper();
     String expectedOutput = objectMapper.writeValueAsString(testScenario.getOutput());
     String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
 
@@ -156,7 +177,7 @@ public class GetAccountsFeedTest {
   }
 
   private static List<Scenario> loadScenarios() throws IOException {
-    String scenariosPath = "classpath:data/controllers/accountController/getAccountsFeed.scenarios.json";
+    String scenariosPath = "classpath:data/functional/controllers/accountController/getAccountsFeed.scenarios.json";
     Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
     ObjectMapper objectMapper = new ObjectMapper();
     return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {

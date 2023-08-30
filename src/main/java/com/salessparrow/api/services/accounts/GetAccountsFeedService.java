@@ -13,7 +13,6 @@ import com.salessparrow.api.dto.formatter.PaginationIdentifierFormatterDto;
 import com.salessparrow.api.dto.requestMapper.GetAccountsFeedDto;
 import com.salessparrow.api.dto.responseMapper.GetAccountsFeedResponseDto;
 import com.salessparrow.api.exception.CustomException;
-import com.salessparrow.api.lib.UserLoginCookieAuth;
 import com.salessparrow.api.lib.Util;
 import com.salessparrow.api.lib.crmActions.getAccounts.GetAccountsFactory;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
@@ -33,7 +32,7 @@ public class GetAccountsFeedService {
   @Autowired
   private Util util;
 
-  Logger logger = LoggerFactory.getLogger(UserLoginCookieAuth.class);
+  Logger logger = LoggerFactory.getLogger(GetAccountsFeedService.class);
 
   int offset;
   int pageNumber = 1;
@@ -75,42 +74,40 @@ public class GetAccountsFeedService {
         AccountConstants.FEED_VIEW_KIND, offset));
   }
 
-  /**
-   * Preparing response
-   * 
-   * @param accountsFactoryRes GetAccountsFormatterDto
-   * @return GetAccountsFeedResponseDto
-   */
   private GetAccountsFeedResponseDto prepareResponse(GetAccountsFormatterDto accountsFactoryRes) {
     logger.info("Preparing response");
     GetAccountsFeedResponseDto accountsFeedResponse = new GetAccountsFeedResponseDto();
 
-    accountsFeedResponse.setAccountIds(accountsFactoryRes.getAccountIds());
-    accountsFeedResponse.setAccountMapById(accountsFactoryRes.getAccountMapById());
-    accountsFeedResponse.setContactMapById(accountsFactoryRes.getContactMapById());
-    accountsFeedResponse.setAccountContactAssociationsMapById(
-        accountsFactoryRes.getAccountContactAssociationsMapById());
+    setResponseFields(accountsFeedResponse, accountsFactoryRes);
+    setNextPagePayload(accountsFeedResponse);
 
-    NextPagePayloadEntity nextPagePayload = new NextPagePayloadEntity();
+    return accountsFeedResponse;
+  }
 
+  private void setResponseFields(GetAccountsFeedResponseDto response, GetAccountsFormatterDto factoryRes) {
+    response.setAccountIds(factoryRes.getAccountIds());
+    response.setAccountMapById(factoryRes.getAccountMapById());
+    response.setContactMapById(factoryRes.getContactMapById());
+    response.setAccountContactAssociationsMapById(factoryRes.getAccountContactAssociationsMapById());
+  }
+
+  private void setNextPagePayload(GetAccountsFeedResponseDto response) {
     logger.info("Preparing pagination identifier");
     PaginationIdentifierFormatterDto paginationIdentifier = new PaginationIdentifierFormatterDto();
     paginationIdentifier.setPageNumber(pageNumber + 1);
 
     try {
       String paginationJson = mapper.writeValueAsString(paginationIdentifier);
+      NextPagePayloadEntity nextPagePayload = new NextPagePayloadEntity();
       nextPagePayload.setPaginationIdentifier(util.base64Encode(paginationJson));
+      response.setNextPagePayload(nextPagePayload);
     } catch (Exception e) {
       throw new CustomException(
           new ErrorObject(
               "s_a_gafs_gaf_pr_1",
               "something_went_wrong",
               e.getMessage()));
-
     }
-
-    accountsFeedResponse.setNextPagePayload(nextPagePayload);
-    return accountsFeedResponse;
   }
 
 }
