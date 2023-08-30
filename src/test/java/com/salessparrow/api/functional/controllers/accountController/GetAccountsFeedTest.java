@@ -175,8 +175,12 @@ public class GetAccountsFeedTest {
   }
 
   static Stream<Scenario> testScenariosProvider() throws IOException {
-    List<Scenario> testScenarios = loadScenarios();
-    return testScenarios.stream();
+    try {
+      List<Scenario> testScenarios = loadScenarios();
+      return testScenarios.stream();
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to load test scenarios", e);
+    }
   }
 
   private static List<Scenario> loadScenarios() throws IOException {

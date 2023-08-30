@@ -104,8 +104,6 @@ public class GetSalesforceAccounts implements GetAccounts {
 
     JsonNode rootNode = util.getJsonNode(responseBody);
 
-    System.out.println("rootNode--->>>" + rootNode);
-
     JsonNode httpStatusCodeNode = rootNode.get("compositeResponse").get(0).get("httpStatusCode");
 
     if (httpStatusCodeNode.asInt() != 200 && httpStatusCodeNode.asInt() != 201) {

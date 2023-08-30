@@ -58,9 +58,9 @@ public class Util {
       if (headerName.equals("authorization") ||
           headerName.equals("cookie") ||
           headerName.equals("password")) {
-        headerBuilder.append(headerName).append(":**********, ");
+        headerBuilder.append(headerName).append(":**********");
       } else {
-        headerBuilder.append(headerName).append(":").append(request.getHeader(headerName)).append(", ");
+        headerBuilder.append(headerName).append(":").append(request.getHeader(headerName));
       }
     });
     headerBuilder.append("}");

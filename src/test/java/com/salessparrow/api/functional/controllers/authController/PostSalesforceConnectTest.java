@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -34,6 +36,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dynamobee.exception.DynamobeeException;
+import com.salessparrow.api.changelogs.DatabaseChangelog;
 import com.salessparrow.api.helper.Cleanup;
 import com.salessparrow.api.helper.Common;
 import com.salessparrow.api.helper.FixtureData;
@@ -80,6 +83,8 @@ public class PostSalesforceConnectTest {
   @InjectMocks
   private AuthService authService;
 
+  Logger logger = LoggerFactory.getLogger(DatabaseChangelog.class);
+
   @BeforeEach
   public void setUp() throws DynamobeeException, IOException {
     MockitoAnnotations.openMocks(this);
@@ -99,7 +104,7 @@ public class PostSalesforceConnectTest {
     List<Scenario> testDataItems = loadTestData(currentFunctionName);
 
     for (Scenario testDataItem : testDataItems) {
-      System.out.println("Test description: " + testDataItem.getDescription());
+      logger.info("Running test scenario: " + testDataItem.getDescription());
       ObjectMapper objectMapper = new ObjectMapper();
 
       HttpResponse getTokensMockRes = new HttpResponse();
@@ -117,7 +122,6 @@ public class PostSalesforceConnectTest {
           .contentType(MediaType.APPLICATION_JSON));
 
       String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
-      System.out.println("actualOutput: " + actualOutput);
 
       if (resultActions.andReturn().getResponse().getStatus() == 200) {
         assertEquals(objectMapper.writeValueAsString(testDataItem.getOutput()), actualOutput);
@@ -142,7 +146,7 @@ public class PostSalesforceConnectTest {
     List<Scenario> testDataItems = loadTestData(currentFunctionName);
 
     for (Scenario testDataItem : testDataItems) {
-      System.out.println("Test description: " + testDataItem.getDescription());
+      logger.info("Running test scenario: " + testDataItem.getDescription());
       ObjectMapper objectMapper = new ObjectMapper();
 
       HttpResponse getTokensMockRes = new HttpResponse();
