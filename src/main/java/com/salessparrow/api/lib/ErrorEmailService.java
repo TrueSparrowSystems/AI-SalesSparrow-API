@@ -58,6 +58,7 @@ public class ErrorEmailService {
 				&& !CoreConstants.isLocalTestEnvironment()) {
 			System.out.println(" sendErrorMail 4");
 			sendEmail(CoreConstants.errorEmailFrom(), CoreConstants.errorEmailTo(), subject, body);
+			System.out.println(" sendErrorMail 4.1");
 		}
 		else {
 			System.out.println(" sendErrorMail 5");
@@ -76,6 +77,7 @@ public class ErrorEmailService {
 	 */
 	// @Async
 	public void sendEmail(String from, String to, String subject, String body) {
+		System.out.println(" sendEmail 1");
 		logger.info("send SES Email");
 		try {
 			SendEmailRequest request = new SendEmailRequest().withDestination(new Destination().withToAddresses(to))
