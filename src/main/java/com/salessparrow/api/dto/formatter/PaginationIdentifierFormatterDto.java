@@ -4,5 +4,7 @@ import lombok.Data;
 
 @Data
 public class PaginationIdentifierFormatterDto {
-  private Integer pageNumber;
+
+	private Integer pageNumber;
+
 }

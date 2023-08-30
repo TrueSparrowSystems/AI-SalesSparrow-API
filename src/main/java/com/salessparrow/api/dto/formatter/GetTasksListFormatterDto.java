@@ -15,6 +15,9 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GetTasksListFormatterDto {
-  private List<String> taskIds;
-  private Map<String, TaskEntity> taskMapById;
+
+	private List<String> taskIds;
+
+	private Map<String, TaskEntity> taskMapById;
+
 }

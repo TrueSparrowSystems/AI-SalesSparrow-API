@@ -32,127 +32,120 @@ import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 import com.salessparrow.api.lib.salesforce.helper.SalesforceQueryBuilder;
 
 /**
- * GetSalesforceAccounts is a class for the GetAccounts service for the
- * Salesforce CRM.
+ * GetSalesforceAccounts is a class for the GetAccounts service for the Salesforce CRM.
  **/
 @Component
 public class GetSalesforceAccounts implements GetAccounts {
-  @Autowired
-  private SalesforceConstants salesforceConstants;
 
-  @Autowired
-  private MakeCompositeRequest makeCompositeRequest;
+	@Autowired
+	private SalesforceConstants salesforceConstants;
 
-  @Autowired
-  private Util util;
+	@Autowired
+	private MakeCompositeRequest makeCompositeRequest;
 
-  Logger logger = LoggerFactory.getLogger(UserLoginCookieAuth.class);
+	@Autowired
+	private Util util;
 
-  /**
-   * Get the list of accounts for a given search term
-   * 
-   * @param user
-   * @param searchTerm
-   * 
-   * @return GetAccountsFormatterDto
-   **/
-  public GetAccountsFormatterDto getAccounts(User user, String searchTerm, String viewKind, int offset) {
-    String salesforceUserId = user.getExternalUserId();
+	Logger logger = LoggerFactory.getLogger(UserLoginCookieAuth.class);
 
-    SalesforceQueryBuilder salesforceQuery = new SalesforceQueryBuilder();
-    String query = null;
+	/**
+	 * Get the list of accounts for a given search term
+	 * @param user
+	 * @param searchTerm
+	 * @return GetAccountsFormatterDto
+	 **/
+	public GetAccountsFormatterDto getAccounts(User user, String searchTerm, String viewKind, int offset) {
+		String salesforceUserId = user.getExternalUserId();
 
-    if (viewKind.equals(AccountConstants.FEED_VIEW_KIND)) {
-      logger.info("View kind is feed");
-      query = salesforceQuery.getAccountFeedQuery(AccountConstants.PAGINATION_LIMIT, offset);
-    } else if (viewKind.equals(AccountConstants.BASIC_VIEW_KIND)) {
-      logger.info("View kind is basic");
-      query = salesforceQuery.getAccountsQuery(searchTerm);
-    } else {
-      throw new CustomException(
-          new ErrorObject(
-              "l_ca_ga_gsa_ga_1",
-              "something_went_wrong",
-              "Invalid view kind."));
-    }
+		SalesforceQueryBuilder salesforceQuery = new SalesforceQueryBuilder();
+		String query = null;
 
-    String url = salesforceConstants.queryUrlPath() + query;
+		if (viewKind.equals(AccountConstants.FEED_VIEW_KIND)) {
+			logger.info("View kind is feed");
+			query = salesforceQuery.getAccountFeedQuery(AccountConstants.PAGINATION_LIMIT, offset);
+		}
+		else if (viewKind.equals(AccountConstants.BASIC_VIEW_KIND)) {
+			logger.info("View kind is basic");
+			query = salesforceQuery.getAccountsQuery(searchTerm);
+		}
+		else {
+			throw new CustomException(
+					new ErrorObject("l_ca_ga_gsa_ga_1", "something_went_wrong", "Invalid view kind."));
+		}
 
-    CompositeRequestDto compositeReq = new CompositeRequestDto("GET", url, "getAccounts");
+		String url = salesforceConstants.queryUrlPath() + query;
 
-    List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
-    compositeRequests.add(compositeReq);
+		CompositeRequestDto compositeReq = new CompositeRequestDto("GET", url, "getAccounts");
 
-    HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId);
+		List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
+		compositeRequests.add(compositeReq);
 
-    return parseResponse(response.getResponseBody());
-  }
+		HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId);
 
-  /**
-   * Parse Response
-   * 
-   * @param responseBody
-   * 
-   * @return GetAccountsFormatterDto
-   **/
-  public GetAccountsFormatterDto parseResponse(String responseBody) {
+		return parseResponse(response.getResponseBody());
+	}
 
-    List<String> accountIds = new ArrayList<String>();
-    Map<String, AccountEntity> accountIdToEntityMap = new HashMap<>();
-    Map<String, ContactEntity> contactMapById = new HashMap<>();
-    Map<String, AccountContactAssociationsEntity> accountContactAssociationsMapById = new HashMap<>();
+	/**
+	 * Parse Response
+	 * @param responseBody
+	 * @return GetAccountsFormatterDto
+	 **/
+	public GetAccountsFormatterDto parseResponse(String responseBody) {
 
-    JsonNode rootNode = util.getJsonNode(responseBody);
+		List<String> accountIds = new ArrayList<String>();
+		Map<String, AccountEntity> accountIdToEntityMap = new HashMap<>();
+		Map<String, ContactEntity> contactMapById = new HashMap<>();
+		Map<String, AccountContactAssociationsEntity> accountContactAssociationsMapById = new HashMap<>();
 
-    JsonNode httpStatusCodeNode = rootNode.get("compositeResponse").get(0).get("httpStatusCode");
+		JsonNode rootNode = util.getJsonNode(responseBody);
 
-    if (httpStatusCodeNode.asInt() != 200 && httpStatusCodeNode.asInt() != 201) {
-      throw new CustomException(
-          new ErrorObject(
-              "l_ca_ga_gsa_pr_1",
-              "something_went_wrong",
-              "Error in fetching accounts from salesforce"));
-    }
+		JsonNode httpStatusCodeNode = rootNode.get("compositeResponse").get(0).get("httpStatusCode");
 
-    JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");
+		if (httpStatusCodeNode.asInt() != 200 && httpStatusCodeNode.asInt() != 201) {
+			throw new CustomException(new ErrorObject("l_ca_ga_gsa_pr_1", "something_went_wrong",
+					"Error in fetching accounts from salesforce"));
+		}
 
-    for (JsonNode recordNode : recordsNode) {
-      ObjectMapper mapper = new ObjectMapper();
-      mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-      SalesforceAccountDto salesforceAccount = mapper.convertValue(recordNode, SalesforceAccountDto.class);
+		JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");
 
-      AccountEntity accountEntity = salesforceAccount.getAccountEntity();
-      accountIds.add(accountEntity.getId());
-      accountIdToEntityMap.put(accountEntity.getId(), accountEntity);
+		for (JsonNode recordNode : recordsNode) {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+			SalesforceAccountDto salesforceAccount = mapper.convertValue(recordNode, SalesforceAccountDto.class);
 
-      if (salesforceAccount.getContacts() != null && salesforceAccount.getContacts().getRecords() != null
-          && salesforceAccount.getContacts().getRecords().size() > 0) {
-        handleContacts(salesforceAccount, contactMapById, accountContactAssociationsMapById);
-      }
-    }
+			AccountEntity accountEntity = salesforceAccount.getAccountEntity();
+			accountIds.add(accountEntity.getId());
+			accountIdToEntityMap.put(accountEntity.getId(), accountEntity);
 
-    GetAccountsFormatterDto getAccountsResponse = new GetAccountsFormatterDto();
-    getAccountsResponse.setAccountMapById(accountIdToEntityMap);
-    getAccountsResponse.setAccountIds(accountIds);
-    getAccountsResponse.setContactMapById(contactMapById);
-    getAccountsResponse.setAccountContactAssociationsMapById(accountContactAssociationsMapById);
+			if (salesforceAccount.getContacts() != null && salesforceAccount.getContacts().getRecords() != null
+					&& salesforceAccount.getContacts().getRecords().size() > 0) {
+				handleContacts(salesforceAccount, contactMapById, accountContactAssociationsMapById);
+			}
+		}
 
-    return getAccountsResponse;
-  }
+		GetAccountsFormatterDto getAccountsResponse = new GetAccountsFormatterDto();
+		getAccountsResponse.setAccountMapById(accountIdToEntityMap);
+		getAccountsResponse.setAccountIds(accountIds);
+		getAccountsResponse.setContactMapById(contactMapById);
+		getAccountsResponse.setAccountContactAssociationsMapById(accountContactAssociationsMapById);
 
-  private void handleContacts(SalesforceAccountDto salesforceAccount, Map<String, ContactEntity> contactMapById,
-      Map<String, AccountContactAssociationsEntity> accountContactAssociationsMapById) {
-    List<String> contactIds = new ArrayList<String>();
+		return getAccountsResponse;
+	}
 
-    for (SalesforceContactDto contact : salesforceAccount.getContacts().getRecords()) {
-      ContactEntity contactEntity = contact.getContactEntity();
-      contactMapById.put(contactEntity.getId(), contactEntity);
-      contactIds.add(contactEntity.getId());
-    }
+	private void handleContacts(SalesforceAccountDto salesforceAccount, Map<String, ContactEntity> contactMapById,
+			Map<String, AccountContactAssociationsEntity> accountContactAssociationsMapById) {
+		List<String> contactIds = new ArrayList<String>();
 
-    AccountContactAssociationsEntity accountContactAssociationsEntity = new AccountContactAssociationsEntity();
-    accountContactAssociationsEntity.setContactIds(contactIds);
-    accountContactAssociationsMapById.put(salesforceAccount.getAccountEntity().getId(),
-        accountContactAssociationsEntity);
-  }
+		for (SalesforceContactDto contact : salesforceAccount.getContacts().getRecords()) {
+			ContactEntity contactEntity = contact.getContactEntity();
+			contactMapById.put(contactEntity.getId(), contactEntity);
+			contactIds.add(contactEntity.getId());
+		}
+
+		AccountContactAssociationsEntity accountContactAssociationsEntity = new AccountContactAssociationsEntity();
+		accountContactAssociationsEntity.setContactIds(contactIds);
+		accountContactAssociationsMapById.put(salesforceAccount.getAccountEntity().getId(),
+				accountContactAssociationsEntity);
+	}
+
 }

@@ -17,25 +17,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-
 @RestController
 @RequestMapping("/api/v1/crm-organization-users")
 public class CrmOrganizationUserController {
-    Logger logger = LoggerFactory.getLogger(CrmOrganizationUserController.class);
-    
-    @Autowired
-    private GetCrmOrganizationUsersList getCrmOrganizationUsersList;
 
-    @GetMapping("")
-    public ResponseEntity<GetCrmOrganizationUsersFormatterDto> getCrmOrganizationUsers(
-        HttpServletRequest request,
-        @Valid @ModelAttribute GetCrmOrganizationUsersDto CrmOrganizationUsersDto
-    ){
-        logger.info("Get list of crm organization users request received");
+	Logger logger = LoggerFactory.getLogger(CrmOrganizationUserController.class);
 
-        GetCrmOrganizationUsersFormatterDto getCrmOrganizationUsersFormatterDto = getCrmOrganizationUsersList.getCrmOrganizationUsers(request, CrmOrganizationUsersDto);
+	@Autowired
+	private GetCrmOrganizationUsersList getCrmOrganizationUsersList;
 
-        return ResponseEntity.ok().body(getCrmOrganizationUsersFormatterDto);
-    }
-    
+	@GetMapping("")
+	public ResponseEntity<GetCrmOrganizationUsersFormatterDto> getCrmOrganizationUsers(HttpServletRequest request,
+			@Valid @ModelAttribute GetCrmOrganizationUsersDto CrmOrganizationUsersDto) {
+		logger.info("Get list of crm organization users request received");
+
+		GetCrmOrganizationUsersFormatterDto getCrmOrganizationUsersFormatterDto = getCrmOrganizationUsersList
+			.getCrmOrganizationUsers(request, CrmOrganizationUsersDto);
+
+		return ResponseEntity.ok().body(getCrmOrganizationUsersFormatterDto);
+	}
+
 }

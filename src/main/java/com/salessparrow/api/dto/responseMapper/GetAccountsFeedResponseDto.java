@@ -16,9 +16,14 @@ import lombok.Data;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GetAccountsFeedResponseDto {
 
-  private List<String> accountIds;
-  private Map<String, AccountEntity> accountMapById;
-  private Map<String, ContactEntity> contactMapById;
-  private Map<String, AccountContactAssociationsEntity> accountContactAssociationsMapById;
-  private NextPagePayloadEntity nextPagePayload;
+	private List<String> accountIds;
+
+	private Map<String, AccountEntity> accountMapById;
+
+	private Map<String, ContactEntity> contactMapById;
+
+	private Map<String, AccountContactAssociationsEntity> accountContactAssociationsMapById;
+
+	private NextPagePayloadEntity nextPagePayload;
+
 }

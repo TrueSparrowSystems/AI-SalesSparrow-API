@@ -157,6 +157,12 @@
 			<version>2.20.132</version>
 		</dependency>
 
+		<dependency>
+			<groupId>io.spring.javaformat</groupId>
+			<artifactId>spring-javaformat-maven-plugin</artifactId>
+			<version>0.0.39</version>
+		</dependency>
+
  </dependencies>
 
 	<build>
@@ -164,6 +170,20 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>io.spring.javaformat</groupId>
+				<artifactId>spring-javaformat-maven-plugin</artifactId>
+				<version>0.0.39</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>validate</goal>
+							<goal>apply</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 			<plugin>

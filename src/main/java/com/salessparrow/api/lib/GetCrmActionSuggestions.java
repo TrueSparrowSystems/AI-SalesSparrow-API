@@ -25,88 +25,91 @@ import com.salessparrow.api.lib.validators.DateFormatValidator;
  */
 @Component
 public class GetCrmActionSuggestions {
-  @Autowired
-  private OpenAiRequest openAiRequest;
 
-  @Autowired
-  private OpenAiPayloadBuilder openAiPayloadBuilder;
+	@Autowired
+	private OpenAiRequest openAiRequest;
 
-  private DateFormatValidator dateFormatValidator = new DateFormatValidator(); 
+	@Autowired
+	private OpenAiPayloadBuilder openAiPayloadBuilder;
 
-  private Logger logger = org.slf4j.LoggerFactory.getLogger(SuggestionsController.class);
-  
-  /**
-   * Get the crm action suggestions.
-   * @param text
-   * @return
-   */
-  public CrmActionSuggestionsFormatterDto getTaskSuggestions(String text) {
-    logger.info("Crm actions suggestions lib called");
-    
-    String escapedText = escapeForJson(text);
-    String payload = openAiPayloadBuilder.payloadForCrmActionsSuggestions(escapedText);
-    
-    String response = openAiRequest.makeRequest(payload).getResponseBody();
+	private DateFormatValidator dateFormatValidator = new DateFormatValidator();
 
-    return parseResponse(response);
-  }
+	private Logger logger = org.slf4j.LoggerFactory.getLogger(SuggestionsController.class);
 
-  /**
-   * Parse the response from openai.
-   * @param responseBody
-   * @return
-   */
-  private CrmActionSuggestionsFormatterDto parseResponse(String responseBody){
-    CrmActionSuggestionsFormatterDto crmActionSuggestionsFormatterDto = new CrmActionSuggestionsFormatterDto();
-    
-    try {
-      Util util = new Util();
-      JsonNode rootNode = util.getJsonNode(responseBody);
-      JsonNode argumentsNode = rootNode.get("choices").get(0).get("message").get("function_call").get("arguments");  
+	/**
+	 * Get the crm action suggestions.
+	 * @param text
+	 * @return
+	 */
+	public CrmActionSuggestionsFormatterDto getTaskSuggestions(String text) {
+		logger.info("Crm actions suggestions lib called");
 
-      ObjectMapper objectMapper = new ObjectMapper();
-      objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-      String argumentsJson = objectMapper.convertValue(argumentsNode, String.class);
+		String escapedText = escapeForJson(text);
+		String payload = openAiPayloadBuilder.payloadForCrmActionsSuggestions(escapedText);
 
-      Map<String, List<AddTaskSuggestionEntityDto>> arguments = objectMapper.readValue(argumentsJson, new TypeReference<Map<String, List<AddTaskSuggestionEntityDto>>>() {});
-      List<AddTaskSuggestionEntityDto> addTaskList = arguments.get("add_task");
+		String response = openAiRequest.makeRequest(payload).getResponseBody();
 
+		return parseResponse(response);
+	}
 
-      List<AddTaskSuggestionEntityDto> formattedTaskSuggestionEntityDtos = new ArrayList<>();
-      if (addTaskList != null) {
-        for (AddTaskSuggestionEntityDto addTask : addTaskList) {
-          AddTaskSuggestionEntityDto addTaskSuggestionEntityDto = new AddTaskSuggestionEntityDto();
-          addTaskSuggestionEntityDto.setDescription(addTask.getDescription());
+	/**
+	 * Parse the response from openai.
+	 * @param responseBody
+	 * @return
+	 */
+	private CrmActionSuggestionsFormatterDto parseResponse(String responseBody) {
+		CrmActionSuggestionsFormatterDto crmActionSuggestionsFormatterDto = new CrmActionSuggestionsFormatterDto();
 
-          // Format the response check if duedate format is YYYY-MM-DD else remove duedate
-          String dueDate = addTask.getDueDate();
-          if (dateFormatValidator.isValid(dueDate, null)) {
-            addTaskSuggestionEntityDto.setDueDate(dueDate);
-          } 
+		try {
+			Util util = new Util();
+			JsonNode rootNode = util.getJsonNode(responseBody);
+			JsonNode argumentsNode = rootNode.get("choices")
+				.get(0)
+				.get("message")
+				.get("function_call")
+				.get("arguments");
 
-          formattedTaskSuggestionEntityDtos.add(addTaskSuggestionEntityDto);
-        }
-      }
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+			String argumentsJson = objectMapper.convertValue(argumentsNode, String.class);
 
-      crmActionSuggestionsFormatterDto.setAddTaskSuggestions(formattedTaskSuggestionEntityDtos);
-      return crmActionSuggestionsFormatterDto;
-    } catch (Exception e) {
-        throw new CustomException(
-            new ErrorObject(
-                "l_gcas_p_1",
-                "something_went_wrong",
-                e.getMessage()
-            )
-        );
-    }
-  }
+			Map<String, List<AddTaskSuggestionEntityDto>> arguments = objectMapper.readValue(argumentsJson,
+					new TypeReference<Map<String, List<AddTaskSuggestionEntityDto>>>() {
+					});
+			List<AddTaskSuggestionEntityDto> addTaskList = arguments.get("add_task");
 
-  /**
-   * Escape the input string for json.
-   * @param input
-   * @return
-   */
-  private String escapeForJson(String input) {
-    return input.replace("\"", "\\\"").replace("\n", "\\n");
-  }
+			List<AddTaskSuggestionEntityDto> formattedTaskSuggestionEntityDtos = new ArrayList<>();
+			if (addTaskList != null) {
+				for (AddTaskSuggestionEntityDto addTask : addTaskList) {
+					AddTaskSuggestionEntityDto addTaskSuggestionEntityDto = new AddTaskSuggestionEntityDto();
+					addTaskSuggestionEntityDto.setDescription(addTask.getDescription());
+
+					// Format the response check if duedate format is YYYY-MM-DD else
+					// remove duedate
+					String dueDate = addTask.getDueDate();
+					if (dateFormatValidator.isValid(dueDate, null)) {
+						addTaskSuggestionEntityDto.setDueDate(dueDate);
+					}
+
+					formattedTaskSuggestionEntityDtos.add(addTaskSuggestionEntityDto);
+				}
+			}
+
+			crmActionSuggestionsFormatterDto.setAddTaskSuggestions(formattedTaskSuggestionEntityDtos);
+			return crmActionSuggestionsFormatterDto;
+		}
+		catch (Exception e) {
+			throw new CustomException(new ErrorObject("l_gcas_p_1", "something_went_wrong", e.getMessage()));
+		}
+	}
+
+	/**
+	 * Escape the input string for json.
+	 * @param input
+	 * @return
+	 */
+	private String escapeForJson(String input) {
+		return input.replace("\"", "\\\"").replace("\n", "\\n");
+	}
+
 }

@@ -21,109 +21,103 @@ import com.salessparrow.api.lib.globalConstants.AccountConstants;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
- * GetAccountsFeedService is a service class for the GetAccountsFeed action for
- * the CRM.
+ * GetAccountsFeedService is a service class for the GetAccountsFeed action for the CRM.
  */
 @Service
 public class GetAccountsFeedService {
-  @Autowired
-  private GetAccountsFactory getAccountsFactory;
 
-  Logger logger = LoggerFactory.getLogger(GetAccountsFeedService.class);
-  int pageNumber;
+	@Autowired
+	private GetAccountsFactory getAccountsFactory;
 
-  /**
-   * Get accounts feed method
-   * 
-   * @param request            HttpServletRequest
-   * @param getAccountsFeedDto GetAccountsFeedDto
-   * @return GetAccountsFeedResponseDto
-   */
-  public GetAccountsFeedResponseDto getAccountsFeed(HttpServletRequest request,
-      GetAccountsFeedDto getAccountsFeedDto) {
-    logger.info("Getting accounts feed");
+	Logger logger = LoggerFactory.getLogger(GetAccountsFeedService.class);
 
-    User currentUser = (User) request.getAttribute("current_user");
-    pageNumber = 1;
-    String searchTerm = null;
+	int pageNumber;
 
-    int offset = calculateOffset(getAccountsFeedDto.getPagination_identifier());
+	/**
+	 * Get accounts feed method
+	 * @param request HttpServletRequest
+	 * @param getAccountsFeedDto GetAccountsFeedDto
+	 * @return GetAccountsFeedResponseDto
+	 */
+	public GetAccountsFeedResponseDto getAccountsFeed(HttpServletRequest request,
+			GetAccountsFeedDto getAccountsFeedDto) {
+		logger.info("Getting accounts feed");
 
-    return prepareResponse(getAccountsFactory.getAccounts(currentUser, searchTerm,
-        AccountConstants.FEED_VIEW_KIND, offset));
-  }
+		User currentUser = (User) request.getAttribute("current_user");
+		pageNumber = 1;
+		String searchTerm = null;
 
-  /**
-   * Calculate offset for pagination using pagination identifier
-   * 
-   * @param paginationIdentifier String
-   * @return int
-   */
-  private int calculateOffset(String paginationIdentifier) {
-    int offset = 0;
+		int offset = calculateOffset(getAccountsFeedDto.getPagination_identifier());
 
-    if (paginationIdentifier != null) {
-      logger.info("Pagination identifier found");
-      String decodedPaginationIdentifier = Util.base64Decode(paginationIdentifier);
-      PaginationIdentifierFormatterDto paginationIdentifierObj = null;
-      try {
-        ObjectMapper mapper = new ObjectMapper();
-        paginationIdentifierObj = mapper.readValue(decodedPaginationIdentifier, PaginationIdentifierFormatterDto.class);
-      } catch (Exception e) {
-        throw new CustomException(
-            new ErrorObject(
-                "s_a_gafs_gaf_1",
-                "pagination_identifier_parsing_error",
-                e.getMessage()));
-      }
-      pageNumber = paginationIdentifierObj.getPageNumber();
-      offset = (pageNumber - 1) * AccountConstants.PAGINATION_LIMIT;
-    }
+		return prepareResponse(
+				getAccountsFactory.getAccounts(currentUser, searchTerm, AccountConstants.FEED_VIEW_KIND, offset));
+	}
 
-    return offset;
-  }
+	/**
+	 * Calculate offset for pagination using pagination identifier
+	 * @param paginationIdentifier String
+	 * @return int
+	 */
+	private int calculateOffset(String paginationIdentifier) {
+		int offset = 0;
 
-  /**
-   * Preparing response
-   * 
-   * @param accountsFactoryRes GetAccountsFormatterDto
-   * @return GetAccountsFeedResponseDto
-   */
-  private GetAccountsFeedResponseDto prepareResponse(GetAccountsFormatterDto accountsFactoryRes) {
-    logger.info("Preparing response");
-    GetAccountsFeedResponseDto accountsFeedResponse = new GetAccountsFeedResponseDto();
+		if (paginationIdentifier != null) {
+			logger.info("Pagination identifier found");
+			String decodedPaginationIdentifier = Util.base64Decode(paginationIdentifier);
+			PaginationIdentifierFormatterDto paginationIdentifierObj = null;
+			try {
+				ObjectMapper mapper = new ObjectMapper();
+				paginationIdentifierObj = mapper.readValue(decodedPaginationIdentifier,
+						PaginationIdentifierFormatterDto.class);
+			}
+			catch (Exception e) {
+				throw new CustomException(
+						new ErrorObject("s_a_gafs_gaf_1", "pagination_identifier_parsing_error", e.getMessage()));
+			}
+			pageNumber = paginationIdentifierObj.getPageNumber();
+			offset = (pageNumber - 1) * AccountConstants.PAGINATION_LIMIT;
+		}
 
-    setResponseFields(accountsFeedResponse, accountsFactoryRes);
-    setNextPagePayload(accountsFeedResponse, pageNumber);
+		return offset;
+	}
 
-    return accountsFeedResponse;
-  }
+	/**
+	 * Preparing response
+	 * @param accountsFactoryRes GetAccountsFormatterDto
+	 * @return GetAccountsFeedResponseDto
+	 */
+	private GetAccountsFeedResponseDto prepareResponse(GetAccountsFormatterDto accountsFactoryRes) {
+		logger.info("Preparing response");
+		GetAccountsFeedResponseDto accountsFeedResponse = new GetAccountsFeedResponseDto();
 
-  private void setResponseFields(GetAccountsFeedResponseDto response, GetAccountsFormatterDto factoryRes) {
-    response.setAccountIds(factoryRes.getAccountIds());
-    response.setAccountMapById(factoryRes.getAccountMapById());
-    response.setContactMapById(factoryRes.getContactMapById());
-    response.setAccountContactAssociationsMapById(factoryRes.getAccountContactAssociationsMapById());
-  }
+		setResponseFields(accountsFeedResponse, accountsFactoryRes);
+		setNextPagePayload(accountsFeedResponse, pageNumber);
 
-  private void setNextPagePayload(GetAccountsFeedResponseDto response, int pageNumber) {
-    logger.info("Preparing pagination identifier");
-    PaginationIdentifierFormatterDto paginationIdentifier = new PaginationIdentifierFormatterDto();
-    paginationIdentifier.setPageNumber(pageNumber + 1);
+		return accountsFeedResponse;
+	}
 
-    try {
-      ObjectMapper mapper = new ObjectMapper();
-      String paginationJson = mapper.writeValueAsString(paginationIdentifier);
-      NextPagePayloadEntity nextPagePayload = new NextPagePayloadEntity();
-      nextPagePayload.setPaginationIdentifier(Util.base64Encode(paginationJson));
-      response.setNextPagePayload(nextPagePayload);
-    } catch (Exception e) {
-      throw new CustomException(
-          new ErrorObject(
-              "s_a_gafs_gaf_pr_1",
-              "something_went_wrong",
-              e.getMessage()));
-    }
-  }
+	private void setResponseFields(GetAccountsFeedResponseDto response, GetAccountsFormatterDto factoryRes) {
+		response.setAccountIds(factoryRes.getAccountIds());
+		response.setAccountMapById(factoryRes.getAccountMapById());
+		response.setContactMapById(factoryRes.getContactMapById());
+		response.setAccountContactAssociationsMapById(factoryRes.getAccountContactAssociationsMapById());
+	}
+
+	private void setNextPagePayload(GetAccountsFeedResponseDto response, int pageNumber) {
+		logger.info("Preparing pagination identifier");
+		PaginationIdentifierFormatterDto paginationIdentifier = new PaginationIdentifierFormatterDto();
+		paginationIdentifier.setPageNumber(pageNumber + 1);
+
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			String paginationJson = mapper.writeValueAsString(paginationIdentifier);
+			NextPagePayloadEntity nextPagePayload = new NextPagePayloadEntity();
+			nextPagePayload.setPaginationIdentifier(Util.base64Encode(paginationJson));
+			response.setNextPagePayload(nextPagePayload);
+		}
+		catch (Exception e) {
+			throw new CustomException(new ErrorObject("s_a_gafs_gaf_pr_1", "something_went_wrong", e.getMessage()));
+		}
+	}
 
 }

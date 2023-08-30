@@ -14,28 +14,25 @@ import com.salessparrow.api.lib.globalConstants.UserConstants;
  */
 @Component
 public class GetAccountsFactory {
-  @Autowired
-  private GetSalesforceAccounts getSalesforceAccounts;
 
-  /**
-   * Get the list of accounts for a given searchterm.
-   * 
-   * @param user
-   * @param searchTerm
-   * 
-   * @return GetAccountsFormatterDto
-   **/
-  public GetAccountsFormatterDto getAccounts(User user, String searchTerm, String viewKind, int offset) {
+	@Autowired
+	private GetSalesforceAccounts getSalesforceAccounts;
 
-    switch (user.getUserKind()) {
-      case UserConstants.SALESFORCE_USER_KIND:
-        return getSalesforceAccounts.getAccounts(user, searchTerm, viewKind, offset);
-      default:
-        throw new CustomException(
-            new ErrorObject(
-                "l_ca_ga_gaf_ga_1",
-                "something_went_wrong",
-                "Invalid user kind."));
-    }
-  }
+	/**
+	 * Get the list of accounts for a given searchterm.
+	 * @param user
+	 * @param searchTerm
+	 * @return GetAccountsFormatterDto
+	 **/
+	public GetAccountsFormatterDto getAccounts(User user, String searchTerm, String viewKind, int offset) {
+
+		switch (user.getUserKind()) {
+			case UserConstants.SALESFORCE_USER_KIND:
+				return getSalesforceAccounts.getAccounts(user, searchTerm, viewKind, offset);
+			default:
+				throw new CustomException(
+						new ErrorObject("l_ca_ga_gaf_ga_1", "something_went_wrong", "Invalid user kind."));
+		}
+	}
+
 }

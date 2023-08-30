@@ -19,17 +19,17 @@ import jakarta.validation.Valid;
 @Validated
 public class SuggestionsController {
 
-  private Logger logger = org.slf4j.LoggerFactory.getLogger(SuggestionsController.class);
+	private Logger logger = org.slf4j.LoggerFactory.getLogger(SuggestionsController.class);
 
-  @Autowired
-  private CrmActionsSuggestionsService crmActionsSuggestionsService;
+	@Autowired
+	private CrmActionsSuggestionsService crmActionsSuggestionsService;
 
-  @PostMapping("/crm-actions")
-  public CrmActionSuggestionsFormatterDto getCrmActionSuggestions(
-     @Valid @RequestBody CrmActionsSuggestionsDto crmActionsSuggestionsDto) {
-    logger.info("Crm actions suggestions request received");
+	@PostMapping("/crm-actions")
+	public CrmActionSuggestionsFormatterDto getCrmActionSuggestions(
+			@Valid @RequestBody CrmActionsSuggestionsDto crmActionsSuggestionsDto) {
+		logger.info("Crm actions suggestions request received");
 
-    return crmActionsSuggestionsService.getSuggestions(crmActionsSuggestionsDto);
-  }
+		return crmActionsSuggestionsService.getSuggestions(crmActionsSuggestionsDto);
+	}
 
 }

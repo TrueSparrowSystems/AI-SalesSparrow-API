@@ -11,38 +11,34 @@ import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.globalConstants.UserConstants;
 
 /**
- * DeleteAccountTaskFactory is a factory class that handles the deleting a task in an account.
+ * DeleteAccountTaskFactory is a factory class that handles the deleting a task in an
+ * account.
  */
 @Component
 public class DeleteAccountTaskFactory {
 
-    Logger logger = LoggerFactory.getLogger(DeleteAccountTaskFactory.class);
+	Logger logger = LoggerFactory.getLogger(DeleteAccountTaskFactory.class);
 
-    @Autowired
-    DeleteSalesforceAccountTask deleteSalesforceAccountTask;
-    
-    /**
-     * Deletes a task in an account.
-     * 
-     * @param user
-     * @param accountId
-     * @param taskId
-     * 
-     * @return void
-     */
-    public void deleteAccountTask(User user, String accountId, String taskId) {
-        logger.info("Delete Account Task Factory called");
-        switch(user.getUserKind()) {
-            case UserConstants.SALESFORCE_USER_KIND:
-                deleteSalesforceAccountTask.deleteAccountTask(user, accountId, taskId);
-                break;
-            default:
-                throw new CustomException(
-                    new ErrorObject(
-                        "l_ca_dat_datf_1",
-                         "something_went_wrong", 
-                         "Invalid user kind.")
-                );
-        }
-    }
+	@Autowired
+	DeleteSalesforceAccountTask deleteSalesforceAccountTask;
+
+	/**
+	 * Deletes a task in an account.
+	 * @param user
+	 * @param accountId
+	 * @param taskId
+	 * @return void
+	 */
+	public void deleteAccountTask(User user, String accountId, String taskId) {
+		logger.info("Delete Account Task Factory called");
+		switch (user.getUserKind()) {
+			case UserConstants.SALESFORCE_USER_KIND:
+				deleteSalesforceAccountTask.deleteAccountTask(user, accountId, taskId);
+				break;
+			default:
+				throw new CustomException(
+						new ErrorObject("l_ca_dat_datf_1", "something_went_wrong", "Invalid user kind."));
+		}
+	}
+
 }

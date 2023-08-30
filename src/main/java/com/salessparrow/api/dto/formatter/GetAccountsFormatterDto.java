@@ -14,8 +14,13 @@ import com.salessparrow.api.dto.entities.ContactEntity;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GetAccountsFormatterDto {
-  private List<String> accountIds;
-  private Map<String, AccountEntity> accountMapById;
-  private Map<String, ContactEntity> contactMapById;
-  private Map<String, AccountContactAssociationsEntity> accountContactAssociationsMapById;
+
+	private List<String> accountIds;
+
+	private Map<String, AccountEntity> accountMapById;
+
+	private Map<String, ContactEntity> contactMapById;
+
+	private Map<String, AccountContactAssociationsEntity> accountContactAssociationsMapById;
+
 }

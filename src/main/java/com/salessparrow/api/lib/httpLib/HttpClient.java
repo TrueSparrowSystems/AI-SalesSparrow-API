@@ -13,97 +13,98 @@ import java.util.Map;
 
 public class HttpClient {
 
-  public static class HttpResponse {
-    private int statusCode;
-    private String responseBody;
-    private Map<String, List<String>> headers;
-    private String contentType;
+	public static class HttpResponse {
 
-    public HttpResponse(int statusCode, String responseBody, Map<String, List<String>> headers, String contentType) {
-      this.statusCode = statusCode;
-      this.responseBody = responseBody;
-      this.headers = headers;
-      this.contentType = contentType;
-    }
+		private int statusCode;
 
-    public HttpResponse() {
-    }
+		private String responseBody;
 
-    public int getStatusCode() {
-      return statusCode;
-    }
+		private Map<String, List<String>> headers;
 
-    public String getResponseBody() {
-      return responseBody;
-    }
+		private String contentType;
 
-    public Map<String, List<String>> getHeaders() {
-      return headers;
-    }
+		public HttpResponse(int statusCode, String responseBody, Map<String, List<String>> headers,
+				String contentType) {
+			this.statusCode = statusCode;
+			this.responseBody = responseBody;
+			this.headers = headers;
+			this.contentType = contentType;
+		}
 
-    public String getContentType() {
-      return contentType;
-    }
+		public HttpResponse() {
+		}
 
-    public void setResponseBody(String responseBody) {
-      this.responseBody = responseBody;
-    }
+		public int getStatusCode() {
+			return statusCode;
+		}
 
-  }
+		public String getResponseBody() {
+			return responseBody;
+		}
 
-  public static HttpResponse makeGetRequest(String url, Map<String, String> headers, int timeoutMillis) {
+		public Map<String, List<String>> getHeaders() {
+			return headers;
+		}
 
-    WebClient webClient = WebClient.builder().build();
+		public String getContentType() {
+			return contentType;
+		}
 
-    WebClient.RequestHeadersSpec<?> request = webClient.get()
-        .uri(url);
+		public void setResponseBody(String responseBody) {
+			this.responseBody = responseBody;
+		}
 
-    if (headers != null) {
-      request.headers(httpHeaders -> {
-        headers.forEach(httpHeaders::set);
-      });
-    }
+	}
 
-    Mono<ResponseEntity<String>> responseMono = request
-        .retrieve()
-        .toEntity(String.class);
+	public static HttpResponse makeGetRequest(String url, Map<String, String> headers, int timeoutMillis) {
 
-    ResponseEntity<String> responseEntity = responseMono.block(Duration.ofMillis(timeoutMillis));
+		WebClient webClient = WebClient.builder().build();
 
-    int statusCode = responseEntity.getStatusCode().value();
-    String responseBody = responseEntity.getBody();
-    Map<String, List<String>> responseHeaders = new HashMap<>(responseEntity.getHeaders());
-    String contentType = responseEntity.getHeaders().getContentType().toString();
+		WebClient.RequestHeadersSpec<?> request = webClient.get().uri(url);
 
-    return new HttpResponse(statusCode, responseBody, responseHeaders, contentType);
-  }
+		if (headers != null) {
+			request.headers(httpHeaders -> {
+				headers.forEach(httpHeaders::set);
+			});
+		}
 
-  public static HttpResponse makePostRequest(String url, Map<String, String> headers, Object requestBody,
-      int timeoutMillis) {
-    WebClient webClient = WebClient.builder().build();
+		Mono<ResponseEntity<String>> responseMono = request.retrieve().toEntity(String.class);
 
-    WebClient.RequestHeadersSpec<?> request = webClient.post()
-        .uri(url)
-        .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(requestBody);
+		ResponseEntity<String> responseEntity = responseMono.block(Duration.ofMillis(timeoutMillis));
 
-    if (headers != null) {
-      request.headers(httpHeaders -> {
-        headers.forEach(httpHeaders::set);
-      });
-    }
+		int statusCode = responseEntity.getStatusCode().value();
+		String responseBody = responseEntity.getBody();
+		Map<String, List<String>> responseHeaders = new HashMap<>(responseEntity.getHeaders());
+		String contentType = responseEntity.getHeaders().getContentType().toString();
 
-    Mono<ResponseEntity<String>> responseMono = request
-        .retrieve()
-        .toEntity(String.class);
+		return new HttpResponse(statusCode, responseBody, responseHeaders, contentType);
+	}
 
-    ResponseEntity<String> responseEntity = responseMono.block(Duration.ofMillis(timeoutMillis));
+	public static HttpResponse makePostRequest(String url, Map<String, String> headers, Object requestBody,
+			int timeoutMillis) {
+		WebClient webClient = WebClient.builder().build();
 
-    int statusCode = responseEntity.getStatusCode().value();
-    String responseBody = responseEntity.getBody();
-    Map<String, List<String>> responseHeaders = new HashMap<>(responseEntity.getHeaders());
-    String contentType = responseEntity.getHeaders().getContentType().toString();
+		WebClient.RequestHeadersSpec<?> request = webClient.post()
+			.uri(url)
+			.contentType(MediaType.APPLICATION_JSON)
+			.bodyValue(requestBody);
 
-    return new HttpResponse(statusCode, responseBody, responseHeaders, contentType);
-  }
+		if (headers != null) {
+			request.headers(httpHeaders -> {
+				headers.forEach(httpHeaders::set);
+			});
+		}
+
+		Mono<ResponseEntity<String>> responseMono = request.retrieve().toEntity(String.class);
+
+		ResponseEntity<String> responseEntity = responseMono.block(Duration.ofMillis(timeoutMillis));
+
+		int statusCode = responseEntity.getStatusCode().value();
+		String responseBody = responseEntity.getBody();
+		Map<String, List<String>> responseHeaders = new HashMap<>(responseEntity.getHeaders());
+		String contentType = responseEntity.getHeaders().getContentType().toString();
+
+		return new HttpResponse(statusCode, responseBody, responseHeaders, contentType);
+	}
+
 }

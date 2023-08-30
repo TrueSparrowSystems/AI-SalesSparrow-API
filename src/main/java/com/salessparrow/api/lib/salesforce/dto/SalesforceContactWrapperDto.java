@@ -7,5 +7,7 @@ import lombok.Data;
 
 @Data
 public class SalesforceContactWrapperDto {
-  private List<SalesforceContactDto> records = new ArrayList<>();
+
+	private List<SalesforceContactDto> records = new ArrayList<>();
+
 }

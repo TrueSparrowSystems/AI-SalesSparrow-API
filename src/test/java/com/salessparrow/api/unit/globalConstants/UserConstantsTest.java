@@ -11,16 +11,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 public class UserConstantsTest {
-    @Test
-    void testGetName() {
-        assertEquals("SALESFORCE", UserConstants.SALESFORCE_USER_KIND);
-    }
-    
-    @Test
-    void testPrivateConstructor() throws NoSuchMethodException, IllegalAccessException, InstantiationException {
-        Constructor<UserConstants> constructor = UserConstants.class.getDeclaredConstructor();
-        constructor.setAccessible(true);
-        assertThrows(InvocationTargetException.class, constructor::newInstance);
-    } 
+
+	@Test
+	void testGetName() {
+		assertEquals("SALESFORCE", UserConstants.SALESFORCE_USER_KIND);
+	}
+
+	@Test
+	void testPrivateConstructor() throws NoSuchMethodException, IllegalAccessException, InstantiationException {
+		Constructor<UserConstants> constructor = UserConstants.class.getDeclaredConstructor();
+		constructor.setAccessible(true);
+		assertThrows(InvocationTargetException.class, constructor::newInstance);
+	}
 
 }

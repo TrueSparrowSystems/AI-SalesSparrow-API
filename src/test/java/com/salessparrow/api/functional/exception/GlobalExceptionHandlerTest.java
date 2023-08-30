@@ -25,46 +25,47 @@ import com.salessparrow.api.helper.LoadFixture;
 import com.salessparrow.api.helper.Scenario;
 import com.salessparrow.api.helper.Setup;
 
-
 @SpringBootTest
 @AutoConfigureMockMvc
 @WebAppConfiguration
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
 public class GlobalExceptionHandlerTest {
-  @Autowired
-  private MockMvc mockMvc;
 
-  @Autowired
-  private Setup setup;
+	@Autowired
+	private MockMvc mockMvc;
 
-  @Autowired
-  private Cleanup cleanup;
+	@Autowired
+	private Setup setup;
 
-  @Autowired
-  private Common common;
+	@Autowired
+	private Cleanup cleanup;
 
-  @BeforeEach
-  public void setUp() throws DynamobeeException, IOException {
-    setup.perform();
-  }
+	@Autowired
+	private Common common;
 
-  @AfterEach
-  public void tearDown() {
-    cleanup.perform();
-  }
+	@BeforeEach
+	public void setUp() throws DynamobeeException, IOException {
+		setup.perform();
+	}
 
-  @Test
-  public void handleNoHandlerFoundException() throws Exception{
-    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/functional/exceptions/globalExceptionHandler.scenarios.json");
-    for (Scenario testDataItem : testDataItems) {
+	@AfterEach
+	public void tearDown() {
+		cleanup.perform();
+	}
 
-      ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/unknown-route")
-        .contentType(MediaType.APPLICATION_JSON));
+	@Test
+	public void handleNoHandlerFoundException() throws Exception {
+		List<Scenario> testDataItems = common
+			.loadScenariosData("classpath:data/functional/exceptions/globalExceptionHandler.scenarios.json");
+		for (Scenario testDataItem : testDataItems) {
 
-      String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
-        common.compareErrors(testDataItem, contentAsString);
-    }
+			ResultActions resultActions = mockMvc
+				.perform(MockMvcRequestBuilders.get("/api/v1/unknown-route").contentType(MediaType.APPLICATION_JSON));
 
-  }
+			String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
+			common.compareErrors(testDataItem, contentAsString);
+		}
+
+	}
+
 }
-

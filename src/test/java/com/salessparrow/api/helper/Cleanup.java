@@ -12,39 +12,39 @@ import org.springframework.cache.CacheManager;
 @TestConfiguration
 public class Cleanup {
 
-  Logger logger = LoggerFactory.getLogger(Cleanup.class);
+	Logger logger = LoggerFactory.getLogger(Cleanup.class);
 
-  @Autowired
-  private DropTables dropTables;
+	@Autowired
+	private DropTables dropTables;
 
-  @Autowired
-  private CacheManager cacheManager;
+	@Autowired
+	private CacheManager cacheManager;
 
-  /**
-   * Clean the setup after each test.
-   * - Flush the cache
-   * - Drop dynamodb tables
-   */
-  public void perform() {
-    logger.info("Cleaning setup");
+	/**
+	 * Clean the setup after each test. - Flush the cache - Drop dynamodb tables
+	 */
+	public void perform() {
+		logger.info("Cleaning setup");
 
-    flushCache();
-    dropTables();
-  }
+		flushCache();
+		dropTables();
+	}
 
-  /**
-   * Flush the cache.
-   */
-  private void flushCache(){
-    logger.info("Setup: Flushing cache");
-    cacheManager.getCacheNames().stream().forEach(cacheName -> {
-      cacheManager.getCache(cacheName).clear();
-  });  }
+	/**
+	 * Flush the cache.
+	 */
+	private void flushCache() {
+		logger.info("Setup: Flushing cache");
+		cacheManager.getCacheNames().stream().forEach(cacheName -> {
+			cacheManager.getCache(cacheName).clear();
+		});
+	}
 
-  /**
-   * Drop the tables.
-   */
-  private void dropTables() {
-    dropTables.perform();
-  }
+	/**
+	 * Drop the tables.
+	 */
+	private void dropTables() {
+		dropTables.perform();
+	}
+
 }

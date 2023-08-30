@@ -13,6 +13,8 @@ import lombok.Data;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GetAccountListResponseDto {
 
-  private List<String> accountIds;
-  private Map<String, AccountEntity> accountMapById;
+	private List<String> accountIds;
+
+	private Map<String, AccountEntity> accountMapById;
+
 }

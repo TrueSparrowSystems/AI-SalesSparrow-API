@@ -7,13 +7,14 @@ import lombok.Data;
 
 /**
  * Redirect url formatter DTO.
- * 
+ *
  * @param url
- * 
  * @return RedirectUrlFormatterDto
  */
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class RedirectUrlFormatterDto {
-  private String url;
+
+	private String url;
+
 }

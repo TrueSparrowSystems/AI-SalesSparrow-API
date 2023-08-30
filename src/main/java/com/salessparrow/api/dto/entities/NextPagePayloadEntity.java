@@ -8,5 +8,7 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class NextPagePayloadEntity {
-  private String paginationIdentifier;
+
+	private String paginationIdentifier;
+
 }

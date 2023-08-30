@@ -10,6 +10,7 @@ import lombok.Data;
 @JsonNaming(LowerCamelCaseStrategy.class)
 public class GetAccountsFeedDto {
 
-  @Pattern(regexp = "^[A-Za-z0-9+/]*={0,2}$", message = "invalid_pagination_identifier")
-  private String pagination_identifier;
+	@Pattern(regexp = "^[A-Za-z0-9+/]*={0,2}$", message = "invalid_pagination_identifier")
+	private String pagination_identifier;
+
 }

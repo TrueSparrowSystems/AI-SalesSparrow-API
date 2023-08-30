@@ -10,5 +10,7 @@ import com.salessparrow.api.dto.formatter.GetNoteDetailsFormatterDto;
  */
 @Component
 public interface GetAccountNoteDetails {
-    public GetNoteDetailsFormatterDto getNoteDetails(User user, String noteId);
+
+	public GetNoteDetailsFormatterDto getNoteDetails(User user, String noteId);
+
 }

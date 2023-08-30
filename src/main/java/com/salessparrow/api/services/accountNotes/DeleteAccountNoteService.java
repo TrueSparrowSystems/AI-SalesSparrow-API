@@ -10,28 +10,29 @@ import com.salessparrow.api.lib.crmActions.deleteAccountNote.DeleteAccountNoteFa
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
- * DeleteAccountNoteService is a service class for the DeleteAccountNote action for the CRM.
+ * DeleteAccountNoteService is a service class for the DeleteAccountNote action for the
+ * CRM.
  */
 @Service
 public class DeleteAccountNoteService {
-  private Logger logger = org.slf4j.LoggerFactory.getLogger(DeleteAccountNoteService.class);
 
-  @Autowired
-  private DeleteAccountNoteFactory deleteAccountNoteFactory;
-  
-  /**
-   * Delete note for the given note id
-   * 
-   * @param accountId
-   * @param noteId
-   * 
-   * @return void
-   */
-  public void deleteAccountNote(HttpServletRequest request, String accountId, String noteId) {
-      logger.info("Delete Account Note Service called");
+	private Logger logger = org.slf4j.LoggerFactory.getLogger(DeleteAccountNoteService.class);
 
-      User currentUser = (User) request.getAttribute("current_user");
-      
-      deleteAccountNoteFactory.deleteAccountNote(currentUser, noteId);
-  }
+	@Autowired
+	private DeleteAccountNoteFactory deleteAccountNoteFactory;
+
+	/**
+	 * Delete note for the given note id
+	 * @param accountId
+	 * @param noteId
+	 * @return void
+	 */
+	public void deleteAccountNote(HttpServletRequest request, String accountId, String noteId) {
+		logger.info("Delete Account Note Service called");
+
+		User currentUser = (User) request.getAttribute("current_user");
+
+		deleteAccountNoteFactory.deleteAccountNote(currentUser, noteId);
+	}
+
 }

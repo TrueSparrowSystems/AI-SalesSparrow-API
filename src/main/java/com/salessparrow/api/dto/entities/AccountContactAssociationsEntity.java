@@ -10,5 +10,7 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AccountContactAssociationsEntity {
-  private List<String> contactIds;
+
+	private List<String> contactIds;
+
 }

@@ -14,25 +14,27 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
 public class SalesforceContactDto {
-  private String id;
-  private String name;
-  private Map<String, Object> additionalFields = new HashMap<>();
 
-  public ContactEntity getContactEntity() {
-    ContactEntity contactEntity = new ContactEntity();
-    contactEntity.setId(this.id);
-    contactEntity.setName(this.name);
-    contactEntity.setAdditionalFields(this.additionalFields);
-    return contactEntity;
-  }
+	private String id;
 
-  @JsonAnySetter
-  public void setAdditionalField(String fieldName, Object value) {
-    fieldName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE,
-        fieldName);
-    if (!fieldName.equals("attributes")) {
-      additionalFields.put(fieldName, value);
-    }
-  }
+	private String name;
+
+	private Map<String, Object> additionalFields = new HashMap<>();
+
+	public ContactEntity getContactEntity() {
+		ContactEntity contactEntity = new ContactEntity();
+		contactEntity.setId(this.id);
+		contactEntity.setName(this.name);
+		contactEntity.setAdditionalFields(this.additionalFields);
+		return contactEntity;
+	}
+
+	@JsonAnySetter
+	public void setAdditionalField(String fieldName, Object value) {
+		fieldName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, fieldName);
+		if (!fieldName.equals("attributes")) {
+			additionalFields.put(fieldName, value);
+		}
+	}
 
 }

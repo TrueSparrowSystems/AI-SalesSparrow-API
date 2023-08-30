@@ -24,34 +24,33 @@ import jakarta.validation.Valid;
 @Validated
 public class AccountController {
 
-  private Logger logger = org.slf4j.LoggerFactory.getLogger(AccountController.class);
+	private Logger logger = org.slf4j.LoggerFactory.getLogger(AccountController.class);
 
-  @Autowired
-  private GetAccountListService getAccountListService;
+	@Autowired
+	private GetAccountListService getAccountListService;
 
-  @Autowired
-  private GetAccountsFeedService getAccountsFeedService;
+	@Autowired
+	private GetAccountsFeedService getAccountsFeedService;
 
-  @GetMapping("")
-  public ResponseEntity<GetAccountListResponseDto> getAccounts(
-      HttpServletRequest request,
-      @Valid @ModelAttribute GetAccountsDto getAccountsDto) {
-    logger.info("Request received");
+	@GetMapping("")
+	public ResponseEntity<GetAccountListResponseDto> getAccounts(HttpServletRequest request,
+			@Valid @ModelAttribute GetAccountsDto getAccountsDto) {
+		logger.info("Request received");
 
-    GetAccountListResponseDto getAccountsResponse = getAccountListService.getAccounts(request, getAccountsDto);
+		GetAccountListResponseDto getAccountsResponse = getAccountListService.getAccounts(request, getAccountsDto);
 
-    return ResponseEntity.ok().body(getAccountsResponse);
-  }
+		return ResponseEntity.ok().body(getAccountsResponse);
+	}
 
-  @GetMapping("/feed")
-  public ResponseEntity<GetAccountsFeedResponseDto> getFeed(
-      HttpServletRequest request,
-      @Valid @ModelAttribute GetAccountsFeedDto getAccountsFeedDto) {
-    logger.info("Request received");
+	@GetMapping("/feed")
+	public ResponseEntity<GetAccountsFeedResponseDto> getFeed(HttpServletRequest request,
+			@Valid @ModelAttribute GetAccountsFeedDto getAccountsFeedDto) {
+		logger.info("Request received");
 
-    GetAccountsFeedResponseDto getAccountsFeedResponse = getAccountsFeedService.getAccountsFeed(request,
-        getAccountsFeedDto);
+		GetAccountsFeedResponseDto getAccountsFeedResponse = getAccountsFeedService.getAccountsFeed(request,
+				getAccountsFeedDto);
 
-    return ResponseEntity.ok().body(getAccountsFeedResponse);
-  }
+		return ResponseEntity.ok().body(getAccountsFeedResponse);
+	}
+
 }

@@ -18,31 +18,27 @@ import com.salessparrow.api.lib.globalConstants.UserConstants;
 @Component
 public class CreateAccountTaskFactory {
 
-    Logger logger = LoggerFactory.getLogger(CreateAccountTaskFactory.class);
+	Logger logger = LoggerFactory.getLogger(CreateAccountTaskFactory.class);
 
-    @Autowired
-    CreateSalesforceAccountTask createSalesforceAccountTask;
+	@Autowired
+	CreateSalesforceAccountTask createSalesforceAccountTask;
 
-    /**
-     * Create a task in CRM
-     * 
-     * @param user User object
-     * @param accountId CRM account id
-     * @param task CreateTaskDto object
-     * 
-     * @return CreateTaskFormatterDto object
-     */
-    public CreateTaskFormatterDto createAccountTask(User user, String accountId, CreateAccountTaskDto task) {
-        switch(user.getUserKind()) {
-        case UserConstants.SALESFORCE_USER_KIND:
-          logger.info("calling createTask of salesforceCreateTask");
-          return createSalesforceAccountTask.createAccountTask(user, accountId, task);
-        default:
-          throw new CustomException(
-            new ErrorObject(
-              "l_ca_ct_ctf_1",
-              "something_went_wrong",
-              "Invalid user kind."));
-        }
-    }
+	/**
+	 * Create a task in CRM
+	 * @param user User object
+	 * @param accountId CRM account id
+	 * @param task CreateTaskDto object
+	 * @return CreateTaskFormatterDto object
+	 */
+	public CreateTaskFormatterDto createAccountTask(User user, String accountId, CreateAccountTaskDto task) {
+		switch (user.getUserKind()) {
+			case UserConstants.SALESFORCE_USER_KIND:
+				logger.info("calling createTask of salesforceCreateTask");
+				return createSalesforceAccountTask.createAccountTask(user, accountId, task);
+			default:
+				throw new CustomException(
+						new ErrorObject("l_ca_ct_ctf_1", "something_went_wrong", "Invalid user kind."));
+		}
+	}
+
 }

@@ -24,56 +24,50 @@ import com.salessparrow.api.services.accountTask.GetAccountTasksListService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
-
 @RestController
 @RequestMapping("/api/v1/accounts")
 @Validated
 public class AccountTaskController {
-  Logger logger = LoggerFactory.getLogger(AccountTaskController.class);
-    
-  @Autowired
-  private CreateTaskService createTaskService;
 
-  @Autowired
-  private DeleteTaskService deleteTaskService;
+	Logger logger = LoggerFactory.getLogger(AccountTaskController.class);
 
-  @Autowired
-  private GetAccountTasksListService getAccountTasksListService;
-  
-  @PostMapping("/{account_id}/tasks")
-  public ResponseEntity<CreateTaskFormatterDto> createTask(
-    HttpServletRequest request,
-    @PathVariable("account_id") String accountId,
-    @Valid @RequestBody CreateAccountTaskDto task
-  ){
-    logger.info("Create task request received");
-    
-    CreateTaskFormatterDto createTaskFormatterDto = createTaskService.createAccountTask(request, accountId, task);
-    
-    return ResponseEntity.status(HttpStatus.CREATED).body(createTaskFormatterDto);
-  }
+	@Autowired
+	private CreateTaskService createTaskService;
 
-  @GetMapping("/{account_id}/tasks")
-  public ResponseEntity<GetTasksListFormatterDto> getTasksList(
-    HttpServletRequest request,
-    @PathVariable("account_id") String accountId
-  ){
-    logger.info("Get tasks list request received");
-  
-    GetTasksListFormatterDto getTasksListFormatterDto = getAccountTasksListService.getAccountTasksList(request, accountId);
-    return ResponseEntity.status(HttpStatus.OK).body(getTasksListFormatterDto);
-  }
+	@Autowired
+	private DeleteTaskService deleteTaskService;
 
-  @DeleteMapping("/{account_id}/tasks/{task_id}")
-  public ResponseEntity<Void> deleteTask(
-    HttpServletRequest request,
-    @PathVariable("account_id") String accountId,
-    @PathVariable("task_id") String taskId
-  ){
-    logger.info("Delete task request received");
+	@Autowired
+	private GetAccountTasksListService getAccountTasksListService;
 
-    deleteTaskService.deleteAccountTask(request, accountId, taskId);
-    
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-  }
+	@PostMapping("/{account_id}/tasks")
+	public ResponseEntity<CreateTaskFormatterDto> createTask(HttpServletRequest request,
+			@PathVariable("account_id") String accountId, @Valid @RequestBody CreateAccountTaskDto task) {
+		logger.info("Create task request received");
+
+		CreateTaskFormatterDto createTaskFormatterDto = createTaskService.createAccountTask(request, accountId, task);
+
+		return ResponseEntity.status(HttpStatus.CREATED).body(createTaskFormatterDto);
+	}
+
+	@GetMapping("/{account_id}/tasks")
+	public ResponseEntity<GetTasksListFormatterDto> getTasksList(HttpServletRequest request,
+			@PathVariable("account_id") String accountId) {
+		logger.info("Get tasks list request received");
+
+		GetTasksListFormatterDto getTasksListFormatterDto = getAccountTasksListService.getAccountTasksList(request,
+				accountId);
+		return ResponseEntity.status(HttpStatus.OK).body(getTasksListFormatterDto);
+	}
+
+	@DeleteMapping("/{account_id}/tasks/{task_id}")
+	public ResponseEntity<Void> deleteTask(HttpServletRequest request, @PathVariable("account_id") String accountId,
+			@PathVariable("task_id") String taskId) {
+		logger.info("Delete task request received");
+
+		deleteTaskService.deleteAccountTask(request, accountId, taskId);
+
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
 }
