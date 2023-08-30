@@ -20,6 +20,7 @@ import java.util.Map;
  * Custom request wrapper to sanitize the request body
  */
 public class SanitizedRequestWrapper extends HttpServletRequestWrapper {
+
 	private final String sanitizedBody;
 
 	private Map<String, List<String>> sanitizedParams;
@@ -38,8 +39,7 @@ public class SanitizedRequestWrapper extends HttpServletRequestWrapper {
 	 */
 	@Override
 	public BufferedReader getReader() throws IOException {
-		return new BufferedReader(
-				new InputStreamReader(new ByteArrayInputStream(sanitizedBody.getBytes())));
+		return new BufferedReader(new InputStreamReader(new ByteArrayInputStream(sanitizedBody.getBytes())));
 	}
 
 	/**
@@ -47,8 +47,7 @@ public class SanitizedRequestWrapper extends HttpServletRequestWrapper {
 	 */
 	@Override
 	public ServletInputStream getInputStream() throws IOException {
-		final ByteArrayInputStream byteArrayInputStream =
-				new ByteArrayInputStream(sanitizedBody.getBytes());
+		final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(sanitizedBody.getBytes());
 
 		return new ServletInputStream() {
 			@Override
@@ -75,10 +74,8 @@ public class SanitizedRequestWrapper extends HttpServletRequestWrapper {
 
 	/**
 	 * Method to set the request parameter value by key
-	 * 
 	 * @param key
 	 * @param value
-	 * 
 	 * @return void
 	 */
 	public void setParameter(String key, String value) {
@@ -89,9 +86,7 @@ public class SanitizedRequestWrapper extends HttpServletRequestWrapper {
 
 	/**
 	 * Method to get the request parameter value by key from the sanitized params map.
-	 * 
 	 * @param key - parameter key
-	 * 
 	 * @return String - parameter value
 	 */
 	@Override
@@ -106,7 +101,6 @@ public class SanitizedRequestWrapper extends HttpServletRequestWrapper {
 
 	/**
 	 * Method to get the request parameter map from the sanitized params map.
-	 * 
 	 * @return Map<String, String[]> - parameter map
 	 */
 	@Override
@@ -122,7 +116,6 @@ public class SanitizedRequestWrapper extends HttpServletRequestWrapper {
 
 	/**
 	 * Method to get the request parameter names from the sanitized params map.
-	 * 
 	 * @return Enumeration<String> - parameter names
 	 */
 	@Override
@@ -132,9 +125,7 @@ public class SanitizedRequestWrapper extends HttpServletRequestWrapper {
 
 	/**
 	 * Method to get the request parameter values by key from the sanitized params map.
-	 * 
 	 * @param key - parameter key
-	 * 
 	 * @return String[] - parameter values
 	 */
 	@Override
@@ -148,10 +139,8 @@ public class SanitizedRequestWrapper extends HttpServletRequestWrapper {
 
 	/**
 	 * Method to get the request parameter map
-	 * 
 	 * @param key - header key
 	 * @param value - header value
-	 *
 	 * @return void
 	 */
 	public void setHeader(String key, String value) {
@@ -162,9 +151,7 @@ public class SanitizedRequestWrapper extends HttpServletRequestWrapper {
 
 	/**
 	 * Method to get the request header value by key from the sanitized headers map.
-	 * 
 	 * @param key - header key
-	 * 
 	 * @return String - header value
 	 */
 	@Override
@@ -178,9 +165,7 @@ public class SanitizedRequestWrapper extends HttpServletRequestWrapper {
 
 	/**
 	 * Method to get the request header names from the sanitized headers map.
-	 * 
 	 * @return Enumeration<String> - header names
-	 * 
 	 * @return void
 	 */
 	@Override
@@ -190,9 +175,7 @@ public class SanitizedRequestWrapper extends HttpServletRequestWrapper {
 
 	/**
 	 * Method to get the request header values by key from the sanitized headers map.
-	 * 
 	 * @param key - header key
-	 * 
 	 * @return Enumeration<String> - header values
 	 */
 	@Override
@@ -207,18 +190,18 @@ public class SanitizedRequestWrapper extends HttpServletRequestWrapper {
 	/**
 	 * Escapes HTML-encoded quotes in a given sanitized JSON string.
 	 *
-	 * This method is specifically designed to work on JSON strings that have been 
+	 * This method is specifically designed to work on JSON strings that have been
 	 * HTML-sanitized. In the sanitization process, quotes could be converted to their
 	 * HTML-encoded form ("&#34;" for double quotes and "&#39;" for single quotes).
 	 *
-	 * This method replaces these HTML-encoded quotes back to their plain text versions
-	 * (" and ' respectively) so that the JSON can be parsed correctly.
-	 *
+	 * This method replaces these HTML-encoded quotes back to their plain text versions ("
+	 * and ' respectively) so that the JSON can be parsed correctly.
 	 * @param input The sanitized JSON string that may contain HTML-encoded quotes.
-	 * @return A JSON string with HTML-encoded quotes replaced by their plain text equivalents.
+	 * @return A JSON string with HTML-encoded quotes replaced by their plain text
+	 * equivalents.
 	 */
 	private String escapeQuotes(String input) {
 		return input.replace("&#34;", "\"").replace("&#39;", "'");
 	}
-}
 
+}

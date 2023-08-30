@@ -26,107 +26,90 @@ import com.salessparrow.api.lib.salesforce.helper.SalesforceQueryBuilder;
 @Component
 public class GetSalesforceAccountNoteDetails implements GetAccountNoteDetails {
 
-    @Autowired
-    private SalesforceConstants salesforceConstants;
+	@Autowired
+	private SalesforceConstants salesforceConstants;
 
-    @Autowired
-    private MakeCompositeRequest makeCompositeRequest;
+	@Autowired
+	private MakeCompositeRequest makeCompositeRequest;
 
-    @Autowired
-    private SalesforceGetNoteContent salesforceGetNoteContent;
+	@Autowired
+	private SalesforceGetNoteContent salesforceGetNoteContent;
 
-    /**
-     * Get the details of a note
-     * 
-     * @param user
-     * @param noteId
-     * 
-     * @return GetNoteDetailsFormatterDto
-     **/
-    public GetNoteDetailsFormatterDto getNoteDetails(User user, String noteId) {
+	/**
+	 * Get the details of a note
+	 * @param user
+	 * @param noteId
+	 * @return GetNoteDetailsFormatterDto
+	 **/
+	public GetNoteDetailsFormatterDto getNoteDetails(User user, String noteId) {
 
-        String salesforceUserId = user.getExternalUserId();
+		String salesforceUserId = user.getExternalUserId();
 
-        HttpClient.HttpResponse noteDetailsResponse = notesResponse(noteId, salesforceUserId);
+		HttpClient.HttpResponse noteDetailsResponse = notesResponse(noteId, salesforceUserId);
 
-        HttpClient.HttpResponse noteContentResponse = salesforceGetNoteContent.getNoteContent(noteId, salesforceUserId);
+		HttpClient.HttpResponse noteContentResponse = salesforceGetNoteContent.getNoteContent(noteId, salesforceUserId);
 
-        GetNoteDetailsFormatterDto noteDetailsFormatterDto = parseResponse(noteDetailsResponse.getResponseBody(), noteContentResponse.getResponseBody());
+		GetNoteDetailsFormatterDto noteDetailsFormatterDto = parseResponse(noteDetailsResponse.getResponseBody(),
+				noteContentResponse.getResponseBody());
 
-        return noteDetailsFormatterDto;
+		return noteDetailsFormatterDto;
 
-    }
+	}
 
-    /**
-     * Get the list of notes for a given account
-     * 
-     * @param documentIds
-     * @param salesforceUserId
-     * 
-     * @return HttpResponse
-     **/
-    private HttpClient.HttpResponse notesResponse(String noteId, String salesforceUserId) {
-        SalesforceQueryBuilder salesforceLib = new SalesforceQueryBuilder();
-        String notesQuery = salesforceLib.getNoteDetailsUrl(noteId);
+	/**
+	 * Get the list of notes for a given account
+	 * @param documentIds
+	 * @param salesforceUserId
+	 * @return HttpResponse
+	 **/
+	private HttpClient.HttpResponse notesResponse(String noteId, String salesforceUserId) {
+		SalesforceQueryBuilder salesforceLib = new SalesforceQueryBuilder();
+		String notesQuery = salesforceLib.getNoteDetailsUrl(noteId);
 
-        String notesUrl = salesforceConstants.queryUrlPath() + notesQuery;
+		String notesUrl = salesforceConstants.queryUrlPath() + notesQuery;
 
-        CompositeRequestDto noteCompositeRequest = new CompositeRequestDto("GET", notesUrl, "GetNotesList");
+		CompositeRequestDto noteCompositeRequest = new CompositeRequestDto("GET", notesUrl, "GetNotesList");
 
-        List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
-        compositeRequests.add(noteCompositeRequest);
+		List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
+		compositeRequests.add(noteCompositeRequest);
 
-        HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId);
+		HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId);
 
-        return response;
-    }
+		return response;
+	}
 
-    /**
-     * Format the response of the note details
-     * 
-     * @param noteDetailsResponse
-     * @param noteContentResponse
-     * 
-     * @return GetNoteDetailsFormatterDto
-     */
-    private GetNoteDetailsFormatterDto parseResponse(String noteDetailsResponse, String noteContentResponse) {
-        NoteDetailEntity noteDetailEntity = new NoteDetailEntity();
-        try {
-            Util util = new Util();
-            JsonNode rootNode = util.getJsonNode(noteDetailsResponse);
-            JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");
+	/**
+	 * Format the response of the note details
+	 * @param noteDetailsResponse
+	 * @param noteContentResponse
+	 * @return GetNoteDetailsFormatterDto
+	 */
+	private GetNoteDetailsFormatterDto parseResponse(String noteDetailsResponse, String noteContentResponse) {
+		NoteDetailEntity noteDetailEntity = new NoteDetailEntity();
+		try {
+			Util util = new Util();
+			JsonNode rootNode = util.getJsonNode(noteDetailsResponse);
+			JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");
 
-            for (JsonNode recordNode : recordsNode) {
-                ObjectMapper mapper = new ObjectMapper();
-                mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-                SalesforceGetNoteDetailsDto salesforceGetNotesList = mapper.convertValue(recordNode, SalesforceGetNoteDetailsDto.class);
-                noteDetailEntity = salesforceGetNotesList.noteDetailEntity(noteContentResponse);
-            }
-            if(recordsNode.size() == 0) {   
-                throw new CustomException(
-                    new ErrorObject(
-                        "l_c_gnd_gsnd_1",
-                        "something_went_wrong",
-                        "Note not found"
-                    )
-                );
-            }
-        } catch (Exception e) {
-            throw new CustomException(
-                new ErrorObject(
-                    "l_c_gnd_gsnd_2",
-                    "something_went_wrong",
-                    e.getMessage()
-                )
-            );
-        }
+			for (JsonNode recordNode : recordsNode) {
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+				SalesforceGetNoteDetailsDto salesforceGetNotesList = mapper.convertValue(recordNode,
+						SalesforceGetNoteDetailsDto.class);
+				noteDetailEntity = salesforceGetNotesList.noteDetailEntity(noteContentResponse);
+			}
+			if (recordsNode.size() == 0) {
+				throw new CustomException(new ErrorObject("l_c_gnd_gsnd_1", "something_went_wrong", "Note not found"));
+			}
+		}
+		catch (Exception e) {
+			throw new CustomException(new ErrorObject("l_c_gnd_gsnd_2", "something_went_wrong", e.getMessage()));
+		}
 
-        GetNoteDetailsFormatterDto getNoteDetailsFormatterDto = new GetNoteDetailsFormatterDto(
-            noteDetailEntity
-        );
+		GetNoteDetailsFormatterDto getNoteDetailsFormatterDto = new GetNoteDetailsFormatterDto(noteDetailEntity);
 
-        return getNoteDetailsFormatterDto;
+		return getNoteDetailsFormatterDto;
 
-    }
+	}
 
 }

@@ -13,16 +13,19 @@ import com.salessparrow.api.lib.globalConstants.config.dynamoBeeConfigConstants;
  */
 @Configuration
 public class DynamoBeeConfig {
-  @Autowired
-  private AmazonDynamoDB db;
 
-  @Autowired
-  private dynamoBeeConfigConstants dynamoBeeConfigConstants;
+	@Autowired
+	private AmazonDynamoDB db;
 
-  @Bean
-  public Dynamobee dynamobee(){
-    Dynamobee runner = new Dynamobee(db);
-    runner.setChangeLogsScanPackage(dynamoBeeConfigConstants.getChangeLogScanPackage()).setChangelogTableName(dynamoBeeConfigConstants.getChangelogTableName());
-    return runner;
-  }
+	@Autowired
+	private dynamoBeeConfigConstants dynamoBeeConfigConstants;
+
+	@Bean
+	public Dynamobee dynamobee() {
+		Dynamobee runner = new Dynamobee(db);
+		runner.setChangeLogsScanPackage(dynamoBeeConfigConstants.getChangeLogScanPackage())
+			.setChangelogTableName(dynamoBeeConfigConstants.getChangelogTableName());
+		return runner;
+	}
+
 }

@@ -20,28 +20,27 @@ import java.util.Enumeration;
  * Class to sanitize the request
  */
 public class SanitizationFilter implements Filter {
+
 	private SanitizedRequestWrapper sanitizedRequest;
 
 	private final PolicyFactory policy = new HtmlPolicyBuilder().toFactory();
 
 	@Override
-	public void init(FilterConfig filterConfig) {}
+	public void init(FilterConfig filterConfig) {
+	}
 
 	/**
 	 * Method to sanitize the request
-	 * 
 	 * @param servletRequest - Servlet request object
 	 * @param servletResponse - Servlet response object
 	 * @param chain - Filter chain - Filter chain
-	 * 
 	 * @throws IOException - IOException
 	 * @throws ServletException - ServletException
-	 * 
 	 * @return void
 	 */
 	@Override
-	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
-			FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
+			throws IOException, ServletException {
 		if (!(servletRequest instanceof HttpServletRequest)) {
 			throw new ServletException("Can only process HttpServletRequest");
 		}
@@ -55,9 +54,7 @@ public class SanitizationFilter implements Filter {
 
 	/**
 	 * Method to sanitize the request body
-	 * 
 	 * @param request - Servlet request object
-	 * 
 	 * @return void
 	 */
 	private void sanitizeRequestBody(HttpServletRequest request) {
@@ -68,7 +65,6 @@ public class SanitizationFilter implements Filter {
 
 	/**
 	 * Method to sanitize the request params
-	 * 
 	 * @return void
 	 */
 	private void sanitizeRequestParams(HttpServletRequest request) {
@@ -82,7 +78,6 @@ public class SanitizationFilter implements Filter {
 
 	/**
 	 * Method to sanitize the request headers
-	 * 
 	 * @return void
 	 */
 	private void sanitizeRequestHeaders(HttpServletRequest request) {
@@ -102,7 +97,6 @@ public class SanitizationFilter implements Filter {
 
 	/**
 	 * Method to get the request body
-	 * 
 	 * @param request - Servlet request object
 	 * @return String - Request body
 	 */
@@ -110,20 +104,21 @@ public class SanitizationFilter implements Filter {
 		try {
 			BufferedReader reader = request.getReader();
 			String line;
-			// TODO: Consider using a more efficient way to read the request body, such as streaming
+			// TODO: Consider using a more efficient way to read the request body, such as
+			// streaming
 			StringBuilder requestBody = new StringBuilder();
 			while ((line = reader.readLine()) != null) {
 				requestBody.append(line);
 			}
 			return requestBody.toString();
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			throw new RuntimeException("Error reading request body: ", e.getCause());
 		}
 	}
 
 	/**
 	 * Method to sanitize the html
-	 * 
 	 * @param input - Input string
 	 * @return String - Sanitized string
 	 */
@@ -136,5 +131,7 @@ public class SanitizationFilter implements Filter {
 	 * Method to destroy the filter
 	 */
 	@Override
-	public void destroy() {}
+	public void destroy() {
+	}
+
 }

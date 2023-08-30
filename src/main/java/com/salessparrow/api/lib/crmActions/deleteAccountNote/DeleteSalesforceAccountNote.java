@@ -20,75 +20,68 @@ import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 
 /**
- * DeleteAccountSalesforceNote is a class for the DeleteAccountNote service for the Salesforce CRM.
+ * DeleteAccountSalesforceNote is a class for the DeleteAccountNote service for the
+ * Salesforce CRM.
  **/
 @Component
 public class DeleteSalesforceAccountNote implements DeleteAccountNoteInterface {
-  private Logger logger = org.slf4j.LoggerFactory.getLogger(DeleteSalesforceAccountNote.class);
 
-  @Autowired
-  private SalesforceConstants salesforceConstants;
+	private Logger logger = org.slf4j.LoggerFactory.getLogger(DeleteSalesforceAccountNote.class);
 
-  @Autowired
-  private MakeCompositeRequest makeCompositeRequest;
+	@Autowired
+	private SalesforceConstants salesforceConstants;
 
-  /**
-   * Deletes a note from salesforce
-   * 
-   * @param user
-   * @param noteId
-   * 
-   * @return void
-   **/
-  public void deleteAccountNote(User user, String noteId) {
-    logger.info("Delete Salesforce Account Note called");
+	@Autowired
+	private MakeCompositeRequest makeCompositeRequest;
 
-    String salesforceUserId = user.getExternalUserId();
+	/**
+	 * Deletes a note from salesforce
+	 * @param user
+	 * @param noteId
+	 * @return void
+	 **/
+	public void deleteAccountNote(User user, String noteId) {
+		logger.info("Delete Salesforce Account Note called");
 
-    String url = salesforceConstants.salesforceDeleteNoteUrl(noteId);
+		String salesforceUserId = user.getExternalUserId();
 
-    CompositeRequestDto compositeReq = new CompositeRequestDto("DELETE", url, "DeleteNote");
+		String url = salesforceConstants.salesforceDeleteNoteUrl(noteId);
 
-    List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
-    compositeRequests.add(compositeReq);
+		CompositeRequestDto compositeReq = new CompositeRequestDto("DELETE", url, "DeleteNote");
 
-    HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId);
+		List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
+		compositeRequests.add(compositeReq);
 
-    parseResponse(response.getResponseBody());
-  }
+		HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId);
 
-  /**
-   * Parse Response
-   * 
-   * @param responseBody
-   * 
-   * @return void
-  **/
-  public void parseResponse(String responseBody) {
+		parseResponse(response.getResponseBody());
+	}
 
-    Util util = new Util();
-    JsonNode rootNode = util.getJsonNode(responseBody);
+	/**
+	 * Parse Response
+	 * @param responseBody
+	 * @return void
+	 **/
+	public void parseResponse(String responseBody) {
 
-    JsonNode deleteNoteCompositeResponse = rootNode.get("compositeResponse").get(0);
-    Integer deleteNoteStatusCode = deleteNoteCompositeResponse.get("httpStatusCode").asInt();
-    
-    if (deleteNoteStatusCode != 200 && deleteNoteStatusCode != 201 && deleteNoteStatusCode != 204) {
-      String errorBody = deleteNoteCompositeResponse.get("body").asText();
+		Util util = new Util();
+		JsonNode rootNode = util.getJsonNode(responseBody);
 
-      // MALFORMED_ID or NOT_FOUND
-      if (deleteNoteStatusCode == 400 || deleteNoteStatusCode == 404) {
-        throw new CustomException(
-          new ParamErrorObject(
-            "l_ca_dan_dasn_pr_1", 
-            errorBody, 
-            Arrays.asList("invalid_note_id")));
-      } else {
-        throw new CustomException(
-          new ErrorObject(
-            "l_ca_dan_dasn_pr_2",
-            "something_went_wrong",
-            errorBody));
-      }
-    }
-  }
+		JsonNode deleteNoteCompositeResponse = rootNode.get("compositeResponse").get(0);
+		Integer deleteNoteStatusCode = deleteNoteCompositeResponse.get("httpStatusCode").asInt();
+
+		if (deleteNoteStatusCode != 200 && deleteNoteStatusCode != 201 && deleteNoteStatusCode != 204) {
+			String errorBody = deleteNoteCompositeResponse.get("body").asText();
+
+			// MALFORMED_ID or NOT_FOUND
+			if (deleteNoteStatusCode == 400 || deleteNoteStatusCode == 404) {
+				throw new CustomException(
+						new ParamErrorObject("l_ca_dan_dasn_pr_1", errorBody, Arrays.asList("invalid_note_id")));
+			}
+			else {
+				throw new CustomException(new ErrorObject("l_ca_dan_dasn_pr_2", "something_went_wrong", errorBody));
+			}
+		}
+	}
+
 }

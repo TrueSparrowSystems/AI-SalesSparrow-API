@@ -47,71 +47,81 @@ import jakarta.servlet.http.Cookie;
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
 public class GetAccountTasksListTest {
 
-  @Autowired 
-  private MockMvc mockMvc;
-  @Autowired
-  private Common common;
-  @Autowired
-  private LoadFixture loadFixture;
-  @Autowired
-  private Setup setup;
-  @Autowired
-  private Cleanup cleanup;
+	@Autowired
+	private MockMvc mockMvc;
 
-  @MockBean
-  private MakeCompositeRequest makeCompositeRequestMock;
+	@Autowired
+	private Common common;
 
-  @BeforeEach
-  public void setUp() throws DynamobeeException {
-      setup.perform();
-  }
+	@Autowired
+	private LoadFixture loadFixture;
 
-  @AfterEach
-  public void tearDown() {
-      cleanup.perform();
-  }
+	@Autowired
+	private Setup setup;
 
-  @ParameterizedTest
-  @MethodSource("testScenariosProvider")
-  public void getAccountTasksList(Scenario testScenario) throws Exception {
+	@Autowired
+	private Cleanup cleanup;
 
-    // Load fixture data
-    String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
-    FixtureData fixtureData = common.loadFixture("classpath:fixtures/functional/controllers/accountTaskController/getAccountTasksList.fixtures.json", currentFunctionName);
-    loadFixture.perform(fixtureData);
+	@MockBean
+	private MakeCompositeRequest makeCompositeRequestMock;
 
-    // Read data from the scenario
-    ObjectMapper objectMapper = new ObjectMapper();
-    String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
-    String accountId = (String) testScenario.getInput().get("accountId");
+	@BeforeEach
+	public void setUp() throws DynamobeeException {
+		setup.perform();
+	}
 
-    // Prepare mock responses
-    HttpResponse getTasksListMockResponse = new HttpResponse();
-    getTasksListMockResponse.setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeCompositeRequest")));
-    when(makeCompositeRequestMock.makePostRequest(any(), any())).thenReturn(getTasksListMockResponse);
+	@AfterEach
+	public void tearDown() {
+		cleanup.perform();
+	}
 
-    // Perform the request
-    String url = "/api/v1/accounts/" + accountId + "/tasks";
+	@ParameterizedTest
+	@MethodSource("testScenariosProvider")
+	public void getAccountTasksList(Scenario testScenario) throws Exception {
 
-    ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(url)
-      .cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
-      .contentType(MediaType.APPLICATION_JSON));
+		// Load fixture data
+		String currentFunctionName = new Object() {
+		}.getClass().getEnclosingMethod().getName();
+		FixtureData fixtureData = common.loadFixture(
+				"classpath:fixtures/functional/controllers/accountTaskController/getAccountTasksList.fixtures.json",
+				currentFunctionName);
+		loadFixture.perform(fixtureData);
 
-    // Check the response
-    String expectedOutput = objectMapper.writeValueAsString(testScenario.getOutput());
-    String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
-    assertEquals(expectedOutput, actualOutput);
-  }
+		// Read data from the scenario
+		ObjectMapper objectMapper = new ObjectMapper();
+		String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
+		String accountId = (String) testScenario.getInput().get("accountId");
 
-  static Stream<Scenario> testScenariosProvider() throws IOException {
-    List<Scenario> testScenarios = loadScenarios();
-    return testScenarios.stream();
-  }
+		// Prepare mock responses
+		HttpResponse getTasksListMockResponse = new HttpResponse();
+		getTasksListMockResponse
+			.setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeCompositeRequest")));
+		when(makeCompositeRequestMock.makePostRequest(any(), any())).thenReturn(getTasksListMockResponse);
 
-  private static List<Scenario> loadScenarios() throws IOException {
-    String scenariosPath = "classpath:data/functional/controllers/accountTaskController/getAccountTasksList.scenarios.json";
-    Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
-    ObjectMapper objectMapper = new ObjectMapper();
-    return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});
-  }
+		// Perform the request
+		String url = "/api/v1/accounts/" + accountId + "/tasks";
+
+		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(url)
+			.cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
+			.contentType(MediaType.APPLICATION_JSON));
+
+		// Check the response
+		String expectedOutput = objectMapper.writeValueAsString(testScenario.getOutput());
+		String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
+		assertEquals(expectedOutput, actualOutput);
+	}
+
+	static Stream<Scenario> testScenariosProvider() throws IOException {
+		List<Scenario> testScenarios = loadScenarios();
+		return testScenarios.stream();
+	}
+
+	private static List<Scenario> loadScenarios() throws IOException {
+		String scenariosPath = "classpath:data/functional/controllers/accountTaskController/getAccountTasksList.scenarios.json";
+		Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
+		ObjectMapper objectMapper = new ObjectMapper();
+		return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {
+		});
+	}
+
 }

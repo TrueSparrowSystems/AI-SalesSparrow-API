@@ -5,6 +5,8 @@ import lombok.Data;
 
 @Data
 public class GetCrmOrganizationUsersDto {
-    @Size(max = 200, message = "search_term_too_long")
-    private String q;
+
+	@Size(max = 200, message = "search_term_too_long")
+	private String q;
+
 }

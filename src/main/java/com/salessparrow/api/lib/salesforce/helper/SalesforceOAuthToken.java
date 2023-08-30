@@ -17,57 +17,55 @@ import com.salessparrow.api.repositories.SalesforceOauthTokenRepository;
 @Service
 public class SalesforceOAuthToken {
 
-  @Autowired
-  private AwsKms awsKms;
+	@Autowired
+	private AwsKms awsKms;
 
-  @Autowired
-  private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
+	@Autowired
+	private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
 
-  @Autowired
-  private SalesforceGetRefreshedAccessToken salesforceGetRefreshedAccessToken;
+	@Autowired
+	private SalesforceGetRefreshedAccessToken salesforceGetRefreshedAccessToken;
 
-  @Autowired
-  private Util util;
+	@Autowired
+	private Util util;
 
-  /**
-   * Fetch the access token from the database and decrypt it.
-   * 
-   * @param sfOAuthToken
-   * 
-   * @return String
-   */
-  public String fetchAccessToken(SalesforceOauthToken sfOAuthToken) {
-    String decryptedAccessToken = awsKms.decryptToken(sfOAuthToken.getAccessToken());
-    return decryptedAccessToken;
-  }
+	/**
+	 * Fetch the access token from the database and decrypt it.
+	 * @param sfOAuthToken
+	 * @return String
+	 */
+	public String fetchAccessToken(SalesforceOauthToken sfOAuthToken) {
+		String decryptedAccessToken = awsKms.decryptToken(sfOAuthToken.getAccessToken());
+		return decryptedAccessToken;
+	}
 
-  public String updateAndGetRefreshedAccessToken(SalesforceOauthToken sfOAuthToken) {
-    String encryptedRefreshToken = sfOAuthToken.getRefreshToken();
-    String decryptedRefreshToken = awsKms.decryptToken(encryptedRefreshToken);
+	public String updateAndGetRefreshedAccessToken(SalesforceOauthToken sfOAuthToken) {
+		String encryptedRefreshToken = sfOAuthToken.getRefreshToken();
+		String decryptedRefreshToken = awsKms.decryptToken(encryptedRefreshToken);
 
-    HttpClient.HttpResponse response = salesforceGetRefreshedAccessToken.getRefreshedAccessToken(decryptedRefreshToken);
-    String decryptedAccessToken = updateAccessTokenInDatabase(response.getResponseBody(), sfOAuthToken);
+		HttpClient.HttpResponse response = salesforceGetRefreshedAccessToken
+			.getRefreshedAccessToken(decryptedRefreshToken);
+		String decryptedAccessToken = updateAccessTokenInDatabase(response.getResponseBody(), sfOAuthToken);
 
-    return decryptedAccessToken;
-  }
+		return decryptedAccessToken;
+	}
 
-  /**
-   * Update the access token in the database and return the decrypted access token.
-   * 
-   * @param responseBody
-   * @param sfOAuthToken
-   * 
-   * @return String
-   */
-  private String updateAccessTokenInDatabase(String responseBody, SalesforceOauthToken sfOAuthToken) {
-    JsonNode rootNode = util.getJsonNode(responseBody);
-    String decryptedAccessToken = rootNode.get("access_token").asText();
+	/**
+	 * Update the access token in the database and return the decrypted access token.
+	 * @param responseBody
+	 * @param sfOAuthToken
+	 * @return String
+	 */
+	private String updateAccessTokenInDatabase(String responseBody, SalesforceOauthToken sfOAuthToken) {
+		JsonNode rootNode = util.getJsonNode(responseBody);
+		String decryptedAccessToken = rootNode.get("access_token").asText();
 
-    String encryptedAccessToken = awsKms.encryptToken(decryptedAccessToken);
+		String encryptedAccessToken = awsKms.encryptToken(decryptedAccessToken);
 
-    sfOAuthToken.setAccessToken(encryptedAccessToken);
-    salesforceOauthTokenRepository.saveSalesforceOauthToken(sfOAuthToken);
+		sfOAuthToken.setAccessToken(encryptedAccessToken);
+		salesforceOauthTokenRepository.updateSalesforceOauthToken(sfOAuthToken);
 
-    return decryptedAccessToken;
-  }
+		return decryptedAccessToken;
+	}
+
 }

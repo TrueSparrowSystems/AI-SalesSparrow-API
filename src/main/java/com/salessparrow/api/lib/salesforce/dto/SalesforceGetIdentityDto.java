@@ -8,9 +8,15 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class SalesforceGetIdentityDto {
-  private String sub;
-  private String userId;
-  private String organizationId;
-  private String name;
-  private String email;
+
+	private String sub;
+
+	private String userId;
+
+	private String organizationId;
+
+	private String name;
+
+	private String email;
+
 }

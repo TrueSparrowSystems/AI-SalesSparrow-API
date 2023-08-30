@@ -27,90 +27,91 @@ import java.util.Vector;
 
 class SanitizationFilterTest {
 
-  @Mock
-  private HttpServletRequest request;
+	@Mock
+	private HttpServletRequest request;
 
-  @Mock
-  private HttpServletResponse response;
+	@Mock
+	private HttpServletResponse response;
 
-  @Mock
-  private FilterChain filterChain;
+	@Mock
+	private FilterChain filterChain;
 
-  @Mock
-  private ServletRequest nonHttpRequest;
+	@Mock
+	private ServletRequest nonHttpRequest;
 
-  @InjectMocks
-  private SanitizationFilter sanitizationFilter;
+	@InjectMocks
+	private SanitizationFilter sanitizationFilter;
 
-  @BeforeEach
-  void setUp() {
-    MockitoAnnotations.openMocks(this);
-  }
+	@BeforeEach
+	void setUp() {
+		MockitoAnnotations.openMocks(this);
+	}
 
-  @Test
-  void testDoFilter() throws Exception {
-    mockCommonRequestBehaviors();
-    sanitizationFilter.doFilter(request, response, filterChain);
-    verify(filterChain).doFilter(any(), eq(response));
-  }
+	@Test
+	void testDoFilter() throws Exception {
+		mockCommonRequestBehaviors();
+		sanitizationFilter.doFilter(request, response, filterChain);
+		verify(filterChain).doFilter(any(), eq(response));
+	}
 
-  @Test
-  void testRequestBodySanitization() throws Exception {
-    mockCommonRequestBehaviors();
-    sanitizationFilter.doFilter(request, response, filterChain);
-    verify(request).getReader();
-    assertTrue(true, "Request body should be read without exceptions.");
-  }
+	@Test
+	void testRequestBodySanitization() throws Exception {
+		mockCommonRequestBehaviors();
+		sanitizationFilter.doFilter(request, response, filterChain);
+		verify(request).getReader();
+		assertTrue(true, "Request body should be read without exceptions.");
+	}
 
-  @Test
-  void testRequestParamsSanitization() throws Exception {
-    mockCommonRequestBehaviors();
-    sanitizationFilter.doFilter(request, response, filterChain);
-    verify(request).getParameterMap();
-    assertTrue(true, "Request parameters should be read without exceptions.");
-  }
+	@Test
+	void testRequestParamsSanitization() throws Exception {
+		mockCommonRequestBehaviors();
+		sanitizationFilter.doFilter(request, response, filterChain);
+		verify(request).getParameterMap();
+		assertTrue(true, "Request parameters should be read without exceptions.");
+	}
 
-  @Test
-  void testRequestHeadersSanitization() throws Exception {
-    mockCommonRequestBehaviors();
-    sanitizationFilter.doFilter(request, response, filterChain);
-    verify(request).getHeaderNames();
-    assertTrue(true, "Request headers should be read without exceptions.");
-  }
+	@Test
+	void testRequestHeadersSanitization() throws Exception {
+		mockCommonRequestBehaviors();
+		sanitizationFilter.doFilter(request, response, filterChain);
+		verify(request).getHeaderNames();
+		assertTrue(true, "Request headers should be read without exceptions.");
+	}
 
-  @Test
-  void testIOException() throws Exception {
-    assertThrows(RuntimeException.class, () -> {
-      when(request.getReader()).thenThrow(new IOException("Test IOException"));
-      sanitizationFilter.doFilter(request, response, filterChain);
-    }, "Expected doFilter to throw RuntimeException");
-  }
+	@Test
+	void testIOException() throws Exception {
+		assertThrows(RuntimeException.class, () -> {
+			when(request.getReader()).thenThrow(new IOException("Test IOException"));
+			sanitizationFilter.doFilter(request, response, filterChain);
+		}, "Expected doFilter to throw RuntimeException");
+	}
 
-  @Test
-  void testNonHttpRequest() {
-    assertThrows(ServletException.class, () -> {
-      sanitizationFilter.doFilter(nonHttpRequest, response, filterChain);
-    }, "Expected doFilter to throw ServletException");
-  }
+	@Test
+	void testNonHttpRequest() {
+		assertThrows(ServletException.class, () -> {
+			sanitizationFilter.doFilter(nonHttpRequest, response, filterChain);
+		}, "Expected doFilter to throw ServletException");
+	}
 
-  // Helper methods
-  private void mockCommonRequestBehaviors() throws IOException {
+	// Helper methods
+	private void mockCommonRequestBehaviors() throws IOException {
     when(request.getReader()).thenReturn(new BufferedReader(new StringReader("some request body")));
     when(request.getParameterMap()).thenReturn(mockedParamMap());
     when(request.getHeaderNames()).thenReturn(mockedHeaderNames());
   }
 
-  private static Enumeration<String> mockedHeaderNames() {
-    Vector<String> headerNames = new Vector<>();
-    headerNames.add("Header1");
-    headerNames.add("Header2");
-    return headerNames.elements();
-  }
+	private static Enumeration<String> mockedHeaderNames() {
+		Vector<String> headerNames = new Vector<>();
+		headerNames.add("Header1");
+		headerNames.add("Header2");
+		return headerNames.elements();
+	}
 
-  private static Map<String, String[]> mockedParamMap() {
-    Map<String, String[]> paramMap = new HashMap<>();
-    paramMap.put("param1", new String[] {"value1"});
-    paramMap.put("param2", new String[] {"value2"});
-    return paramMap;
-  }
+	private static Map<String, String[]> mockedParamMap() {
+		Map<String, String[]> paramMap = new HashMap<>();
+		paramMap.put("param1", new String[] { "value1" });
+		paramMap.put("param2", new String[] { "value2" });
+		return paramMap;
+	}
+
 }

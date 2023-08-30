@@ -10,7 +10,9 @@ import lombok.Data;
  */
 @Data
 public class CrmActionsSuggestionsDto {
-  @NotBlank(message = "missing_text")
-  @Length(max = 12000, message = "text_too_long")
-  private String text;
+
+	@NotBlank(message = "missing_text")
+	@Length(max = 12000, message = "text_too_long")
+	private String text;
+
 }

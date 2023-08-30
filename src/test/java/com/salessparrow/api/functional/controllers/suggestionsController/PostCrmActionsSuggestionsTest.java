@@ -41,62 +41,69 @@ import jakarta.servlet.http.Cookie;
 @WebAppConfiguration
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
 public class PostCrmActionsSuggestionsTest {
-  @Autowired
-  private MockMvc mockMvc;
 
-  @Autowired
-  private Setup setup;
+	@Autowired
+	private MockMvc mockMvc;
 
-  @Autowired
-  private Cleanup cleanup;
+	@Autowired
+	private Setup setup;
 
-  @Autowired
-  private Common common;
+	@Autowired
+	private Cleanup cleanup;
 
-  @Autowired
-  private LoadFixture loadFixture;
+	@Autowired
+	private Common common;
 
-  @MockBean
-  private OpenAiRequest openAiRequestMock;
+	@Autowired
+	private LoadFixture loadFixture;
 
-  @BeforeEach
-  public void setUp() throws DynamobeeException, IOException {
-    setup.perform();
-  }
+	@MockBean
+	private OpenAiRequest openAiRequestMock;
 
-  @AfterEach
-  public void tearDown() {
-    cleanup.perform();
-  }
+	@BeforeEach
+	public void setUp() throws DynamobeeException, IOException {
+		setup.perform();
+	}
 
-  @Test
-  public void testPostCrmActionsSuggestions() throws Exception {
-    String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
-    FixtureData fixtureData = common.loadFixture("classpath:fixtures/functional/controllers/suggestionsController/postCrmActionsSuggestions.fixtures.json",
-      currentFunctionName);
-    loadFixture.perform(fixtureData);
+	@AfterEach
+	public void tearDown() {
+		cleanup.perform();
+	}
 
-    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/functional/controllers/suggestionsController/crmActionsSuggestions.scenarios.json");
-    for (Scenario testDataItem : testDataItems) {
-      ObjectMapper objectMapper = new ObjectMapper();
-      HttpResponse getAccountMockResponse = new HttpResponse();
-      getAccountMockResponse.setResponseBody(objectMapper.writeValueAsString(testDataItem.getMocks().get("makeRequest")));
-      when(openAiRequestMock.makeRequest(any())).thenReturn(getAccountMockResponse);
+	@Test
+	public void testPostCrmActionsSuggestions() throws Exception {
+		String currentFunctionName = new Object() {
+		}.getClass().getEnclosingMethod().getName();
+		FixtureData fixtureData = common.loadFixture(
+				"classpath:fixtures/functional/controllers/suggestionsController/postCrmActionsSuggestions.fixtures.json",
+				currentFunctionName);
+		loadFixture.perform(fixtureData);
 
-      String expectedOutput = objectMapper.writeValueAsString(testDataItem.getOutput());
-      String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
-      
-      ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/suggestions/crm-actions")
-        .content(objectMapper.writeValueAsString(testDataItem.getInput()))
-        .cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
-        .contentType(MediaType.APPLICATION_JSON));
+		List<Scenario> testDataItems = common.loadScenariosData(
+				"classpath:data/functional/controllers/suggestionsController/crmActionsSuggestions.scenarios.json");
+		for (Scenario testDataItem : testDataItems) {
+			ObjectMapper objectMapper = new ObjectMapper();
+			HttpResponse getAccountMockResponse = new HttpResponse();
+			getAccountMockResponse
+				.setResponseBody(objectMapper.writeValueAsString(testDataItem.getMocks().get("makeRequest")));
+			when(openAiRequestMock.makeRequest(any())).thenReturn(getAccountMockResponse);
 
-      String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
-      if(resultActions.andReturn().getResponse().getStatus() == 200) {
-        assertEquals(expectedOutput, actualOutput);
-      } else {
-        common.compareErrors(testDataItem, actualOutput);
-      }
-    }
-  }
+			String expectedOutput = objectMapper.writeValueAsString(testDataItem.getOutput());
+			String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
+
+			ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/suggestions/crm-actions")
+				.content(objectMapper.writeValueAsString(testDataItem.getInput()))
+				.cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
+				.contentType(MediaType.APPLICATION_JSON));
+
+			String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
+			if (resultActions.andReturn().getResponse().getStatus() == 200) {
+				assertEquals(expectedOutput, actualOutput);
+			}
+			else {
+				common.compareErrors(testDataItem, actualOutput);
+			}
+		}
+	}
+
 }

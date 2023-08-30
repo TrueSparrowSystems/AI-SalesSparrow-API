@@ -10,9 +10,11 @@ import com.salessparrow.api.lib.validators.RedirectUriValidator;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = RedirectUriValidator.class)
 public @interface ValidRedirectUri {
-  String message() default "Invalid redirect URI";
 
-  Class<?>[] groups() default {};
+	String message() default "Invalid redirect URI";
 
-  Class<? extends Payload>[] payload() default {};
+	Class<?>[] groups() default {};
+
+	Class<? extends Payload>[] payload() default {};
+
 }

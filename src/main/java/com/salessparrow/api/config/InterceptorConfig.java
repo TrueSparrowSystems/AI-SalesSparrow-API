@@ -12,49 +12,43 @@ import com.salessparrow.api.interceptors.V1Interceptor;
 
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
-  
-  @Autowired
-  private final LoggerInterceptor loggerInterceptor;
 
-  @Autowired
-  private final JsonOnlyInterceptor jsonOnlyInterceptor;
-  
-  @Autowired
-  private final V1Interceptor V1Interceptor;
+	@Autowired
+	private final LoggerInterceptor loggerInterceptor;
 
-  @Autowired
-  private final UserAuthInterceptor userAuthInterceptor;
+	@Autowired
+	private final JsonOnlyInterceptor jsonOnlyInterceptor;
 
-  public InterceptorConfig(
-    UserAuthInterceptor userAuthInterceptor, 
-    JsonOnlyInterceptor jsonOnlyInterceptor, 
-    LoggerInterceptor loggerInterceptor, 
-    V1Interceptor V1Interceptor
-  ) {
-    this.userAuthInterceptor = userAuthInterceptor;
-    this.loggerInterceptor = loggerInterceptor;
-    this.V1Interceptor = V1Interceptor;
-    this.jsonOnlyInterceptor = jsonOnlyInterceptor;
-  }
+	@Autowired
+	private final V1Interceptor V1Interceptor;
 
-  @Override
-  public void addInterceptors(InterceptorRegistry registry) {
-    /* Add logger interceptor to all the routes */
-    registry.addInterceptor(loggerInterceptor)
-        .addPathPatterns("/**");
+	@Autowired
+	private final UserAuthInterceptor userAuthInterceptor;
 
-    /* Add json only interceptor to all the routes */
-    registry.addInterceptor(jsonOnlyInterceptor)
-        .addPathPatterns("/**");
+	public InterceptorConfig(UserAuthInterceptor userAuthInterceptor, JsonOnlyInterceptor jsonOnlyInterceptor,
+			LoggerInterceptor loggerInterceptor, V1Interceptor V1Interceptor) {
+		this.userAuthInterceptor = userAuthInterceptor;
+		this.loggerInterceptor = loggerInterceptor;
+		this.V1Interceptor = V1Interceptor;
+		this.jsonOnlyInterceptor = jsonOnlyInterceptor;
+	}
 
-    /* Add v1 interceptor only to all the routes */  
-    registry.addInterceptor(V1Interceptor)
-      .addPathPatterns("/api/v1/**");
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		/* Add logger interceptor to all the routes */
+		registry.addInterceptor(loggerInterceptor).addPathPatterns("/**");
 
-    /* Add user auth interceptor to all the routes except the ones below */
-    registry.addInterceptor(userAuthInterceptor)
-        .addPathPatterns("/**")
-        .excludePathPatterns("/api/v1/auth/salesforce/**")
-        .excludePathPatterns("/api/v1/health-check");
-  }
+		/* Add json only interceptor to all the routes */
+		registry.addInterceptor(jsonOnlyInterceptor).addPathPatterns("/**");
+
+		/* Add v1 interceptor only to all the routes */
+		registry.addInterceptor(V1Interceptor).addPathPatterns("/api/v1/**");
+
+		/* Add user auth interceptor to all the routes except the ones below */
+		registry.addInterceptor(userAuthInterceptor)
+			.addPathPatterns("/**")
+			.excludePathPatterns("/api/v1/auth/salesforce/**")
+			.excludePathPatterns("/api/v1/health-check");
+	}
+
 }

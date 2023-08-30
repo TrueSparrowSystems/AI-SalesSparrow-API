@@ -15,28 +15,29 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 @Service
 public class GetAccountListService {
-  @Autowired
-  private GetAccountsFactory getAccountsFactory;
-  
-  /**
-     * Get the list of accounts for a given search term
-     * @param request
-     * @param getAccountsDto
-     * 
-     * @return GetAccountsFormatterDto
-     **/
-  public GetAccountsFormatterDto getAccounts(HttpServletRequest request, GetAccountsDto getAccountsDto) {
-    User currentUser = (User) request.getAttribute("current_user");
 
-    String formattedSearchString = "";
-    if(getAccountsDto.getQ() != null){
-      formattedSearchString = formatSearchString(getAccountsDto.getQ());
-    }
-    return getAccountsFactory.getAccounts(currentUser, formattedSearchString);
-  }
+	@Autowired
+	private GetAccountsFactory getAccountsFactory;
 
-  private String formatSearchString(String q) {
-    q = q.trim();
-    return q;
-  }
+	/**
+	 * Get the list of accounts for a given search term
+	 * @param request
+	 * @param getAccountsDto
+	 * @return GetAccountsFormatterDto
+	 **/
+	public GetAccountsFormatterDto getAccounts(HttpServletRequest request, GetAccountsDto getAccountsDto) {
+		User currentUser = (User) request.getAttribute("current_user");
+
+		String formattedSearchString = "";
+		if (getAccountsDto.getQ() != null) {
+			formattedSearchString = formatSearchString(getAccountsDto.getQ());
+		}
+		return getAccountsFactory.getAccounts(currentUser, formattedSearchString);
+	}
+
+	private String formatSearchString(String q) {
+		q = q.trim();
+		return q;
+	}
+
 }

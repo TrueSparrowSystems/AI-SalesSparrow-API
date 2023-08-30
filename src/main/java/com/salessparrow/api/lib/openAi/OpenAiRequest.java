@@ -20,52 +20,42 @@ import com.salessparrow.api.lib.httpLib.HttpClient;
  **/
 @Component
 public class OpenAiRequest {
-  @Autowired
-  private OpenAiConstants openAiConstants;
 
-  private Logger logger = org.slf4j.LoggerFactory.getLogger(SuggestionsController.class);
-  
-  /**
-   * Make a request to the OpenAI API.
-   * @param payload
-   * @return
-   */
-  public HttpClient.HttpResponse makeRequest(Object payload) {
-    String httpReqUrl = openAiConstants.chatCompletionUrl();
+	@Autowired
+	private OpenAiConstants openAiConstants;
 
-    Map<String, String> headers = new HashMap<>();
-    headers.put("Authorization", "Bearer " + CoreConstants.openAiApiKey());
+	private Logger logger = org.slf4j.LoggerFactory.getLogger(SuggestionsController.class);
 
-    Integer timeoutMillis = openAiConstants.timeoutMillis();
-    try {
-      logger.info("Making request to OpenAI API");
-      HttpClient.HttpResponse response = HttpClient.makePostRequest(
-        httpReqUrl,
-        headers,
-        payload,
-        timeoutMillis);
+	/**
+	 * Make a request to the OpenAI API.
+	 * @param payload
+	 * @return
+	 */
+	public HttpClient.HttpResponse makeRequest(Object payload) {
+		String httpReqUrl = openAiConstants.chatCompletionUrl();
 
-      return response;
-    } catch (WebClientResponseException e) {
-      if(e.getStatusCode().value() == 401) {
-        throw new CustomException(
-            new ErrorObject(
-              "l_o_a_oar_mr_1",
-              "something_went_wrong",
-              "Invalid OpenAI API key"));
-      } else if(e.getStatusCode().value() == 400) {
-        throw new CustomException(
-            new ErrorObject(
-              "l_o_a_oar_mr_2",
-              "something_went_wrong",
-              "Invalid request payload"));
-      }
+		Map<String, String> headers = new HashMap<>();
+		headers.put("Authorization", "Bearer " + CoreConstants.openAiApiKey());
 
-      throw new CustomException(
-            new ErrorObject(
-              "l_o_a_oar_mr_3",
-              "something_went_wrong",
-              e.getMessage()));
-    }
-  }
+		Integer timeoutMillis = openAiConstants.timeoutMillis();
+		try {
+			logger.info("Making request to OpenAI API");
+			HttpClient.HttpResponse response = HttpClient.makePostRequest(httpReqUrl, headers, payload, timeoutMillis);
+
+			return response;
+		}
+		catch (WebClientResponseException e) {
+			if (e.getStatusCode().value() == 401) {
+				throw new CustomException(
+						new ErrorObject("l_o_a_oar_mr_1", "something_went_wrong", "Invalid OpenAI API key"));
+			}
+			else if (e.getStatusCode().value() == 400) {
+				throw new CustomException(
+						new ErrorObject("l_o_a_oar_mr_2", "something_went_wrong", "Invalid request payload"));
+			}
+
+			throw new CustomException(new ErrorObject("l_o_a_oar_mr_3", "something_went_wrong", e.getMessage()));
+		}
+	}
+
 }
