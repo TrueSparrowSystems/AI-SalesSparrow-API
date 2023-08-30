@@ -31,57 +31,57 @@ public class SalesforceGetTokensTest {
 
 	@Test
 	public void testSalesforceGetTokens_Success() throws Exception {
-		MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class);
+		try (MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class)) {
 
-		String code = "dummyCode";
-		String redirectUri = "dummyRedirectUri";
+			String code = "dummyCode";
+			String redirectUri = "dummyRedirectUri";
 
-		Map<String, String> headers = new HashMap<>();
-		headers.put("Authorization", "Dummy Bearer Header");
+			Map<String, String> headers = new HashMap<>();
+			headers.put("Authorization", "Dummy Bearer Header");
 
-		String responseBody = "Mock Response Body";
-		HttpResponse mockResponse = new HttpResponse();
-		mockResponse.setResponseBody(responseBody);
+			String responseBody = "Mock Response Body";
+			HttpResponse mockResponse = new HttpResponse();
+			mockResponse.setResponseBody(responseBody);
 
-		httpClientMockedStatic.when(() -> HttpClient.makePostRequest(anyString(), anyMap(), anyString(), anyInt()))
-			.thenReturn(mockResponse);
+			httpClientMockedStatic.when(() -> HttpClient.makePostRequest(anyString(), anyMap(), anyString(), anyInt()))
+				.thenReturn(mockResponse);
 
-		HttpResponse actualResponse = salesforceGetTokens.getTokens(code, redirectUri);
+			HttpResponse actualResponse = salesforceGetTokens.getTokens(code, redirectUri);
 
-		// Assertions
-		assertEquals(mockResponse.getResponseBody(), actualResponse.getResponseBody());
+			// Assertions
+			assertEquals(mockResponse.getResponseBody(), actualResponse.getResponseBody());
+		}
 
-		httpClientMockedStatic.close();
 	}
 
 	@Test
 	public void testSalesforceGetTokens_Exception() throws Exception {
-		MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class);
+		try (MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class)) {
 
-		String code = "dummyCode";
-		String redirectUri = "dummyRedirectUri";
+			String code = "dummyCode";
+			String redirectUri = "dummyRedirectUri";
 
-		Map<String, String> headers = new HashMap<>();
-		headers.put("Authorization", "Dummy Bearer Header");
+			Map<String, String> headers = new HashMap<>();
+			headers.put("Authorization", "Dummy Bearer Header");
 
-		String responseBody = "Mock Response Body";
-		HttpResponse mockResponse = new HttpResponse();
-		mockResponse.setResponseBody(responseBody);
+			String responseBody = "Mock Response Body";
+			HttpResponse mockResponse = new HttpResponse();
+			mockResponse.setResponseBody(responseBody);
 
-		httpClientMockedStatic.when(() -> HttpClient.makePostRequest(anyString(), anyMap(), anyString(), anyInt()))
-			.thenThrow(new RuntimeException("Some error occurred"));
+			httpClientMockedStatic.when(() -> HttpClient.makePostRequest(anyString(), anyMap(), anyString(), anyInt()))
+				.thenThrow(new RuntimeException("Some error occurred"));
 
-		CustomException exception = assertThrows(CustomException.class, () -> {
-			salesforceGetTokens.getTokens(code, redirectUri);
-		});
+			CustomException exception = assertThrows(CustomException.class, () -> {
+				salesforceGetTokens.getTokens(code, redirectUri);
+			});
 
-		// Assertions
-		assertNotNull(exception);
-		ParamErrorObject paramErrorObject = exception.getParamErrorObject();
-		assertNotNull(paramErrorObject);
-		assertEquals("l_s_w_sgt_gt_1", paramErrorObject.getInternalErrorIdentifier());
+			// Assertions
+			assertNotNull(exception);
+			ParamErrorObject paramErrorObject = exception.getParamErrorObject();
+			assertNotNull(paramErrorObject);
+			assertEquals("l_s_w_sgt_gt_1", paramErrorObject.getInternalErrorIdentifier());
 
-		httpClientMockedStatic.close();
+		}
 	}
 
 }
