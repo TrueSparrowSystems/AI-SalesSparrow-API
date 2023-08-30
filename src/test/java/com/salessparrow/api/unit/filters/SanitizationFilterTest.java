@@ -52,7 +52,6 @@ class SanitizationFilterTest {
     mockCommonRequestBehaviors();
     sanitizationFilter.doFilter(request, response, filterChain);
     verify(filterChain).doFilter(any(), eq(response));
-    assertTrue(true, "doFilter should complete without exceptions.");
   }
 
   @Test

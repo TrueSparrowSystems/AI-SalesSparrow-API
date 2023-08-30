@@ -110,13 +110,14 @@ public class SanitizationFilter implements Filter {
 		try {
 			BufferedReader reader = request.getReader();
 			String line;
+			// TODO: Consider using a more efficient way to read the request body, such as streaming
 			StringBuilder requestBody = new StringBuilder();
 			while ((line = reader.readLine()) != null) {
 				requestBody.append(line);
 			}
 			return requestBody.toString();
 		} catch (IOException e) {
-			throw new RuntimeException("Error reading request body", e);
+			throw new RuntimeException("Error reading request body: ", e.getCause());
 		}
 	}
 
@@ -126,7 +127,7 @@ public class SanitizationFilter implements Filter {
 	 * @param input - Input string
 	 * @return String - Sanitized string
 	 */
-	public String sanitizeHtml(String input) {
+	private String sanitizeHtml(String input) {
 		String sanitizedInput = policy.sanitize(input);
 		return sanitizedInput;
 	}
