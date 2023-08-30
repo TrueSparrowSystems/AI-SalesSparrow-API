@@ -71,7 +71,7 @@ public class DeleteSalesforceAccountNote implements DeleteAccountNoteInterface {
 		Integer deleteNoteStatusCode = deleteNoteCompositeResponse.get("httpStatusCode").asInt();
 
 		if (deleteNoteStatusCode != 200 && deleteNoteStatusCode != 201 && deleteNoteStatusCode != 204) {
-			logger.error("Error in deleting note in salesforce", deleteNoteCompositeResponse);
+			logger.error("Error in deleting note in salesforce:{}", deleteNoteCompositeResponse);
 			String errorBody = deleteNoteCompositeResponse.get("body").asText();
 
 			// MALFORMED_ID or NOT_FOUND
