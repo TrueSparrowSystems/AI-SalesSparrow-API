@@ -8,21 +8,18 @@ import com.salessparrow.api.lib.salesforce.wrappers.SalesforceGetNoteContent;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class SalesforceGetNoteContentTest {
-
-  @Autowired
-  private SalesforceGetNoteContent salesforceGetNoteContent;
 
   @Mock
   private SalesforceConstants salesforceConstants;
@@ -30,11 +27,12 @@ public class SalesforceGetNoteContentTest {
   @Mock
   private SalesforceRequest salesforceRequest;
 
+  @InjectMocks
+  private SalesforceGetNoteContent salesforceGetNoteContent;
+
   @BeforeEach
   public void setUp() {
     MockitoAnnotations.openMocks(this);
-    ReflectionTestUtils.setField(salesforceGetNoteContent, "salesforceConstants", salesforceConstants);
-    ReflectionTestUtils.setField(salesforceGetNoteContent, "salesforceOauthRequest", salesforceRequest);
   }
 
   @Test

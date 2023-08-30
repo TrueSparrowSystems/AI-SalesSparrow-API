@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,6 +47,7 @@ public class SalesforceGetRefreshedAccessTokenTest {
 
     // Assertions
     assertEquals(mockResponse.getResponseBody(), actualResponse.getResponseBody());
+    httpClientMockedStatic.verify(() -> HttpClient.makePostRequest(anyString(), anyMap(), anyString(), anyInt()), times(1));
 
     httpClientMockedStatic.close();
   }

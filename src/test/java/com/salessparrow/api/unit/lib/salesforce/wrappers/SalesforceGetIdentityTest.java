@@ -18,16 +18,20 @@ import org.springframework.context.annotation.Import;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
+import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
 import com.salessparrow.api.lib.salesforce.wrappers.SalesforceGetIdentity;
 
 @SpringBootTest
-@Import({SalesforceGetIdentity.class})
+@Import({SalesforceGetIdentity.class, SalesforceConstants.class})
 public class SalesforceGetIdentityTest {
 
   @Autowired
   private SalesforceGetIdentity salesforceGetIdentity;
+
+  @Autowired
+  private SalesforceConstants salesforceConstants;
 
   @Test
   public void testGetUserIdentity_Success() throws Exception {
@@ -50,6 +54,8 @@ public class SalesforceGetIdentityTest {
 
     // Assertions
     assertEquals(mockResponse.getResponseBody(), actualResponse.getResponseBody());
+
+    httpClientMockedStatic.verify(() -> HttpClient.makeGetRequest(instanceUrl + salesforceConstants.identityUrl(), headers, 10000), Mockito.times(1));
 
     httpClientMockedStatic.close();
   }
@@ -81,6 +87,8 @@ public class SalesforceGetIdentityTest {
     assertNotNull(errorObject);
     assertEquals("l_s_w_sgi_gui_1", errorObject.getInternalErrorIdentifier());
     assertEquals("bad_request", errorObject.getApiErrorIdentifier());
+
+    httpClientMockedStatic.verify(() -> HttpClient.makeGetRequest(instanceUrl + salesforceConstants.identityUrl(), headers, 10000), Mockito.times(1));
 
     httpClientMockedStatic.close();
   }

@@ -89,6 +89,8 @@ public class SalesforceRequestTest {
     // Verify that the methods were called with the expected parameters
     verify(sfOauthTokenRepository).getSalesforceOauthTokenByExternalUserId("user123");
     verify(salesforceOAuthToken).fetchAccessToken(sfOAuthToken);
+
+    // Verify that the updateAndGetRefreshedAccessToken method was called once
     verify(salesforceOAuthToken, times(1)).updateAndGetRefreshedAccessToken(sfOAuthToken);
   }
 
