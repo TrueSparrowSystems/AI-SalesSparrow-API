@@ -70,7 +70,6 @@ public class DynamoDBConfiguration {
 			}
 
 			// Similarly, you can override other used methods like delete, batchSave, etc.
-			// similarly
 		};
 	}
 

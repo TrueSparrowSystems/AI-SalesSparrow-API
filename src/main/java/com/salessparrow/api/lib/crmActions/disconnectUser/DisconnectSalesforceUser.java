@@ -32,7 +32,7 @@ public class DisconnectSalesforceUser implements DisconnectUser {
   @Autowired
   private SalesforceTokens salesforceTokens;
 
-  Logger logger = LoggerFactory.getLogger(DisconnectSalesforceUser.class);
+  private static final Logger logger = LoggerFactory.getLogger(DisconnectSalesforceUser.class);
 
   /**
    * Disconnects a user from Salesforce by revoking the tokens and deleting the

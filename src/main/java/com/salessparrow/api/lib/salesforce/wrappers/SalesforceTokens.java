@@ -16,7 +16,7 @@ import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
 import java.util.List;
 
 /**
- * SalesforceGetTokens class to get tokens from Salesforce
+ * SalesforceTokens class to handle token operations with Salesforce
  */
 @Component
 public class SalesforceTokens {
@@ -77,12 +77,9 @@ public class SalesforceTokens {
 
     String requestBody = "token=" + token;
 
-    System.out.println("requestBody: " + requestBody);
-
     Map<String, String> headers = new HashMap<>();
     headers.put("content-type", "application/x-www-form-urlencoded");
 
-    System.out.println("headers: " + headers);
     HttpResponse response = null;
     try {
       response = HttpClient.makePostRequest(
