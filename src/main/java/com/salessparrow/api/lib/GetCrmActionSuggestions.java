@@ -42,7 +42,7 @@ public class GetCrmActionSuggestions {
 	 * @return
 	 */
 	public CrmActionSuggestionsFormatterDto getTaskSuggestions(String text) {
-		logger.info("Crm actions suggestions lib called");
+		logger.info("Crm actions suggestions lib called for text: " + text);
 
 		String escapedText = escapeForJson(text);
 		String payload = openAiPayloadBuilder.payloadForCrmActionsSuggestions(escapedText);
