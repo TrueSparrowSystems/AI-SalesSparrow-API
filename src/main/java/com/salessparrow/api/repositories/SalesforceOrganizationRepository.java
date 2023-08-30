@@ -3,8 +3,8 @@ package com.salessparrow.api.repositories;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.salessparrow.api.domain.SalesforceOrganization;
 import com.salessparrow.api.exception.CustomException;
+import com.salessparrow.api.lib.Util;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
-
 import org.springframework.stereotype.Repository;
 
 /**
@@ -18,15 +18,38 @@ public class SalesforceOrganizationRepository {
     public SalesforceOrganizationRepository(DynamoDBMapper dynamoDBMapper) {
         this.dynamoDBMapper = dynamoDBMapper;
     }
-    
+
     /**
-     * Saves a SalesforceOrganization to the salesforce_organizations table.
+     * Insert a SalesforceOrganization to the salesforce_organizations table.
      * 
      * @param sfo
      * 
      * @return SalesforceOrganization
      */
-    public SalesforceOrganization saveSalesforceOrganization(SalesforceOrganization sfo) {
+    public SalesforceOrganization createSalesforceOrganization(SalesforceOrganization sfo) {
+        // Create a row with status active and created at as current time
+        sfo.setStatus(SalesforceOrganization.Status.ACTIVE);
+        sfo.setCreatedAt(Util.getCurrentTimeInDateFormat());
+
+        try {
+            dynamoDBMapper.save(sfo);
+        } catch (Exception e) {
+            throw new CustomException(new ErrorObject(
+                    "r_sor_cso_1",
+                    "something_went_wrong",
+                    e.getMessage()));
+        }
+        return sfo;
+    }
+
+    /**
+     * Update a SalesforceOrganization to the salesforce_organizations table.
+     * 
+     * @param sfo
+     * 
+     * @return SalesforceOrganization
+     */
+    public SalesforceOrganization updateSalesforceOrganization(SalesforceOrganization sfo) {
         try {
             dynamoDBMapper.save(sfo);
         } catch (Exception e) {
