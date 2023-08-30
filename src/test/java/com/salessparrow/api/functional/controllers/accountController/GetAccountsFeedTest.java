@@ -14,6 +14,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -64,6 +66,8 @@ public class GetAccountsFeedTest {
   @Autowired
   private Cleanup cleanup;
 
+  Logger logger = LoggerFactory.getLogger(GetAccountsFeedTest.class);
+
   @MockBean
   private MakeCompositeRequest makeCompositeRequestMock;
 
@@ -83,8 +87,8 @@ public class GetAccountsFeedTest {
   @ParameterizedTest
   @MethodSource("testScenariosProvider")
   public void getAccountsFeed(Scenario testScenario) throws Exception {
-    System.out.println("Description: " + testScenario.getDescription());
 
+    logger.info("Running test scenario: " + testScenario.getDescription());
     String currentFunctionName = new Object() {
     }.getClass().getEnclosingMethod().getName();
     // Load fixture data and set up mocks
@@ -125,7 +129,6 @@ public class GetAccountsFeedTest {
     if (testScenario.getMocks() != null && testScenario.getMocks().containsKey("readValue")) {
       ObjectMapper mapper = mock(ObjectMapper.class);
 
-      System.out.println("in base64Encode");
       String errorMessage = testScenario.getMocks().get("readValue").toString();
       when(mapper.readValue(any(JsonParser.class), eq(PaginationIdentifierFormatterDto.class)))
           .thenThrow(new RuntimeException(errorMessage));
