@@ -39,7 +39,6 @@ public class GlobalExceptionHandler {
 
 	/**
 	 * Handle 404. Catches the exception for undefined endpoints
-	 * 
 	 * @param NoHandlerFoundException
 	 * @return ResponseEntity<ErrorResponseObject>
 	 */
@@ -59,7 +58,6 @@ public class GlobalExceptionHandler {
 
 	/**
 	 * Handle custom exception
-	 * 
 	 * @param ex
 	 * @return ResponseEntity<Map<String, String>>
 	 */
@@ -72,9 +70,11 @@ public class GlobalExceptionHandler {
 			logger.error("Message from custom exception: {}", paramErrorObject.getMessage());
 			errorResponse = er.getParamErrorResponse(paramErrorObject.getInternalErrorIdentifier(),
 					paramErrorObject.getMessage(), paramErrorObject.getParamErrorIdentifiers());
-		} else if (ex.getErrorObject() == null || ex.getErrorObject().getApiErrorIdentifier() == null) {
+		}
+		else if (ex.getErrorObject() == null || ex.getErrorObject().getApiErrorIdentifier() == null) {
 			errorResponse = er.getErrorResponse("something_went_wrong", "e_geh_hce_1", ex.getMessage());
-		} else {
+		}
+		else {
 			ErrorObject errorObject = ex.getErrorObject();
 			logger.error("Message from custom exception: {}", errorObject.getMessage());
 			errorResponse = er.getErrorResponse(errorObject.getApiErrorIdentifier(),
@@ -101,7 +101,6 @@ public class GlobalExceptionHandler {
 
 	/**
 	 * Catch-all exception handler for any unhandled runtime exception
-	 * 
 	 * @param ex
 	 * @return ResponseEntity<ErrorResponseObject>
 	 */
