@@ -84,8 +84,8 @@ public class PostLogoutTest {
 			String cookieValue = (String) testDataItem.getInput().get("cookie");
 
 			ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/logout")
-					.cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
-					.contentType(MediaType.APPLICATION_JSON));
+				.cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
+				.contentType(MediaType.APPLICATION_JSON));
 
 			String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
 
