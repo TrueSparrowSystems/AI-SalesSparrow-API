@@ -190,7 +190,8 @@
         "code": "INVALID_PARAMS",
         "internal_error_identifier": "l_ca_ct_cst_1",
         "param_errors": [
-            "invalid_account_id"
+            "invalid_account_id",
+            "invalid_crm_organization_user_id"
         ]
     }
     }

@@ -1,6 +1,7 @@
 package com.salessparrow.api.lib.crmActions.createAccountTask;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,9 @@ import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
 import com.salessparrow.api.lib.salesforce.dto.SalesforceCreateTaskDto;
+import com.salessparrow.api.lib.salesforce.dto.SalesforceErrorObject;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
+import com.salessparrow.api.lib.salesforce.helper.SalesforceCompositeResponseHelper;
 
 /**
  * CreateSalesforceTask class is responsible for creating a task in Salesforce
@@ -39,6 +42,9 @@ public class CreateSalesforceAccountTask implements CreateAccountTask{
 
     @Autowired
     private MakeCompositeRequest makeCompositeRequest;
+
+    @Autowired
+    private SalesforceCompositeResponseHelper salesforceCompositeResponseHelper;
     
     /**
      * Create a task in Salesforce
@@ -91,42 +97,21 @@ public class CreateSalesforceAccountTask implements CreateAccountTask{
 
         logger.info("parsing response from salesforce");
 
-        JsonNode createTaskCompositeResponse = rootNode.get("compositeResponse").get(0);
-        String createTaskStatusCode = createTaskCompositeResponse.get("httpStatusCode").asText();
+        SalesforceErrorObject errorObject = salesforceCompositeResponseHelper.getErrorObjectFromCompositeResponse(rootNode);
 
-        if (!createTaskStatusCode.equals("200") && !createTaskStatusCode.equals("201")) {
-            String errorBody = createTaskCompositeResponse.get("body").asText();
-            String errorCode = createTaskCompositeResponse.get("body").get(0).get("errorCode").asText();
-
-            if(errorCode.equals("MALFORMED_ID")){
-                String errorField = createTaskCompositeResponse.get("body").get(0).get("fields").get(0).asText();
-                List<String> errorFields = new ArrayList<String>();
-
-                if(errorField.equals("OwnerId")){
-                    errorFields.add("invalid_crm_organization_user_id");
-                }else if(errorField.equals("WhatId")){
-                    errorFields.add("invalid_account_id");
-                }
-
+        if(!errorObject.isSuccess()){
+            if(errorObject.getErrorCode() == "invalid_params"){
                 throw new CustomException(
                     new ParamErrorObject(
-                        "l_ca_ct_cst_1", 
-                        errorBody, 
-                        errorFields));
-
-            }else if(errorCode.equals("NOT_FOUND")){
-                throw new CustomException(
-                new ErrorObject(
-                    "l_ca_ct_cst_2",
-                    "resource_not_found",
-                    errorBody));
-                    
+                        "l_ca_ct_cst_1",
+                        errorObject.getErrorCode(),
+                        Arrays.asList("invalid_account_id", "invalid_crm_organization_user_id")));
             }else{
                 throw new CustomException(
                     new ErrorObject(
-                        "l_ca_ct_cst_3",
-                        "internal_server_error",
-                        errorBody)); 
+                        "l_ca_ct_cst_1",
+                        errorObject.getErrorCode(),
+                        errorObject.getMessage())); 
             }
         }
 
