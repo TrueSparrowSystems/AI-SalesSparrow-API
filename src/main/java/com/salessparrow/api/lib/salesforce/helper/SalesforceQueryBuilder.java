@@ -105,11 +105,11 @@ public class SalesforceQueryBuilder {
 		String query = "";
 
 		if (searchTerm == "") {
-			query = "SELECT Id, Name FROM User ORDER BY LastModifiedDate DESC LIMIT 20";
+			query = "SELECT Id, Name FROM User WHERE IsActive = true ORDER BY LastModifiedDate DESC LIMIT 20";
 		}
 		else {
 			query = "SELECT Id, Name FROM User WHERE Name LIKE '%" + searchTerm
-					+ "%' ORDER BY LastModifiedDate DESC LIMIT 20";
+					+ "%' AND IsActive = true ORDER BY LastModifiedDate DESC LIMIT 20";
 		}
 
 		return Util.urlEncoder(query);
