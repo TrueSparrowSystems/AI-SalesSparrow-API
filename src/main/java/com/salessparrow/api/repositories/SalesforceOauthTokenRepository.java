@@ -71,7 +71,23 @@ public class SalesforceOauthTokenRepository {
 			return dynamoDBMapper.load(SalesforceOauthToken.class, externalUserId);
 		}
 		catch (Exception e) {
-			throw new CustomException(new ErrorObject("r_sotr_gsotbsfui_1", "something_went_wrong", e.getMessage()));
+			throw new CustomException(new ErrorObject("r_sotr_gsotbeui_1", "something_went_wrong", e.getMessage()));
+		}
+	}
+
+	/**
+	 * Deletes a SalesforceOauthToken from the salesforce_oauth_tokens table based on the
+	 * provided SalesforceOauthToken.
+	 * @param salesforceOauthToken
+	 * @return void
+	 */
+	@CacheEvict(value = CacheConstants.SS_SALESFORCE_OAUTH_TOKEN_CACHE, key = "#salesforceOauthToken.externalUserId")
+	public void deleteSalesforceOauthTokenBySalesforceOauthToken(SalesforceOauthToken salesforceOauthToken) {
+		try {
+			dynamoDBMapper.delete(salesforceOauthToken);
+		}
+		catch (Exception e) {
+			throw new CustomException(new ErrorObject("r_sotr_dsotbeui_1", "something_went_wrong", e.getMessage()));
 		}
 	}
 

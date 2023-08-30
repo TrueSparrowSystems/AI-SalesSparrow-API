@@ -55,8 +55,24 @@ public class DynamoDBConfiguration {
 				long duration = System.currentTimeMillis() - startTimestamp;
 				logger.debug("({} ms)DBQuery:Save: table-{}", duration, object.getClass().getSimpleName());
 			}
+
+			@Override
+			public <T> void save(T object, DynamoDBMapperConfig config) {
+				long startTimestamp = System.currentTimeMillis();
+				try {
+					defaultMapper.save(object, config);
+				}
+				catch (Exception e) {
+					logger.debug("DBQuery:Save: table-{}", object.getClass().getSimpleName());
+					logger.error("DBQuery:Save: exception-{}", e);
+					throw new RuntimeException("Error during save database operation", e);
+				}
+
+				long duration = System.currentTimeMillis() - startTimestamp;
+				logger.debug("({} ms)DBQuery:Save: table-{}", duration, object.getClass().getSimpleName());
+			}
+
 			// Similarly, you can override other used methods like delete, batchSave, etc.
-			// similarly
 		};
 	}
 

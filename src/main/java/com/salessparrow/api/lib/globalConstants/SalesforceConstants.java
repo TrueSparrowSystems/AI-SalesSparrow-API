@@ -30,6 +30,10 @@ public class SalesforceConstants {
 		return CoreConstants.salesforceAuthUrl() + "/services/oauth2/token";
 	}
 
+	public String revokeTokensUrl() {
+		return "/services/oauth2/revoke";
+	}
+
 	public String salesforceCreateNoteUrl() {
 		return sObjectsPath() + "/ContentNote";
 	}
