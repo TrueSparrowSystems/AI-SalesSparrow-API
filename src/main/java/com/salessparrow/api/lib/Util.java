@@ -1,5 +1,7 @@
 package com.salessparrow.api.lib;
 
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -43,20 +45,21 @@ public class Util {
     return jsonNode;
   }
 
-/**
- * Retrieves a string representation of all request headers. For security, 
- * the value of the "authorization, cookie, password" header is obfuscated.
- * 
- * @param request - The HTTP request containing the headers to be logged.
- * @return String - A string representation of the headers in the format "{headerName:headerValue, ...}".
- */
+  /**
+   * Retrieves a string representation of all request headers. For security,
+   * the value of the "authorization, cookie, password" header is obfuscated.
+   * 
+   * @param request - The HTTP request containing the headers to be logged.
+   * @return String - A string representation of the headers in the format
+   *         "{headerName:headerValue, ...}".
+   */
   public static String generateHeaderLogString(HttpServletRequest request) {
     StringBuilder headerBuilder = new StringBuilder("{");
     request.getHeaderNames().asIterator().forEachRemaining(headerName -> {
       // Add any other secret headers here that you don't want logged.
-      if (headerName.equals("authorization") || 
-        headerName.equals("cookie") || 
-        headerName.equals("password")) {
+      if (headerName.equals("authorization") ||
+          headerName.equals("cookie") ||
+          headerName.equals("password")) {
         headerBuilder.append(headerName).append(":**********, ");
       } else {
         headerBuilder.append(headerName).append(":").append(request.getHeader(headerName)).append(", ");
@@ -64,7 +67,17 @@ public class Util {
     });
     headerBuilder.append("}");
 
-    return  headerBuilder.toString();
+    return headerBuilder.toString();
+  }
+
+  /**
+   * Get current time in Date format
+   * 
+   * @return Date
+   */
+  public static Date getCurrentTimeInDateFormat() {
+    Instant currentTimestamp = Instant.now();
+    return Date.from(currentTimestamp.atOffset(ZoneOffset.UTC).toInstant());
   }
 
   /**

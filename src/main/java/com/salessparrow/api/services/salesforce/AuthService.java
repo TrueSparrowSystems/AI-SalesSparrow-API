@@ -85,13 +85,14 @@ public class AuthService {
   public AuthServiceDto connectToSalesforce(SalesforceConnectDto params, HttpServletRequest request) {
     this.reqApiSource = (String) request.getAttribute("api_source");
 
-    this.isNewUser = true; // setting default value true to this variable
+    this.isNewUser = true; // setting default value true to this variable, this will be updated based on conditions in further processing
+
     code = params.getCode();
     redirectUri = params.getRedirect_uri();
 
     fetchOauthTokensFromSalesforce();
 
-    validateAndUpsertSalesforceOrganization();
+    validateAndSaveSalesforceOrganization();
 
     upsertSalesforceOAuthTokens();
 
@@ -126,11 +127,11 @@ public class AuthService {
   }
 
   /**
-   * Validate and upsert Salesforce Organization in DB.
+   * Validate and save Salesforce Organization in DB.
    * 
    * @return void
    */
-  private void validateAndUpsertSalesforceOrganization() {
+  private void validateAndSaveSalesforceOrganization() {
     logger.info("Validating Salesforce Organization");
 
     String salesforceOrganizationId = this.tokensData.getSalesforceOrganizationId();
@@ -149,14 +150,14 @@ public class AuthService {
                 "forbidden_api_request",
                 "Salesforce Organization is not active."));
       }
+      return;
     }
 
-    logger.info("Upserting Salesforce Organization in DB");
+    logger.info("Creating Salesforce Organization in DB");
     SalesforceOrganization salesforceOrganization = new SalesforceOrganization();
     salesforceOrganization.setExternalOrganizationId(salesforceOrganizationId);
-    salesforceOrganization.setStatus(SalesforceOrganization.Status.ACTIVE);
-
-    salesforceOrganizationRepository.saveSalesforceOrganization(salesforceOrganization);
+    salesforceOrganizationRepository
+        .createSalesforceOrganization(salesforceOrganization);
   }
 
   /**
@@ -170,26 +171,35 @@ public class AuthService {
 
     long currentTime = System.currentTimeMillis();
     String encryptedAccessToken = awsKms.encryptToken(this.tokensData.getAccessToken());
-
     logger.info("Time in ms for encryption : " + (System.currentTimeMillis() - currentTime));
 
     String encryptedRefreshToken = awsKms.encryptToken(this.tokensData.getRefreshToken());
     String salesforceUserId = this.tokensData.getSalesforceUserId();
 
-    SalesforceOauthToken salesforceOauthToken = new SalesforceOauthToken();
-    // Todo: use salesforceconnect res entity object
-    salesforceOauthToken.setExternalUserId(salesforceUserId);
-    salesforceOauthToken.setIdentityUrl(this.tokensData.getId());
-    salesforceOauthToken.setAccessToken(encryptedAccessToken);
-    salesforceOauthToken.setRefreshToken(encryptedRefreshToken);
-    salesforceOauthToken.setSignature(this.tokensData.getSignature());
-    salesforceOauthToken.setIdToken(this.tokensData.getIdToken());
-    salesforceOauthToken.setInstanceUrl(this.tokensData.getInstanceUrl());
-    salesforceOauthToken.setStatus(SalesforceOauthToken.Status.ACTIVE);
-    salesforceOauthToken.setIssuedAt(Long.parseLong(this.tokensData.getIssuedAt()));
+    SalesforceOauthToken existingSalesforceOauthToken = salesforceOauthTokenRepository
+        .getSalesforceOauthTokenByExternalUserId(salesforceUserId);
 
-    this.salesforceOauthToken = salesforceOauthTokenRepository
-        .saveSalesforceOauthToken(salesforceOauthToken);
+      SalesforceOauthToken salesforceOauthToken = new SalesforceOauthToken();
+      salesforceOauthToken.setExternalUserId(salesforceUserId);
+      salesforceOauthToken.setIdentityUrl(this.tokensData.getId());
+      salesforceOauthToken.setAccessToken(encryptedAccessToken);
+      salesforceOauthToken.setRefreshToken(encryptedRefreshToken);
+      salesforceOauthToken.setSignature(this.tokensData.getSignature());
+      salesforceOauthToken.setIdToken(this.tokensData.getIdToken());
+      salesforceOauthToken.setInstanceUrl(this.tokensData.getInstanceUrl());
+      salesforceOauthToken.setIssuedAt(Long.parseLong(this.tokensData.getIssuedAt()));
+
+    if (existingSalesforceOauthToken != null) {
+      logger.info("Salesforce OAuth Token already exists");
+      this.salesforceOauthToken = salesforceOauthTokenRepository
+        .updateSalesforceOauthToken(salesforceOauthToken);
+    } else {
+      logger.info("Salesforce OAuth Token does not exists. Creating new one.");
+      this.salesforceOauthToken = salesforceOauthTokenRepository
+        .createSalesforceOauthToken(salesforceOauthToken);
+    }
+
+
   }
 
   /**
@@ -257,7 +267,7 @@ public class AuthService {
       this.salesforceUser.setEncryptionSalt(encryptedSalt);
       this.salesforceUser.setStatus(SalesforceUser.Status.ACTIVE);
 
-      this.salesforceUser = salesforceUserRepository.saveSalesforceUser(this.salesforceUser);
+      this.salesforceUser = salesforceUserRepository.updateSalesforceUser(this.salesforceUser);
       this.decryptedSalt = decryptedSalt;
       return;
     }
@@ -272,9 +282,8 @@ public class AuthService {
     salesforceUser.setUserKind(UserConstants.SALESFORCE_USER_KIND);
     salesforceUser.setCookieToken(encryptedCookieToken);
     salesforceUser.setEncryptionSalt(encryptedSalt);
-    salesforceUser.setStatus(SalesforceUser.Status.ACTIVE);
 
-    this.salesforceUser = salesforceUserRepository.saveSalesforceUser(salesforceUser);
+    this.salesforceUser = salesforceUserRepository.createSalesforceUser(salesforceUser);
     this.decryptedSalt = decryptedSalt;
   }
 
