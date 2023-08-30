@@ -127,7 +127,10 @@ public class GetSalesforceAccounts implements GetAccounts {
       accountIds.add(accountEntity.getId());
       accountIdToEntityMap.put(accountEntity.getId(), accountEntity);
 
-      handleContacts(salesforceAccount, contactMapById, accountContactAssociationsMapById);
+      if (salesforceAccount.getContacts() != null && salesforceAccount.getContacts().getRecords() != null
+          && salesforceAccount.getContacts().getRecords().size() > 0) {
+        handleContacts(salesforceAccount, contactMapById, accountContactAssociationsMapById);
+      }
     }
 
     GetAccountsFormatterDto getAccountsResponse = new GetAccountsFormatterDto();
