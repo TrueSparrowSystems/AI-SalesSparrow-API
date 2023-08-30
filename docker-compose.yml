@@ -1,16 +1,16 @@
-version: '3'
+version: "3"
 services:
   api:
     build:
       context: .
       dockerfile: Dockerfile.local
     ports:
-      - '8080:8080'
+      - "8080:8080"
     networks:
       - localdev
     volumes:
-      - './:/app'
-      - '~/.m2:/root/.m2'
+      - "./:/app"
+      - "~/.m2:/root/.m2"
     environment:
       - ENVIRONMENT=development
       - AWS_ACCESS_KEY_ID=local
@@ -27,12 +27,12 @@ services:
       context: .
       dockerfile: Dockerfile.local
     ports:
-      - '8080:8080'
+      - "8080:8080"
     networks:
       - localdev
     volumes:
-      - './:/app'
-      - '~/.m2:/root/.m2'      
+      - "./:/app"
+      - "~/.m2:/root/.m2"
     environment:
       - ENVIRONMENT=local-test
       - AWS_ACCESS_KEY_ID=local
@@ -47,14 +47,14 @@ services:
   memcached:
     image: memcached
     ports:
-      - '11211:11211'
+      - "11211:11211"
     networks:
       - localdev
-  
+
   localkms:
     image: nsmithuk/local-kms
     ports:
-      - '4599:8080'
+      - "4599:8080"
     volumes:
       - ./init:/init
     networks:
@@ -66,17 +66,17 @@ services:
       - KMS_ACCOUNT_ID='111122223333'
       - KMS_REGION='us-east-1'
       - KMS_SEED_PATH=init/seed.yaml
-  
+
   dynamodb:
     image: amazon/dynamodb-local:latest
     ports:
-      - '8000:8000'
+      - "8000:8000"
     networks:
       - localdev
     volumes:
-     - "./docker/dynamodb:/home/dynamodblocal/data"
+      - "./docker/dynamodb:/home/dynamodblocal/data"
     working_dir: /home/dynamodblocal
-    command: '-jar DynamoDBLocal.jar -sharedDb -dbPath ./data'
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
 
 networks:
   localdev:

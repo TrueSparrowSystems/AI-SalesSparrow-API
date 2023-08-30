@@ -16,7 +16,8 @@ public class FilterConfig {
      */
     @Bean
     public FilterRegistrationBean<SameSiteCookieFilter> sameSiteCookieFilter() {
-        FilterRegistrationBean<SameSiteCookieFilter> registrationBean = new FilterRegistrationBean<>();
+        FilterRegistrationBean<SameSiteCookieFilter> registrationBean =
+                new FilterRegistrationBean<>();
         registrationBean.setFilter(new SameSiteCookieFilter());
         registrationBean.addUrlPatterns("/*"); // or specific URL patterns
         registrationBean.setOrder(1);
@@ -30,7 +31,8 @@ public class FilterConfig {
      */
     @Bean
     public FilterRegistrationBean<SanitizationFilter> sanitizationFilter() {
-        FilterRegistrationBean<SanitizationFilter> registrationBean = new FilterRegistrationBean<>();
+        FilterRegistrationBean<SanitizationFilter> registrationBean =
+                new FilterRegistrationBean<>();
         registrationBean.setFilter(new SanitizationFilter());
         registrationBean.addUrlPatterns("/*");
         registrationBean.setOrder(0);
