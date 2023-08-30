@@ -30,6 +30,7 @@ public class GetAccountsFeedService {
   private GetAccountsFactory getAccountsFactory;
 
   Logger logger = LoggerFactory.getLogger(GetAccountsFeedService.class);
+  int pageNumber;
 
   /**
    * Get accounts feed method
@@ -43,13 +44,13 @@ public class GetAccountsFeedService {
     logger.info("Getting accounts feed");
 
     User currentUser = (User) request.getAttribute("current_user");
-    int pageNumber = 1;
+    pageNumber = 1;
     String searchTerm = null;
 
     int offset = calculateOffset(getAccountsFeedDto.getPagination_identifier());
 
     return prepareResponse(getAccountsFactory.getAccounts(currentUser, searchTerm,
-        AccountConstants.FEED_VIEW_KIND, offset), pageNumber);
+        AccountConstants.FEED_VIEW_KIND, offset));
   }
 
   /**
@@ -75,7 +76,7 @@ public class GetAccountsFeedService {
                 "pagination_identifier_parsing_error",
                 e.getMessage()));
       }
-      int pageNumber = paginationIdentifierObj.getPageNumber();
+      pageNumber = paginationIdentifierObj.getPageNumber();
       offset = (pageNumber - 1) * AccountConstants.PAGINATION_LIMIT;
     }
 
@@ -88,7 +89,7 @@ public class GetAccountsFeedService {
    * @param accountsFactoryRes GetAccountsFormatterDto
    * @return GetAccountsFeedResponseDto
    */
-  private GetAccountsFeedResponseDto prepareResponse(GetAccountsFormatterDto accountsFactoryRes, int pageNumber) {
+  private GetAccountsFeedResponseDto prepareResponse(GetAccountsFormatterDto accountsFactoryRes) {
     logger.info("Preparing response");
     GetAccountsFeedResponseDto accountsFeedResponse = new GetAccountsFeedResponseDto();
 
