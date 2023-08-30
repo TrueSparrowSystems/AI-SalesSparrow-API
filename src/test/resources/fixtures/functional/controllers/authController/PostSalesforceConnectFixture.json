@@ -21,5 +21,17 @@
         "filepath": "classpath:fixtures/common/repositories/salesforceOrganization/DeletedSalesforceOrganization.json"
       }
     ]
+  },
+  "testPostSalesforceConnectDisconnectedUserSignup": {
+    "salesforce_users": [
+      {
+        "filepath": "classpath:fixtures/common/repositories/salesforceUser/DeletedSalesforceUser.json"
+      }
+    ],
+    "salesforce_organizations": [
+      {
+        "filepath": "classpath:fixtures/common/repositories/salesforceOrganization/ActiveSalesforceOrganization.json"
+      }
+    ]    
   }
 }

@@ -71,12 +71,8 @@ public class SecurityConfig {
 				.xssProtection(xss -> xss.headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK))
 				.referrerPolicy(referrer -> referrer.policy(ReferrerPolicy.SAME_ORIGIN)));
 
-		// Enable for production and staging
-		if (!CoreConstants.isDevEnvironment() && !CoreConstants.isTestEnvironment()
-				&& !CoreConstants.isLocalTestEnvironment()) {
-			// All requests must be secure
-			http.requiresChannel(channel -> channel.anyRequest().requiresSecure());
-		}
+		// http redirect to https is handled by the reverse proxy server (nginx). So no
+		// need to handle it here.
 
 		return http.build();
 	}
