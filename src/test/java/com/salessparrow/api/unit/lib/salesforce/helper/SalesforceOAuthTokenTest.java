@@ -73,7 +73,7 @@ public class SalesforceOAuthTokenTest {
 
     when(awsKms.encryptToken("new_access_token")).thenReturn("encrypted_access_token");
 
-    when(salesforceOauthTokenRepository.saveSalesforceOauthToken(any(SalesforceOauthToken.class)))
+    when(salesforceOauthTokenRepository.updateSalesforceOauthToken(any(SalesforceOauthToken.class)))
       .thenAnswer(invocation -> invocation.getArgument(0)); // Return the argument back
 
     String decryptedAccessToken = salesforceOauthToken.updateAndGetRefreshedAccessToken(sfOAuthToken);
