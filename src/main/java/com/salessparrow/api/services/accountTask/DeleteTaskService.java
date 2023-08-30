@@ -15,26 +15,25 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 @Service
 public class DeleteTaskService {
-    
-    Logger logger = LoggerFactory.getLogger(DeleteTaskService.class);
 
-    @Autowired
-    private DeleteAccountTaskFactory deleteAccountTaskFactory;
+	Logger logger = LoggerFactory.getLogger(DeleteTaskService.class);
 
-    /**
-     * Deletes a task in an account.
-     * 
-     * @param request
-     * @param accountId
-     * @param taskId
-     * 
-     * @return void
-     */
-    public void deleteAccountTask(HttpServletRequest request, String accountId, String taskId) {
-        logger.info("Delete task in account service called");
+	@Autowired
+	private DeleteAccountTaskFactory deleteAccountTaskFactory;
 
-        User currentUser = (User) request.getAttribute("current_user");
-        
-        deleteAccountTaskFactory.deleteAccountTask(currentUser, accountId, taskId); 
-    }
+	/**
+	 * Deletes a task in an account.
+	 * @param request
+	 * @param accountId
+	 * @param taskId
+	 * @return void
+	 */
+	public void deleteAccountTask(HttpServletRequest request, String accountId, String taskId) {
+		logger.info("Delete task in account service called");
+
+		User currentUser = (User) request.getAttribute("current_user");
+
+		deleteAccountTaskFactory.deleteAccountTask(currentUser, accountId, taskId);
+	}
+
 }

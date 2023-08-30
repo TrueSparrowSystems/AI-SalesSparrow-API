@@ -16,30 +16,27 @@ import com.salessparrow.api.lib.httpLib.HttpClient;
 @Component
 public class SalesforceGetRefreshedAccessToken {
 
-  @Autowired
-  SalesforceConstants salesforceConstants;
-  
-  /**
-   * Get tokens from Salesforce
-   * 
-   * @param decryptedRefreshToken
-   * 
-   * @return HttpResponse
-   */
-  public HttpClient.HttpResponse getRefreshedAccessToken(String decryptedRefreshToken) {
-    String url = salesforceConstants.oauth2Url();
+	@Autowired
+	SalesforceConstants salesforceConstants;
 
-    String requestBody = "grant_type=" + salesforceConstants.refreshTokenGrantType() + "&client_id="
-        + CoreConstants.salesforceClientId()
-        + "&client_secret="
-        + CoreConstants.salesforceClientSecret() +
-        "&refresh_token=" + decryptedRefreshToken;
+	/**
+	 * Get tokens from Salesforce
+	 * @param decryptedRefreshToken
+	 * @return HttpResponse
+	 */
+	public HttpClient.HttpResponse getRefreshedAccessToken(String decryptedRefreshToken) {
+		String url = salesforceConstants.oauth2Url();
 
-    Map<String, String> headers = new HashMap<>();
-    headers.put("content-type", "application/x-www-form-urlencoded");
+		String requestBody = "grant_type=" + salesforceConstants.refreshTokenGrantType() + "&client_id="
+				+ CoreConstants.salesforceClientId() + "&client_secret=" + CoreConstants.salesforceClientSecret()
+				+ "&refresh_token=" + decryptedRefreshToken;
 
-    HttpClient.HttpResponse response = HttpClient.makePostRequest(url, headers, requestBody, 5000);
+		Map<String, String> headers = new HashMap<>();
+		headers.put("content-type", "application/x-www-form-urlencoded");
 
-    return response;
-  }
+		HttpClient.HttpResponse response = HttpClient.makePostRequest(url, headers, requestBody, 5000);
+
+		return response;
+	}
+
 }

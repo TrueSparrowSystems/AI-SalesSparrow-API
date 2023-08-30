@@ -13,48 +13,45 @@ import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * GetCrmOrganizationUsersList class for the getCrmOrganizationUsers action.
- * 
- * 
+ *
+ *
  */
 @Service
 public class GetCrmOrganizationUsersList {
 
-    Logger logger = LoggerFactory.getLogger(GetCrmOrganizationUsersList.class);
-    
-    @Autowired
-    private GetCrmOrganizationUsersFactory getCrmOrganizationUsersFactory;
+	Logger logger = LoggerFactory.getLogger(GetCrmOrganizationUsersList.class);
 
-    /**
-     * getCrmOrganizationUsers method for the getCrmOrganizationUsers action.
-     * 
-     * @param request
-     * @param crmOrganizationUsersDto
-     * 
-     * @return GetCrmOrganizationUsersFormatterDto
-    */
-    public GetCrmOrganizationUsersFormatterDto getCrmOrganizationUsers(HttpServletRequest request ,GetCrmOrganizationUsersDto crmOrganizationUsersDto) {
-        logger.info("Inside Search crm organization user service");
-        User currentUser = (User) request.getAttribute("current_user");
-        String formattedSearchString = "";
-        if(crmOrganizationUsersDto.getQ() != null){
-            formattedSearchString = formatSearchString(crmOrganizationUsersDto.getQ());
-        }
+	@Autowired
+	private GetCrmOrganizationUsersFactory getCrmOrganizationUsersFactory;
 
-        return getCrmOrganizationUsersFactory.getCrmOrganizationUsers(currentUser, formattedSearchString);
-    }
+	/**
+	 * getCrmOrganizationUsers method for the getCrmOrganizationUsers action.
+	 * @param request
+	 * @param crmOrganizationUsersDto
+	 * @return GetCrmOrganizationUsersFormatterDto
+	 */
+	public GetCrmOrganizationUsersFormatterDto getCrmOrganizationUsers(HttpServletRequest request,
+			GetCrmOrganizationUsersDto crmOrganizationUsersDto) {
+		logger.info("Inside Search crm organization user service");
+		User currentUser = (User) request.getAttribute("current_user");
+		String formattedSearchString = "";
+		if (crmOrganizationUsersDto.getQ() != null) {
+			formattedSearchString = formatSearchString(crmOrganizationUsersDto.getQ());
+		}
 
-    /**
-     * formatSearchString method for the getCrmOrganizationUsers action.
-     * 
-     * @param searchTerm
-     * 
-     * @return String
-     */
-    private String formatSearchString(String searchTerm) {
-        logger.info("format and sanitize search term");
-        searchTerm = searchTerm.trim();
+		return getCrmOrganizationUsersFactory.getCrmOrganizationUsers(currentUser, formattedSearchString);
+	}
 
-        return searchTerm;
-    }
+	/**
+	 * formatSearchString method for the getCrmOrganizationUsers action.
+	 * @param searchTerm
+	 * @return String
+	 */
+	private String formatSearchString(String searchTerm) {
+		logger.info("format and sanitize search term");
+		searchTerm = searchTerm.trim();
+
+		return searchTerm;
+	}
 
 }

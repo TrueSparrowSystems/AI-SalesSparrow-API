@@ -25,45 +25,47 @@ import com.salessparrow.api.helper.LoadFixture;
 import com.salessparrow.api.helper.Scenario;
 import com.salessparrow.api.helper.Setup;
 
-
 @SpringBootTest
 @AutoConfigureMockMvc
 @WebAppConfiguration
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
 public class JsonOnlyInterceptorTest {
-  @Autowired
-  private MockMvc mockMvc;
 
-  @Autowired
-  private Setup setup;
+	@Autowired
+	private MockMvc mockMvc;
 
-  @Autowired
-  private Cleanup cleanup;
+	@Autowired
+	private Setup setup;
 
-  @Autowired
-  private Common common;
+	@Autowired
+	private Cleanup cleanup;
 
-  @BeforeEach
-  public void setUp() throws DynamobeeException, IOException {
-    setup.perform();
-  }
+	@Autowired
+	private Common common;
 
-  @AfterEach
-  public void tearDown() {
-    cleanup.perform();
-  }
+	@BeforeEach
+	public void setUp() throws DynamobeeException, IOException {
+		setup.perform();
+	}
 
-  @Test
-  public void preHandle() throws Exception{
-    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/functional/interceptors/jsonOnlyInterceptor.scenarios.json");
-    for (Scenario testDataItem : testDataItems) {
-      ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/auth/salesforce/redirect-url")
-        .contentType(MediaType.ALL_VALUE));
+	@AfterEach
+	public void tearDown() {
+		cleanup.perform();
+	}
 
-      String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
-        common.compareErrors(testDataItem, contentAsString);
-    }
+	@Test
+	public void preHandle() throws Exception {
+		List<Scenario> testDataItems = common
+			.loadScenariosData("classpath:data/functional/interceptors/jsonOnlyInterceptor.scenarios.json");
+		for (Scenario testDataItem : testDataItems) {
+			ResultActions resultActions = mockMvc
+				.perform(MockMvcRequestBuilders.get("/api/v1/auth/salesforce/redirect-url")
+					.contentType(MediaType.ALL_VALUE));
 
-  }
+			String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
+			common.compareErrors(testDataItem, contentAsString);
+		}
+
+	}
+
 }
-

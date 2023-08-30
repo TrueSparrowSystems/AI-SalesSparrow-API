@@ -16,38 +16,35 @@ import com.salessparrow.api.lib.salesforce.helper.SalesforceRequestInterface;
  */
 @Component
 public class SalesforceGetNoteContent {
-    @Autowired
-    private SalesforceConstants salesforceConstants;
 
-    @Autowired
-    private SalesforceRequest salesforceOauthRequest;
-    
-    /**
-     * Get the content of a note
-     * 
-     * @param noteId
-     * @param salesforceUserId
-     * 
-     * @return HttpResponse
-     */
-    public HttpClient.HttpResponse getNoteContent(String noteId, String salesforceUserId){
-        Integer timeoutMillis = salesforceConstants.timeoutMillis();
+	@Autowired
+	private SalesforceConstants salesforceConstants;
 
-        SalesforceRequestInterface<HttpClient.HttpResponse> request = (token, instanceUrl) -> {
-            String noteContentQuery = salesforceConstants.salesforceNotesContentUrl(instanceUrl, noteId);
-          
-            Map<String, String> headers = new HashMap<>();
-            headers.put("Authorization", "Bearer " + token);
+	@Autowired
+	private SalesforceRequest salesforceOauthRequest;
 
-            HttpClient.HttpResponse response = HttpClient.makeGetRequest(
-                    noteContentQuery,
-                    headers,
-                    timeoutMillis);
+	/**
+	 * Get the content of a note
+	 * @param noteId
+	 * @param salesforceUserId
+	 * @return HttpResponse
+	 */
+	public HttpClient.HttpResponse getNoteContent(String noteId, String salesforceUserId) {
+		Integer timeoutMillis = salesforceConstants.timeoutMillis();
 
-            return response;
-        };
+		SalesforceRequestInterface<HttpClient.HttpResponse> request = (token, instanceUrl) -> {
+			String noteContentQuery = salesforceConstants.salesforceNotesContentUrl(instanceUrl, noteId);
 
-        HttpClient.HttpResponse response = salesforceOauthRequest.makeRequest(salesforceUserId, request);
-        return response;
-    }
+			Map<String, String> headers = new HashMap<>();
+			headers.put("Authorization", "Bearer " + token);
+
+			HttpClient.HttpResponse response = HttpClient.makeGetRequest(noteContentQuery, headers, timeoutMillis);
+
+			return response;
+		};
+
+		HttpClient.HttpResponse response = salesforceOauthRequest.makeRequest(salesforceUserId, request);
+		return response;
+	}
+
 }

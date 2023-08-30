@@ -12,13 +12,14 @@ import lombok.Data;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CreateAccountTaskDto {
 
-    @NotBlank(message = "missing_crm_organization_user_id")
-    private String crmOrganizationUserId;
+	@NotBlank(message = "missing_crm_organization_user_id")
+	private String crmOrganizationUserId;
 
-    @NotBlank(message = "missing_description")
-    @Size(max = 32000, message = "description_too_long")
-    private String description;
+	@NotBlank(message = "missing_description")
+	@Size(max = 32000, message = "description_too_long")
+	private String description;
 
-    @ValidDateFormat(message = "invalid_due_date")
-    private String dueDate;
+	@ValidDateFormat(message = "invalid_due_date")
+	private String dueDate;
+
 }

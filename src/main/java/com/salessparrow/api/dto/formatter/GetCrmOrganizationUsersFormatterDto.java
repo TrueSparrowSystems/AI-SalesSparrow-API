@@ -12,6 +12,9 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GetCrmOrganizationUsersFormatterDto {
-    private List<String> crmOrganizationUserIds;
-    private Map<String, CrmOrganizationUserEntity> crmOrganizationUserMapById;
+
+	private List<String> crmOrganizationUserIds;
+
+	private Map<String, CrmOrganizationUserEntity> crmOrganizationUserMapById;
+
 }

@@ -12,35 +12,33 @@ import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.globalConstants.UserConstants;
 
 /**
- * GetAccountTasksListFactory is a factory class for the GetAccountTasksList action for the CRM.
+ * GetAccountTasksListFactory is a factory class for the GetAccountTasksList action for
+ * the CRM.
  */
 @Component
 public class GetAccountTasksListFactory {
-  Logger logger = LoggerFactory.getLogger(GetAccountTasksListFactory.class);
 
-  @Autowired
-  private GetSalesforceAccountTasksList getSalesforceAccountTasksList;
+	Logger logger = LoggerFactory.getLogger(GetAccountTasksListFactory.class);
 
-  /**
-   * Get the list of tasks for a given account.
-   * 
-   * @param user
-   * @param accountId
-   * 
-   * @return GetTasksListFormatterDto
-   **/
-  public GetTasksListFormatterDto getAccountTasksList(User user, String accountId) {
-    logger.info("factory for getAccountTasksList action");
+	@Autowired
+	private GetSalesforceAccountTasksList getSalesforceAccountTasksList;
 
-    switch(user.getUserKind()) {
-      case UserConstants.SALESFORCE_USER_KIND:
-        return getSalesforceAccountTasksList.getAccountTasksList(user, accountId);
-    default:
-      throw new CustomException(
-        new ErrorObject(
-          "l_ca_gatl_gatlf_gtl_1",
-          "something_went_wrong",
-          "Invalid user kind."));
-    }
-  }
+	/**
+	 * Get the list of tasks for a given account.
+	 * @param user
+	 * @param accountId
+	 * @return GetTasksListFormatterDto
+	 **/
+	public GetTasksListFormatterDto getAccountTasksList(User user, String accountId) {
+		logger.info("factory for getAccountTasksList action");
+
+		switch (user.getUserKind()) {
+			case UserConstants.SALESFORCE_USER_KIND:
+				return getSalesforceAccountTasksList.getAccountTasksList(user, accountId);
+			default:
+				throw new CustomException(
+						new ErrorObject("l_ca_gatl_gatlf_gtl_1", "something_went_wrong", "Invalid user kind."));
+		}
+	}
+
 }

@@ -15,21 +15,21 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 @Service
 public class CreateAccountNoteService {
-  
-  @Autowired
-  private CreateNoteFactory createNoteFactory;
-  
-  /**
-   * Create a note for a specific account.
-   * 
-   * @param request
-   * @param accountId
-   * @return CreateNoteFormatterDto
-   */
-  public CreateNoteFormatterDto createNote(HttpServletRequest request, String accountId, NoteDto note) {
 
-      SalesforceUser currentUser = (SalesforceUser) request.getAttribute("current_user");
+	@Autowired
+	private CreateNoteFactory createNoteFactory;
 
-      return createNoteFactory.createNote(currentUser, accountId, note);
-  }
+	/**
+	 * Create a note for a specific account.
+	 * @param request
+	 * @param accountId
+	 * @return CreateNoteFormatterDto
+	 */
+	public CreateNoteFormatterDto createNote(HttpServletRequest request, String accountId, NoteDto note) {
+
+		SalesforceUser currentUser = (SalesforceUser) request.getAttribute("current_user");
+
+		return createNoteFactory.createNote(currentUser, accountId, note);
+	}
+
 }

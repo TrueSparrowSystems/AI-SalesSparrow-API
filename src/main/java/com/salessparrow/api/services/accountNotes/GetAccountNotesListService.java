@@ -14,22 +14,21 @@ import com.salessparrow.api.lib.crmActions.getAccountNotesList.GetAccountNoteLis
  */
 @Service
 public class GetAccountNotesListService {
-    @Autowired
-    private GetAccountNoteListFactory getNotesListFactory;
 
-    /**
-     * Get the list of notes for a given account
-     * @param accountId
-     * @param request
-     * 
-     * @return GetNotesListFormatterDto
-     **/
-    public GetNotesListFormatterDto getNotesList(HttpServletRequest request, String accountId) {
+	@Autowired
+	private GetAccountNoteListFactory getNotesListFactory;
 
-        User currentUser = (User) request.getAttribute("current_user");
+	/**
+	 * Get the list of notes for a given account
+	 * @param accountId
+	 * @param request
+	 * @return GetNotesListFormatterDto
+	 **/
+	public GetNotesListFormatterDto getNotesList(HttpServletRequest request, String accountId) {
 
-        return getNotesListFactory.getNotesList(currentUser, accountId);
-    }
+		User currentUser = (User) request.getAttribute("current_user");
 
-    
+		return getNotesListFactory.getNotesList(currentUser, accountId);
+	}
+
 }

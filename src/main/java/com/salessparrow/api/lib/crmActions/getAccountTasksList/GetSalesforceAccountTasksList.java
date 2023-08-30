@@ -29,98 +29,93 @@ import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 import com.salessparrow.api.lib.salesforce.helper.SalesforceQueryBuilder;
 
 /**
- * GetSalesforceAccountTasksList is a class for the GetAccountTasksList service for the Salesforce CRM.
+ * GetSalesforceAccountTasksList is a class for the GetAccountTasksList service for the
+ * Salesforce CRM.
  */
 @Component
 public class GetSalesforceAccountTasksList {
-  Logger logger = LoggerFactory.getLogger(GetSalesforceAccountTasksList.class);
 
-  @Autowired
-  private SalesforceConstants salesforceConstants;
+	Logger logger = LoggerFactory.getLogger(GetSalesforceAccountTasksList.class);
 
-  @Autowired
-  private MakeCompositeRequest makeCompositeRequest;
+	@Autowired
+	private SalesforceConstants salesforceConstants;
 
-  /**
-   * Get the list of tasks for a given account in salesforce
-   * 
-   * @param user
-   * @param accountId
-   * 
-   * @return GetTasksListFormatterDto
-   **/
-  public GetTasksListFormatterDto getAccountTasksList(User user, String accountId) {
-    logger.info("Salesforce getAccountTasksList action called");
+	@Autowired
+	private MakeCompositeRequest makeCompositeRequest;
 
-    String salesforceUserId = user.getExternalUserId();
+	/**
+	 * Get the list of tasks for a given account in salesforce
+	 * @param user
+	 * @param accountId
+	 * @return GetTasksListFormatterDto
+	 **/
+	public GetTasksListFormatterDto getAccountTasksList(User user, String accountId) {
+		logger.info("Salesforce getAccountTasksList action called");
 
-    SalesforceQueryBuilder salesforceQuery = new SalesforceQueryBuilder();
-    String query = salesforceQuery.getAccountTasksQuery(accountId);
+		String salesforceUserId = user.getExternalUserId();
 
-    String url = salesforceConstants.queryUrlPath() + query;
+		SalesforceQueryBuilder salesforceQuery = new SalesforceQueryBuilder();
+		String query = salesforceQuery.getAccountTasksQuery(accountId);
 
-    CompositeRequestDto compositeReq = new CompositeRequestDto("GET", url, "GetTasksList");
+		String url = salesforceConstants.queryUrlPath() + query;
 
-    List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
-    compositeRequests.add(compositeReq);
+		CompositeRequestDto compositeReq = new CompositeRequestDto("GET", url, "GetTasksList");
 
-    HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId);
+		List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
+		compositeRequests.add(compositeReq);
 
-    return parseResponse(response.getResponseBody());
-  }
+		HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId);
 
-  /**
-   * Parse Response
-   * 
-   * @param responseBody
-   * 
-   * @return GetTasksListFormatterDto
-  **/
-  public GetTasksListFormatterDto parseResponse(String responseBody) {
-    
-    List<String> taskIds = new ArrayList<String>();
-    Map<String, TaskEntity> taskIdToEntityMap = new HashMap<>();
+		return parseResponse(response.getResponseBody());
+	}
 
-    Util util = new Util();
-    JsonNode rootNode = util.getJsonNode(responseBody);
+	/**
+	 * Parse Response
+	 * @param responseBody
+	 * @return GetTasksListFormatterDto
+	 **/
+	public GetTasksListFormatterDto parseResponse(String responseBody) {
 
-    JsonNode getTasksCompositeResponse = rootNode.get("compositeResponse").get(0);
-    Integer getTasksStatusCode = getTasksCompositeResponse.get("httpStatusCode").asInt();
-    
-    if (getTasksStatusCode != 200 && getTasksStatusCode != 201) {
-      String errorBody = getTasksCompositeResponse.get("body").asText();
+		List<String> taskIds = new ArrayList<String>();
+		Map<String, TaskEntity> taskIdToEntityMap = new HashMap<>();
 
-      if (getTasksStatusCode == 400) {
-        throw new CustomException(
-          new ParamErrorObject(
-            "l_ca_gatl_gsatl_pr_1", 
-            errorBody, 
-            Arrays.asList("invalid_account_id")));
-      } else {
-        throw new CustomException(
-          new ErrorObject(
-            "l_ca_gatl_gsatl_pr_2",
-            "something_went_wrong",
-            errorBody));
-      }
-    }
+		Util util = new Util();
+		JsonNode rootNode = util.getJsonNode(responseBody);
 
-    JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");;
+		JsonNode getTasksCompositeResponse = rootNode.get("compositeResponse").get(0);
+		Integer getTasksStatusCode = getTasksCompositeResponse.get("httpStatusCode").asInt();
 
-    for (JsonNode recordNode : recordsNode) {
-      ObjectMapper mapper = new ObjectMapper();
-      mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-      SalesforceGetTasksListDto salesforceGetTasksListDto = mapper.convertValue(recordNode, SalesforceGetTasksListDto.class);
-      TaskEntity taskEntity = salesforceGetTasksListDto.taskEntity();
+		if (getTasksStatusCode != 200 && getTasksStatusCode != 201) {
+			String errorBody = getTasksCompositeResponse.get("body").asText();
 
-      taskIds.add(taskEntity.getId());
-      taskIdToEntityMap.put(taskEntity.getId(), taskEntity);
-    }
+			if (getTasksStatusCode == 400) {
+				throw new CustomException(
+						new ParamErrorObject("l_ca_gatl_gsatl_pr_1", errorBody, Arrays.asList("invalid_account_id")));
+			}
+			else {
+				throw new CustomException(new ErrorObject("l_ca_gatl_gsatl_pr_2", "something_went_wrong", errorBody));
+			}
+		}
 
-    GetTasksListFormatterDto getTasksListFormatterDto = new GetTasksListFormatterDto();
-    getTasksListFormatterDto.setTaskMapById(taskIdToEntityMap);
-    getTasksListFormatterDto.setTaskIds(taskIds);
+		JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");
+		;
 
-    return getTasksListFormatterDto;
-  }
+		for (JsonNode recordNode : recordsNode) {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+			SalesforceGetTasksListDto salesforceGetTasksListDto = mapper.convertValue(recordNode,
+					SalesforceGetTasksListDto.class);
+			TaskEntity taskEntity = salesforceGetTasksListDto.taskEntity();
+
+			taskIds.add(taskEntity.getId());
+			taskIdToEntityMap.put(taskEntity.getId(), taskEntity);
+		}
+
+		GetTasksListFormatterDto getTasksListFormatterDto = new GetTasksListFormatterDto();
+		getTasksListFormatterDto.setTaskMapById(taskIdToEntityMap);
+		getTasksListFormatterDto.setTaskIds(taskIds);
+
+		return getTasksListFormatterDto;
+	}
+
 }

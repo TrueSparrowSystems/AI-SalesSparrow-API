@@ -15,30 +15,31 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class UtilTest {
 
-  @Mock
-  private ObjectMapper objectMapper;
+	@Mock
+	private ObjectMapper objectMapper;
 
-  @InjectMocks
-  private Util util;
+	@InjectMocks
+	private Util util;
 
-  @BeforeEach
-  public void setup() {
-    MockitoAnnotations.openMocks(this);
-  }
+	@BeforeEach
+	public void setup() {
+		MockitoAnnotations.openMocks(this);
+	}
 
-  @Test
-  public void testGetJsonNode_ValidJson() throws Exception {
-    String jsonString = "{\"key\": \"value\"}";
+	@Test
+	public void testGetJsonNode_ValidJson() throws Exception {
+		String jsonString = "{\"key\": \"value\"}";
 
-    JsonNode resultJsonNode = util.getJsonNode(jsonString);
+		JsonNode resultJsonNode = util.getJsonNode(jsonString);
 
-    assertEquals("value", resultJsonNode.get("key").asText());
-  }
+		assertEquals("value", resultJsonNode.get("key").asText());
+	}
 
-  @Test
-  public void testGetJsonNode_InvalidJson() throws Exception {
-    String invalidJsonString = "invalid json";
+	@Test
+	public void testGetJsonNode_InvalidJson() throws Exception {
+		String invalidJsonString = "invalid json";
 
-    assertThrows(CustomException.class, () -> util.getJsonNode(invalidJsonString));
-  }
+		assertThrows(CustomException.class, () -> util.getJsonNode(invalidJsonString));
+	}
+
 }

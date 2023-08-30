@@ -5,9 +5,12 @@ import org.springframework.stereotype.Component;
 import com.salessparrow.api.domain.User;
 
 /**
- * DeleteAccountNoteInterface is an interface for the DeleteAccountNote action for the CRM.
+ * DeleteAccountNoteInterface is an interface for the DeleteAccountNote action for the
+ * CRM.
  */
 @Component
 public interface DeleteAccountNoteInterface {
-    public void deleteAccountNote(User user, String noteId);
+
+	public void deleteAccountNote(User user, String noteId);
+
 }
