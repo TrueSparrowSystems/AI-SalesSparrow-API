@@ -15,6 +15,7 @@ import com.salessparrow.api.dto.requestMapper.NoteDto;
  */
 @Component
 public class CreateNoteFactory {
+
 	@Autowired
 	private CreateSalesforceNote createSalesforceNote;
 
@@ -22,20 +23,17 @@ public class CreateNoteFactory {
 	 * Create a note for a given account
 	 * @param user
 	 * @param accountId
-	 * 
 	 * @return CreateNoteFormatterDto
 	 **/
 	public CreateNoteFormatterDto createNote(SalesforceUser user, String accountId, NoteDto note) {
 
-		switch(user.getUserKind()) {
+		switch (user.getUserKind()) {
 			case UserConstants.SALESFORCE_USER_KIND:
 				return createSalesforceNote.createNote(user, accountId, note);
 			default:
 				throw new CustomException(
-					new ErrorObject(
-						"l_ca_cn_cnf_cn_1",
-						"something_went_wrong",
-						"Invalid user kind."));
+						new ErrorObject("l_ca_cn_cnf_cn_1", "something_went_wrong", "Invalid user kind."));
 		}
 	}
+
 }

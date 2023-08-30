@@ -30,8 +30,8 @@ $ git submodule update --init
 
 1. Copy the contents of `sample.secrets.json` to `secrets.json`.
 2. Update the values of the environment variables in secrets.json:
-    - Copy Salesforce credentials from the Salesforce connected app and update `SALESFORCE_CLIENT_ID`, `SALESFORCE_CLIENT_SECRET`, `SALESFORCE_AUTH_URL`.
-    - Update `KMS_KEY_ID` with value `arn:aws:kms:'us-east-1':'111122223333':key/bc436485-5092-42b8-92a3-0aa8b93536dc`. This local Docker setup uses the [local-kms](https://hub.docker.com/r/nsmithuk/local-kms) Docker image, and the key is already configured using [seed](init/seed.yaml).
+   - Copy Salesforce credentials from the Salesforce connected app and update `SALESFORCE_CLIENT_ID`, `SALESFORCE_CLIENT_SECRET`, `SALESFORCE_AUTH_URL`.
+   - Update `KMS_KEY_ID` with value `arn:aws:kms:'us-east-1':'111122223333':key/bc436485-5092-42b8-92a3-0aa8b93536dc`. This local Docker setup uses the [local-kms](https://hub.docker.com/r/nsmithuk/local-kms) Docker image, and the key is already configured using [seed](init/seed.yaml).
 
 ### Start the API Server with Docker
 
@@ -44,11 +44,13 @@ $ docker-compose up api
 #### Set Test-Related Environment Variables
 
 1. Create a `test.secrets.json` file:
+
 ```sh
 $ touch test.secrets.json
 ```
 
 2. Add the following environment variables to `test.secrets.json`:
+
 ```json
 {
     "ENCRYPTION_KEY": "1234567890",
@@ -71,9 +73,18 @@ $ touch test.secrets.json
 }
 ```
 
+#### Apply Spring Java Format
+
+Before committing the changes, it's good practice to apply the Spring Java format to your code to ensure it adheres to a consistent style.
+
+```sh
+$ ./mvnw spring-javaformat:apply
+```
+
 #### Run Test Cases
 
 ```sh
 $ docker-compose up test
 ```
+
 To view the test coverage, simply open the target/site/index.html file in a web browser.

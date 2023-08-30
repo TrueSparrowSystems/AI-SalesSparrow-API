@@ -25,124 +25,108 @@ import com.salessparrow.api.lib.salesforce.dto.SalesforceCreateNoteDto;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 
 /**
- * CreateSalesforceNote is a class that creates a note in Salesforce and attaches it to an account.
+ * CreateSalesforceNote is a class that creates a note in Salesforce and attaches it to an
+ * account.
  */
 @Component
 public class CreateSalesforceNote implements CreateNoteInterface {
-  
-  @Autowired
-  private SalesforceConstants salesforceConstants;
 
-  @Autowired
-  private MakeCompositeRequest makeCompositeRequest;
+	@Autowired
+	private SalesforceConstants salesforceConstants;
 
-  @Autowired
-  private Base64Helper base64Helper;
+	@Autowired
+	private MakeCompositeRequest makeCompositeRequest;
 
-  /**
-   * Create a note for a given account.
-   * 
-   * @param user
-   * @param accountId
-   * @param note
-   * @return CreateNoteFormatterDto
-   */
-  public CreateNoteFormatterDto createNote(SalesforceUser user, String accountId, NoteDto note) {
-    String salesforceUserId = user.getExternalUserId();
+	@Autowired
+	private Base64Helper base64Helper;
 
-    String noteTitle = getNoteTitleFromContent(note);
-    String encodedNoteContent = base64Helper.base64Encode(note.getText());
+	/**
+	 * Create a note for a given account.
+	 * @param user
+	 * @param accountId
+	 * @param note
+	 * @return CreateNoteFormatterDto
+	 */
+	public CreateNoteFormatterDto createNote(SalesforceUser user, String accountId, NoteDto note) {
+		String salesforceUserId = user.getExternalUserId();
 
-    Map<String, String> createNoteBody = new HashMap<String, String>();
-    createNoteBody.put("Title", noteTitle);
-    createNoteBody.put("Content", encodedNoteContent);
+		String noteTitle = getNoteTitleFromContent(note);
+		String encodedNoteContent = base64Helper.base64Encode(note.getText());
 
-    CompositeRequestDto createNoteCompositeRequestDto = new CompositeRequestDto(
-      "POST", 
-      salesforceConstants.salesforceCreateNoteUrl(), 
-      "CreateNote",
-      createNoteBody
-    );
+		Map<String, String> createNoteBody = new HashMap<String, String>();
+		createNoteBody.put("Title", noteTitle);
+		createNoteBody.put("Content", encodedNoteContent);
 
-    Map<String, String> attachNoteBody = new HashMap<String, String>();
-    attachNoteBody.put("ContentDocumentId", "@{CreateNote.id}");
-    attachNoteBody.put("LinkedEntityId", accountId);
+		CompositeRequestDto createNoteCompositeRequestDto = new CompositeRequestDto("POST",
+				salesforceConstants.salesforceCreateNoteUrl(), "CreateNote", createNoteBody);
 
-    CompositeRequestDto attachNoteCompositeRequestDto = new CompositeRequestDto(
-      "POST", 
-      salesforceConstants.salesforceAttachNoteUrl(), 
-      "AttachNote",
-      attachNoteBody
-    );
+		Map<String, String> attachNoteBody = new HashMap<String, String>();
+		attachNoteBody.put("ContentDocumentId", "@{CreateNote.id}");
+		attachNoteBody.put("LinkedEntityId", accountId);
 
-    List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
-    compositeRequests.add(createNoteCompositeRequestDto);
-    compositeRequests.add(attachNoteCompositeRequestDto);
+		CompositeRequestDto attachNoteCompositeRequestDto = new CompositeRequestDto("POST",
+				salesforceConstants.salesforceAttachNoteUrl(), "AttachNote", attachNoteBody);
 
-    HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId);
+		List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
+		compositeRequests.add(createNoteCompositeRequestDto);
+		compositeRequests.add(attachNoteCompositeRequestDto);
 
-    return parseResponse(response.getResponseBody());
-  }
+		HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId);
 
-  /**
-   * Parse the response from Salesforce.
-   *
-   * @param createNoteFormatterDto
-   * @return CreateNoteFormatterDto - formatted response
-   */
-  private CreateNoteFormatterDto parseResponse(String createNoteResponse) {
-    Util util = new Util();
-    JsonNode rootNode = util.getJsonNode(createNoteResponse);
+		return parseResponse(response.getResponseBody());
+	}
 
-    JsonNode createNoteCompositeResponse = rootNode.get("compositeResponse").get(0);
-    String createNoteStatusCode = createNoteCompositeResponse.get("httpStatusCode").asText();
+	/**
+	 * Parse the response from Salesforce.
+	 * @param createNoteFormatterDto
+	 * @return CreateNoteFormatterDto - formatted response
+	 */
+	private CreateNoteFormatterDto parseResponse(String createNoteResponse) {
+		Util util = new Util();
+		JsonNode rootNode = util.getJsonNode(createNoteResponse);
 
-    if (!createNoteStatusCode.equals("200") && !createNoteStatusCode.equals("201")) {
-      String errorBody = createNoteCompositeResponse.get("body").asText();
+		JsonNode createNoteCompositeResponse = rootNode.get("compositeResponse").get(0);
+		String createNoteStatusCode = createNoteCompositeResponse.get("httpStatusCode").asText();
 
-      throw new CustomException(
-      new ErrorObject(
-          "l_s_fse_fscn_fcn_1",
-          "internal_server_error",
-          errorBody)); 
-    }
+		if (!createNoteStatusCode.equals("200") && !createNoteStatusCode.equals("201")) {
+			String errorBody = createNoteCompositeResponse.get("body").asText();
 
-    JsonNode createNoteNodeResponseBody = rootNode.get("compositeResponse").get(0).get("body");
+			throw new CustomException(new ErrorObject("l_s_fse_fscn_fcn_1", "internal_server_error", errorBody));
+		}
 
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-    SalesforceCreateNoteDto salesforceCreateNoteDto = mapper.convertValue(createNoteNodeResponseBody, SalesforceCreateNoteDto.class);
+		JsonNode createNoteNodeResponseBody = rootNode.get("compositeResponse").get(0).get("body");
 
-    JsonNode attachNoteCompositeResponse = rootNode.get("compositeResponse").get(1);
-    String attachNoteStatusCode = attachNoteCompositeResponse.get("httpStatusCode").asText();
-    
-    if (!attachNoteStatusCode.equals("200") && !attachNoteStatusCode.equals("201")) {
-      String errorBody = attachNoteCompositeResponse.get("body").toString();
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		SalesforceCreateNoteDto salesforceCreateNoteDto = mapper.convertValue(createNoteNodeResponseBody,
+				SalesforceCreateNoteDto.class);
 
-      throw new CustomException(
-        new ErrorObject(
-            "l_s_fse_fscn_fcn_2",
-            "internal_server_error",
-            errorBody)); 
-    }
+		JsonNode attachNoteCompositeResponse = rootNode.get("compositeResponse").get(1);
+		String attachNoteStatusCode = attachNoteCompositeResponse.get("httpStatusCode").asText();
 
-    CreateNoteFormatterDto createNoteFormatterDto = new CreateNoteFormatterDto();
-    createNoteFormatterDto.setNoteId(salesforceCreateNoteDto.getId());
+		if (!attachNoteStatusCode.equals("200") && !attachNoteStatusCode.equals("201")) {
+			String errorBody = attachNoteCompositeResponse.get("body").toString();
 
-    return createNoteFormatterDto;
-  }
+			throw new CustomException(new ErrorObject("l_s_fse_fscn_fcn_2", "internal_server_error", errorBody));
+		}
 
-  /**
-   * Get the first 50 characters of the note content.
-   * 
-   * @param note - note dto
-   * @return String
-   */
-  private String getNoteTitleFromContent(NoteDto note) {
-    if (note.getText().length() < 50) {
-      return note.getText();
-    }
+		CreateNoteFormatterDto createNoteFormatterDto = new CreateNoteFormatterDto();
+		createNoteFormatterDto.setNoteId(salesforceCreateNoteDto.getId());
 
-    return note.getText().substring(0, 50);
-  }
+		return createNoteFormatterDto;
+	}
+
+	/**
+	 * Get the first 50 characters of the note content.
+	 * @param note - note dto
+	 * @return String
+	 */
+	private String getNoteTitleFromContent(NoteDto note) {
+		if (note.getText().length() < 50) {
+			return note.getText();
+		}
+
+		return note.getText().substring(0, 50);
+	}
+
 }

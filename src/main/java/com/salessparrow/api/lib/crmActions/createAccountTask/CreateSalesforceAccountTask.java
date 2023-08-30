@@ -29,106 +29,93 @@ import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
  * CreateSalesforceTask class is responsible for creating a task in Salesforce
  */
 @Component
-public class CreateSalesforceAccountTask implements CreateAccountTask{
+public class CreateSalesforceAccountTask implements CreateAccountTask {
 
-    Logger logger = LoggerFactory.getLogger(CreateSalesforceAccountTask.class);
+	Logger logger = LoggerFactory.getLogger(CreateSalesforceAccountTask.class);
 
-    @Autowired
-    private SalesforceConstants salesforceConstants;
+	@Autowired
+	private SalesforceConstants salesforceConstants;
 
-    @Autowired
-    private MakeCompositeRequest makeCompositeRequest;
-    
-    /**
-     * Create a task in Salesforce
-     * 
-     * @param User User object
-     * @param accountId Salesforce account id
-     * @param task CreateTaskDto object
-     * 
-     * @return CreateTaskFormatterDto object
-     */
-    public CreateTaskFormatterDto createAccountTask(User User, String accountId, CreateAccountTaskDto task) {
-        String salesforceUserId = User.getExternalUserId();
+	@Autowired
+	private MakeCompositeRequest makeCompositeRequest;
 
-        String taskSubject = getTaskSubjectFromDescription(task);
+	/**
+	 * Create a task in Salesforce
+	 * @param User User object
+	 * @param accountId Salesforce account id
+	 * @param task CreateTaskDto object
+	 * @return CreateTaskFormatterDto object
+	 */
+	public CreateTaskFormatterDto createAccountTask(User User, String accountId, CreateAccountTaskDto task) {
+		String salesforceUserId = User.getExternalUserId();
 
-        logger.info("performing create task in salesforce");
+		String taskSubject = getTaskSubjectFromDescription(task);
 
-        Map<String, String> taskBody = new HashMap<String, String>();
-        taskBody.put("Subject", taskSubject);
-        taskBody.put("Description", task.getDescription());
-        taskBody.put("OwnerId", task.getCrmOrganizationUserId());
-        taskBody.put("ActivityDate", task.getDueDate());
-        taskBody.put("WhatId", accountId);
+		logger.info("performing create task in salesforce");
 
-        CompositeRequestDto createTaskCompositeRequestDto = new CompositeRequestDto(
-            "POST",
-            salesforceConstants.salesforceCreateTaskUrl(),
-            "CreateTask",
-            taskBody
-        );
+		Map<String, String> taskBody = new HashMap<String, String>();
+		taskBody.put("Subject", taskSubject);
+		taskBody.put("Description", task.getDescription());
+		taskBody.put("OwnerId", task.getCrmOrganizationUserId());
+		taskBody.put("ActivityDate", task.getDueDate());
+		taskBody.put("WhatId", accountId);
 
-        List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
-        compositeRequests.add(createTaskCompositeRequestDto);
+		CompositeRequestDto createTaskCompositeRequestDto = new CompositeRequestDto("POST",
+				salesforceConstants.salesforceCreateTaskUrl(), "CreateTask", taskBody);
 
-        HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId);
+		List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
+		compositeRequests.add(createTaskCompositeRequestDto);
 
-        return parseResponse(response.getResponseBody());
-    }
+		HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId);
 
-    /**
-     * Parse the response from Salesforce
-     * 
-     * @param createTaskResponse String response from Salesforce
-     * 
-     * @return CreateTaskFormatterDto object
-     */
-    private CreateTaskFormatterDto parseResponse(String createTaskResponse){
-        Util util = new Util();
-        JsonNode rootNode = util.getJsonNode(createTaskResponse);
+		return parseResponse(response.getResponseBody());
+	}
 
-        logger.info("parsing response from salesforce");
+	/**
+	 * Parse the response from Salesforce
+	 * @param createTaskResponse String response from Salesforce
+	 * @return CreateTaskFormatterDto object
+	 */
+	private CreateTaskFormatterDto parseResponse(String createTaskResponse) {
+		Util util = new Util();
+		JsonNode rootNode = util.getJsonNode(createTaskResponse);
 
-        JsonNode createTaskCompositeResponse = rootNode.get("compositeResponse").get(0);
-        String createTaskStatusCode = createTaskCompositeResponse.get("httpStatusCode").asText();
+		logger.info("parsing response from salesforce");
 
-        if (!createTaskStatusCode.equals("200") && !createTaskStatusCode.equals("201")) {
-            String errorBody = createTaskCompositeResponse.get("body").asText();
+		JsonNode createTaskCompositeResponse = rootNode.get("compositeResponse").get(0);
+		String createTaskStatusCode = createTaskCompositeResponse.get("httpStatusCode").asText();
 
-            throw new CustomException(
-            new ErrorObject(
-                "l_ca_ct_cst_1",
-                "internal_server_error",
-                errorBody
-            )); 
-        }
+		if (!createTaskStatusCode.equals("200") && !createTaskStatusCode.equals("201")) {
+			String errorBody = createTaskCompositeResponse.get("body").asText();
 
-        JsonNode createTaskNodeResponseBody = rootNode.get("compositeResponse").get(0).get("body");
+			throw new CustomException(new ErrorObject("l_ca_ct_cst_1", "internal_server_error", errorBody));
+		}
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        SalesforceCreateTaskDto salesforceCreateTaskDto = mapper.convertValue(createTaskNodeResponseBody, SalesforceCreateTaskDto.class);
+		JsonNode createTaskNodeResponseBody = rootNode.get("compositeResponse").get(0).get("body");
 
-        CreateTaskFormatterDto createTaskFormatterDto = new CreateTaskFormatterDto();
-        createTaskFormatterDto.setTaskId(salesforceCreateTaskDto.getId());
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		SalesforceCreateTaskDto salesforceCreateTaskDto = mapper.convertValue(createTaskNodeResponseBody,
+				SalesforceCreateTaskDto.class);
 
-        return createTaskFormatterDto;
-    }
+		CreateTaskFormatterDto createTaskFormatterDto = new CreateTaskFormatterDto();
+		createTaskFormatterDto.setTaskId(salesforceCreateTaskDto.getId());
 
-    /**
-     * Get task subject from description
-     * 
-     * @param task CreateTaskDto object
-     * 
-     * @return String task subject
-     */
-    private String getTaskSubjectFromDescription(CreateAccountTaskDto task) {
-        logger.info("getting task subject from description");
-        if (task.getDescription().length() < 60) {
-            return task.getDescription();
-        }
+		return createTaskFormatterDto;
+	}
 
-        return task.getDescription().substring(0, 60);
-    }
+	/**
+	 * Get task subject from description
+	 * @param task CreateTaskDto object
+	 * @return String task subject
+	 */
+	private String getTaskSubjectFromDescription(CreateAccountTaskDto task) {
+		logger.info("getting task subject from description");
+		if (task.getDescription().length() < 60) {
+			return task.getDescription();
+		}
+
+		return task.getDescription().substring(0, 60);
+	}
+
 }

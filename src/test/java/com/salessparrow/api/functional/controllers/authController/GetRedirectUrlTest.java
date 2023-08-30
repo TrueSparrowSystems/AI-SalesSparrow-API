@@ -24,31 +24,36 @@ import com.salessparrow.api.helper.Setup;
 @WebAppConfiguration
 @Import({ Setup.class, Cleanup.class, Common.class })
 public class GetRedirectUrlTest {
-  @Autowired
-  private MockMvc mockMvc;
 
-  @Autowired
-  private Common common;
+	@Autowired
+	private MockMvc mockMvc;
 
-  @Test
-  public void getRedirectUrl() throws Exception{
-    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/functional/controllers/authController/redirectUrl.scenarios.json");
+	@Autowired
+	private Common common;
 
-    for (Scenario testDataItem : testDataItems) {
-      ObjectMapper objectMapper = new ObjectMapper();
-      String expectedOutput = objectMapper.writeValueAsString(testDataItem.getOutput());
+	@Test
+	public void getRedirectUrl() throws Exception {
+		List<Scenario> testDataItems = common
+			.loadScenariosData("classpath:data/functional/controllers/authController/redirectUrl.scenarios.json");
 
-      ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/auth/salesforce/redirect-url")
-        .param("redirect_uri", (String) testDataItem.getInput().get("redirect_uri"))
-        .param("state", (String) testDataItem.getInput().get("state"))
-        .contentType(MediaType.APPLICATION_JSON));
+		for (Scenario testDataItem : testDataItems) {
+			ObjectMapper objectMapper = new ObjectMapper();
+			String expectedOutput = objectMapper.writeValueAsString(testDataItem.getOutput());
 
-      String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
-      if(resultActions.andReturn().getResponse().getStatus() == 200) {
-        assertEquals(expectedOutput, contentAsString);
-      } else {
-        common.compareErrors(testDataItem, contentAsString);
-      }
-    }
-  }
+			ResultActions resultActions = mockMvc
+				.perform(MockMvcRequestBuilders.get("/api/v1/auth/salesforce/redirect-url")
+					.param("redirect_uri", (String) testDataItem.getInput().get("redirect_uri"))
+					.param("state", (String) testDataItem.getInput().get("state"))
+					.contentType(MediaType.APPLICATION_JSON));
+
+			String contentAsString = resultActions.andReturn().getResponse().getContentAsString();
+			if (resultActions.andReturn().getResponse().getStatus() == 200) {
+				assertEquals(expectedOutput, contentAsString);
+			}
+			else {
+				common.compareErrors(testDataItem, contentAsString);
+			}
+		}
+	}
+
 }

@@ -5,5 +5,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApiSource {
 
-  public static final String APP = "app";
+	public static final String APP = "app";
+
 }

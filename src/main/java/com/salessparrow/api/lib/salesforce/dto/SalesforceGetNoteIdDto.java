@@ -8,5 +8,7 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
 public class SalesforceGetNoteIdDto {
-    private String contentDocumentId;
+
+	private String contentDocumentId;
+
 }

@@ -25,63 +25,61 @@ import com.salessparrow.api.lib.globalConstants.CookieConstants;
 @Component
 public class UserAuthInterceptor implements HandlerInterceptor {
 
-  @Autowired
-  private UserLoginCookieAuth userLoginCookieAuth;
+	@Autowired
+	private UserLoginCookieAuth userLoginCookieAuth;
 
-  Logger logger = LoggerFactory.getLogger(UserAuthInterceptor.class);
+	Logger logger = LoggerFactory.getLogger(UserAuthInterceptor.class);
 
-  @Autowired
-  private CookieHelper cookieHelper;
+	@Autowired
+	private CookieHelper cookieHelper;
 
-  /**
-   * Intercept request and validate user login cookie
-   *
-   * @param request
-   * @param response
-   * @param handler
-   *
-   * @return boolean
-   */
-  @Override
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    String cookieValue = getCookieValue(request);
-    String reqApiSource = (String) request.getAttribute("api_source");
-    
-    Map<String, Object> userLoginCookieAuthRes = userLoginCookieAuth.validateAndSetCookie(cookieValue, reqApiSource);
+	/**
+	 * Intercept request and validate user login cookie
+	 * @param request
+	 * @param response
+	 * @param handler
+	 * @return boolean
+	 */
+	@Override
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+			throws Exception {
+		String cookieValue = getCookieValue(request);
+		String reqApiSource = (String) request.getAttribute("api_source");
 
-    User currentUser = (User) userLoginCookieAuthRes.get("current_user");
-    request.setAttribute("current_user", currentUser);
+		Map<String, Object> userLoginCookieAuthRes = userLoginCookieAuth.validateAndSetCookie(cookieValue,
+				reqApiSource);
 
-    String userLoginCookieValue = (String) userLoginCookieAuthRes.get("userLoginCookieValue");
+		User currentUser = (User) userLoginCookieAuthRes.get("current_user");
+		request.setAttribute("current_user", currentUser);
 
-    String cookieName = CookieConstants.USER_LOGIN_COOKIE_NAME;
+		String userLoginCookieValue = (String) userLoginCookieAuthRes.get("userLoginCookieValue");
 
-    HttpHeaders headers = new HttpHeaders();
-    headers = cookieHelper.setCookieInHeaders(cookieName, userLoginCookieValue, headers);
+		String cookieName = CookieConstants.USER_LOGIN_COOKIE_NAME;
 
-    response.addHeader(HttpHeaders.SET_COOKIE, headers.getFirst(HttpHeaders.SET_COOKIE));
+		HttpHeaders headers = new HttpHeaders();
+		headers = cookieHelper.setCookieInHeaders(cookieName, userLoginCookieValue, headers);
 
-    return true;
-  }
+		response.addHeader(HttpHeaders.SET_COOKIE, headers.getFirst(HttpHeaders.SET_COOKIE));
 
-  /**
-   * Get cookie value from request
-   *
-   * @param request
-   * @param cookieName
-   *
-   * @return String
-   */
-  private String getCookieValue(HttpServletRequest request) {
-    Cookie[] cookies = request.getCookies();
-    if (cookies != null) {
-      for (Cookie cookie : cookies) {
-        if (cookie.getName().equals(CookieConstants.USER_LOGIN_COOKIE_NAME)) {
-          return cookie.getValue();
-        }
-      }
-    }
-    return null;
-  }
+		return true;
+	}
+
+	/**
+	 * Get cookie value from request
+	 * @param request
+	 * @param cookieName
+	 * @return String
+	 */
+	private String getCookieValue(HttpServletRequest request) {
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals(CookieConstants.USER_LOGIN_COOKIE_NAME)) {
+					return cookie.getValue();
+				}
+			}
+		}
+		return null;
+	}
 
 }

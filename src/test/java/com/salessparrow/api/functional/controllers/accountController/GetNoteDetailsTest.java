@@ -50,85 +50,97 @@ import jakarta.servlet.http.Cookie;
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
 public class GetNoteDetailsTest {
 
-  @Autowired
-  private MockMvc mockMvc;
-  @Autowired
-  private Common common;
-  @Autowired
-  private LoadFixture loadFixture;
-  @Autowired
-  private Setup setup;
-  @Autowired
-  private Cleanup cleanup;
-  @MockBean
-  private SalesforceGetNoteContent salesforceGetNoteContentMock;
+	@Autowired
+	private MockMvc mockMvc;
 
-  @MockBean
-  private MakeCompositeRequest makeCompositeRequestMock;
+	@Autowired
+	private Common common;
 
-  @BeforeEach
-  public void setUp() throws DynamobeeException, IOException {
-    setup.perform();
-  }
+	@Autowired
+	private LoadFixture loadFixture;
 
-  @AfterEach
-  public void tearDown() {
-    cleanup.perform();
-  }
+	@Autowired
+	private Setup setup;
 
-  @ParameterizedTest
-  @MethodSource("testScenariosProvider")
-  public void getNoteDetails(Scenario testScenario) throws Exception {
-    String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
-    FixtureData fixtureData = common.loadFixture("classpath:fixtures/functional/controllers/accountController/getNoteDetails.fixtures.json", currentFunctionName);
-    loadFixture.perform(fixtureData);
+	@Autowired
+	private Cleanup cleanup;
 
-    ObjectMapper objectMapper = new ObjectMapper();
+	@MockBean
+	private SalesforceGetNoteContent salesforceGetNoteContentMock;
 
-    String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
-    String accountId = (String) testScenario.getInput().get("accountId");
-    String noteId = (String) testScenario.getInput().get("noteId");
+	@MockBean
+	private MakeCompositeRequest makeCompositeRequestMock;
 
-    HttpResponse getNoteDetailsMockResponse = new HttpResponse();
+	@BeforeEach
+	public void setUp() throws DynamobeeException, IOException {
+		setup.perform();
+	}
 
-    getNoteDetailsMockResponse.setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeCompositeRequest")));
-    
-    when(makeCompositeRequestMock.makePostRequest(any(), any())).thenReturn(getNoteDetailsMockResponse);
+	@AfterEach
+	public void tearDown() {
+		cleanup.perform();
+	}
 
+	@ParameterizedTest
+	@MethodSource("testScenariosProvider")
+	public void getNoteDetails(Scenario testScenario) throws Exception {
+		String currentFunctionName = new Object() {
+		}.getClass().getEnclosingMethod().getName();
+		FixtureData fixtureData = common.loadFixture(
+				"classpath:fixtures/functional/controllers/accountController/getNoteDetails.fixtures.json",
+				currentFunctionName);
+		loadFixture.perform(fixtureData);
 
-    HttpResponse getNoteContentMockResponse = new HttpResponse();
-    getNoteContentMockResponse.setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeWrapperRequest")));
+		ObjectMapper objectMapper = new ObjectMapper();
 
-    when(salesforceGetNoteContentMock.getNoteContent(any(), any())).thenReturn(getNoteContentMockResponse);
+		String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
+		String accountId = (String) testScenario.getInput().get("accountId");
+		String noteId = (String) testScenario.getInput().get("noteId");
 
-    String url = "/api/v1/accounts/" + accountId + "/notes/" + noteId;
-    ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(url)
-      .cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
-      .contentType(MediaType.APPLICATION_JSON));
+		HttpResponse getNoteDetailsMockResponse = new HttpResponse();
 
-    String expectedOutput = objectMapper.writeValueAsString(testScenario.getOutput());
-    String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
+		getNoteDetailsMockResponse
+			.setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeCompositeRequest")));
 
-    if(resultActions.andReturn().getResponse().getStatus() == 200) {
-      assertEquals(expectedOutput, actualOutput);
-    } else {
-      common.compareErrors(testScenario, actualOutput);
-    }
+		when(makeCompositeRequestMock.makePostRequest(any(), any())).thenReturn(getNoteDetailsMockResponse);
 
-  }
+		HttpResponse getNoteContentMockResponse = new HttpResponse();
+		getNoteContentMockResponse
+			.setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeWrapperRequest")));
 
-  static Stream<Scenario> testScenariosProvider() throws IOException {
-    List<Scenario> testScenarios = loadScenarios();
-    return testScenarios.stream();
-  }
+		when(salesforceGetNoteContentMock.getNoteContent(any(), any())).thenReturn(getNoteContentMockResponse);
 
-  private static List<Scenario> loadScenarios() throws IOException {
-    String scenariosPath = "classpath:data/functional/controllers/accountController/getNoteDetails.scenarios.json";
-    Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
-    ObjectMapper objectMapper = new ObjectMapper();
-    
-    try (InputStream inputStream = resource.getInputStream()) {
-        return objectMapper.readValue(inputStream, new TypeReference<List<Scenario>>() {});
-    }
-  }
+		String url = "/api/v1/accounts/" + accountId + "/notes/" + noteId;
+		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(url)
+			.cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
+			.contentType(MediaType.APPLICATION_JSON));
+
+		String expectedOutput = objectMapper.writeValueAsString(testScenario.getOutput());
+		String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
+
+		if (resultActions.andReturn().getResponse().getStatus() == 200) {
+			assertEquals(expectedOutput, actualOutput);
+		}
+		else {
+			common.compareErrors(testScenario, actualOutput);
+		}
+
+	}
+
+	static Stream<Scenario> testScenariosProvider() throws IOException {
+		List<Scenario> testScenarios = loadScenarios();
+		return testScenarios.stream();
+	}
+
+	private static List<Scenario> loadScenarios() throws IOException {
+		String scenariosPath = "classpath:data/functional/controllers/accountController/getNoteDetails.scenarios.json";
+		Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		try (InputStream inputStream = resource.getInputStream()) {
+			return objectMapper.readValue(inputStream, new TypeReference<List<Scenario>>() {
+			});
+		}
+	}
+
 }
