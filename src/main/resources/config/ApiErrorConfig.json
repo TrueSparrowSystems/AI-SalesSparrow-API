@@ -44,9 +44,14 @@
     "code": "INVALID_PARAMS",
     "message": "At least one parameter is invalid or missing."
   },
-    "forbidden_api_request": {
-      "httpCode": "403",
-      "code": "FORBIDDEN",
-      "message": "Forbidden API request. You do not have the necessary permissions."
-    }
+  "forbidden_api_request": {
+    "httpCode": "403",
+    "code": "FORBIDDEN",
+    "message": "Forbidden API request. You do not have the necessary permissions."
+  },
+  "pagination_identifier_parsing_error": {
+    "httpCode": "400",
+    "code": "PAGINATION_IDENTIFIER_PARSING_ERROR",
+    "message": "Error parsing pagination identifier."
+  }
 }

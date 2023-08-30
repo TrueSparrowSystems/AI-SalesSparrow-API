@@ -56,6 +56,23 @@ public class Common {
 	}
 
 	/**
+	 * Load the test scenario data from the given location and key.
+	 * @param location - location of the test data
+	 * @param key - key of the test data
+	 * @return List<Scenario>
+	 * @throws IOException
+	 */
+	public List<Scenario> loadScenariosData(String location, String key) throws IOException {
+		Resource resource = resourceLoader.getResource(location);
+		ObjectMapper objectMapper = new ObjectMapper();
+		Map<String, List<Scenario>> scenarioMap = new HashMap<>();
+		scenarioMap = objectMapper.readValue(resource.getInputStream(),
+				new TypeReference<HashMap<String, List<Scenario>>>() {
+				});
+		return scenarioMap.get(key);
+	}
+
+	/**
 	 * Compare the errors from the test data with the actual errors.
 	 * @param testDataItem
 	 * @param contentAsString
