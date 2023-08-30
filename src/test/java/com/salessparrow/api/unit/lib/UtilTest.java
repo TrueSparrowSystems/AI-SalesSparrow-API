@@ -6,18 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.Util;
 
 public class UtilTest {
-
-  @Mock
-  private ObjectMapper objectMapper;
 
   @InjectMocks
   private Util util;
@@ -30,47 +25,47 @@ public class UtilTest {
   @Test
   public void testEncode() {
     String plainText = "Hello, World!";
-    String encodedText = util.base64Encode(plainText);
+    String encodedText = Util.base64Encode(plainText);
     assertEquals("SGVsbG8sIFdvcmxkIQ==", encodedText);
   }
 
   @Test
   public void testEncodeEmptyString() {
     String plainText = "";
-    String encodedText = util.base64Encode(plainText);
+    String encodedText = Util.base64Encode(plainText);
     assertEquals("", encodedText);
   }
 
   @Test
   public void testEncodeNullString() {
     String plainText = null;
-    assertThrows(CustomException.class, () -> util.base64Encode(plainText));
+    assertThrows(CustomException.class, () -> Util.base64Encode(plainText));
   }
 
   @Test
   public void testDecode() {
     String encodedText = "SGVsbG8sIFdvcmxkIQ==";
-    String decodedText = util.base64Decode(encodedText);
+    String decodedText = Util.base64Decode(encodedText);
     assertEquals("Hello, World!", decodedText);
   }
 
   @Test
   public void testDecodeEmptyString() {
     String encodedText = "";
-    String decodedText = util.base64Decode(encodedText);
+    String decodedText = Util.base64Decode(encodedText);
     assertEquals("", decodedText);
   }
 
   @Test
   public void testDecodeNullString() {
     String encodedText = null;
-    assertThrows(CustomException.class, () -> util.base64Decode(encodedText));
+    assertThrows(CustomException.class, () -> Util.base64Decode(encodedText));
   }
 
   @Test
   public void testDecodeInvalidString() {
     String encodedText = "SGVsbG8sIFdvcmxkIQ=";
-    assertThrows(CustomException.class, () -> util.base64Decode(encodedText));
+    assertThrows(CustomException.class, () -> Util.base64Decode(encodedText));
   }
 
   @Test
@@ -90,24 +85,24 @@ public class UtilTest {
   }
 
   @Test
-    public void testEscapeSpecialChars() {
-        String[] inputStrings = {"\\a","%a","_a","'a","\"a"};
-        String[] expectedOutputs = {"\\\\a","\\%a","\\_a","\\'a","\\\"a"};
+  public void testEscapeSpecialChars() {
+    String[] inputStrings = { "\\a", "%a", "_a", "'a", "\"a" };
+    String[] expectedOutputs = { "\\\\a", "\\%a", "\\_a", "\\'a", "\\\"a" };
 
-        for(int i = 0; i < inputStrings.length; i++) {
-            String result = Util.escapeSpecialChars(inputStrings[i]);
-            assertEquals(expectedOutputs[i], result);
-        }
+    for (int i = 0; i < inputStrings.length; i++) {
+      String result = Util.escapeSpecialChars(inputStrings[i]);
+      assertEquals(expectedOutputs[i], result);
     }
+  }
 
-    @Test
-    public void testUrlEncoder() {
-        String[] inputStrings = {"\\\\a","\\%a","\\_a","\\'a","\\\"a","a+b","a b"};
-        String[] expectedOutputs = {"%5C%5Ca","%5C%25a","%5C_a","%5C%27a","%5C%22a","a%2Bb","a+b"};
+  @Test
+  public void testUrlEncoder() {
+    String[] inputStrings = { "\\\\a", "\\%a", "\\_a", "\\'a", "\\\"a", "a+b", "a b" };
+    String[] expectedOutputs = { "%5C%5Ca", "%5C%25a", "%5C_a", "%5C%27a", "%5C%22a", "a%2Bb", "a+b" };
 
-        for(int i = 0; i < inputStrings.length; i++) {
-            String result = Util.urlEncoder(inputStrings[i]);
-            assertEquals(expectedOutputs[i], result);
-        }
+    for (int i = 0; i < inputStrings.length; i++) {
+      String result = Util.urlEncoder(inputStrings[i]);
+      assertEquals(expectedOutputs[i], result);
     }
+  }
 }

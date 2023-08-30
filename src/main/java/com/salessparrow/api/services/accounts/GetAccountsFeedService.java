@@ -29,15 +29,7 @@ public class GetAccountsFeedService {
   @Autowired
   private GetAccountsFactory getAccountsFactory;
 
-  @Autowired
-  private Util util;
-
   Logger logger = LoggerFactory.getLogger(GetAccountsFeedService.class);
-
-  int offset;
-  int pageNumber = 1;
-  String searchTerm = null;
-  ObjectMapper mapper = new ObjectMapper();
 
   /**
    * Get accounts feed method
@@ -51,35 +43,57 @@ public class GetAccountsFeedService {
     logger.info("Getting accounts feed");
 
     User currentUser = (User) request.getAttribute("current_user");
-    offset = 0;
+    int pageNumber = 1;
+    String searchTerm = null;
 
-    if (getAccountsFeedDto.getPagination_identifier() != null) {
+    int offset = calculateOffset(getAccountsFeedDto.getPagination_identifier());
+
+    return prepareResponse(getAccountsFactory.getAccounts(currentUser, searchTerm,
+        AccountConstants.FEED_VIEW_KIND, offset), pageNumber);
+  }
+
+  /**
+   * Calculate offset for pagination using pagination identifier
+   * 
+   * @param paginationIdentifier String
+   * @return int
+   */
+  private int calculateOffset(String paginationIdentifier) {
+    int offset = 0;
+
+    if (paginationIdentifier != null) {
       logger.info("Pagination identifier found");
-      String decodedPaginationIdentifier = util.base64Decode(getAccountsFeedDto.getPagination_identifier());
+      String decodedPaginationIdentifier = Util.base64Decode(paginationIdentifier);
       PaginationIdentifierFormatterDto paginationIdentifierObj = null;
       try {
+        ObjectMapper mapper = new ObjectMapper();
         paginationIdentifierObj = mapper.readValue(decodedPaginationIdentifier, PaginationIdentifierFormatterDto.class);
       } catch (Exception e) {
         throw new CustomException(
             new ErrorObject(
                 "s_a_gafs_gaf_1",
-                "something_went_wrong",
+                "pagination_identifier_parsing_error",
                 e.getMessage()));
       }
-      pageNumber = paginationIdentifierObj.getPageNumber();
+      int pageNumber = paginationIdentifierObj.getPageNumber();
       offset = (pageNumber - 1) * AccountConstants.PAGINATION_LIMIT;
     }
 
-    return prepareResponse(getAccountsFactory.getAccounts(currentUser, searchTerm,
-        AccountConstants.FEED_VIEW_KIND, offset));
+    return offset;
   }
 
-  private GetAccountsFeedResponseDto prepareResponse(GetAccountsFormatterDto accountsFactoryRes) {
+  /**
+   * Preparing response
+   * 
+   * @param accountsFactoryRes GetAccountsFormatterDto
+   * @return GetAccountsFeedResponseDto
+   */
+  private GetAccountsFeedResponseDto prepareResponse(GetAccountsFormatterDto accountsFactoryRes, int pageNumber) {
     logger.info("Preparing response");
     GetAccountsFeedResponseDto accountsFeedResponse = new GetAccountsFeedResponseDto();
 
     setResponseFields(accountsFeedResponse, accountsFactoryRes);
-    setNextPagePayload(accountsFeedResponse);
+    setNextPagePayload(accountsFeedResponse, pageNumber);
 
     return accountsFeedResponse;
   }
@@ -91,15 +105,16 @@ public class GetAccountsFeedService {
     response.setAccountContactAssociationsMapById(factoryRes.getAccountContactAssociationsMapById());
   }
 
-  private void setNextPagePayload(GetAccountsFeedResponseDto response) {
+  private void setNextPagePayload(GetAccountsFeedResponseDto response, int pageNumber) {
     logger.info("Preparing pagination identifier");
     PaginationIdentifierFormatterDto paginationIdentifier = new PaginationIdentifierFormatterDto();
     paginationIdentifier.setPageNumber(pageNumber + 1);
 
     try {
+      ObjectMapper mapper = new ObjectMapper();
       String paginationJson = mapper.writeValueAsString(paginationIdentifier);
       NextPagePayloadEntity nextPagePayload = new NextPagePayloadEntity();
-      nextPagePayload.setPaginationIdentifier(util.base64Encode(paginationJson));
+      nextPagePayload.setPaginationIdentifier(Util.base64Encode(paginationJson));
       response.setNextPagePayload(nextPagePayload);
     } catch (Exception e) {
       throw new CustomException(

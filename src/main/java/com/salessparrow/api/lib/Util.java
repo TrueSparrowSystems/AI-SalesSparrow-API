@@ -74,7 +74,7 @@ public class Util {
    * @param plainText - String to be encoded
    * @return String - Encoded string
    */
-  public String base64Encode(String plainText) {
+  public static String base64Encode(String plainText) {
     String encodedText = null;
 
     try {
@@ -96,7 +96,7 @@ public class Util {
    * @param encodedText - String to be decoded
    * @return String - Decoded string
    */
-  public String base64Decode(String encodedText) {
+  public static String base64Decode(String encodedText) {
     String decodedText = null;
 
     try {
@@ -116,20 +116,22 @@ public class Util {
   /**
    * Escape special characters in a string for use in a regular expression.
    * SOQL is important from security point of view.
-   * Refer https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_select_quotedstringescapes.htm for more details.
+   * Refer
+   * https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/sforce_api_calls_soql_select_quotedstringescapes.htm
+   * for more details.
    * 
    * @param input
    * 
    * @return String
    */
   public static String escapeSpecialChars(String input) {
-    if(input == null || input == "") 
+    if (input == null || input == "")
       return input;
 
-    String[] specialChars = {"\\", "%", "'", "\"", "_"};
-    
+    String[] specialChars = { "\\", "%", "'", "\"", "_" };
+
     for (String specialChar : specialChars) {
-        input = input.replace(specialChar, "\\" + specialChar);
+      input = input.replace(specialChar, "\\" + specialChar);
     }
 
     return input;
@@ -142,24 +144,23 @@ public class Util {
    * 
    * @return String
    */
-  public static String urlEncoder(String input){
-    if(input == null || input == "") 
+  public static String urlEncoder(String input) {
+    if (input == null || input == "")
       return input;
-      
+
     try {
       return URLEncoder.encode(input, "UTF-8");
     } catch (UnsupportedEncodingException e) {
       throw new CustomException(
-        new ErrorObject(
-          "u_u_ue_1",
-          "something_went_wrong",
-          e.getMessage()
-        )
-      );
+          new ErrorObject(
+              "u_u_ue_1",
+              "something_went_wrong",
+              e.getMessage()));
     }
   }
-  
-  /** Get date format from datetime
+
+  /**
+   * Get date format from datetime
    * 
    * @param date
    * 

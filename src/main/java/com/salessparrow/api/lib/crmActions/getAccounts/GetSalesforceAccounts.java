@@ -27,6 +27,7 @@ import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
 import com.salessparrow.api.lib.salesforce.dto.SalesforceAccountDto;
+import com.salessparrow.api.lib.salesforce.dto.SalesforceContactDto;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 import com.salessparrow.api.lib.salesforce.helper.SalesforceQueryBuilder;
 
@@ -41,6 +42,9 @@ public class GetSalesforceAccounts implements GetAccounts {
 
   @Autowired
   private MakeCompositeRequest makeCompositeRequest;
+
+  @Autowired
+  private Util util;
 
   Logger logger = LoggerFactory.getLogger(UserLoginCookieAuth.class);
 
@@ -98,8 +102,9 @@ public class GetSalesforceAccounts implements GetAccounts {
     Map<String, ContactEntity> contactMapById = new HashMap<>();
     Map<String, AccountContactAssociationsEntity> accountContactAssociationsMapById = new HashMap<>();
 
-    Util util = new Util();
     JsonNode rootNode = util.getJsonNode(responseBody);
+
+    System.out.println("rootNode--->>>" + rootNode);
 
     JsonNode httpStatusCodeNode = rootNode.get("compositeResponse").get(0).get("httpStatusCode");
 
@@ -138,7 +143,7 @@ public class GetSalesforceAccounts implements GetAccounts {
       Map<String, AccountContactAssociationsEntity> accountContactAssociationsMapById) {
     List<String> contactIds = new ArrayList<String>();
 
-    for (SalesforceAccountDto.Contact contact : salesforceAccount.getContacts().getRecords()) {
+    for (SalesforceContactDto contact : salesforceAccount.getContacts().getRecords()) {
       ContactEntity contactEntity = contact.getContactEntity();
       contactMapById.put(contactEntity.getId(), contactEntity);
       contactIds.add(contactEntity.getId());

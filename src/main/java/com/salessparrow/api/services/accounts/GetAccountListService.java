@@ -33,15 +33,19 @@ public class GetAccountListService {
     User currentUser = (User) request.getAttribute("current_user");
 
     String formattedSearchString = "";
-    if(getAccountsDto.getQ() != null){
+    if (getAccountsDto.getQ() != null) {
       formattedSearchString = formatSearchString(getAccountsDto.getQ());
     }
     GetAccountsFormatterDto getAccountsFormatterDto = getAccountsFactory.getAccounts(currentUser, formattedSearchString,
         AccountConstants.BASIC_VIEW_KIND, 0);
 
     GetAccountListResponseDto getAccountListResponseDto = new GetAccountListResponseDto();
-    getAccountListResponseDto.setAccountIds(getAccountsFormatterDto.getAccountIds());
-    getAccountListResponseDto.setAccountMapById(getAccountsFormatterDto.getAccountMapById());
+    if (getAccountsFormatterDto.getAccountIds() != null) {
+      getAccountListResponseDto.setAccountIds(getAccountsFormatterDto.getAccountIds());
+    }
+    if (getAccountsFormatterDto.getAccountMapById() != null) {
+      getAccountListResponseDto.setAccountMapById(getAccountsFormatterDto.getAccountMapById());
+    }
     return getAccountListResponseDto;
   }
 

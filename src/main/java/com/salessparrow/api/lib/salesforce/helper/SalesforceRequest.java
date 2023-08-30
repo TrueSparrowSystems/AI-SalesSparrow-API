@@ -38,23 +38,23 @@ public class SalesforceRequest {
     try {
       return request.execute(decryptedAccessToken, sfOAuthToken.getInstanceUrl());
     } catch (WebClientResponseException e) {
-      if(e.getStatusCode().value() == 401) {
+      if (e.getStatusCode().value() == 401) {
         try {
           decryptedAccessToken = getAccessTokenService.updateAndGetRefreshedAccessToken(sfOAuthToken);
           return request.execute(decryptedAccessToken, sfOAuthToken.getInstanceUrl());
         } catch (Exception e1) {
           throw new CustomException(
-            new ErrorObject(
-              "l_s_h_sr_mr_1",
-              "something_went_wrong",
-              e.getMessage()));
+              new ErrorObject(
+                  "l_s_h_sr_mr_1",
+                  "something_went_wrong",
+                  e.getMessage()));
         }
       }
       throw new CustomException(
-        new ErrorObject(
-          "l_s_h_sr_mr_2",
-          "something_went_wrong",
-          e.getMessage()));
+          new ErrorObject(
+              "l_s_h_sr_mr_2",
+              "something_went_wrong",
+              e.getMessage()));
     }
   }
 }
