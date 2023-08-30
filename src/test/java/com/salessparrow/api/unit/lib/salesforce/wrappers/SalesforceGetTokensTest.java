@@ -50,6 +50,8 @@ public class SalesforceGetTokensTest {
 
 			// Assertions
 			assertEquals(mockResponse.getResponseBody(), actualResponse.getResponseBody());
+			httpClientMockedStatic.verify(
+					() -> HttpClient.makePostRequest(anyString(), anyMap(), anyString(), anyInt()), Mockito.times(1));
 		}
 
 	}
@@ -80,6 +82,9 @@ public class SalesforceGetTokensTest {
 			ParamErrorObject paramErrorObject = exception.getParamErrorObject();
 			assertNotNull(paramErrorObject);
 			assertEquals("l_s_w_sgt_gt_1", paramErrorObject.getInternalErrorIdentifier());
+
+			httpClientMockedStatic.verify(
+					() -> HttpClient.makePostRequest(anyString(), anyMap(), anyString(), anyInt()), Mockito.times(1));
 
 		}
 	}

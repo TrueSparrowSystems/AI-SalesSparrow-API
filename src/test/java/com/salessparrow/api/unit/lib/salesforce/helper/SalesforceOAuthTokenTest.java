@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -80,6 +81,8 @@ public class SalesforceOAuthTokenTest {
 		String decryptedAccessToken = salesforceOauthToken.updateAndGetRefreshedAccessToken(sfOAuthToken);
 
 		assertEquals("new_access_token", decryptedAccessToken);
+		assertEquals(200, response.getStatusCode());
+		assertTrue(responseBodyNode.has("access_token"));
 	}
 
 }
