@@ -22,105 +22,100 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 public class SalesforceRequestTest {
 
-  @Mock
-  private SalesforceOAuthToken salesforceOAuthToken;
+	@Mock
+	private SalesforceOAuthToken salesforceOAuthToken;
 
-  @Mock
-  private SalesforceOauthTokenRepository sfOauthTokenRepository;
+	@Mock
+	private SalesforceOauthTokenRepository sfOauthTokenRepository;
 
-  @InjectMocks
-  private SalesforceRequest salesforceRequest;
+	@InjectMocks
+	private SalesforceRequest salesforceRequest;
 
-  @BeforeEach
-  public void setUp() {
-      MockitoAnnotations.openMocks(this);
-  }
+	@BeforeEach
+	public void setUp() {
+		MockitoAnnotations.openMocks(this);
+	}
 
-  @Test
-  public void testMakeRequest_Success() {
+	@Test
+	public void testMakeRequest_Success() {
 
-    SalesforceOauthToken sfOAuthToken = new SalesforceOauthToken();
-    sfOAuthToken.setAccessToken("access_token");
-    sfOAuthToken.setInstanceUrl("https://instance.url");
+		SalesforceOauthToken sfOAuthToken = new SalesforceOauthToken();
+		sfOAuthToken.setAccessToken("access_token");
+		sfOAuthToken.setInstanceUrl("https://instance.url");
 
-    when(sfOauthTokenRepository.getSalesforceOauthTokenByExternalUserId("user123"))
-      .thenReturn(sfOAuthToken);
+		when(sfOauthTokenRepository.getSalesforceOauthTokenByExternalUserId("user123")).thenReturn(sfOAuthToken);
 
-    // Mock SalesforceOAuthToken
-    when(salesforceOAuthToken.fetchAccessToken(any(SalesforceOauthToken.class)))
-      .thenReturn("access_token");
+		// Mock SalesforceOAuthToken
+		when(salesforceOAuthToken.fetchAccessToken(any(SalesforceOauthToken.class))).thenReturn("access_token");
 
-    // Mock SalesforceRequestInterface
-    SalesforceRequestInterface<String> requestInterface = (token, instanceUrl) -> "Response";
-    
-    // Test the method
-    String response = salesforceRequest.makeRequest("user123", requestInterface);
+		// Mock SalesforceRequestInterface
+		SalesforceRequestInterface<String> requestInterface = (token, instanceUrl) -> "Response";
 
-    // Verify that the methods were called with the expected parameters
-    verify(sfOauthTokenRepository).getSalesforceOauthTokenByExternalUserId("user123");
-    verify(salesforceOAuthToken).fetchAccessToken(sfOAuthToken);
+		// Test the method
+		String response = salesforceRequest.makeRequest("user123", requestInterface);
 
-    // Verify the response
-    assertEquals("Response", response);
-  }
+		// Verify that the methods were called with the expected parameters
+		verify(sfOauthTokenRepository).getSalesforceOauthTokenByExternalUserId("user123");
+		verify(salesforceOAuthToken).fetchAccessToken(sfOAuthToken);
 
-  @Test
-  public void testMakeRequest_WebClientResponseException() {
+		// Verify the response
+		assertEquals("Response", response);
+	}
 
-    SalesforceOauthToken sfOAuthToken = new SalesforceOauthToken();
-    sfOAuthToken.setAccessToken("access_token");
-    sfOAuthToken.setInstanceUrl("https://instance.url");
+	@Test
+	public void testMakeRequest_WebClientResponseException() {
 
-    when(sfOauthTokenRepository.getSalesforceOauthTokenByExternalUserId("user123"))
-      .thenReturn(sfOAuthToken);
+		SalesforceOauthToken sfOAuthToken = new SalesforceOauthToken();
+		sfOAuthToken.setAccessToken("access_token");
+		sfOAuthToken.setInstanceUrl("https://instance.url");
 
-    // Mock SalesforceOAuthToken
-    when(salesforceOAuthToken.fetchAccessToken(any(SalesforceOauthToken.class)))
-      .thenReturn("access_token");
+		when(sfOauthTokenRepository.getSalesforceOauthTokenByExternalUserId("user123")).thenReturn(sfOAuthToken);
 
-    // Mock SalesforceRequestInterface
-    SalesforceRequestInterface<String> requestInterface = (token, instanceUrl) -> {
-      throw new WebClientResponseException(401, "Unauthorized", null, null, null);
-    };
+		// Mock SalesforceOAuthToken
+		when(salesforceOAuthToken.fetchAccessToken(any(SalesforceOauthToken.class))).thenReturn("access_token");
 
-    // Test the method and expect a CustomException
-    assertThrows(CustomException.class, () -> salesforceRequest.makeRequest("user123", requestInterface));
+		// Mock SalesforceRequestInterface
+		SalesforceRequestInterface<String> requestInterface = (token, instanceUrl) -> {
+			throw new WebClientResponseException(401, "Unauthorized", null, null, null);
+		};
 
-    // Verify that the methods were called with the expected parameters
-    verify(sfOauthTokenRepository).getSalesforceOauthTokenByExternalUserId("user123");
-    verify(salesforceOAuthToken).fetchAccessToken(sfOAuthToken);
+		// Test the method and expect a CustomException
+		assertThrows(CustomException.class, () -> salesforceRequest.makeRequest("user123", requestInterface));
 
-    // Verify that the updateAndGetRefreshedAccessToken method was called once
-    verify(salesforceOAuthToken, times(1)).updateAndGetRefreshedAccessToken(sfOAuthToken);
-  }
+		// Verify that the methods were called with the expected parameters
+		verify(sfOauthTokenRepository).getSalesforceOauthTokenByExternalUserId("user123");
+		verify(salesforceOAuthToken).fetchAccessToken(sfOAuthToken);
 
-  @Test
-  public void testMakeRequest_InternalServerErrorException() {
+		// Verify that the updateAndGetRefreshedAccessToken method was called once
+		verify(salesforceOAuthToken, times(1)).updateAndGetRefreshedAccessToken(sfOAuthToken);
+	}
 
-    SalesforceOauthToken sfOAuthToken = new SalesforceOauthToken();
-    sfOAuthToken.setAccessToken("access_token");
-    sfOAuthToken.setInstanceUrl("https://instance.url");
+	@Test
+	public void testMakeRequest_InternalServerErrorException() {
 
-    when(sfOauthTokenRepository.getSalesforceOauthTokenByExternalUserId("user123"))
-      .thenReturn(sfOAuthToken);
+		SalesforceOauthToken sfOAuthToken = new SalesforceOauthToken();
+		sfOAuthToken.setAccessToken("access_token");
+		sfOAuthToken.setInstanceUrl("https://instance.url");
 
-    // Mock SalesforceOAuthToken
-    when(salesforceOAuthToken.fetchAccessToken(any(SalesforceOauthToken.class)))
-      .thenReturn("access_token");
+		when(sfOauthTokenRepository.getSalesforceOauthTokenByExternalUserId("user123")).thenReturn(sfOAuthToken);
 
-    // Mock SalesforceRequestInterface
-    SalesforceRequestInterface<String> requestInterface = (token, instanceUrl) -> {
-      throw new WebClientResponseException(500, "Internal Server Error", null, null, null);
-    };
+		// Mock SalesforceOAuthToken
+		when(salesforceOAuthToken.fetchAccessToken(any(SalesforceOauthToken.class))).thenReturn("access_token");
 
-    // Test the method and expect a CustomException
-    assertThrows(CustomException.class, () -> salesforceRequest.makeRequest("user123", requestInterface));
+		// Mock SalesforceRequestInterface
+		SalesforceRequestInterface<String> requestInterface = (token, instanceUrl) -> {
+			throw new WebClientResponseException(500, "Internal Server Error", null, null, null);
+		};
 
-    // Verify that the methods were called with the expected parameters
-    verify(sfOauthTokenRepository).getSalesforceOauthTokenByExternalUserId("user123");
-    verify(salesforceOAuthToken).fetchAccessToken(sfOAuthToken);
+		// Test the method and expect a CustomException
+		assertThrows(CustomException.class, () -> salesforceRequest.makeRequest("user123", requestInterface));
 
-    // Verify that the updateAndGetRefreshedAccessToken method was not called
-    verify(salesforceOAuthToken, never()).updateAndGetRefreshedAccessToken(sfOAuthToken);
-  }
+		// Verify that the methods were called with the expected parameters
+		verify(sfOauthTokenRepository).getSalesforceOauthTokenByExternalUserId("user123");
+		verify(salesforceOAuthToken).fetchAccessToken(sfOAuthToken);
+
+		// Verify that the updateAndGetRefreshedAccessToken method was not called
+		verify(salesforceOAuthToken, never()).updateAndGetRefreshedAccessToken(sfOAuthToken);
+	}
+
 }

@@ -24,72 +24,77 @@ import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
 import com.salessparrow.api.lib.salesforce.wrappers.SalesforceGetIdentity;
 
 @SpringBootTest
-@Import({SalesforceGetIdentity.class, SalesforceConstants.class})
+@Import({ SalesforceGetIdentity.class, SalesforceConstants.class })
 public class SalesforceGetIdentityTest {
 
-  @Autowired
-  private SalesforceGetIdentity salesforceGetIdentity;
+	@Autowired
+	private SalesforceGetIdentity salesforceGetIdentity;
 
-  @Autowired
-  private SalesforceConstants salesforceConstants;
+	@Autowired
+	private SalesforceConstants salesforceConstants;
 
-  @Test
-  public void testGetUserIdentity_Success() throws Exception {
-    MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class);
+	@Test
+	public void testGetUserIdentity_Success() throws Exception {
+		MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class);
 
-    String instanceUrl = "https://example.com";
-    String accessToken = "dummyAccessToken";
+		String instanceUrl = "https://example.com";
+		String accessToken = "dummyAccessToken";
 
-    Map<String, String> headers = new HashMap<>();
-    headers.put("Authorization", "Bearer " + accessToken);
+		Map<String, String> headers = new HashMap<>();
+		headers.put("Authorization", "Bearer " + accessToken);
 
-    String responseBody = "Mock Response Body";
-    HttpResponse mockResponse = new HttpResponse();
-    mockResponse.setResponseBody(responseBody);
+		String responseBody = "Mock Response Body";
+		HttpResponse mockResponse = new HttpResponse();
+		mockResponse.setResponseBody(responseBody);
 
-    httpClientMockedStatic.when(() -> HttpClient.makeGetRequest(anyString(), anyMap(), anyInt()))
-      .thenReturn(mockResponse);
-    
-    HttpResponse actualResponse = salesforceGetIdentity.getUserIdentity(instanceUrl, accessToken);
+		httpClientMockedStatic.when(() -> HttpClient.makeGetRequest(anyString(), anyMap(), anyInt()))
+			.thenReturn(mockResponse);
 
-    // Assertions
-    assertEquals(mockResponse.getResponseBody(), actualResponse.getResponseBody());
+		HttpResponse actualResponse = salesforceGetIdentity.getUserIdentity(instanceUrl, accessToken);
 
-    httpClientMockedStatic.verify(() -> HttpClient.makeGetRequest(instanceUrl + salesforceConstants.identityUrl(), headers, 10000), Mockito.times(1));
+		// Assertions
+		assertEquals(mockResponse.getResponseBody(), actualResponse.getResponseBody());
 
-    httpClientMockedStatic.close();
-  }
+		httpClientMockedStatic.verify(
+				() -> HttpClient.makeGetRequest(instanceUrl + salesforceConstants.identityUrl(), headers, 10000),
+				Mockito.times(1));
 
-  @Test
-  public void testGetUserIdentity_Exception() throws Exception {
-    MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class);
+		httpClientMockedStatic.close();
+	}
 
-    String instanceUrl = "https://example.com";
-    String accessToken = "dummyAccessToken";
+	@Test
+	public void testGetUserIdentity_Exception() throws Exception {
+		MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class);
 
-    Map<String, String> headers = new HashMap<>();
-    headers.put("Authorization", "Bearer " + accessToken);
+		String instanceUrl = "https://example.com";
+		String accessToken = "dummyAccessToken";
 
-    String responseBody = "Mock Response Body";
-    HttpResponse mockResponse = new HttpResponse();
-    mockResponse.setResponseBody(responseBody);
+		Map<String, String> headers = new HashMap<>();
+		headers.put("Authorization", "Bearer " + accessToken);
 
-    httpClientMockedStatic.when(() -> HttpClient.makeGetRequest(anyString(), anyMap(), anyInt()))
-      .thenThrow(new RuntimeException("Some error occurred"));
+		String responseBody = "Mock Response Body";
+		HttpResponse mockResponse = new HttpResponse();
+		mockResponse.setResponseBody(responseBody);
 
-    CustomException exception = assertThrows(CustomException.class, () -> {
-        salesforceGetIdentity.getUserIdentity(instanceUrl, accessToken);
-    });
+		httpClientMockedStatic.when(() -> HttpClient.makeGetRequest(anyString(), anyMap(), anyInt()))
+			.thenThrow(new RuntimeException("Some error occurred"));
 
-    // Assertions
-    assertNotNull(exception);
-    ErrorObject errorObject = exception.getErrorObject();
-    assertNotNull(errorObject);
-    assertEquals("l_s_w_sgi_gui_1", errorObject.getInternalErrorIdentifier());
-    assertEquals("bad_request", errorObject.getApiErrorIdentifier());
+		CustomException exception = assertThrows(CustomException.class, () -> {
+			salesforceGetIdentity.getUserIdentity(instanceUrl, accessToken);
+		});
 
-    httpClientMockedStatic.verify(() -> HttpClient.makeGetRequest(instanceUrl + salesforceConstants.identityUrl(), headers, 10000), Mockito.times(1));
+		// Assertions
+		assertNotNull(exception);
+		ErrorObject errorObject = exception.getErrorObject();
+		assertNotNull(errorObject);
+		assertEquals("l_s_w_sgi_gui_1", errorObject.getInternalErrorIdentifier());
+		assertEquals("bad_request", errorObject.getApiErrorIdentifier());
 
-    httpClientMockedStatic.close();
-  }
+		httpClientMockedStatic.verify(
+				() -> HttpClient.makeGetRequest(instanceUrl + salesforceConstants.identityUrl(), headers, 10000),
+				Mockito.times(1));
+
+		httpClientMockedStatic.close();
+	}
+
 }

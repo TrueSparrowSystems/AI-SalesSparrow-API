@@ -23,64 +23,65 @@ import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
 import com.salessparrow.api.lib.salesforce.wrappers.SalesforceGetTokens;
 
 @SpringBootTest
-@Import({SalesforceGetTokens.class})
+@Import({ SalesforceGetTokens.class })
 public class SalesforceGetTokensTest {
 
-  @Autowired
-  private SalesforceGetTokens salesforceGetTokens;
+	@Autowired
+	private SalesforceGetTokens salesforceGetTokens;
 
-  @Test
-  public void testSalesforceGetTokens_Success() throws Exception {
-    MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class);
+	@Test
+	public void testSalesforceGetTokens_Success() throws Exception {
+		MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class);
 
-    String code = "dummyCode";
-    String redirectUri = "dummyRedirectUri";
+		String code = "dummyCode";
+		String redirectUri = "dummyRedirectUri";
 
-    Map<String, String> headers = new HashMap<>();
-    headers.put("Authorization", "Dummy Bearer Header");
+		Map<String, String> headers = new HashMap<>();
+		headers.put("Authorization", "Dummy Bearer Header");
 
-    String responseBody = "Mock Response Body";
-    HttpResponse mockResponse = new HttpResponse();
-    mockResponse.setResponseBody(responseBody);
+		String responseBody = "Mock Response Body";
+		HttpResponse mockResponse = new HttpResponse();
+		mockResponse.setResponseBody(responseBody);
 
-    httpClientMockedStatic.when(() -> HttpClient.makePostRequest(anyString(), anyMap(), anyString(), anyInt()))
-      .thenReturn(mockResponse);
-    
-    HttpResponse actualResponse = salesforceGetTokens.getTokens(code, redirectUri);
+		httpClientMockedStatic.when(() -> HttpClient.makePostRequest(anyString(), anyMap(), anyString(), anyInt()))
+			.thenReturn(mockResponse);
 
-    // Assertions
-    assertEquals(mockResponse.getResponseBody(), actualResponse.getResponseBody());
+		HttpResponse actualResponse = salesforceGetTokens.getTokens(code, redirectUri);
 
-    httpClientMockedStatic.close();
-  }
+		// Assertions
+		assertEquals(mockResponse.getResponseBody(), actualResponse.getResponseBody());
 
-  @Test
-  public void testSalesforceGetTokens_Exception() throws Exception {
-    MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class);
+		httpClientMockedStatic.close();
+	}
 
-    String code = "dummyCode";
-    String redirectUri = "dummyRedirectUri";
+	@Test
+	public void testSalesforceGetTokens_Exception() throws Exception {
+		MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class);
 
-    Map<String, String> headers = new HashMap<>();
-    headers.put("Authorization", "Dummy Bearer Header");
+		String code = "dummyCode";
+		String redirectUri = "dummyRedirectUri";
 
-    String responseBody = "Mock Response Body";
-    HttpResponse mockResponse = new HttpResponse();
-    mockResponse.setResponseBody(responseBody);
+		Map<String, String> headers = new HashMap<>();
+		headers.put("Authorization", "Dummy Bearer Header");
 
-    httpClientMockedStatic.when(() -> HttpClient.makePostRequest(anyString(), anyMap(), anyString(), anyInt()))
-      .thenThrow(new RuntimeException("Some error occurred"));
+		String responseBody = "Mock Response Body";
+		HttpResponse mockResponse = new HttpResponse();
+		mockResponse.setResponseBody(responseBody);
 
-    CustomException exception = assertThrows(CustomException.class, () -> {
-        salesforceGetTokens.getTokens(code, redirectUri);
-    });
+		httpClientMockedStatic.when(() -> HttpClient.makePostRequest(anyString(), anyMap(), anyString(), anyInt()))
+			.thenThrow(new RuntimeException("Some error occurred"));
 
-    // Assertions
-    assertNotNull(exception);
-    ParamErrorObject paramErrorObject = exception.getParamErrorObject();
-    assertNotNull(paramErrorObject);
-    assertEquals("l_s_w_sgt_gt_1", paramErrorObject.getInternalErrorIdentifier());
+		CustomException exception = assertThrows(CustomException.class, () -> {
+			salesforceGetTokens.getTokens(code, redirectUri);
+		});
 
-    httpClientMockedStatic.close();
-  }
+		// Assertions
+		assertNotNull(exception);
+		ParamErrorObject paramErrorObject = exception.getParamErrorObject();
+		assertNotNull(paramErrorObject);
+		assertEquals("l_s_w_sgt_gt_1", paramErrorObject.getInternalErrorIdentifier());
+
+		httpClientMockedStatic.close();
+	}
+
 }

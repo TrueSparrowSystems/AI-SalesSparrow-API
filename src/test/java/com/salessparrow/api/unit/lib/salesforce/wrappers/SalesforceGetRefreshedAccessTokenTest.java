@@ -21,34 +21,36 @@ import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
 import com.salessparrow.api.lib.salesforce.wrappers.SalesforceGetRefreshedAccessToken;
 
 @SpringBootTest
-@Import({SalesforceGetRefreshedAccessToken.class})
+@Import({ SalesforceGetRefreshedAccessToken.class })
 public class SalesforceGetRefreshedAccessTokenTest {
 
-  @Autowired
-  private SalesforceGetRefreshedAccessToken salesforceGetRefreshedAccessToken;
+	@Autowired
+	private SalesforceGetRefreshedAccessToken salesforceGetRefreshedAccessToken;
 
-  @Test
-  public void testSalesforceGetRefreshedAccessToken() throws Exception {
-    MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class);
+	@Test
+	public void testSalesforceGetRefreshedAccessToken() throws Exception {
+		MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class);
 
-    String refreshToken = "dummyRefreshToken";
+		String refreshToken = "dummyRefreshToken";
 
-    Map<String, String> headers = new HashMap<>();
-    headers.put("Authorization", "Bearer " + refreshToken);
+		Map<String, String> headers = new HashMap<>();
+		headers.put("Authorization", "Bearer " + refreshToken);
 
-    String responseBody = "Mock Response Body";
-    HttpResponse mockResponse = new HttpResponse();
-    mockResponse.setResponseBody(responseBody);
+		String responseBody = "Mock Response Body";
+		HttpResponse mockResponse = new HttpResponse();
+		mockResponse.setResponseBody(responseBody);
 
-    httpClientMockedStatic.when(() -> HttpClient.makePostRequest(anyString(), anyMap(), anyString(), anyInt()))
-      .thenReturn(mockResponse);
-    
-    HttpResponse actualResponse = salesforceGetRefreshedAccessToken.getRefreshedAccessToken(refreshToken);
+		httpClientMockedStatic.when(() -> HttpClient.makePostRequest(anyString(), anyMap(), anyString(), anyInt()))
+			.thenReturn(mockResponse);
 
-    // Assertions
-    assertEquals(mockResponse.getResponseBody(), actualResponse.getResponseBody());
-    httpClientMockedStatic.verify(() -> HttpClient.makePostRequest(anyString(), anyMap(), anyString(), anyInt()), times(1));
+		HttpResponse actualResponse = salesforceGetRefreshedAccessToken.getRefreshedAccessToken(refreshToken);
 
-    httpClientMockedStatic.close();
-  }
+		// Assertions
+		assertEquals(mockResponse.getResponseBody(), actualResponse.getResponseBody());
+		httpClientMockedStatic.verify(() -> HttpClient.makePostRequest(anyString(), anyMap(), anyString(), anyInt()),
+				times(1));
+
+		httpClientMockedStatic.close();
+	}
+
 }

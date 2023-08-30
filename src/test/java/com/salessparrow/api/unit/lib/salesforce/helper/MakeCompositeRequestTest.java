@@ -23,38 +23,38 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 public class MakeCompositeRequestTest {
 
-  @Mock
-  private SalesforceRequest salesforceRequest;
+	@Mock
+	private SalesforceRequest salesforceRequest;
 
-  @Mock
-  private SalesforceConstants salesforceConstants;
+	@Mock
+	private SalesforceConstants salesforceConstants;
 
-  @InjectMocks
-  private MakeCompositeRequest makeCompositeRequest;
+	@InjectMocks
+	private MakeCompositeRequest makeCompositeRequest;
 
-  @BeforeEach
-  public void setUp() {
-      MockitoAnnotations.openMocks(this);
-  }
+	@BeforeEach
+	public void setUp() {
+		MockitoAnnotations.openMocks(this);
+	}
 
-  @Test
-  public void testMakePostRequest() {
+	@Test
+	public void testMakePostRequest() {
 
-    List<CompositeRequestDto> compositeRequests = new ArrayList<>();
-    CompositeRequestDto requestDto = new CompositeRequestDto("endpoint", "method", null);
-    compositeRequests.add(requestDto);
+		List<CompositeRequestDto> compositeRequests = new ArrayList<>();
+		CompositeRequestDto requestDto = new CompositeRequestDto("endpoint", "method", null);
+		compositeRequests.add(requestDto);
 
-    when(salesforceConstants.timeoutMillis()).thenReturn(5000);
+		when(salesforceConstants.timeoutMillis()).thenReturn(5000);
 
-    when(salesforceConstants.salesforceCompositeUrl(anyString())).thenReturn("composite_url");
+		when(salesforceConstants.salesforceCompositeUrl(anyString())).thenReturn("composite_url");
 
-    when(salesforceRequest.makeRequest(anyString(), any(SalesforceRequestInterface.class)))
-      .thenReturn(new HttpClient.HttpResponse(200, "response", null, "application/json"));
+		when(salesforceRequest.makeRequest(anyString(), any(SalesforceRequestInterface.class)))
+			.thenReturn(new HttpClient.HttpResponse(200, "response", null, "application/json"));
 
-    HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, "user_id");
+		HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, "user_id");
 
-    assertEquals(200, response.getStatusCode());
-    assertEquals("response", response.getResponseBody());
-  }
+		assertEquals(200, response.getStatusCode());
+		assertEquals("response", response.getResponseBody());
+	}
+
 }
-
