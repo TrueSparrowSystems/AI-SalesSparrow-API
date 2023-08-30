@@ -25,7 +25,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dynamobee.exception.DynamobeeException;
-import com.salessparrow.api.changelogs.DatabaseChangelog;
 import com.salessparrow.api.helper.Cleanup;
 import com.salessparrow.api.helper.Common;
 import com.salessparrow.api.helper.FixtureData;
@@ -60,7 +59,7 @@ public class PostLogoutTest {
   @Autowired
   private LoadFixture loadFixture;
 
-  Logger logger = LoggerFactory.getLogger(DatabaseChangelog.class);
+  Logger logger = LoggerFactory.getLogger(PostLogoutTest.class);
 
   @BeforeEach
   public void setUp() throws DynamobeeException, IOException {
