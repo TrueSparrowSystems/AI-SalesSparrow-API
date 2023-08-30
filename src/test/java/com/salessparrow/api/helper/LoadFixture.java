@@ -7,14 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salessparrow.api.domain.SalesforceOauthToken;
 import com.salessparrow.api.domain.SalesforceOrganization;
 import com.salessparrow.api.domain.SalesforceUser;
-import com.salessparrow.api.repositories.SalesforceOauthTokenRepository;
-import com.salessparrow.api.repositories.SalesforceOrganizationRepository;
-import com.salessparrow.api.repositories.SalesforceUserRepository;
 
 /**
  * LoadFixture is a helper class for the tests.
@@ -25,13 +23,7 @@ public class LoadFixture {
 	private ResourceLoader resourceLoader;
 
 	@Autowired
-	private SalesforceUserRepository salesforceUserRepository;
-
-	@Autowired
-	private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
-
-	@Autowired
-	private SalesforceOrganizationRepository salesforceOrganizationRepository;
+	private DynamoDBMapper dynamoDBMapper;
 
 	/**
 	 * Load the fixture data.
@@ -44,14 +36,14 @@ public class LoadFixture {
 		if (fixtureData.getSalesforce_users() != null) {
 			for (FilePathData filePathData : fixtureData.getSalesforce_users()) {
 				SalesforceUser salesforceUser = loadSalesForceUserFixture(filePathData.getFilepath());
-				salesforceUserRepository.saveSalesforceUser(salesforceUser);
+				dynamoDBMapper.save(salesforceUser);
 			}
 		}
 
 		if (fixtureData.getSalesforce_oauth_tokens() != null) {
 			for (FilePathData filePathData : fixtureData.getSalesforce_oauth_tokens()) {
 				SalesforceOauthToken salesforceOauth = loadSalesForceOAuthTokenFixture(filePathData.getFilepath());
-				salesforceOauthTokenRepository.saveSalesforceOauthToken(salesforceOauth);
+				dynamoDBMapper.save(salesforceOauth);
 			}
 		}
 
@@ -59,7 +51,7 @@ public class LoadFixture {
 			for (FilePathData filePathData : fixtureData.getSalesforce_organizations()) {
 				SalesforceOrganization salesforceOrganization = loadSalesForceOrganizationFixture(
 						filePathData.getFilepath());
-				salesforceOrganizationRepository.saveSalesforceOrganization(salesforceOrganization);
+				dynamoDBMapper.save(salesforceOrganization);
 			}
 		}
 

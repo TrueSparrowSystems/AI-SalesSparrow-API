@@ -1,5 +1,7 @@
 package com.salessparrow.api.lib;
 
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -59,6 +61,15 @@ public class Util {
 		headerBuilder.append("}");
 
 		return headerBuilder.toString();
+	}
+
+	/**
+	 * Get current time in Date format
+	 * @return Date
+	 */
+	public static Date getCurrentTimeInDateFormat() {
+		Instant currentTimestamp = Instant.now();
+		return Date.from(currentTimestamp.atOffset(ZoneOffset.UTC).toInstant());
 	}
 
 	/**
