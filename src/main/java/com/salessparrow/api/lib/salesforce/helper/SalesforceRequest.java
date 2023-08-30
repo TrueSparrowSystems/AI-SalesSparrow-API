@@ -49,11 +49,11 @@ public class SalesforceRequest {
 					return request.execute(decryptedAccessToken, sfOAuthToken.getInstanceUrl());
 				}
 				catch (Exception e1) {
-					logger.error("Error while refreshing access token", e1);
+					logger.error("Error while refreshing access token {}", e1);
 					throw new CustomException(new ErrorObject("l_s_h_sr_mr_1", "something_went_wrong", e.getMessage()));
 				}
 			}
-			logger.error("Error while making request to salesforce", e);
+			logger.error("Error while making request to salesforce {}", e);
 			throw new CustomException(new ErrorObject("l_s_h_sr_mr_2", "something_went_wrong", e.getMessage()));
 		}
 	}
