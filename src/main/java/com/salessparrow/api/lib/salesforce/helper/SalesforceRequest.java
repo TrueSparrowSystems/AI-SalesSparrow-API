@@ -7,7 +7,11 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import com.salessparrow.api.domain.SalesforceOauthToken;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
+import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.repositories.SalesforceOauthTokenRepository;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * SalesforceRequest is a class for making a request to the Salesforce API.
@@ -20,6 +24,8 @@ public class SalesforceRequest {
 
 	@Autowired
 	private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
+
+	Logger logger = LoggerFactory.getLogger(SalesforceRequest.class);
 
 	/**
 	 * Make a request to the Salesforce API.
@@ -43,9 +49,11 @@ public class SalesforceRequest {
 					return request.execute(decryptedAccessToken, sfOAuthToken.getInstanceUrl());
 				}
 				catch (Exception e1) {
+					logger.error("Error while refreshing access token", e1);
 					throw new CustomException(new ErrorObject("l_s_h_sr_mr_1", "something_went_wrong", e.getMessage()));
 				}
 			}
+			logger.error("Error while making request to salesforce", e);
 			throw new CustomException(new ErrorObject("l_s_h_sr_mr_2", "something_went_wrong", e.getMessage()));
 		}
 	}
