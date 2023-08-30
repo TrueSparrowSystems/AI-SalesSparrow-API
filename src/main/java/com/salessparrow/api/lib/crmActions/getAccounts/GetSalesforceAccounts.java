@@ -105,10 +105,10 @@ public class GetSalesforceAccounts implements GetAccounts {
 
     if (httpStatusCodeNode.asInt() != 200 && httpStatusCodeNode.asInt() != 201) {
       throw new CustomException(
-        new ErrorObject(
-          "l_ca_ga_gsa_pr_1",
-          "something_went_wrong",
-          "Error in fetching accounts from salesforce"));
+          new ErrorObject(
+              "l_ca_ga_gsa_pr_1",
+              "something_went_wrong",
+              "Error in fetching accounts from salesforce"));
     }
 
     JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");
@@ -122,19 +122,7 @@ public class GetSalesforceAccounts implements GetAccounts {
       accountIds.add(accountEntity.getId());
       accountIdToEntityMap.put(accountEntity.getId(), accountEntity);
 
-      if (salesforceAccount.getContacts() != null) {
-        List<String> contactIds = new ArrayList<String>();
-
-        for (SalesforceAccountDto.Contact contact : salesforceAccount.getContacts().getRecords()) {
-          ContactEntity contactEntity = contact.getContactEntity();
-          contactMapById.put(contactEntity.getId(), contactEntity);
-          contactIds.add(contactEntity.getId());
-        }
-
-        AccountContactAssociationsEntity accountContactAssociationsEntity = new AccountContactAssociationsEntity();
-        accountContactAssociationsEntity.setContactIds(contactIds);
-        accountContactAssociationsMapById.put(accountEntity.getId(), accountContactAssociationsEntity);
-      }
+      handleContacts(salesforceAccount, contactMapById, accountContactAssociationsMapById);
     }
 
     GetAccountsFormatterDto getAccountsResponse = new GetAccountsFormatterDto();
@@ -144,5 +132,21 @@ public class GetSalesforceAccounts implements GetAccounts {
     getAccountsResponse.setAccountContactAssociationsMapById(accountContactAssociationsMapById);
 
     return getAccountsResponse;
+  }
+
+  private void handleContacts(SalesforceAccountDto salesforceAccount, Map<String, ContactEntity> contactMapById,
+      Map<String, AccountContactAssociationsEntity> accountContactAssociationsMapById) {
+    List<String> contactIds = new ArrayList<String>();
+
+    for (SalesforceAccountDto.Contact contact : salesforceAccount.getContacts().getRecords()) {
+      ContactEntity contactEntity = contact.getContactEntity();
+      contactMapById.put(contactEntity.getId(), contactEntity);
+      contactIds.add(contactEntity.getId());
+    }
+
+    AccountContactAssociationsEntity accountContactAssociationsEntity = new AccountContactAssociationsEntity();
+    accountContactAssociationsEntity.setContactIds(contactIds);
+    accountContactAssociationsMapById.put(salesforceAccount.getAccountEntity().getId(),
+        accountContactAssociationsEntity);
   }
 }
