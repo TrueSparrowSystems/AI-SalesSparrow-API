@@ -10,6 +10,6 @@ import com.salessparrow.api.domain.User;
 @Component
 public interface DisconnectUser {
 
-  public void disconnect(User User);
+	public void disconnect(User User);
 
 }

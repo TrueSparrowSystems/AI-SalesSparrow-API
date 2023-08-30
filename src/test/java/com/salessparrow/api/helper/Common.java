@@ -21,89 +21,88 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 @TestConfiguration
 public class Common {
-  @Autowired
-  private ResourceLoader resourceLoader;
 
-  /**
-   * Load the fixture data from the given location.
-   * 
-   * @param location
-   * @param key
-   * @return FixtureData
-   * @throws IOException
-   */
-  public FixtureData loadFixture(String location, String key) throws IOException {
-    Resource resource = resourceLoader.getResource(location);
-    ObjectMapper objectMapper = new ObjectMapper();
-    Map<String, FixtureData> fixtureMap = new HashMap<>();
-    fixtureMap = objectMapper.readValue(resource.getInputStream(), new TypeReference<HashMap<String, FixtureData>>() {
-    });
-    return fixtureMap.get(key);
-  }
+	@Autowired
+	private ResourceLoader resourceLoader;
 
-  /**
-   * Load the test scenario data from the given location.
-   * 
-   * @param location
-   * @return List<Scenario>
-   * @throws IOException
-   */
-  public List<Scenario> loadScenariosData(String location) throws IOException {
-    Resource resource = resourceLoader.getResource(location);
-    ObjectMapper objectMapper = new ObjectMapper();
-    return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {
-    });
-  }
+	/**
+	 * Load the fixture data from the given location.
+	 * @param location
+	 * @param key
+	 * @return FixtureData
+	 * @throws IOException
+	 */
+	public FixtureData loadFixture(String location, String key) throws IOException {
+		Resource resource = resourceLoader.getResource(location);
+		ObjectMapper objectMapper = new ObjectMapper();
+		Map<String, FixtureData> fixtureMap = new HashMap<>();
+		fixtureMap = objectMapper.readValue(resource.getInputStream(),
+				new TypeReference<HashMap<String, FixtureData>>() {
+				});
+		return fixtureMap.get(key);
+	}
 
-  /**
-   * Load the test scenario data from the given location and key.
-   * 
-   * @param location - location of the test data
-   * @param key      - key of the test data
-   * @return List<Scenario>
-   * @throws IOException
-   */
-  public List<Scenario> loadScenariosData(String location, String key) throws IOException {
-    Resource resource = resourceLoader.getResource(location);
-    ObjectMapper objectMapper = new ObjectMapper();
-    Map<String, List<Scenario>> scenarioMap = new HashMap<>();
-    scenarioMap = objectMapper.readValue(resource.getInputStream(),
-        new TypeReference<HashMap<String, List<Scenario>>>() {
-        });
-    return scenarioMap.get(key);
-  }
+	/**
+	 * Load the test scenario data from the given location.
+	 * @param location
+	 * @return List<Scenario>
+	 * @throws IOException
+	 */
+	public List<Scenario> loadScenariosData(String location) throws IOException {
+		Resource resource = resourceLoader.getResource(location);
+		ObjectMapper objectMapper = new ObjectMapper();
+		return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {
+		});
+	}
 
-  /**
-   * Compare the errors from the test data with the actual errors.
-   * 
-   * @param testDataItem
-   * @param contentAsString
-   */
-  public void compareErrors(Scenario testDataItem, String contentAsString) throws Exception {
-    ObjectMapper objectMapper = new ObjectMapper();
-    JsonNode resJsonNode = objectMapper.readTree(contentAsString);
-    Integer httpCode = resJsonNode.get("http_code").asInt();
-    assertEquals(testDataItem.getOutput().get("http_code"), httpCode);
+	/**
+	 * Load the test scenario data from the given location and key.
+	 * @param location - location of the test data
+	 * @param key - key of the test data
+	 * @return List<Scenario>
+	 * @throws IOException
+	 */
+	public List<Scenario> loadScenariosData(String location, String key) throws IOException {
+		Resource resource = resourceLoader.getResource(location);
+		ObjectMapper objectMapper = new ObjectMapper();
+		Map<String, List<Scenario>> scenarioMap = new HashMap<>();
+		scenarioMap = objectMapper.readValue(resource.getInputStream(),
+				new TypeReference<HashMap<String, List<Scenario>>>() {
+				});
+		return scenarioMap.get(key);
+	}
 
-    String code = resJsonNode.get("code").asText();
-    assertEquals(testDataItem.getOutput().get("code"), code);
+	/**
+	 * Compare the errors from the test data with the actual errors.
+	 * @param testDataItem
+	 * @param contentAsString
+	 */
+	public void compareErrors(Scenario testDataItem, String contentAsString) throws Exception {
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonNode resJsonNode = objectMapper.readTree(contentAsString);
+		Integer httpCode = resJsonNode.get("http_code").asInt();
+		assertEquals(testDataItem.getOutput().get("http_code"), httpCode);
 
-    List<String> paramErrors = (List<String>) testDataItem.getOutput().get("param_errors");
-    if (paramErrors != null) {
-      for (int i = 0; i < paramErrors.size(); i++) {
-        String actualError = resJsonNode.get("param_errors").get(i).get("param_error_identifier").asText();
-        assertEquals(paramErrors.contains(actualError), true);
-      }
-    }
-  }
+		String code = resJsonNode.get("code").asText();
+		assertEquals(testDataItem.getOutput().get("code"), code);
 
-  // Custom assertion method that treats {} and "" as the same
-  public void assertCustomEquals(String expected, String actual) {
+		List<String> paramErrors = (List<String>) testDataItem.getOutput().get("param_errors");
+		if (paramErrors != null) {
+			for (int i = 0; i < paramErrors.size(); i++) {
+				String actualError = resJsonNode.get("param_errors").get(i).get("param_error_identifier").asText();
+				assertEquals(paramErrors.contains(actualError), true);
+			}
+		}
+	}
 
-    if (expected.equals("{}")) {
-      expected = "";
-    }
+	// Custom assertion method that treats {} and "" as the same
+	public void assertCustomEquals(String expected, String actual) {
 
-    assertEquals(expected, actual);
-  }
+		if (expected.equals("{}")) {
+			expected = "";
+		}
+
+		assertEquals(expected, actual);
+	}
+
 }

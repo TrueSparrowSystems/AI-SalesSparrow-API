@@ -24,46 +24,46 @@ import com.salessparrow.api.lib.salesforce.wrappers.SalesforceTokens;
 @Import({ SalesforceTokens.class })
 public class SalesforceTokensTest {
 
-  @MockBean
-  private HttpClient httpClientMock;
+	@MockBean
+	private HttpClient httpClientMock;
 
-  @Autowired
-  private SalesforceTokens salesforceTokens;
+	@Autowired
+	private SalesforceTokens salesforceTokens;
 
-  @Test
-  public void testRevokeTokensSuccess() throws Exception {
-    MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class);
+	@Test
+	public void testRevokeTokensSuccess() throws Exception {
+		MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class);
 
-    String instanceUrl = "https://example.com";
-    String refreshToken = "your-refresh-token";
+		String instanceUrl = "https://example.com";
+		String refreshToken = "your-refresh-token";
 
-    HttpResponse expectedResponse = new HttpResponse();
-    expectedResponse.setResponseBody("");
+		HttpResponse expectedResponse = new HttpResponse();
+		expectedResponse.setResponseBody("");
 
-    httpClientMockedStatic.when(() -> HttpClient.makePostRequest(anyString(), anyMap(), any(), anyInt()))
-        .thenReturn(expectedResponse);
+		httpClientMockedStatic.when(() -> HttpClient.makePostRequest(anyString(), anyMap(), any(), anyInt()))
+			.thenReturn(expectedResponse);
 
-    HttpResponse response = salesforceTokens.revokeTokens(instanceUrl, refreshToken);
+		HttpResponse response = salesforceTokens.revokeTokens(instanceUrl, refreshToken);
 
-    assertEquals(expectedResponse, response);
+		assertEquals(expectedResponse, response);
 
-    httpClientMockedStatic.close();
-  }
+		httpClientMockedStatic.close();
+	}
 
-  @Test
-  public void testRevokeTokensFailure() throws Exception {
-    MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class);
+	@Test
+	public void testRevokeTokensFailure() throws Exception {
+		MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class);
 
-    String instanceUrl = "https://example.com";
-    String refreshToken = "invalid-refresh-token";
+		String instanceUrl = "https://example.com";
+		String refreshToken = "invalid-refresh-token";
 
-    httpClientMockedStatic.when(() -> HttpClient.makePostRequest(anyString(), anyMap(), any(), anyInt()))
-        .thenThrow(new RuntimeException("Invalid refresh token"));
+		httpClientMockedStatic.when(() -> HttpClient.makePostRequest(anyString(), anyMap(), any(), anyInt()))
+			.thenThrow(new RuntimeException("Invalid refresh token"));
 
-    assertThrows(CustomException.class, () -> {
-      salesforceTokens.revokeTokens(instanceUrl, refreshToken);
-    });
-    httpClientMockedStatic.close();
-  }
+		assertThrows(CustomException.class, () -> {
+			salesforceTokens.revokeTokens(instanceUrl, refreshToken);
+		});
+		httpClientMockedStatic.close();
+	}
 
 }

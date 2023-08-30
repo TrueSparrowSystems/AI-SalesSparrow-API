@@ -11,23 +11,25 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
 public class SalesforceGetNoteDetailsDto {
-    private String id;
-    private CreatedBy createdBy;
-    private Date lastModifiedDate;
 
-    @Data
-    @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
-    private class CreatedBy{
-        private String name;
-    }
+	private String id;
 
-    public NoteDetailEntity noteDetailEntity(String noteContentResponse){
-        NoteDetailEntity noteDetailEntity = new NoteDetailEntity(
-            this.id,
-            this.createdBy.name,
-            noteContentResponse,
-            this.lastModifiedDate
-        );
-        return noteDetailEntity;
-    }
+	private CreatedBy createdBy;
+
+	private Date lastModifiedDate;
+
+	@Data
+	@JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
+	private class CreatedBy {
+
+		private String name;
+
+	}
+
+	public NoteDetailEntity noteDetailEntity(String noteContentResponse) {
+		NoteDetailEntity noteDetailEntity = new NoteDetailEntity(this.id, this.createdBy.name, noteContentResponse,
+				this.lastModifiedDate);
+		return noteDetailEntity;
+	}
+
 }

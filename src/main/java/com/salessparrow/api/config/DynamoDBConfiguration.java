@@ -28,7 +28,8 @@ public class DynamoDBConfiguration {
 				long startTimestamp = System.currentTimeMillis();
 				try {
 					response = defaultMapper.load(clazz, hashKey);
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					logger.debug("DBQuery:Load: table-{} hashKey-{}", clazz.getSimpleName(), hashKey);
 					logger.error("DBQuery:Load: exception-{}", e);
 					throw new RuntimeException("Error during load database operation", e);
@@ -44,7 +45,8 @@ public class DynamoDBConfiguration {
 				long startTimestamp = System.currentTimeMillis();
 				try {
 					defaultMapper.save(object);
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					logger.debug("DBQuery:Save: table-{}", object.getClass().getSimpleName());
 					logger.error("DBQuery:Save: exception-{}", e);
 					throw new RuntimeException("Error during save database operation", e);
@@ -59,7 +61,8 @@ public class DynamoDBConfiguration {
 				long startTimestamp = System.currentTimeMillis();
 				try {
 					defaultMapper.save(object, config);
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					logger.debug("DBQuery:Save: table-{}", object.getClass().getSimpleName());
 					logger.error("DBQuery:Save: exception-{}", e);
 					throw new RuntimeException("Error during save database operation", e);
@@ -73,24 +76,21 @@ public class DynamoDBConfiguration {
 		};
 	}
 
-    @Bean
+	@Bean
 	public AmazonDynamoDB buildAmazonDynamoDB() {
-		return AmazonDynamoDBClientBuilder
-				.standard()
-				.withEndpointConfiguration(
-						new AwsClientBuilder.EndpointConfiguration(
-								CoreConstants.dynamoDbUrl(),
-								CoreConstants.awsRegion()))
-				.build();
+		return AmazonDynamoDBClientBuilder.standard()
+			.withEndpointConfiguration(
+					new AwsClientBuilder.EndpointConfiguration(CoreConstants.dynamoDbUrl(), CoreConstants.awsRegion()))
+			.build();
 	}
 
-    @Bean
-    DynamoDBMapperConfig dynamoDBMapperConfig() {
-        String prefix = CoreConstants.environment() + "_";
-        return new DynamoDBMapperConfig.Builder()
-                .withTableNameOverride(DynamoDBMapperConfig.TableNameOverride.withTableNamePrefix(prefix))
-                .withSaveBehavior(SaveBehavior.UPDATE_SKIP_NULL_ATTRIBUTES)
-                .build();
-    }
+	@Bean
+	DynamoDBMapperConfig dynamoDBMapperConfig() {
+		String prefix = CoreConstants.environment() + "_";
+		return new DynamoDBMapperConfig.Builder()
+			.withTableNameOverride(DynamoDBMapperConfig.TableNameOverride.withTableNamePrefix(prefix))
+			.withSaveBehavior(SaveBehavior.UPDATE_SKIP_NULL_ATTRIBUTES)
+			.build();
+	}
 
 }

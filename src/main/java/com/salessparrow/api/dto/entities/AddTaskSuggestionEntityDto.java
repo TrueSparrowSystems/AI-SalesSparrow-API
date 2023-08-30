@@ -11,6 +11,9 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AddTaskSuggestionEntityDto {
-  private String description;
-  private String dueDate;
+
+	private String description;
+
+	private String dueDate;
+
 }

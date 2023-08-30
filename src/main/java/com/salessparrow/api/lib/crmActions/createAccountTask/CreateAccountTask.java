@@ -11,5 +11,7 @@ import com.salessparrow.api.dto.requestMapper.CreateAccountTaskDto;
  */
 @Component
 public interface CreateAccountTask {
-    public CreateTaskFormatterDto createAccountTask(User User,String accountId, CreateAccountTaskDto task);
+
+	public CreateTaskFormatterDto createAccountTask(User User, String accountId, CreateAccountTaskDto task);
+
 }

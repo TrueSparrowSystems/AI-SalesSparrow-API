@@ -31,67 +31,68 @@ import jakarta.validation.Valid;
 @Validated
 public class AuthController {
 
-  Logger logger = LoggerFactory.getLogger(AuthController.class);
+	Logger logger = LoggerFactory.getLogger(AuthController.class);
 
-  @Autowired
-  private RedirectUrlService redirectUrlService;
+	@Autowired
+	private RedirectUrlService redirectUrlService;
 
-  @Autowired
-  private AuthService authService;
+	@Autowired
+	private AuthService authService;
 
-  @Autowired
-  private DisconnectUserService disconnectUserService;
+	@Autowired
+	private DisconnectUserService disconnectUserService;
 
-  @Autowired
-  private CookieHelper cookieHelper;
+	@Autowired
+	private CookieHelper cookieHelper;
 
-  @GetMapping("/salesforce/redirect-url")
-  public ResponseEntity<RedirectUrlFormatterDto> getSalesforceRedirectUrl(
-      @Valid @ModelAttribute SalesforceRedirectUrlDto salesforceRedirectUrlDto) {
+	@GetMapping("/salesforce/redirect-url")
+	public ResponseEntity<RedirectUrlFormatterDto> getSalesforceRedirectUrl(
+			@Valid @ModelAttribute SalesforceRedirectUrlDto salesforceRedirectUrlDto) {
 
-    RedirectUrlFormatterDto redirectUrlFormatterDto = redirectUrlService
-        .getSalesforceOauthUrl(salesforceRedirectUrlDto);
+		RedirectUrlFormatterDto redirectUrlFormatterDto = redirectUrlService
+			.getSalesforceOauthUrl(salesforceRedirectUrlDto);
 
-    return ResponseEntity.ok().body(redirectUrlFormatterDto);
-  }
+		return ResponseEntity.ok().body(redirectUrlFormatterDto);
+	}
 
-  @PostMapping("/salesforce/connect")
-  public ResponseEntity<SalesforceConnectFormatterDto> connectToSalesforce(HttpServletRequest request,
-      @Valid @RequestBody SalesforceConnectDto salesforceConnectDto) {
-    logger.info("Salesforce connection request received");
+	@PostMapping("/salesforce/connect")
+	public ResponseEntity<SalesforceConnectFormatterDto> connectToSalesforce(HttpServletRequest request,
+			@Valid @RequestBody SalesforceConnectDto salesforceConnectDto) {
+		logger.info("Salesforce connection request received");
 
-    AuthServiceDto authServiceResponse = authService.connectToSalesforce(salesforceConnectDto, request);
+		AuthServiceDto authServiceResponse = authService.connectToSalesforce(salesforceConnectDto, request);
 
-    HttpHeaders headers = new HttpHeaders();
-    headers = cookieHelper.setUserCookie(authServiceResponse.getCurrentUserLoginCookie(), headers);
+		HttpHeaders headers = new HttpHeaders();
+		headers = cookieHelper.setUserCookie(authServiceResponse.getCurrentUserLoginCookie(), headers);
 
-    SalesforceConnectFormatterDto salesforceConnectResponse = new SalesforceConnectFormatterDto();
-    salesforceConnectResponse.setCurrentUser(authServiceResponse.getCurrentUser());
+		SalesforceConnectFormatterDto salesforceConnectResponse = new SalesforceConnectFormatterDto();
+		salesforceConnectResponse.setCurrentUser(authServiceResponse.getCurrentUser());
 
-    return ResponseEntity.ok().headers(headers).body(salesforceConnectResponse);
-  }
+		return ResponseEntity.ok().headers(headers).body(salesforceConnectResponse);
+	}
 
-  @PostMapping("/logout")
-  public ResponseEntity<String> logout(HttpServletRequest request) {
-    logger.info("User logout request received");
+	@PostMapping("/logout")
+	public ResponseEntity<String> logout(HttpServletRequest request) {
+		logger.info("User logout request received");
 
-    HttpHeaders headers = new HttpHeaders();
-    headers = cookieHelper.clearUserCookie(headers);
+		HttpHeaders headers = new HttpHeaders();
+		headers = cookieHelper.clearUserCookie(headers);
 
-    return ResponseEntity.ok().headers(headers).body(null);
-  }
+		return ResponseEntity.ok().headers(headers).body(null);
+	}
 
-  @PostMapping("/disconnect")
-  public ResponseEntity<String> disconnect(HttpServletRequest request) {
-    logger.info("User disconnect request received");
+	@PostMapping("/disconnect")
+	public ResponseEntity<String> disconnect(HttpServletRequest request) {
+		logger.info("User disconnect request received");
 
-    disconnectUserService.disconnect(request);
+		disconnectUserService.disconnect(request);
 
-    logger.info("Clearing user cookie");
-    HttpHeaders headers = new HttpHeaders();
-    headers = cookieHelper.clearUserCookie(headers);
+		logger.info("Clearing user cookie");
+		HttpHeaders headers = new HttpHeaders();
+		headers = cookieHelper.clearUserCookie(headers);
 
-    logger.info("User disconnected successfully");
-    return ResponseEntity.noContent().headers(headers).build();
-  }
+		logger.info("User disconnected successfully");
+		return ResponseEntity.noContent().headers(headers).build();
+	}
+
 }

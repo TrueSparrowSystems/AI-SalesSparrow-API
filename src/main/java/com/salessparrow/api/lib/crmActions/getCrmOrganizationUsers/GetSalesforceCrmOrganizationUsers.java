@@ -28,87 +28,83 @@ import com.salessparrow.api.lib.salesforce.helper.SalesforceQueryBuilder;
 
 /**
  * GetCrmOrganizationUsersFactory class for the getCrmOrganizationUsers action.
- * 
+ *
  */
 @Component
-public class GetSalesforceCrmOrganizationUsers implements GetCrmOrganizationUsers{
+public class GetSalesforceCrmOrganizationUsers implements GetCrmOrganizationUsers {
 
-    Logger logger = LoggerFactory.getLogger(GetSalesforceCrmOrganizationUsers.class);
+	Logger logger = LoggerFactory.getLogger(GetSalesforceCrmOrganizationUsers.class);
 
-    @Autowired
-    private SalesforceConstants salesforceConstants;
+	@Autowired
+	private SalesforceConstants salesforceConstants;
 
-    @Autowired
-    private MakeCompositeRequest makeCompositeRequest;
+	@Autowired
+	private MakeCompositeRequest makeCompositeRequest;
 
-    /**
-     * getCrmOrganizationUsers method for the getCrmOrganizationUsers action.
-     * 
-     * @param user
-     * @param searchTerm
-     * 
-     * @return GetCrmOrganizationUsersFormatterDto
-     */
-    public GetCrmOrganizationUsersFormatterDto getCrmOrganizationUsers(User user, String searchTerm) {
-        String salesforceUserId = user.getExternalUserId();
-        
-        SalesforceQueryBuilder salesforceQuery = new SalesforceQueryBuilder();
-        String query = salesforceQuery.getCrmOrganizationUsersQuery(searchTerm);
+	/**
+	 * getCrmOrganizationUsers method for the getCrmOrganizationUsers action.
+	 * @param user
+	 * @param searchTerm
+	 * @return GetCrmOrganizationUsersFormatterDto
+	 */
+	public GetCrmOrganizationUsersFormatterDto getCrmOrganizationUsers(User user, String searchTerm) {
+		String salesforceUserId = user.getExternalUserId();
 
-        String url = salesforceConstants.queryUrlPath() + query;
+		SalesforceQueryBuilder salesforceQuery = new SalesforceQueryBuilder();
+		String query = salesforceQuery.getCrmOrganizationUsersQuery(searchTerm);
 
-        CompositeRequestDto compositeReq = new CompositeRequestDto("GET", url, "getCrmOrganizationUsers");
-        
-        List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
-        compositeRequests.add(compositeReq);
+		String url = salesforceConstants.queryUrlPath() + query;
 
-        HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId);
+		CompositeRequestDto compositeReq = new CompositeRequestDto("GET", url, "getCrmOrganizationUsers");
 
-        return parseResponse(response.getResponseBody());
-    }   
+		List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
+		compositeRequests.add(compositeReq);
 
-    /**
-     * parseResponse method for the getCrmOrganizationUsers action.
-     * 
-     * @param responseBody
-     * 
-     * @return GetCrmOrganizationUsersFormatterDto
-     */
-    private GetCrmOrganizationUsersFormatterDto parseResponse(String responseBody){
-        List<String> crmOrganizationUserIds = new ArrayList<String>();
-        Map<String, CrmOrganizationUserEntity> crmOrganizationUserMap = new HashMap<String, CrmOrganizationUserEntity>();
+		HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId);
 
-        logger.info("Parsing response from salesforce");
-        
-        Util util = new Util();
-        JsonNode rootNode = util.getJsonNode(responseBody);
+		return parseResponse(response.getResponseBody());
+	}
 
-        JsonNode httpStatusCodeNode = rootNode.get("compositeResponse").get(0).get("httpStatusCode");
-        
-        if (httpStatusCodeNode.asInt() != 200 && httpStatusCodeNode.asInt() != 201) {
-        throw new CustomException(
-            new ErrorObject(
-            "l_ca_ga_gsa_pr_1",
-            "bad_request",
-            "Error in fetching accounts from salesforce"));
-        }
+	/**
+	 * parseResponse method for the getCrmOrganizationUsers action.
+	 * @param responseBody
+	 * @return GetCrmOrganizationUsersFormatterDto
+	 */
+	private GetCrmOrganizationUsersFormatterDto parseResponse(String responseBody) {
+		List<String> crmOrganizationUserIds = new ArrayList<String>();
+		Map<String, CrmOrganizationUserEntity> crmOrganizationUserMap = new HashMap<String, CrmOrganizationUserEntity>();
 
-        JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");
+		logger.info("Parsing response from salesforce");
 
-        for (JsonNode recordNode : recordsNode) {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-            SalesforceCrmOrganizationUserDto salesforceCrmOrganization = mapper.convertValue(recordNode, SalesforceCrmOrganizationUserDto.class);
-            CrmOrganizationUserEntity accountCrmOrganizationUser = salesforceCrmOrganization.getCrmOrganizationUserEntity();
+		Util util = new Util();
+		JsonNode rootNode = util.getJsonNode(responseBody);
 
-            crmOrganizationUserIds.add(accountCrmOrganizationUser.getId());
-            crmOrganizationUserMap.put(accountCrmOrganizationUser.getId(), accountCrmOrganizationUser);
-        }
+		JsonNode httpStatusCodeNode = rootNode.get("compositeResponse").get(0).get("httpStatusCode");
 
-        GetCrmOrganizationUsersFormatterDto getCrmOrganizationUsersResponse = new GetCrmOrganizationUsersFormatterDto();
-        getCrmOrganizationUsersResponse.setCrmOrganizationUserIds(crmOrganizationUserIds);
-        getCrmOrganizationUsersResponse.setCrmOrganizationUserMapById(crmOrganizationUserMap); 
+		if (httpStatusCodeNode.asInt() != 200 && httpStatusCodeNode.asInt() != 201) {
+			throw new CustomException(
+					new ErrorObject("l_ca_ga_gsa_pr_1", "bad_request", "Error in fetching accounts from salesforce"));
+		}
 
-        return getCrmOrganizationUsersResponse;
-    }
+		JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");
+
+		for (JsonNode recordNode : recordsNode) {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+			SalesforceCrmOrganizationUserDto salesforceCrmOrganization = mapper.convertValue(recordNode,
+					SalesforceCrmOrganizationUserDto.class);
+			CrmOrganizationUserEntity accountCrmOrganizationUser = salesforceCrmOrganization
+				.getCrmOrganizationUserEntity();
+
+			crmOrganizationUserIds.add(accountCrmOrganizationUser.getId());
+			crmOrganizationUserMap.put(accountCrmOrganizationUser.getId(), accountCrmOrganizationUser);
+		}
+
+		GetCrmOrganizationUsersFormatterDto getCrmOrganizationUsersResponse = new GetCrmOrganizationUsersFormatterDto();
+		getCrmOrganizationUsersResponse.setCrmOrganizationUserIds(crmOrganizationUserIds);
+		getCrmOrganizationUsersResponse.setCrmOrganizationUserMapById(crmOrganizationUserMap);
+
+		return getCrmOrganizationUsersResponse;
+	}
+
 }

@@ -13,10 +13,17 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class TaskEntity {
-  private String id;
-  private String creatorName;
-  private String description;
-  private String dueDate;
-  private String crmOrganizationUserName;
-  private Date lastModifiedTime;
+
+	private String id;
+
+	private String creatorName;
+
+	private String description;
+
+	private String dueDate;
+
+	private String crmOrganizationUserName;
+
+	private Date lastModifiedTime;
+
 }

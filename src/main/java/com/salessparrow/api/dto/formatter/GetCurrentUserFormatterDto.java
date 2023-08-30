@@ -8,13 +8,14 @@ import lombok.Data;
 
 /**
  * Get current user formatter DTO.
- * 
+ *
  * @param current_user
- * 
  * @return GetCurrentUserFormatterDto
  */
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GetCurrentUserFormatterDto {
-  private CurrentUserEntityDto currentUser;
+
+	private CurrentUserEntityDto currentUser;
+
 }

@@ -46,174 +46,184 @@ import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
 public class PostSalesforceConnectTest {
 
-  @Autowired
-  private MockMvc mockMvc;
+	@Autowired
+	private MockMvc mockMvc;
 
-  @Autowired
-  private Setup setup;
+	@Autowired
+	private Setup setup;
 
-  @Autowired
-  private Cleanup cleanup;
+	@Autowired
+	private Cleanup cleanup;
 
-  @Autowired
-  private Common common;
+	@Autowired
+	private Common common;
 
-  @Autowired
-  private LoadFixture loadFixture;
+	@Autowired
+	private LoadFixture loadFixture;
 
-  @MockBean
-  private SalesforceTokens mockGetTokens;
+	@MockBean
+	private SalesforceTokens mockGetTokens;
 
-  @MockBean
-  private SalesforceGetIdentity mockGetIdentity;
+	@MockBean
+	private SalesforceGetIdentity mockGetIdentity;
 
-  @Mock
-  private HttpResponse getTokensHttpMockResponse;
+	@Mock
+	private HttpResponse getTokensHttpMockResponse;
 
-  @InjectMocks
-  private AuthService authService;
+	@InjectMocks
+	private AuthService authService;
 
-  @BeforeEach
-  public void setUp() throws DynamobeeException, IOException {
-    MockitoAnnotations.openMocks(this);
-    setup.perform();
-  }
+	@BeforeEach
+	public void setUp() throws DynamobeeException, IOException {
+		MockitoAnnotations.openMocks(this);
+		setup.perform();
+	}
 
-  @AfterEach
-  public void tearDown() {
-    cleanup.perform();
-  }
+	@AfterEach
+	public void tearDown() {
+		cleanup.perform();
+	}
 
-  @Test
-  public void testPostSalesforceConnectSignup() throws Exception {
-    String currentFunctionName = new Object() {
-    }.getClass().getEnclosingMethod().getName();
+	@Test
+	public void testPostSalesforceConnectSignup() throws Exception {
+		String currentFunctionName = new Object() {
+		}.getClass().getEnclosingMethod().getName();
 
-    List<Scenario> testDataItems = common.loadScenariosData(
-        "classpath:data/functional/controllers/authController/SalesforceConnect.scenarios.json", currentFunctionName);
+		List<Scenario> testDataItems = common.loadScenariosData(
+				"classpath:data/functional/controllers/authController/SalesforceConnect.scenarios.json",
+				currentFunctionName);
 
-    for (Scenario testDataItem : testDataItems) {
-      System.out.println("Test description: " + testDataItem.getDescription());
-      ObjectMapper objectMapper = new ObjectMapper();
+		for (Scenario testDataItem : testDataItems) {
+			System.out.println("Test description: " + testDataItem.getDescription());
+			ObjectMapper objectMapper = new ObjectMapper();
 
-      HttpResponse getTokensMockRes = new HttpResponse();
-      getTokensMockRes.setResponseBody(objectMapper.writeValueAsString(testDataItem.getMocks().get("getTokens")));
+			HttpResponse getTokensMockRes = new HttpResponse();
+			getTokensMockRes.setResponseBody(objectMapper.writeValueAsString(testDataItem.getMocks().get("getTokens")));
 
-      HttpResponse getIdentityMockRes = new HttpResponse();
-      getIdentityMockRes.setResponseBody(objectMapper.writeValueAsString(testDataItem.getMocks().get("getIdentity")));
+			HttpResponse getIdentityMockRes = new HttpResponse();
+			getIdentityMockRes
+				.setResponseBody(objectMapper.writeValueAsString(testDataItem.getMocks().get("getIdentity")));
 
-      when(mockGetTokens.getTokens(anyString(),
-          anyString())).thenReturn(getTokensMockRes);
-      when(mockGetIdentity.getUserIdentity(anyString(),
-          anyString())).thenReturn(getIdentityMockRes);
+			when(mockGetTokens.getTokens(anyString(), anyString())).thenReturn(getTokensMockRes);
+			when(mockGetIdentity.getUserIdentity(anyString(), anyString())).thenReturn(getIdentityMockRes);
 
-      ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/salesforce/connect")
-          .content(objectMapper.writeValueAsString(testDataItem.getInput().get("body")))
-          .accept(MediaType.APPLICATION_JSON).characterEncoding("UTF-8")
-          .contentType(MediaType.APPLICATION_JSON));
+			ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/salesforce/connect")
+				.content(objectMapper.writeValueAsString(testDataItem.getInput().get("body")))
+				.accept(MediaType.APPLICATION_JSON)
+				.characterEncoding("UTF-8")
+				.contentType(MediaType.APPLICATION_JSON));
 
-      String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
-      System.out.println("actualOutput: " + actualOutput);
+			String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
+			System.out.println("actualOutput: " + actualOutput);
 
-      if (resultActions.andReturn().getResponse().getStatus() == 200) {
-        assertEquals(objectMapper.writeValueAsString(testDataItem.getOutput()),
-            actualOutput);
-      } else if (resultActions.andReturn().getResponse().getStatus() == 400) {
-        common.compareErrors(testDataItem, actualOutput);
-      } else {
-        assertEquals(testDataItem.getOutput().get("http_code"),
-            resultActions.andReturn().getResponse().getStatus());
-      }
-    }
-  }
+			if (resultActions.andReturn().getResponse().getStatus() == 200) {
+				assertEquals(objectMapper.writeValueAsString(testDataItem.getOutput()), actualOutput);
+			}
+			else if (resultActions.andReturn().getResponse().getStatus() == 400) {
+				common.compareErrors(testDataItem, actualOutput);
+			}
+			else {
+				assertEquals(testDataItem.getOutput().get("http_code"),
+						resultActions.andReturn().getResponse().getStatus());
+			}
+		}
+	}
 
-  @Test
-  public void testPostSalesforceConnectLogin() throws Exception {
-    String currentFunctionName = new Object() {
-    }.getClass().getEnclosingMethod().getName();
+	@Test
+	public void testPostSalesforceConnectLogin() throws Exception {
+		String currentFunctionName = new Object() {
+		}.getClass().getEnclosingMethod().getName();
 
-    FixtureData fixtureData = common.loadFixture(
-        "classpath:fixtures/functional/controllers/authController/PostSalesforceConnectFixture.json",
-        currentFunctionName);
-    loadFixture.perform(fixtureData);
+		FixtureData fixtureData = common.loadFixture(
+				"classpath:fixtures/functional/controllers/authController/PostSalesforceConnectFixture.json",
+				currentFunctionName);
+		loadFixture.perform(fixtureData);
 
-    List<Scenario> testDataItems = common.loadScenariosData(
-        "classpath:data/functional/controllers/authController/SalesforceConnect.scenarios.json", currentFunctionName);
+		List<Scenario> testDataItems = common.loadScenariosData(
+				"classpath:data/functional/controllers/authController/SalesforceConnect.scenarios.json",
+				currentFunctionName);
 
-    for (Scenario testDataItem : testDataItems) {
-      System.out.println("Test description: " + testDataItem.getDescription());
-      ObjectMapper objectMapper = new ObjectMapper();
+		for (Scenario testDataItem : testDataItems) {
+			System.out.println("Test description: " + testDataItem.getDescription());
+			ObjectMapper objectMapper = new ObjectMapper();
 
-      HttpResponse getTokensMockRes = new HttpResponse();
-      getTokensMockRes.setResponseBody(objectMapper.writeValueAsString(testDataItem.getMocks().get("getTokens")));
+			HttpResponse getTokensMockRes = new HttpResponse();
+			getTokensMockRes.setResponseBody(objectMapper.writeValueAsString(testDataItem.getMocks().get("getTokens")));
 
-      when(mockGetTokens.getTokens(anyString(),
-          anyString())).thenReturn(getTokensMockRes);
+			when(mockGetTokens.getTokens(anyString(), anyString())).thenReturn(getTokensMockRes);
 
-      ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/salesforce/connect")
-          .content(objectMapper.writeValueAsString(testDataItem.getInput().get("body")))
-          .accept(MediaType.APPLICATION_JSON).characterEncoding("UTF-8")
-          .contentType(MediaType.APPLICATION_JSON));
+			ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/salesforce/connect")
+				.content(objectMapper.writeValueAsString(testDataItem.getInput().get("body")))
+				.accept(MediaType.APPLICATION_JSON)
+				.characterEncoding("UTF-8")
+				.contentType(MediaType.APPLICATION_JSON));
 
-      String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
+			String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
 
-      if (resultActions.andReturn().getResponse().getStatus() == 200) {
-        assertEquals(objectMapper.writeValueAsString(testDataItem.getOutput()),
-            actualOutput);
-        verify(mockGetTokens, times(1)).getTokens(anyString(), anyString());
-        verify(mockGetIdentity, times(0)).getUserIdentity(anyString(), anyString());
-      } else if (resultActions.andReturn().getResponse().getStatus() == 400) {
-        common.compareErrors(testDataItem, actualOutput);
-      } else {
-        assertEquals(testDataItem.getOutput().get("http_code"),
-            resultActions.andReturn().getResponse().getStatus());
-      }
-    }
+			if (resultActions.andReturn().getResponse().getStatus() == 200) {
+				assertEquals(objectMapper.writeValueAsString(testDataItem.getOutput()), actualOutput);
+				verify(mockGetTokens, times(1)).getTokens(anyString(), anyString());
+				verify(mockGetIdentity, times(0)).getUserIdentity(anyString(), anyString());
+			}
+			else if (resultActions.andReturn().getResponse().getStatus() == 400) {
+				common.compareErrors(testDataItem, actualOutput);
+			}
+			else {
+				assertEquals(testDataItem.getOutput().get("http_code"),
+						resultActions.andReturn().getResponse().getStatus());
+			}
+		}
 
-  }
+	}
 
-  @Test
-  public void testPostSalesforceConnectDisconnectedUserSignup() throws Exception {
-    String currentFunctionName = new Object() {
-    }.getClass().getEnclosingMethod().getName();
+	@Test
+	public void testPostSalesforceConnectDisconnectedUserSignup() throws Exception {
+		String currentFunctionName = new Object() {
+		}.getClass().getEnclosingMethod().getName();
 
-    FixtureData fixtureData = common.loadFixture(
-        "classpath:fixtures/functional/controllers/authController/PostSalesforceConnectFixture.json",
-        currentFunctionName);
-    loadFixture.perform(fixtureData);
+		FixtureData fixtureData = common.loadFixture(
+				"classpath:fixtures/functional/controllers/authController/PostSalesforceConnectFixture.json",
+				currentFunctionName);
+		loadFixture.perform(fixtureData);
 
-    List<Scenario> testDataItems = common.loadScenariosData(
-        "classpath:data/functional/controllers/authController/SalesforceConnect.scenarios.json", currentFunctionName);
-    for (Scenario testDataItem : testDataItems) {
-      System.out.println(
-          "testPostSalesforceConnectDisconnectedUserSignup Test description: " + testDataItem.getDescription());
-      ObjectMapper objectMapper = new ObjectMapper();
+		List<Scenario> testDataItems = common.loadScenariosData(
+				"classpath:data/functional/controllers/authController/SalesforceConnect.scenarios.json",
+				currentFunctionName);
+		for (Scenario testDataItem : testDataItems) {
+			System.out.println("testPostSalesforceConnectDisconnectedUserSignup Test description: "
+					+ testDataItem.getDescription());
+			ObjectMapper objectMapper = new ObjectMapper();
 
-      HttpResponse getTokensMockRes = new HttpResponse();
-      getTokensMockRes.setResponseBody(objectMapper.writeValueAsString(testDataItem.getMocks().get("getTokens")));
+			HttpResponse getTokensMockRes = new HttpResponse();
+			getTokensMockRes.setResponseBody(objectMapper.writeValueAsString(testDataItem.getMocks().get("getTokens")));
 
-      HttpResponse getIdentityMockRes = new HttpResponse();
-      getIdentityMockRes.setResponseBody(objectMapper.writeValueAsString(testDataItem.getMocks().get("getIdentity")));
+			HttpResponse getIdentityMockRes = new HttpResponse();
+			getIdentityMockRes
+				.setResponseBody(objectMapper.writeValueAsString(testDataItem.getMocks().get("getIdentity")));
 
-      when(mockGetTokens.getTokens(anyString(), anyString())).thenReturn(getTokensMockRes);
-      when(mockGetIdentity.getUserIdentity(anyString(), anyString())).thenReturn(getIdentityMockRes);
+			when(mockGetTokens.getTokens(anyString(), anyString())).thenReturn(getTokensMockRes);
+			when(mockGetIdentity.getUserIdentity(anyString(), anyString())).thenReturn(getIdentityMockRes);
 
-      ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/salesforce/connect")
-          .content(objectMapper.writeValueAsString(testDataItem.getInput().get("body")))
-          .accept(MediaType.APPLICATION_JSON).characterEncoding("UTF-8")
-          .contentType(MediaType.APPLICATION_JSON));
+			ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/salesforce/connect")
+				.content(objectMapper.writeValueAsString(testDataItem.getInput().get("body")))
+				.accept(MediaType.APPLICATION_JSON)
+				.characterEncoding("UTF-8")
+				.contentType(MediaType.APPLICATION_JSON));
 
-      String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
-      System.out.println("actualOutput: " + actualOutput);
+			String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
+			System.out.println("actualOutput: " + actualOutput);
 
-      if (resultActions.andReturn().getResponse().getStatus() == 200) {
-        assertEquals(objectMapper.writeValueAsString(testDataItem.getOutput()), actualOutput);
-      } else if (resultActions.andReturn().getResponse().getStatus() == 400) {
-        common.compareErrors(testDataItem, actualOutput);
-      } else {
-        assertEquals(testDataItem.getOutput().get("http_code"), resultActions.andReturn().getResponse().getStatus());
-      }
-    }
-  }
+			if (resultActions.andReturn().getResponse().getStatus() == 200) {
+				assertEquals(objectMapper.writeValueAsString(testDataItem.getOutput()), actualOutput);
+			}
+			else if (resultActions.andReturn().getResponse().getStatus() == 400) {
+				common.compareErrors(testDataItem, actualOutput);
+			}
+			else {
+				assertEquals(testDataItem.getOutput().get("http_code"),
+						resultActions.andReturn().getResponse().getStatus());
+			}
+		}
+	}
 
 }

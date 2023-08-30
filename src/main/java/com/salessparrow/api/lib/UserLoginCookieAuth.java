@@ -20,198 +20,176 @@ import com.salessparrow.api.repositories.SalesforceUserRepository;
 
 @Component
 public class UserLoginCookieAuth {
-  Logger logger = LoggerFactory.getLogger(UserLoginCookieAuth.class);
 
-  private String cookieValue;
-  private String reqApiSource;
+	Logger logger = LoggerFactory.getLogger(UserLoginCookieAuth.class);
 
-  private String userId;
-  private String userKind;
-  private String cookieApiSource;
-  private Integer timestampInCookie;
-  private String token;
-  private User currentUser;
-  private String userLoginCookieValue;
-  private String decryptedEncryptionSalt;
+	private String cookieValue;
 
-  @Autowired
-  private LocalCipher localCipher;
+	private String reqApiSource;
 
-  @Autowired
-  private CookieHelper cookieHelper;
+	private String userId;
 
-  @Autowired
-  private SalesforceUserRepository salesforceUserRepository;
+	private String userKind;
 
-  /**
-   * Validate and set cookie
-   *
-   * @param cookieValue
-   * @param reqApiSource
-   *
-   * @return Map<String, Object>
-   */
-  public Map<String, Object> validateAndSetCookie(String cookieValue, String reqApiSource) {
-    this.cookieValue = cookieValue;
-    this.reqApiSource = reqApiSource;
+	private String cookieApiSource;
 
-    logger.info("Validating cookie");
-    validate();
-    setParts();
-    validateTimestamp();
-    validateApiSource();
-    fetchAndValidateUser();
-    validateCookieToken();
-    setCookie();
+	private Integer timestampInCookie;
 
-    Map<String, Object> resultMap = new HashMap<>();
-    resultMap.put("current_user", currentUser);
-    resultMap.put("userLoginCookieValue", userLoginCookieValue);
+	private String token;
 
-    return resultMap;
-  }
+	private User currentUser;
 
-  /**
-   * Validate cookie value and expire timestamp
-   *
-   * @throws RuntimeException
-   */
-  private void validate() {
-    if (cookieValue == null || cookieValue.isEmpty()) {
+	private String userLoginCookieValue;
 
-      throw new CustomException(
-          new ErrorObject(
-              "l_ulca_v_1",
-              "unauthorized_api_request",
-              "Invalid cookie value"));
-    }
+	private String decryptedEncryptionSalt;
 
-  }
+	@Autowired
+	private LocalCipher localCipher;
 
-  /**
-   * Set cookie value parts
-   *
-   * @throws RuntimeException
-   */
-  private void setParts() {
-    List<String> cookieValueParts = Arrays.asList(cookieValue.split(":"));
+	@Autowired
+	private CookieHelper cookieHelper;
 
-    if (cookieValueParts.size() != 6) {
-      throw new CustomException(
-          new ErrorObject(
-              "l_ulca_sp_1",
-              "unauthorized_api_request",
-              "Invalid cookie value"));
-    }
+	@Autowired
+	private SalesforceUserRepository salesforceUserRepository;
 
-    if (cookieValueParts.get(0).equals(CookieConstants.LATEST_VERSION)) {
-      userId = cookieValueParts.get(1);
-      userKind = cookieValueParts.get(2);
-      cookieApiSource = cookieValueParts.get(3);
-      timestampInCookie = Integer.parseInt(cookieValueParts.get(4));
-      token = cookieValueParts.get(5);
-    } else {
-      throw new CustomException(
-          new ErrorObject(
-              "l_ulca_sp_2",
-              "unauthorized_api_request",
-              "Invalid cookie version"));
-    }
-  }
+	/**
+	 * Validate and set cookie
+	 * @param cookieValue
+	 * @param reqApiSource
+	 * @return Map<String, Object>
+	 */
+	public Map<String, Object> validateAndSetCookie(String cookieValue, String reqApiSource) {
+		this.cookieValue = cookieValue;
+		this.reqApiSource = reqApiSource;
 
-  /**
-   * Validate cookie timestamp
-   *
-   * @throws RuntimeException
-   */
-  private void validateTimestamp() {
-    if (timestampInCookie + CookieConstants.USER_LOGIN_COOKIE_EXPIRY_IN_SEC < System.currentTimeMillis() / 1000) {
-      throw new CustomException(
-          new ErrorObject(
-              "l_ulca_vt_1",
-              "unauthorized_api_request",
-              "Cookie expired"));
+		logger.info("Validating cookie");
+		validate();
+		setParts();
+		validateTimestamp();
+		validateApiSource();
+		fetchAndValidateUser();
+		validateCookieToken();
+		setCookie();
 
-    }
-  }
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("current_user", currentUser);
+		resultMap.put("userLoginCookieValue", userLoginCookieValue);
 
-  /**
-   * Validate api source
-   *
-   * @throws RuntimeException
-   */
-  private void validateApiSource() {
-    if (!cookieApiSource.equals(reqApiSource)) {
-      throw new CustomException(
-          new ErrorObject(
-              "l_ulca_vas_1",
-              "unauthorized_api_request",
-              "Cookie api source and request api source mismatch"));
+		return resultMap;
+	}
 
-    }
-  }
+	/**
+	 * Validate cookie value and expire timestamp
+	 * @throws RuntimeException
+	 */
+	private void validate() {
+		if (cookieValue == null || cookieValue.isEmpty()) {
 
-  /**
-   * Fetch and validate user
-   *
-   * @throws RuntimeException
-   */
-  private void fetchAndValidateUser() {
+			throw new CustomException(
+					new ErrorObject("l_ulca_v_1", "unauthorized_api_request", "Invalid cookie value"));
+		}
 
-    logger.info("Fetching and validating current user");
-    if (userKind.equals(UserConstants.SALESFORCE_USER_KIND)) {
-      logger.info("Fetching and validating salesforce user");
-      fetchAndValidateSalesforceUser();
-    } else {
-      logger.info("Fetching another user");
-      // Todo: Throw an error
-    }
+	}
 
-  }
+	/**
+	 * Set cookie value parts
+	 * @throws RuntimeException
+	 */
+	private void setParts() {
+		List<String> cookieValueParts = Arrays.asList(cookieValue.split(":"));
 
-  private void fetchAndValidateSalesforceUser() {
-    User userObj = salesforceUserRepository.getSalesforceUserByExternalUserId(userId);
+		if (cookieValueParts.size() != 6) {
+			throw new CustomException(
+					new ErrorObject("l_ulca_sp_1", "unauthorized_api_request", "Invalid cookie value"));
+		}
 
-    if (userObj == null) {
-      throw new CustomException(
-          new ErrorObject(
-              "l_ulca_favu_1",
-              "unauthorized_api_request",
-              "User not found"));
-    }
+		if (cookieValueParts.get(0).equals(CookieConstants.LATEST_VERSION)) {
+			userId = cookieValueParts.get(1);
+			userKind = cookieValueParts.get(2);
+			cookieApiSource = cookieValueParts.get(3);
+			timestampInCookie = Integer.parseInt(cookieValueParts.get(4));
+			token = cookieValueParts.get(5);
+		}
+		else {
+			throw new CustomException(
+					new ErrorObject("l_ulca_sp_2", "unauthorized_api_request", "Invalid cookie version"));
+		}
+	}
 
-    currentUser = userObj;
-  }
+	/**
+	 * Validate cookie timestamp
+	 * @throws RuntimeException
+	 */
+	private void validateTimestamp() {
+		if (timestampInCookie + CookieConstants.USER_LOGIN_COOKIE_EXPIRY_IN_SEC < System.currentTimeMillis() / 1000) {
+			throw new CustomException(new ErrorObject("l_ulca_vt_1", "unauthorized_api_request", "Cookie expired"));
 
-  /**
-   * Validate cookie token
-   *
-   * @throws RuntimeException
-   */
-  private void validateCookieToken() {
-    String encryptionSalt = currentUser.getEncryptionSalt();
-    decryptedEncryptionSalt = localCipher.decrypt(CoreConstants.encryptionKey(),
-        encryptionSalt);
+		}
+	}
 
-    String generatedToken = cookieHelper.getCookieToken(currentUser,
-        decryptedEncryptionSalt, timestampInCookie, reqApiSource);
-    if (!generatedToken.equals(token)) {
-      throw new CustomException(
-          new ErrorObject(
-              "l_ulca_vct_2",
-              "unauthorized_api_request",
-              "Invalid cookie token"));
-    }
-  }
+	/**
+	 * Validate api source
+	 * @throws RuntimeException
+	 */
+	private void validateApiSource() {
+		if (!cookieApiSource.equals(reqApiSource)) {
+			throw new CustomException(new ErrorObject("l_ulca_vas_1", "unauthorized_api_request",
+					"Cookie api source and request api source mismatch"));
 
-  /**
-   * Set cookie
-   *
-   * @throws RuntimeException
-   */
-  private void setCookie() {
-    userLoginCookieValue = cookieHelper.getCookieValue(currentUser, userKind,
-        decryptedEncryptionSalt, reqApiSource);
-  }
+		}
+	}
+
+	/**
+	 * Fetch and validate user
+	 * @throws RuntimeException
+	 */
+	private void fetchAndValidateUser() {
+
+		logger.info("Fetching and validating current user");
+		if (userKind.equals(UserConstants.SALESFORCE_USER_KIND)) {
+			logger.info("Fetching and validating salesforce user");
+			fetchAndValidateSalesforceUser();
+		}
+		else {
+			logger.info("Fetching another user");
+			// Todo: Throw an error
+		}
+
+	}
+
+	private void fetchAndValidateSalesforceUser() {
+		User userObj = salesforceUserRepository.getSalesforceUserByExternalUserId(userId);
+
+		if (userObj == null) {
+			throw new CustomException(new ErrorObject("l_ulca_favu_1", "unauthorized_api_request", "User not found"));
+		}
+
+		currentUser = userObj;
+	}
+
+	/**
+	 * Validate cookie token
+	 * @throws RuntimeException
+	 */
+	private void validateCookieToken() {
+		String encryptionSalt = currentUser.getEncryptionSalt();
+		decryptedEncryptionSalt = localCipher.decrypt(CoreConstants.encryptionKey(), encryptionSalt);
+
+		String generatedToken = cookieHelper.getCookieToken(currentUser, decryptedEncryptionSalt, timestampInCookie,
+				reqApiSource);
+		if (!generatedToken.equals(token)) {
+			throw new CustomException(
+					new ErrorObject("l_ulca_vct_2", "unauthorized_api_request", "Invalid cookie token"));
+		}
+	}
+
+	/**
+	 * Set cookie
+	 * @throws RuntimeException
+	 */
+	private void setCookie() {
+		userLoginCookieValue = cookieHelper.getCookieValue(currentUser, userKind, decryptedEncryptionSalt,
+				reqApiSource);
+	}
 
 }

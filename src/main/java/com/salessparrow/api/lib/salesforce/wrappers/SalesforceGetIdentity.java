@@ -16,29 +16,24 @@ import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
 
 public class SalesforceGetIdentity {
 
-  @Autowired
-  private SalesforceConstants salesforceConstants;
+	@Autowired
+	private SalesforceConstants salesforceConstants;
 
-  public HttpResponse getUserIdentity(String instanceUrl, String accessToken) {
-    String salesforceIdentityEndpoint = instanceUrl + salesforceConstants.identityUrl();
+	public HttpResponse getUserIdentity(String instanceUrl, String accessToken) {
+		String salesforceIdentityEndpoint = instanceUrl + salesforceConstants.identityUrl();
 
-    Map<String, String> headers = new HashMap<>();
-    headers.put("Authorization", "Bearer " + accessToken);
+		Map<String, String> headers = new HashMap<>();
+		headers.put("Authorization", "Bearer " + accessToken);
 
-    HttpResponse response = null;
-    try {
-      response = HttpClient.makeGetRequest(
-          salesforceIdentityEndpoint,
-          headers,
-          10000);
-    } catch (Exception e) {
-      throw new CustomException(
-          new ErrorObject(
-              "l_s_w_sgi_gui_1",
-              "bad_request",
-              e.getMessage()));
-    }
+		HttpResponse response = null;
+		try {
+			response = HttpClient.makeGetRequest(salesforceIdentityEndpoint, headers, 10000);
+		}
+		catch (Exception e) {
+			throw new CustomException(new ErrorObject("l_s_w_sgi_gui_1", "bad_request", e.getMessage()));
+		}
 
-    return response;
-  }
+		return response;
+	}
+
 }

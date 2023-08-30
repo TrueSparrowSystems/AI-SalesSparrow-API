@@ -9,5 +9,7 @@ import com.salessparrow.api.domain.User;
  */
 @Component
 public interface DeleteAccountTask {
-    public void deleteAccountTask(User user, String accountId, String taskId);
+
+	public void deleteAccountTask(User user, String accountId, String taskId);
+
 }

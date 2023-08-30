@@ -20,53 +20,49 @@ import com.salessparrow.api.repositories.SalesforceUserRepository;
 @Component
 public class DisconnectSalesforceUser implements DisconnectUser {
 
-  @Autowired
-  private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
+	@Autowired
+	private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
 
-  @Autowired
-  private SalesforceUserRepository salesforceUserRepository;
+	@Autowired
+	private SalesforceUserRepository salesforceUserRepository;
 
-  @Autowired
-  private AwsKms awsKms;
+	@Autowired
+	private AwsKms awsKms;
 
-  @Autowired
-  private SalesforceTokens salesforceTokens;
+	@Autowired
+	private SalesforceTokens salesforceTokens;
 
-  private static final Logger logger = LoggerFactory.getLogger(DisconnectSalesforceUser.class);
+	private static final Logger logger = LoggerFactory.getLogger(DisconnectSalesforceUser.class);
 
-  /**
-   * Disconnects a user from Salesforce by revoking the tokens and deleting the
-   * user data from the database.
-   * 
-   * @param user
-   * @return void
-   */
-  public void disconnect(User user) {
+	/**
+	 * Disconnects a user from Salesforce by revoking the tokens and deleting the user
+	 * data from the database.
+	 * @param user
+	 * @return void
+	 */
+	public void disconnect(User user) {
 
-    String salesforceUserId = user.getExternalUserId();
+		String salesforceUserId = user.getExternalUserId();
 
-    logger.info("Disconnecting user from Salesforce: " + salesforceUserId);
-    SalesforceOauthToken salesforceOauthToken = salesforceOauthTokenRepository
-        .getSalesforceOauthTokenByExternalUserId(salesforceUserId);
+		logger.info("Disconnecting user from Salesforce: " + salesforceUserId);
+		SalesforceOauthToken salesforceOauthToken = salesforceOauthTokenRepository
+			.getSalesforceOauthTokenByExternalUserId(salesforceUserId);
 
-    if (salesforceOauthToken == null) {
-      throw new CustomException(
-          new ErrorObject(
-              "l_ca_du_dsu_d_1",
-              "something_went_wrong",
-              "No tokens data found for this user."));
-    }
+		if (salesforceOauthToken == null) {
+			throw new CustomException(
+					new ErrorObject("l_ca_du_dsu_d_1", "something_went_wrong", "No tokens data found for this user."));
+		}
 
-    String decryptedRefreshToken = awsKms.decryptToken(salesforceOauthToken.getRefreshToken());
+		String decryptedRefreshToken = awsKms.decryptToken(salesforceOauthToken.getRefreshToken());
 
-    logger.info("Revoking tokens from Salesforce: " + salesforceUserId);
-    salesforceTokens.revokeTokens(salesforceOauthToken.getInstanceUrl(), decryptedRefreshToken);
+		logger.info("Revoking tokens from Salesforce: " + salesforceUserId);
+		salesforceTokens.revokeTokens(salesforceOauthToken.getInstanceUrl(), decryptedRefreshToken);
 
-    logger.info("Deleting tokens from database: " + salesforceUserId);
-    salesforceOauthTokenRepository.deleteSalesforceOauthTokenBySalesforceOauthToken(salesforceOauthToken);
+		logger.info("Deleting tokens from database: " + salesforceUserId);
+		salesforceOauthTokenRepository.deleteSalesforceOauthTokenBySalesforceOauthToken(salesforceOauthToken);
 
-    logger.info("Deleting user data from database: " + salesforceUserId);
-    salesforceUserRepository.removeSalesforceUserData(salesforceUserId);
-  }
+		logger.info("Deleting user data from database: " + salesforceUserId);
+		salesforceUserRepository.removeSalesforceUserData(salesforceUserId);
+	}
 
 }

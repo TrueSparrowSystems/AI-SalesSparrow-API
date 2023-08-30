@@ -10,27 +10,33 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ErrorResponseObject {
-    int httpCode;
-    String message;
-    String code;
-    String internalErrorIdentifier;
-    List<ParamErrorConfig> paramErrors;
 
-    public ErrorResponseObject() {
-    }
+	int httpCode;
 
-    public ErrorResponseObject(int httpCode, String message, String code, String internalErrorIdentifier,
-            List<ParamErrorConfig> paramErrors) {
-        this.httpCode = httpCode;
-        this.message = message;
-        this.code = code;
-        this.internalErrorIdentifier = internalErrorIdentifier;
-        this.paramErrors = paramErrors;
-    }
+	String message;
 
-    @Override
-    public String toString() {
-        return "ErrorResponseObject [code=" + code + ", paramErrors=" + paramErrors + ", httpCode=" + httpCode
-                + ", internalErrorIdentifier=" + internalErrorIdentifier + ", message=" + message + "]";
-    }
+	String code;
+
+	String internalErrorIdentifier;
+
+	List<ParamErrorConfig> paramErrors;
+
+	public ErrorResponseObject() {
+	}
+
+	public ErrorResponseObject(int httpCode, String message, String code, String internalErrorIdentifier,
+			List<ParamErrorConfig> paramErrors) {
+		this.httpCode = httpCode;
+		this.message = message;
+		this.code = code;
+		this.internalErrorIdentifier = internalErrorIdentifier;
+		this.paramErrors = paramErrors;
+	}
+
+	@Override
+	public String toString() {
+		return "ErrorResponseObject [code=" + code + ", paramErrors=" + paramErrors + ", httpCode=" + httpCode
+				+ ", internalErrorIdentifier=" + internalErrorIdentifier + ", message=" + message + "]";
+	}
+
 }

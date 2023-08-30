@@ -9,17 +9,20 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
 public class SalesforceCrmOrganizationUserDto {
-    private String id;
-    private String name;
 
-    /**
-     *  convert SalesforceCrmOrganizationUserDto into CrmOrganizationUserEntity
-     */
-    public CrmOrganizationUserEntity getCrmOrganizationUserEntity() {
-        CrmOrganizationUserEntity crmOrganizationUserEntity = new CrmOrganizationUserEntity();
-        crmOrganizationUserEntity.setId(this.id);
-        crmOrganizationUserEntity.setName(this.name);
+	private String id;
 
-        return crmOrganizationUserEntity;
-    }
+	private String name;
+
+	/**
+	 * convert SalesforceCrmOrganizationUserDto into CrmOrganizationUserEntity
+	 */
+	public CrmOrganizationUserEntity getCrmOrganizationUserEntity() {
+		CrmOrganizationUserEntity crmOrganizationUserEntity = new CrmOrganizationUserEntity();
+		crmOrganizationUserEntity.setId(this.id);
+		crmOrganizationUserEntity.setName(this.name);
+
+		return crmOrganizationUserEntity;
+	}
+
 }

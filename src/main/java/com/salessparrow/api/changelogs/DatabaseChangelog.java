@@ -15,6 +15,7 @@ import com.salessparrow.api.lib.globalConstants.DynamoDbTableNameConstants;
 
 @ChangeLog
 public class DatabaseChangelog {
+
 	Logger logger = LoggerFactory.getLogger(DatabaseChangelog.class);
 
 	@ChangeSet(order = "001", id = "001", author = "testAuthor")
@@ -22,14 +23,10 @@ public class DatabaseChangelog {
 		String tableName = DynamoDbTableNameConstants.salesforceOrganizationsTableName();
 		logger.info("Creating table: " + tableName);
 
-		CreateTableRequest request = new CreateTableRequest()
-				.withTableName(tableName)
-				.withAttributeDefinitions(
-						new AttributeDefinition("external_organization_id",
-								ScalarAttributeType.S))
-				.withKeySchema(
-						new KeySchemaElement("external_organization_id", KeyType.HASH))
-				.withBillingMode("PAY_PER_REQUEST");
+		CreateTableRequest request = new CreateTableRequest().withTableName(tableName)
+			.withAttributeDefinitions(new AttributeDefinition("external_organization_id", ScalarAttributeType.S))
+			.withKeySchema(new KeySchemaElement("external_organization_id", KeyType.HASH))
+			.withBillingMode("PAY_PER_REQUEST");
 
 		db.createTable(request);
 		logger.info("Done creating table: " + tableName);
@@ -40,13 +37,10 @@ public class DatabaseChangelog {
 		String tableName = DynamoDbTableNameConstants.salesforceOauthTokensTableName();
 		logger.info("Creating table:" + tableName);
 
-		CreateTableRequest request = new CreateTableRequest()
-				.withTableName(tableName)
-				.withAttributeDefinitions(
-						new AttributeDefinition("external_user_id", ScalarAttributeType.S))
-				.withKeySchema(
-						new KeySchemaElement("external_user_id", KeyType.HASH))
-				.withBillingMode("PAY_PER_REQUEST");
+		CreateTableRequest request = new CreateTableRequest().withTableName(tableName)
+			.withAttributeDefinitions(new AttributeDefinition("external_user_id", ScalarAttributeType.S))
+			.withKeySchema(new KeySchemaElement("external_user_id", KeyType.HASH))
+			.withBillingMode("PAY_PER_REQUEST");
 
 		db.createTable(request);
 
@@ -58,16 +52,14 @@ public class DatabaseChangelog {
 		String tableName = DynamoDbTableNameConstants.salesforceUsersTableName();
 		logger.info("Creating table:" + tableName);
 
-		CreateTableRequest request = new CreateTableRequest()
-				.withTableName(tableName)
-				.withAttributeDefinitions(
-						new AttributeDefinition("external_user_id", ScalarAttributeType.S))
-				.withKeySchema(
-						new KeySchemaElement("external_user_id", KeyType.HASH))
-				.withBillingMode("PAY_PER_REQUEST");
+		CreateTableRequest request = new CreateTableRequest().withTableName(tableName)
+			.withAttributeDefinitions(new AttributeDefinition("external_user_id", ScalarAttributeType.S))
+			.withKeySchema(new KeySchemaElement("external_user_id", KeyType.HASH))
+			.withBillingMode("PAY_PER_REQUEST");
 
 		db.createTable(request);
 
 		logger.info("Done creating table: " + tableName);
 	}
+
 }

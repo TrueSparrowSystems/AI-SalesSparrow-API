@@ -14,28 +14,24 @@ import com.salessparrow.api.lib.globalConstants.UserConstants;
 @Component
 public class DisconnectUserFactory {
 
-  @Autowired
-  private DisconnectSalesforceUser disconnectSalesforceUser;
+	@Autowired
+	private DisconnectSalesforceUser disconnectSalesforceUser;
 
-  /**
-   * Disconnect a user from the CRM based on the user kind.
-   * 
-   * @param user
-   * 
-   * @return void
-   */
-  public void disconnect(User user) {
+	/**
+	 * Disconnect a user from the CRM based on the user kind.
+	 * @param user
+	 * @return void
+	 */
+	public void disconnect(User user) {
 
-    switch (user.getUserKind()) {
-      case UserConstants.SALESFORCE_USER_KIND:
-        disconnectSalesforceUser.disconnect(user);
-        break;
-      default:
-        throw new CustomException(
-            new ErrorObject(
-                "l_ca_du_duf_d_1",
-                "something_went_wrong",
-                "Invalid user kind."));
-    }
-  }
+		switch (user.getUserKind()) {
+			case UserConstants.SALESFORCE_USER_KIND:
+				disconnectSalesforceUser.disconnect(user);
+				break;
+			default:
+				throw new CustomException(
+						new ErrorObject("l_ca_du_duf_d_1", "something_went_wrong", "Invalid user kind."));
+		}
+	}
+
 }

@@ -10,9 +10,11 @@ import com.salessparrow.api.lib.validators.DateFormatValidator;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = DateFormatValidator.class)
 public @interface ValidDateFormat {
-  String message() default "Invalid Date Format";
 
-  Class<?>[] groups() default {};
+	String message() default "Invalid Date Format";
 
-  Class<? extends Payload>[] payload() default {};
+	Class<?>[] groups() default {};
+
+	Class<? extends Payload>[] payload() default {};
+
 }

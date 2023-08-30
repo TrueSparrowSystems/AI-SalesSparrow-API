@@ -26,55 +26,61 @@ import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
 import com.salessparrow.api.lib.openAi.OpenAiRequest;
 
 @SpringBootTest
-@Import({Common.class, OpenAiRequest.class})
+@Import({ Common.class, OpenAiRequest.class })
 public class OpenAiRequestTest {
-  @Autowired
-  private OpenAiRequest openAiRequest;
 
-  @Autowired
-  private Common common;
+	@Autowired
+	private OpenAiRequest openAiRequest;
 
-  @MockBean
-  private HttpClient httpClientMock;
+	@Autowired
+	private Common common;
 
-  @Test
-  void testOpenAiRequest() throws IOException {
-    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/unit/lib/openAi/openAiRequest.scenarios.json");
-    MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class);
+	@MockBean
+	private HttpClient httpClientMock;
 
-    for (Scenario testDataItem : testDataItems) {
-      ObjectMapper objectMapper = new ObjectMapper();
+	@Test
+	void testOpenAiRequest() throws IOException {
+		List<Scenario> testDataItems = common
+			.loadScenariosData("classpath:data/unit/lib/openAi/openAiRequest.scenarios.json");
+		MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class);
 
-      HttpResponse openAiMocksResponse = new HttpResponse();
-      openAiMocksResponse.setResponseBody(objectMapper.writeValueAsString(testDataItem.getMocks().get("makeRequest")));
-      httpClientMockedStatic.when(() -> HttpClient.makePostRequest(anyString(), anyMap(), any(), anyInt()))
-          .thenReturn(openAiMocksResponse);
+		for (Scenario testDataItem : testDataItems) {
+			ObjectMapper objectMapper = new ObjectMapper();
 
-      HttpResponse actualResponse = openAiRequest.makeRequest(testDataItem.getInput().get("payload"));
-      String expectedOutput = objectMapper.writeValueAsString(testDataItem.getOutput());
+			HttpResponse openAiMocksResponse = new HttpResponse();
+			openAiMocksResponse
+				.setResponseBody(objectMapper.writeValueAsString(testDataItem.getMocks().get("makeRequest")));
+			httpClientMockedStatic.when(() -> HttpClient.makePostRequest(anyString(), anyMap(), any(), anyInt()))
+				.thenReturn(openAiMocksResponse);
 
-      assertEquals(actualResponse.getResponseBody(), expectedOutput);
-    }
-    httpClientMockedStatic.close();
-  }
+			HttpResponse actualResponse = openAiRequest.makeRequest(testDataItem.getInput().get("payload"));
+			String expectedOutput = objectMapper.writeValueAsString(testDataItem.getOutput());
 
-  @Test
-  void testOpenAiRequestError() throws IOException {
-    List<Scenario> testDataItems = common.loadScenariosData("classpath:data/unit/lib/openAi/openAiRequestError.scenarios.json");
-    MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class);
+			assertEquals(actualResponse.getResponseBody(), expectedOutput);
+		}
+		httpClientMockedStatic.close();
+	}
 
-    for (Scenario testDataItem : testDataItems) {
-      int statusCode = (int) testDataItem.getInput().get("statusCode");
-      httpClientMockedStatic.when(() -> HttpClient.makePostRequest(anyString(), anyMap(), any(), anyInt()))
-          .thenThrow( new WebClientResponseException("error", statusCode, "error", null, null, null)); 
-      try {
-        openAiRequest.makeRequest(testDataItem.getInput().get("payload"));
-      } catch (CustomException e) {
-        String expectedApiErrorIdentifier = (String) testDataItem.getOutput().get("apiErrorIdentifier");
+	@Test
+	void testOpenAiRequestError() throws IOException {
+		List<Scenario> testDataItems = common
+			.loadScenariosData("classpath:data/unit/lib/openAi/openAiRequestError.scenarios.json");
+		MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class);
 
-        assertEquals(e.getErrorObject().getApiErrorIdentifier(), expectedApiErrorIdentifier);
-      }
-    }
-    httpClientMockedStatic.close();
-  }
+		for (Scenario testDataItem : testDataItems) {
+			int statusCode = (int) testDataItem.getInput().get("statusCode");
+			httpClientMockedStatic.when(() -> HttpClient.makePostRequest(anyString(), anyMap(), any(), anyInt()))
+				.thenThrow(new WebClientResponseException("error", statusCode, "error", null, null, null));
+			try {
+				openAiRequest.makeRequest(testDataItem.getInput().get("payload"));
+			}
+			catch (CustomException e) {
+				String expectedApiErrorIdentifier = (String) testDataItem.getOutput().get("apiErrorIdentifier");
+
+				assertEquals(e.getErrorObject().getApiErrorIdentifier(), expectedApiErrorIdentifier);
+			}
+		}
+		httpClientMockedStatic.close();
+	}
+
 }

@@ -22,79 +22,61 @@ import java.util.List;
 @Component
 public class SalesforceTokens {
 
-  @Autowired
-  private SalesforceConstants salesforceConstants;
+	@Autowired
+	private SalesforceConstants salesforceConstants;
 
-  /**
-   * Get tokens from Salesforce using the authorization code.
-   * 
-   * @param code
-   * @param redirectUri
-   * 
-   * @return HttpResponse
-   */
-  public HttpResponse getTokens(String code, String redirectUri) {
+	/**
+	 * Get tokens from Salesforce using the authorization code.
+	 * @param code
+	 * @param redirectUri
+	 * @return HttpResponse
+	 */
+	public HttpResponse getTokens(String code, String redirectUri) {
 
-    String salesforceOAuthEndpoint = salesforceConstants.oauth2Url();
+		String salesforceOAuthEndpoint = salesforceConstants.oauth2Url();
 
-    String requestBody = "grant_type=" + salesforceConstants.authorizationCodeGrantType() + "&client_id="
-        + CoreConstants.salesforceClientId()
-        + "&client_secret="
-        + CoreConstants.salesforceClientSecret() +
-        "&code=" + code + "&redirect_uri=" + redirectUri;
+		String requestBody = "grant_type=" + salesforceConstants.authorizationCodeGrantType() + "&client_id="
+				+ CoreConstants.salesforceClientId() + "&client_secret=" + CoreConstants.salesforceClientSecret()
+				+ "&code=" + code + "&redirect_uri=" + redirectUri;
 
-    Map<String, String> headers = new HashMap<>();
-    headers.put("content-type", "application/x-www-form-urlencoded");
+		Map<String, String> headers = new HashMap<>();
+		headers.put("content-type", "application/x-www-form-urlencoded");
 
-    HttpResponse response = null;
-    try {
-      response = HttpClient.makePostRequest(
-          salesforceOAuthEndpoint,
-          headers,
-          requestBody,
-          10000);
-    } catch (Exception e) {
-      List<String> paramErrorIdentifiers = new ArrayList<>();
-      paramErrorIdentifiers.add("invalid_code");
+		HttpResponse response = null;
+		try {
+			response = HttpClient.makePostRequest(salesforceOAuthEndpoint, headers, requestBody, 10000);
+		}
+		catch (Exception e) {
+			List<String> paramErrorIdentifiers = new ArrayList<>();
+			paramErrorIdentifiers.add("invalid_code");
 
-      throw new CustomException(new ParamErrorObject(
-          "l_s_w_sgt_gt_1",
-          e.getMessage(),
-          paramErrorIdentifiers));
-    }
-    return response;
-  }
+			throw new CustomException(new ParamErrorObject("l_s_w_sgt_gt_1", e.getMessage(), paramErrorIdentifiers));
+		}
+		return response;
+	}
 
-  /**
-   * Revokes tokens from Salesforce using the access/refresh token.
-   * 
-   * @param instanceUrl Instance URL
-   * @param token       Refresh token
-   * 
-   * @return HttpResponse
-   */
-  public HttpResponse revokeTokens(String instanceUrl, String token) {
-    String salesforceRevokeTokensEndpoint = instanceUrl + salesforceConstants.revokeTokensUrl();
+	/**
+	 * Revokes tokens from Salesforce using the access/refresh token.
+	 * @param instanceUrl Instance URL
+	 * @param token Refresh token
+	 * @return HttpResponse
+	 */
+	public HttpResponse revokeTokens(String instanceUrl, String token) {
+		String salesforceRevokeTokensEndpoint = instanceUrl + salesforceConstants.revokeTokensUrl();
 
-    String requestBody = "token=" + token;
+		String requestBody = "token=" + token;
 
-    Map<String, String> headers = new HashMap<>();
-    headers.put("content-type", "application/x-www-form-urlencoded");
+		Map<String, String> headers = new HashMap<>();
+		headers.put("content-type", "application/x-www-form-urlencoded");
 
-    HttpResponse response = null;
-    try {
-      response = HttpClient.makePostRequest(
-          salesforceRevokeTokensEndpoint,
-          headers,
-          requestBody,
-          10000);
-    } catch (Exception e) {
-     throw new CustomException(
-          new ErrorObject(
-              "l_s_w_srt_rt_1",
-              "something_went_wrong",
-              e.getMessage()));
-    }
-    return response;
-  }
+		HttpResponse response = null;
+		try {
+			response = HttpClient.makePostRequest(salesforceRevokeTokensEndpoint, headers, requestBody, 10000);
+		}
+		catch (Exception e) {
+			throw new CustomException(new ErrorObject("l_s_w_srt_rt_1", "something_went_wrong", e.getMessage()));
+		}
+		return response;
+	}
+
 }

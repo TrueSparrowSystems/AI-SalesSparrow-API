@@ -6,11 +6,13 @@ import lombok.Data;
 
 @Data
 public class Scenario {
-  String description;
 
-  Map<String, Object> input;
+	String description;
 
-  Map<String, Object> mocks;
+	Map<String, Object> input;
 
-  Map<String, Object> output;
+	Map<String, Object> mocks;
+
+	Map<String, Object> output;
+
 }

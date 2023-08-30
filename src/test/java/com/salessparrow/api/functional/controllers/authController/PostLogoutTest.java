@@ -35,62 +35,62 @@ import jakarta.servlet.http.Cookie;
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
 public class PostLogoutTest {
 
-  @Autowired
-  private MockMvc mockMvc;
+	@Autowired
+	private MockMvc mockMvc;
 
-  @Autowired
-  private Setup setup;
+	@Autowired
+	private Setup setup;
 
-  @Autowired
-  private Cleanup cleanup;
+	@Autowired
+	private Cleanup cleanup;
 
-  @Autowired
-  private Common common;
+	@Autowired
+	private Common common;
 
-  @Autowired
-  private LoadFixture loadFixture;
+	@Autowired
+	private LoadFixture loadFixture;
 
-  @BeforeEach
-  public void setUp() throws DynamobeeException, IOException {
-    setup.perform();
-  }
+	@BeforeEach
+	public void setUp() throws DynamobeeException, IOException {
+		setup.perform();
+	}
 
-  @AfterEach
-  public void tearDown() {
-    cleanup.perform();
-  }
+	@AfterEach
+	public void tearDown() {
+		cleanup.perform();
+	}
 
-  @Test
-  public void testPostLogout() throws Exception {
-    String currentFunctionName = new Object() {
-    }.getClass().getEnclosingMethod().getName();
+	@Test
+	public void testPostLogout() throws Exception {
+		String currentFunctionName = new Object() {
+		}.getClass().getEnclosingMethod().getName();
 
-    FixtureData fixtureData = common.loadFixture(
-        "classpath:fixtures/functional/controllers/authController/PostLogoutFixture.json",
-        currentFunctionName);
-    loadFixture.perform(fixtureData);
+		FixtureData fixtureData = common.loadFixture(
+				"classpath:fixtures/functional/controllers/authController/PostLogoutFixture.json", currentFunctionName);
+		loadFixture.perform(fixtureData);
 
-    List<Scenario> testDataItems = common.loadScenariosData(
-        "classpath:data/functional/controllers/authController/Logout.scenarios.json", currentFunctionName);
+		List<Scenario> testDataItems = common.loadScenariosData(
+				"classpath:data/functional/controllers/authController/Logout.scenarios.json", currentFunctionName);
 
-    for (Scenario testDataItem : testDataItems) {
-      System.out.println("Test description: " + testDataItem.getDescription());
-      ObjectMapper objectMapper = new ObjectMapper();
-      String expectedOutput = objectMapper.writeValueAsString(testDataItem.getOutput());
-      String cookieValue = (String) testDataItem.getInput().get("cookie");
+		for (Scenario testDataItem : testDataItems) {
+			System.out.println("Test description: " + testDataItem.getDescription());
+			ObjectMapper objectMapper = new ObjectMapper();
+			String expectedOutput = objectMapper.writeValueAsString(testDataItem.getOutput());
+			String cookieValue = (String) testDataItem.getInput().get("cookie");
 
-      ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/logout")
-          .cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
-          .contentType(MediaType.APPLICATION_JSON));
+			ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/logout")
+				.cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
+				.contentType(MediaType.APPLICATION_JSON));
 
-      String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
+			String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
 
-      if (resultActions.andReturn().getResponse().getStatus() != 200) {
-        System.out.println("Expected output: " + expectedOutput);
-        System.out.println("Actual output: " + actualOutput);
-        System.out.println("Status code: " + resultActions.andReturn().getResponse().getStatus());
-        common.compareErrors(testDataItem, actualOutput);
-      }
-    }
-  }
+			if (resultActions.andReturn().getResponse().getStatus() != 200) {
+				System.out.println("Expected output: " + expectedOutput);
+				System.out.println("Actual output: " + actualOutput);
+				System.out.println("Status code: " + resultActions.andReturn().getResponse().getStatus());
+				common.compareErrors(testDataItem, actualOutput);
+			}
+		}
+	}
+
 }
