@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.salessparrow.api.config.CoreConstants;
 import com.salessparrow.api.exception.CustomException;
+import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.errorLib.ParamErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
@@ -88,13 +89,11 @@ public class SalesforceTokens {
           requestBody,
           10000);
     } catch (Exception e) {
-      List<String> paramErrorIdentifiers = new ArrayList<>();
-      paramErrorIdentifiers.add("invalid_code");
-
-      throw new CustomException(new ParamErrorObject(
-          "l_s_w_sgt_gt_1",
-          e.getMessage(),
-          paramErrorIdentifiers));
+     throw new CustomException(
+          new ErrorObject(
+              "l_s_w_srt_rt_1",
+              "something_went_wrong",
+              e.getMessage()));
     }
     return response;
   }
