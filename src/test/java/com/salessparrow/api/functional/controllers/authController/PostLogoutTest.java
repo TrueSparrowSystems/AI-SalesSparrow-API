@@ -6,6 +6,8 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,6 +52,8 @@ public class PostLogoutTest {
 	@Autowired
 	private LoadFixture loadFixture;
 
+	Logger logger = LoggerFactory.getLogger(PostLogoutTest.class);
+
 	@BeforeEach
 	public void setUp() throws DynamobeeException, IOException {
 		setup.perform();
@@ -73,9 +77,10 @@ public class PostLogoutTest {
 				"classpath:data/functional/controllers/authController/Logout.scenarios.json", currentFunctionName);
 
 		for (Scenario testDataItem : testDataItems) {
-			System.out.println("Test description: " + testDataItem.getDescription());
+			logger.info("Running test scenario: " + testDataItem.getDescription());
 			ObjectMapper objectMapper = new ObjectMapper();
 			String expectedOutput = objectMapper.writeValueAsString(testDataItem.getOutput());
+			logger.info("Expected output: " + expectedOutput);
 			String cookieValue = (String) testDataItem.getInput().get("cookie");
 
 			ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/logout")
@@ -85,9 +90,6 @@ public class PostLogoutTest {
 			String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
 
 			if (resultActions.andReturn().getResponse().getStatus() != 200) {
-				System.out.println("Expected output: " + expectedOutput);
-				System.out.println("Actual output: " + actualOutput);
-				System.out.println("Status code: " + resultActions.andReturn().getResponse().getStatus());
 				common.compareErrors(testDataItem, actualOutput);
 			}
 		}

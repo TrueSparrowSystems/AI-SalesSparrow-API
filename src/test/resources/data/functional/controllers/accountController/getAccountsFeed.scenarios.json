@@ -1,0 +1,171 @@
+[
+  {
+    "description": "Should return the accounts feed data sorted by lastmodifieddate",
+    "input": {
+      "pagination_identifier": "eyJwYWdlTnVtYmVyIjozfQ=="
+    },
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
+          {
+            "body": {
+              "totalSize": 2,
+              "done": true,
+              "records": [
+                {
+                  "attributes": {
+                    "type": "Account",
+                    "url": "/services/data/v58.0/sobjects/Account/0011e00000bAd2wAAC"
+                  },
+                  "Id": "0011e00000dWhY5AAK",
+                  "Name": "thenaIntegration",
+                  "Website": "www.xyz.com",
+                  "Contacts": null
+                },
+                {
+                  "attributes": {
+                    "type": "Account",
+                    "url": "/services/data/v58.0/sobjects/Account/0011e00000asaDXAAY"
+                  },
+                  "Id": "0011e00000bQwsKAAS",
+                  "Name": "Woomie",
+                  "Website": "www.abc.com",
+                  "Contacts": {
+                    "totalSize": 2,
+                    "done": true,
+                    "records": [
+                      {
+                        "attributes": {
+                          "type": "Contact",
+                          "url": "/services/data/v58.0/sobjects/Contact/0031e00000MFIHdAAP"
+                        },
+                        "Id": "0031e00000MFIHdAAP",
+                        "Name": "Sample user1",
+                        "Title": "Sample title1"
+                      },
+                      {
+                        "attributes": {
+                          "type": "Contact",
+                          "url": "/services/data/v58.0/sobjects/Contact/0031e00000MFJcBAAX"
+                        },
+                        "Id": "0031e00000MFJcBAAX",
+                        "Name": "Sample user2",
+                        "Title": "Sample title2"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "httpHeaders": {},
+            "httpStatusCode": 200,
+            "referenceId": "getAccounts"
+          }
+        ]
+      }
+    },
+    "output": {
+      "account_ids": [
+        "0011e00000dWhY5AAK",
+        "0011e00000bQwsKAAS"
+      ],
+      "account_map_by_id": {
+        "0011e00000bQwsKAAS": {
+          "id": "0011e00000bQwsKAAS",
+          "name": "Woomie",
+          "additional_fields": {
+            "website": "www.abc.com"
+          },
+          "account_contact_associations_id": "0011e00000bQwsKAAS"
+        },
+        "0011e00000dWhY5AAK": {
+          "id": "0011e00000dWhY5AAK",
+          "name": "thenaIntegration",
+          "additional_fields": {
+            "website": "www.xyz.com"
+          },
+          "account_contact_associations_id": "0011e00000dWhY5AAK"
+        }
+      },
+      "contact_map_by_id": {
+        "0031e00000MFJcBAAX": {
+          "id": "0031e00000MFJcBAAX",
+          "name": "Sample user2",
+          "additional_fields": {
+            "title": "Sample title2"
+          }
+        },
+        "0031e00000MFIHdAAP": {
+          "id": "0031e00000MFIHdAAP",
+          "name": "Sample user1",
+          "additional_fields": {
+            "title": "Sample title1"
+          }
+        }
+      },
+      "account_contact_associations_map_by_id": {
+        "0011e00000bQwsKAAS": {
+          "contact_ids": [
+            "0031e00000MFIHdAAP",
+            "0031e00000MFJcBAAX"
+          ]
+        }
+      },
+      "next_page_payload": {
+        "pagination_identifier": "eyJwYWdlTnVtYmVyIjo0fQ=="
+      }
+    }
+  },
+  {
+    "description": "Should return the pagination_identifier validation error",
+    "input": {
+      "pagination_identifier": "SGVsbG8sIFdvcm*xkIQ="
+    },
+    "output": {
+      "http_code": 400,
+      "code": "INVALID_PARAMS",
+      "param_errors": [
+        "invalid_pagination_identifier"
+      ]
+    }
+  },
+  {
+    "description": "Should return the error from salesforce",
+    "input": {
+      "pagination_identifier": "eyJwYWdlTnVtYmVyIjozfQ=="
+    },
+    "mocks": {
+      "SalesforceRequestInterfaceError": "Something went wrong"
+    },
+    "output": {
+      "http_code": 500,
+      "code": "INTERNAL_SERVER_ERROR"
+    }
+  },
+  {
+    "description": "Should return the error while parsing pagination_identifier",
+    "input": {
+      "pagination_identifier": "eyJwYWdlTnVtYmVyIjozfQ=="
+    },
+    "mocks": {
+      "writeValueAsString": "something went wrong"
+    },
+    "output": {
+      "http_code": 500,
+      "code": "INTERNAL_SERVER_ERROR"
+    }
+  },
+  {
+    "description": "Should return the error while encoding paginationJson",
+    "input": {
+      "pagination_identifier": "eyJwYWdlTnVtYmVyIjozfQ=="
+    },
+    "mocks": {
+      "readValue": "something went wrong"
+    },
+    "output": {
+      "http_code": 500,
+      "code": "INTERNAL_SERVER_ERROR"
+    }
+  }
+]

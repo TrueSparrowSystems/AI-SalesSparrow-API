@@ -64,7 +64,44 @@ public class Util {
 	}
 
 	/**
-	 * Get current time in Date format
+	 * <<<<<<< HEAD Encode plain text to base64
+	 * @param plainText - String to be encoded
+	 * @return String - Encoded string
+	 */
+	public static String base64Encode(String plainText) {
+		String encodedText = null;
+
+		try {
+			encodedText = java.util.Base64.getEncoder().encodeToString(plainText.getBytes());
+		}
+		catch (Exception e) {
+			throw new CustomException(new ErrorObject("l_u_b64e_1", "something_went_wrong", e.getMessage()));
+		}
+
+		return encodedText;
+	}
+
+	/**
+	 * Decode base64 encoded text
+	 * @param encodedText - String to be decoded
+	 * @return String - Decoded string
+	 */
+	public static String base64Decode(String encodedText) {
+		String decodedText = null;
+
+		try {
+			byte[] decodedBytes = java.util.Base64.getDecoder().decode(encodedText);
+			decodedText = new String(decodedBytes);
+		}
+		catch (Exception e) {
+			throw new CustomException(new ErrorObject("l_u_b64d_1", "something_went_wrong", e.getMessage()));
+		}
+
+		return decodedText;
+	}
+
+	/**
+	 * Get current time in date format
 	 * @return Date
 	 */
 	public static Date getCurrentTimeInDateFormat() {

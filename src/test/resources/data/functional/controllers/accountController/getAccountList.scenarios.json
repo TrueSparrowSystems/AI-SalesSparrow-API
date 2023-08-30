@@ -39,17 +39,21 @@
     },
     "output": {
       "account_ids": [
-          "0011e00000dWhY5AAK",
-          "0011e00000bQwsKAAS"
+        "0011e00000dWhY5AAK",
+        "0011e00000bQwsKAAS"
       ],
       "account_map_by_id": {
-        "0011e00000dWhY5AAK": {
-          "id": "0011e00000dWhY5AAK",
-          "name": "Test 1"
-        },
         "0011e00000bQwsKAAS": {
           "id": "0011e00000bQwsKAAS",
-          "name": "Test 2"
+          "name": "Test 2",
+          "additional_fields": {},
+          "account_contact_associations_id": "0011e00000bQwsKAAS"
+        },
+        "0011e00000dWhY5AAK": {
+          "id": "0011e00000dWhY5AAK",
+          "name": "Test 1",
+          "additional_fields": {},
+          "account_contact_associations_id": "0011e00000dWhY5AAK"
         }
       }
     }
@@ -94,17 +98,21 @@
     },
     "output": {
       "account_ids": [
-          "0011e00000dWhY5AAK",
-          "0011e00000bQwsKAAS"
+        "0011e00000dWhY5AAK",
+        "0011e00000bQwsKAAS"
       ],
       "account_map_by_id": {
-        "0011e00000dWhY5AAK": {
-          "id": "0011e00000dWhY5AAK",
-          "name": "Test 1"
-        },
         "0011e00000bQwsKAAS": {
           "id": "0011e00000bQwsKAAS",
-          "name": "Test 2"
+          "name": "Test 2",
+          "additional_fields": {},
+          "account_contact_associations_id": "0011e00000bQwsKAAS"
+        },
+        "0011e00000dWhY5AAK": {
+          "id": "0011e00000dWhY5AAK",
+          "name": "Test 1",
+          "additional_fields": {},
+          "account_contact_associations_id": "0011e00000dWhY5AAK"
         }
       }
     }
