@@ -1,6 +1,5 @@
 package com.salessparrow.api.repositories;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
@@ -17,9 +16,11 @@ import com.salessparrow.api.lib.globalConstants.CacheConstants;
 @Repository
 public class SalesforceUserRepository {
 
-  @Autowired
-  private DynamoDBMapper dynamoDBMapper;
+  private final DynamoDBMapper dynamoDBMapper;
 
+  public SalesforceUserRepository(DynamoDBMapper dynamoDBMapper) {
+      this.dynamoDBMapper = dynamoDBMapper;
+  }
   /**
    * Saves a SalesforceUser to the salesforce_users table.
    * 

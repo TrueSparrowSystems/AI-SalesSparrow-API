@@ -80,7 +80,7 @@ public class GetNoteDetailsTest {
   @MethodSource("testScenariosProvider")
   public void getNoteDetails(Scenario testScenario) throws Exception {
     String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
-    FixtureData fixtureData = common.loadFixture("classpath:fixtures/controllers/accountController/getNoteDetails.fixtures.json", currentFunctionName);
+    FixtureData fixtureData = common.loadFixture("classpath:fixtures/functional/controllers/accountController/getNoteDetails.fixtures.json", currentFunctionName);
     loadFixture.perform(fixtureData);
 
     ObjectMapper objectMapper = new ObjectMapper();
@@ -123,7 +123,7 @@ public class GetNoteDetailsTest {
   }
 
   private static List<Scenario> loadScenarios() throws IOException {
-    String scenariosPath = "classpath:data/controllers/accountController/getNoteDetails.scenarios.json";
+    String scenariosPath = "classpath:data/functional/controllers/accountController/getNoteDetails.scenarios.json";
     Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
     ObjectMapper objectMapper = new ObjectMapper();
     

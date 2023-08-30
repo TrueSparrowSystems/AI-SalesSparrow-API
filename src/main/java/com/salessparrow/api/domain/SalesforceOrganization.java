@@ -1,5 +1,6 @@
 package com.salessparrow.api.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @DynamoDBTable(tableName = "salesforce_organizations")
-public class SalesforceOrganization {
+public class SalesforceOrganization implements Serializable {
 
     public enum Status {
         ACTIVE(1),

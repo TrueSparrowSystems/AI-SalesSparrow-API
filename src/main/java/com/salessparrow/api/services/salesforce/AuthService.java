@@ -55,11 +55,11 @@ public class AuthService {
   private Util util;
 
   @Autowired
-  private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
-
-  @Autowired
   private SalesforceUserRepository salesforceUserRepository;
 
+  @Autowired
+  private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
+  
   @Autowired
   private SalesforceOrganizationRepository salesforceOrganizationRepository;
 
@@ -159,8 +159,7 @@ public class AuthService {
     salesforceOrganization.setExternalOrganizationId(salesforceOrganizationId);
     salesforceOrganization.setStatus(SalesforceOrganization.Status.ACTIVE);
 
-    salesforceOrganizationRepository
-        .saveSalesforceOrganization(salesforceOrganization);
+    salesforceOrganizationRepository.saveSalesforceOrganization(salesforceOrganization);
   }
 
   /**
@@ -257,7 +256,7 @@ public class AuthService {
     salesforceUser.setCookieToken(encryptedCookieToken);
     salesforceUser.setEncryptionSalt(encryptedSalt);
     salesforceUser.setStatus(SalesforceUser.Status.ACTIVE);
-
+    
     this.salesforceUser = salesforceUserRepository.saveSalesforceUser(salesforceUser);
     this.decryptedSalt = decryptedSalt;
   }
