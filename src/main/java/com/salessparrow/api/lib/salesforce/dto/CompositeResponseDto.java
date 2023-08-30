@@ -6,17 +6,10 @@ import lombok.Data;
 
 @Data
 public class CompositeResponseDto {
-    List<compositeResponse> compositeResponse;
-    
-    @Data
-    public static class compositeResponse {
-        private List<Body> body;
-        private int httpStatusCode;
-        private String referenceId;
-    }
+    List<CompositeResponseBody> body;
 
     @Data
-    public static class Body {
+    public static class CompositeResponseBody {
         private String errorCode;
         private String message;
     }

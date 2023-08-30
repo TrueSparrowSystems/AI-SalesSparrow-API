@@ -100,7 +100,8 @@ public class CreateSalesforceAccountTask implements CreateAccountTask{
         SalesforceErrorObject errorObject = salesforceCompositeResponseHelper.getErrorObjectFromCompositeResponse(rootNode);
 
         if(!errorObject.isSuccess()){
-            if(errorObject.getErrorCode() == "invalid_params"){
+            
+            if(errorObject.getErrorCode().equals("invalid_params")){
                 throw new CustomException(
                     new ParamErrorObject(
                         "l_ca_ct_cst_1",

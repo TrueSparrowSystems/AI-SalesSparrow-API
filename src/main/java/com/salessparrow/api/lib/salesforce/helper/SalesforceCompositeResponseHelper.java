@@ -25,69 +25,26 @@ public class SalesforceCompositeResponseHelper {
      **/
     public SalesforceErrorObject getErrorObjectFromCompositeResponse(JsonNode responseBody) {
 
-        SalesforceErrorObject salesforceErrorObject = new SalesforceErrorObject(true, null, null, null);
-
         JsonNode CompositeResponse = responseBody.get("compositeResponse");
-        boolean isCompositeResponseSuccess = true;
+        SalesforceErrorObject salesforceErrorObject = null;
+
         for(int i = 0; i < CompositeResponse.size(); i++){
             JsonNode CompositeResponseItem = CompositeResponse.get(i);
             Integer httpStatusCode = CompositeResponseItem.get("httpStatusCode").asInt();
-
+            String referenceId = CompositeResponseItem.get("referenceId").asText();
+            
             if(httpStatusCode != 200 && httpStatusCode != 201 && httpStatusCode != 204){
-                isCompositeResponseSuccess = false;
-            }
-        }
 
-        if(isCompositeResponseSuccess){
-            return salesforceErrorObject;
-        }
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+                CompositeResponseDto compositeResponseBody = mapper.convertValue(CompositeResponseItem, CompositeResponseDto.class);
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        CompositeResponseDto compositeResponse = mapper.convertValue(responseBody, CompositeResponseDto.class);
-
-
-        List<CompositeResponseDto.compositeResponse> compositeResponseList = compositeResponse.getCompositeResponse();
-
-        for(CompositeResponseDto.compositeResponse compositeResponseItem : compositeResponseList) {
-            List<CompositeResponseDto.Body> body = compositeResponseItem.getBody();
-            int httpStatusCode = compositeResponseItem.getHttpStatusCode();
-            String referenceId = compositeResponseItem.getReferenceId();
-
-            if(httpStatusCode != 200 && httpStatusCode != 201 && httpStatusCode != 204) {
-        
-                for(CompositeResponseDto.Body bodyItem : body) {
+                List<CompositeResponseDto.CompositeResponseBody> body = compositeResponseBody.getBody();
+                
+                for(CompositeResponseDto.CompositeResponseBody bodyItem : body) {
                     String salesforceErrorCode = bodyItem.getErrorCode();
                     String message = bodyItem.getMessage();
-                    String errorCode = "";
-    
-                    if(salesforceErrorCode.equals("MALFORMED_ID")){
-                        errorCode = "invalid_params";
-                    }
-                    else if(salesforceErrorCode.equals("NOT_FOUND")){
-                        errorCode = "salesforce_resource_not_found";
-                    }
-                    else if(salesforceErrorCode.equals("ENTITY_IS_DELETED")){
-                        errorCode = "salesforce_resource_not_found";
-                    }
-                    else if(salesforceErrorCode.equals("INSUFFICIENT_ACCESS_OR_READONLY")){
-                        errorCode = "salesforce_forbidden_api_request";
-                    }
-                    else if(salesforceErrorCode.equals("INVALID_TYPE")){
-                        errorCode = "salesforce_forbidden_api_request";
-                    }
-                    else if(salesforceErrorCode.equals("INVALID_QUERY_FILTER_OPERATOR")){
-                        errorCode = "invalid_params";
-                    }
-                    else if(salesforceErrorCode.equals("INVALID_FIELD")){
-                        errorCode = "invalid_params";
-                    }
-                    else if(salesforceErrorCode.equals("INVALID_CROSS_REFERENCE_KEY")){
-                        errorCode = "invalid_params";
-                    }
-                    else{
-                        errorCode = "something_went_wrong";
-                    }
+                    String errorCode = mapSalesforceErrorCodeToCustomErrorCode(salesforceErrorCode);
     
                     salesforceErrorObject = new SalesforceErrorObject(false, errorCode, message, referenceId);
     
@@ -95,7 +52,37 @@ public class SalesforceCompositeResponseHelper {
                 }
             }
         }
+        
+        return new SalesforceErrorObject(true, null, null, null);
+    }
 
-        return salesforceErrorObject;
+    /**
+     * Map Salesforce error code to custom error code.
+     * 
+     * @param salesforceErrorCode
+     * 
+     * @return String
+     **/
+    private String mapSalesforceErrorCodeToCustomErrorCode(String salesforceErrorCode) {
+        
+        switch(salesforceErrorCode) {
+            case "MALFORMED_ID":
+            case "INVALID_QUERY_FILTER_OPERATOR":
+            case "INVALID_FIELD":
+            case "INVALID_CROSS_REFERENCE_KEY":
+                return "invalid_params";
+
+            case "NOT_FOUND":
+            case "ENTITY_IS_DELETED":
+                return "salesforce_resource_not_found";
+
+            case "INSUFFICIENT_ACCESS_OR_READONLY":
+            case "INVALID_TYPE":
+                return "salesforce_forbidden_api_request";
+
+            default:
+                return "something_went_wrong";
+
+        }
     }
 }
