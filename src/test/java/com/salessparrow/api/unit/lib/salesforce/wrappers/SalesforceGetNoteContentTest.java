@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -58,5 +59,21 @@ public class SalesforceGetNoteContentTest {
     assertEquals(200, response.getStatusCode());
     assertEquals("Note Content", response.getResponseBody());
     assertEquals("text/plain", response.getContentType());
+  }
+
+  @Test
+  public void testGetNoteContent_ErrorScenario() {
+    String noteId = "note123";
+    String salesforceUserId = "user123";
+
+    // Mock SalesforceConstants
+    when(salesforceConstants.timeoutMillis()).thenReturn(5000);
+
+    // Mock SalesforceRequest to simulate an error
+    when(salesforceRequest.makeRequest(eq(salesforceUserId), any(SalesforceRequestInterface.class)))
+      .thenThrow(new RuntimeException("Simulated error"));
+
+    // Test the method and verify that it handles the error correctly
+    assertThrows(RuntimeException.class, () -> salesforceGetNoteContent.getNoteContent(noteId, salesforceUserId));
   }
 }
