@@ -22,10 +22,13 @@ public class ErrorEmailService {
 
 	/**
 	 * Send error email
-	 * @param contextString - context string for subject. helps in easy identification of
-	 * error
-	 * @param errorObj - error object - contains error code, message, http code, internal
-	 * error identifier
+	 * 
+	 * @param contextString      - context string for subject. helps in easy
+	 *                           identification of
+	 *                           error
+	 * @param errorObj           - error object - contains error code, message, http
+	 *                           code, internal
+	 *                           error identifier
 	 * @param stackTraceElements - stack trace elements
 	 * @return void
 	 */
@@ -42,19 +45,24 @@ public class ErrorEmailService {
 		body += "internal_error_identifier=" + errorObj.getInternalErrorIdentifier() + "\n";
 		body += "params_error=" + errorObj.getParamErrors() + "\n\n\n";
 
+		System.out.println(" sendErrorMail 1");
 		for (StackTraceElement stackTraceElement : stackTraceElements) {
 			body += stackTraceElement.toString() + "\n";
 		}
 
+		System.out.println(" sendErrorMail 2");
 		String subject = "SalesSparrow::" + CoreConstants.environment() + "::Error-" + contextString + "-"
 				+ errorObj.getMessage();
+
+		System.out.println(" sendErrorMail 3");
 
 		// Send email only if not in dev environment
 		if (!CoreConstants.isDevEnvironment() && !CoreConstants.isTestEnvironment()
 				&& !CoreConstants.isLocalTestEnvironment()) {
+			System.out.println(" sendErrorMail 4");
 			sendEmail(CoreConstants.errorEmailFrom(), CoreConstants.errorEmailTo(), subject, body);
-		}
-		else {
+		} else {
+			System.out.println(" sendErrorMail 5");
 			logger.info("Skip email for development.\n\n subject {} \n body {}", subject, body);
 		}
 
@@ -62,10 +70,11 @@ public class ErrorEmailService {
 
 	/**
 	 * Send mail async using SES. Handles exception if any
-	 * @param from - source email address
-	 * @param to - destination email address
+	 * 
+	 * @param from    - source email address
+	 * @param to      - destination email address
 	 * @param subject - subject of email
-	 * @param body - body of email
+	 * @param body    - body of email
 	 * @return void
 	 */
 	@Async
@@ -73,14 +82,13 @@ public class ErrorEmailService {
 		logger.info("send SES Email");
 		try {
 			SendEmailRequest request = new SendEmailRequest().withDestination(new Destination().withToAddresses(to))
-				.withMessage(
-						new Message().withBody(new Body().withText(new Content().withCharset("UTF-8").withData(body)))
-							.withSubject(new Content().withCharset("UTF-8").withData(subject)))
-				.withSource(from);
+					.withMessage(
+							new Message().withBody(new Body().withText(new Content().withCharset("UTF-8").withData(body)))
+									.withSubject(new Content().withCharset("UTF-8").withData(subject)))
+					.withSource(from);
 
 			sesClient.sendEmail(request);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			logger.error("Error sending email {} subject:{} body:{}", e, subject, body);
 		}
 	}
