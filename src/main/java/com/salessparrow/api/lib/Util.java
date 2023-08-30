@@ -123,4 +123,13 @@ public class Util {
 		return null;
 	}
 
+	/**
+	 * Unescape special characters in a string. Currently, only "&" is unescaped.
+	 * @param input
+	 * @return Unescaped string
+	 */
+	public String unEscapeSpecialCharacters(String input) {
+		return input.replace("&amp;", "&");
+	}
+
 }

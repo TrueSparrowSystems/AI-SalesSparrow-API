@@ -111,11 +111,17 @@ public class CreateSalesforceAccountTask implements CreateAccountTask {
 	 */
 	private String getTaskSubjectFromDescription(CreateAccountTaskDto task) {
 		logger.info("getting task subject from description");
-		if (task.getDescription().length() < 60) {
-			return task.getDescription();
+
+		String taskDescription = task.getDescription();
+
+		Util util = new Util();
+		taskDescription = util.unEscapeSpecialCharacters(taskDescription);
+
+		if (taskDescription.length() < 60) {
+			return taskDescription;
 		}
 
-		return task.getDescription().substring(0, 60);
+		return taskDescription.substring(0, 60);
 	}
 
 }
