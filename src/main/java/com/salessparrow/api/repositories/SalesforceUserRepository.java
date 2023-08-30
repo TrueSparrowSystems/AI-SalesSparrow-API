@@ -5,6 +5,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
 import com.salessparrow.api.domain.SalesforceUser;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.Util;
@@ -72,6 +73,28 @@ public class SalesforceUserRepository {
 		}
 		catch (Exception e) {
 			throw new CustomException(new ErrorObject("r_sur_gsubi_1", "something_went_wrong", e.getMessage()));
+		}
+	}
+
+	@CacheEvict(value = CacheConstants.SS_SALESFORCE_USER_CACHE, key = "#externalUserId")
+	public void removeSalesforceUserData(String externalUserId) {
+		SalesforceUser salesforceUser = getSalesforceUserByExternalUserId(externalUserId);
+		salesforceUser.setIdentityUrl(null);
+		salesforceUser.setExternalOrganizationId(null);
+		salesforceUser.setName(null);
+		salesforceUser.setEmail(null);
+		salesforceUser.setUserKind(null);
+		salesforceUser.setCookieToken(null);
+		salesforceUser.setEncryptionSalt(null);
+		salesforceUser.setStatus(SalesforceUser.Status.DELETED);
+
+		try {
+			dynamoDBMapper.save(salesforceUser,
+					new DynamoDBMapperConfig.Builder().withSaveBehavior(DynamoDBMapperConfig.SaveBehavior.UPDATE)
+						.build());
+		}
+		catch (Exception e) {
+			throw new CustomException(new ErrorObject("r_sur_r_1", "something_went_wrong", e.getMessage()));
 		}
 	}
 

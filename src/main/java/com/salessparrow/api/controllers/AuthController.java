@@ -19,6 +19,7 @@ import com.salessparrow.api.dto.formatter.SalesforceConnectFormatterDto;
 import com.salessparrow.api.dto.requestMapper.SalesforceConnectDto;
 import com.salessparrow.api.dto.requestMapper.SalesforceRedirectUrlDto;
 import com.salessparrow.api.lib.CookieHelper;
+import com.salessparrow.api.services.auth.DisconnectUserService;
 import com.salessparrow.api.services.salesforce.AuthService;
 import com.salessparrow.api.services.salesforce.AuthService.AuthServiceDto;
 
@@ -37,6 +38,9 @@ public class AuthController {
 
 	@Autowired
 	private AuthService authService;
+
+	@Autowired
+	private DisconnectUserService disconnectUserService;
 
 	@Autowired
 	private CookieHelper cookieHelper;
@@ -75,6 +79,20 @@ public class AuthController {
 		headers = cookieHelper.clearUserCookie(headers);
 
 		return ResponseEntity.ok().headers(headers).body(null);
+	}
+
+	@PostMapping("/disconnect")
+	public ResponseEntity<String> disconnect(HttpServletRequest request) {
+		logger.info("User disconnect request received");
+
+		disconnectUserService.disconnect(request);
+
+		logger.info("Clearing user cookie");
+		HttpHeaders headers = new HttpHeaders();
+		headers = cookieHelper.clearUserCookie(headers);
+
+		logger.info("User disconnected successfully");
+		return ResponseEntity.noContent().headers(headers).build();
 	}
 
 }

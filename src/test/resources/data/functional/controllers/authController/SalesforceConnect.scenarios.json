@@ -160,5 +160,43 @@
         "message": "Forbidden API request. You do not have the necessary permissions."
       }
     }
+  ],
+  "testPostSalesforceConnectDisconnectedUserSignup":[
+    {
+      "description": "Should return the current user for valid code and redirect_uri while signup of disconnected user",
+      "input": {
+        "body": {
+          "code": "1234567",
+          "redirect_uri": "http://localhost:3000"
+        }
+      },
+      "mocks": {
+        "getTokens": {
+          "access_token": "xyz",
+          "refresh_token": "xyz",
+          "signature": "xyz",
+          "scope": "xyz",
+          "id_token": "xyz",
+          "instance_url": "xyz",
+          "id": "https://test.salesforce.com/id/000Org-id/00112233445566AAA15",
+          "token_type": "Bearer",
+          "issued_at": "1690520247198"
+        },
+        "getIdentity": {
+          "sub": "https://test.salesforce.com/id/000Org-id/00112233445566AAA15",
+          "user_id": "00112233445566AAA15",
+          "organization_id": "000Org-id",
+          "name": "Test User",
+          "email": "test@test.com"
+        }
+      },
+      "output": {
+        "current_user": {
+          "id": "SALESFORCE-00112233445566AAA15",
+          "name": "Test User",
+          "email": "test@test.com"
+        }
+      }
+    }
   ]
 }
