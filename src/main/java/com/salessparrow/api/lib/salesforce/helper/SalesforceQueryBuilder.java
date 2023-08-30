@@ -33,6 +33,19 @@ public class SalesforceQueryBuilder {
 	}
 
 	/**
+	 * Get the accounts feed for a given limit and offset
+	 * @param limit int
+	 * @param offset int
+	 * @return String
+	 */
+	public String getAccountFeedQuery(int limit, int offset) {
+
+		return Util.urlEncoder(String.format(
+				"SELECT Id, Name, Website, (SELECT Id, Name, Title, Email, Phone FROM Contacts) FROM Account ORDER BY LastModifiedDate ASC LIMIT %d OFFSET %d",
+				limit, offset));
+	}
+
+	/**
 	 * Get the list of tasks for a given account
 	 * @param accountId
 	 * @return String

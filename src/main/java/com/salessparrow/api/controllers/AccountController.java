@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.salessparrow.api.dto.formatter.GetAccountsFormatterDto;
 import com.salessparrow.api.dto.requestMapper.GetAccountsDto;
+import com.salessparrow.api.dto.requestMapper.GetAccountsFeedDto;
+import com.salessparrow.api.dto.responseMapper.GetAccountListResponseDto;
+import com.salessparrow.api.dto.responseMapper.GetAccountsFeedResponseDto;
 import com.salessparrow.api.services.accounts.GetAccountListService;
+import com.salessparrow.api.services.accounts.GetAccountsFeedService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -26,14 +29,28 @@ public class AccountController {
 	@Autowired
 	private GetAccountListService getAccountListService;
 
+	@Autowired
+	private GetAccountsFeedService getAccountsFeedService;
+
 	@GetMapping("")
-	public ResponseEntity<GetAccountsFormatterDto> getAccounts(HttpServletRequest request,
+	public ResponseEntity<GetAccountListResponseDto> getAccounts(HttpServletRequest request,
 			@Valid @ModelAttribute GetAccountsDto getAccountsDto) {
 		logger.info("Request received");
 
-		GetAccountsFormatterDto getAccountsResponse = getAccountListService.getAccounts(request, getAccountsDto);
+		GetAccountListResponseDto getAccountsResponse = getAccountListService.getAccounts(request, getAccountsDto);
 
 		return ResponseEntity.ok().body(getAccountsResponse);
+	}
+
+	@GetMapping("/feed")
+	public ResponseEntity<GetAccountsFeedResponseDto> getFeed(HttpServletRequest request,
+			@Valid @ModelAttribute GetAccountsFeedDto getAccountsFeedDto) {
+		logger.info("Request received");
+
+		GetAccountsFeedResponseDto getAccountsFeedResponse = getAccountsFeedService.getAccountsFeed(request,
+				getAccountsFeedDto);
+
+		return ResponseEntity.ok().body(getAccountsFeedResponse);
 	}
 
 }

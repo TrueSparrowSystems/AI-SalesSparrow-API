@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -73,6 +75,8 @@ public class PostSalesforceConnectTest {
 	@InjectMocks
 	private AuthService authService;
 
+	Logger logger = LoggerFactory.getLogger(PostSalesforceConnectTest.class);
+
 	@BeforeEach
 	public void setUp() throws DynamobeeException, IOException {
 		MockitoAnnotations.openMocks(this);
@@ -94,7 +98,7 @@ public class PostSalesforceConnectTest {
 				currentFunctionName);
 
 		for (Scenario testDataItem : testDataItems) {
-			System.out.println("Test description: " + testDataItem.getDescription());
+			logger.info("Running test scenario: " + testDataItem.getDescription());
 			ObjectMapper objectMapper = new ObjectMapper();
 
 			HttpResponse getTokensMockRes = new HttpResponse();
@@ -114,7 +118,6 @@ public class PostSalesforceConnectTest {
 				.contentType(MediaType.APPLICATION_JSON));
 
 			String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
-			System.out.println("actualOutput: " + actualOutput);
 
 			if (resultActions.andReturn().getResponse().getStatus() == 200) {
 				assertEquals(objectMapper.writeValueAsString(testDataItem.getOutput()), actualOutput);
@@ -144,7 +147,7 @@ public class PostSalesforceConnectTest {
 				currentFunctionName);
 
 		for (Scenario testDataItem : testDataItems) {
-			System.out.println("Test description: " + testDataItem.getDescription());
+			logger.info("Running test scenario: " + testDataItem.getDescription());
 			ObjectMapper objectMapper = new ObjectMapper();
 
 			HttpResponse getTokensMockRes = new HttpResponse();
