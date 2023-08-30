@@ -74,6 +74,7 @@ public class DeleteSalesforceAccountTask implements DeleteAccountTask {
 		Integer deleteNoteStatusCode = deleteNoteCompositeResponse.get("httpStatusCode").asInt();
 
 		if (deleteNoteStatusCode != 200 && deleteNoteStatusCode != 201 && deleteNoteStatusCode != 204) {
+			logger.error("Error in deleting task in salesforce:{}", deleteNoteCompositeResponse);
 			String errorBody = deleteNoteCompositeResponse.get("body").asText();
 
 			// MALFORMED_ID or NOT_FOUND

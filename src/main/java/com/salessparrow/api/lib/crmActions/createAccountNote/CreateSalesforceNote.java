@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -39,6 +41,8 @@ public class CreateSalesforceNote implements CreateNoteInterface {
 
 	@Autowired
 	private Base64Helper base64Helper;
+
+	Logger logger = LoggerFactory.getLogger(CreateSalesforceNote.class);
 
 	/**
 	 * Create a note for a given account.
@@ -91,6 +95,7 @@ public class CreateSalesforceNote implements CreateNoteInterface {
 		if (!createNoteStatusCode.equals("200") && !createNoteStatusCode.equals("201")) {
 			String errorBody = createNoteCompositeResponse.get("body").asText();
 
+			logger.error("createNoteCompositeResponse: " + createNoteCompositeResponse);
 			throw new CustomException(new ErrorObject("l_s_fse_fscn_fcn_1", "internal_server_error", errorBody));
 		}
 

@@ -67,6 +67,7 @@ public class GlobalExceptionHandler {
 
 		if (ex.getParamErrorObject() != null) {
 			ParamErrorObject paramErrorObject = ex.getParamErrorObject();
+			logger.error("Message from custom exception: {}", paramErrorObject.getMessage());
 			errorResponse = er.getParamErrorResponse(paramErrorObject.getInternalErrorIdentifier(),
 					paramErrorObject.getMessage(), paramErrorObject.getParamErrorIdentifiers());
 		}
@@ -75,6 +76,7 @@ public class GlobalExceptionHandler {
 		}
 		else {
 			ErrorObject errorObject = ex.getErrorObject();
+			logger.error("Message from custom exception: {}", errorObject.getMessage());
 			errorResponse = er.getErrorResponse(errorObject.getApiErrorIdentifier(),
 					errorObject.getInternalErrorIdentifier(), errorObject.getMessage());
 		}
