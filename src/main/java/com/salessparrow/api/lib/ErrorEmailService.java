@@ -42,26 +42,19 @@ public class ErrorEmailService {
 		body += "internal_error_identifier=" + errorObj.getInternalErrorIdentifier() + "\n";
 		body += "params_error=" + errorObj.getParamErrors() + "\n\n\n";
 
-		System.out.println(" sendErrorMail 1");
 		for (StackTraceElement stackTraceElement : stackTraceElements) {
 			body += stackTraceElement.toString() + "\n";
 		}
 
-		System.out.println(" sendErrorMail 2");
 		String subject = "SalesSparrow::" + CoreConstants.environment() + "::Error-" + contextString + "-"
 				+ errorObj.getMessage();
-
-		System.out.println(" sendErrorMail 3");
 
 		// Send email only if not in dev environment
 		if (!CoreConstants.isDevEnvironment() && !CoreConstants.isTestEnvironment()
 				&& !CoreConstants.isLocalTestEnvironment()) {
-			System.out.println(" sendErrorMail 4");
 			sendEmail(CoreConstants.errorEmailFrom(), CoreConstants.errorEmailTo(), subject, body);
-			System.out.println(" sendErrorMail 4.1");
 		}
 		else {
-			System.out.println(" sendErrorMail 5");
 			logger.info("Skip email for development.\n\n subject {} \n body {}", subject, body);
 		}
 
@@ -75,9 +68,8 @@ public class ErrorEmailService {
 	 * @param body - body of email
 	 * @return void
 	 */
-	// @Async
+	@Async
 	public void sendEmail(String from, String to, String subject, String body) {
-		System.out.println(" sendEmail 1");
 		logger.info("send SES Email");
 		try {
 			SendEmailRequest request = new SendEmailRequest().withDestination(new Destination().withToAddresses(to))

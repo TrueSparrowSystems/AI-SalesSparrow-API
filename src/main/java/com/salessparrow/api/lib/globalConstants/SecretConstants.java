@@ -125,11 +125,11 @@ public class SecretConstants {
 	}
 
 	public static String errorEmailFrom() {
-		return getSecret("ERROR_EMAIL_FROM");
+		return getSecret("ERROR_MAIL_FROM");
 	}
 
 	public static String errorEmailTo() {
-		return getSecret("ERROR_EMAIL_TO");
+		return getSecret("ERROR_MAIL_TO");
 	}
 
 	public static String dynamoDbUrl() {
