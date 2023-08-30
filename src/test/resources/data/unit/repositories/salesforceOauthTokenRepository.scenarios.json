@@ -1,0 +1,41 @@
+{
+  "testInsert": [
+    {
+      "description": "Insert New Item",
+      "input": {
+        "accessToken": "sampleAccessToken",
+        "refreshToken": "sampleRefreshToken",
+        "signature": "as/FLavAQ8U=",
+        "instanceUrl": "https://truesparrowsystemspvtltd--dev.sandbox.my.salesforce.com",
+        "idToken": "eyJraWQiOiI",
+        "identityUrl": "https://test.salesforce.com/id/00D1e0000000NRYEA2/0055i00000AUxQHAA1",
+        "issuedAt": "1692265987212",
+        "externalUserId": "0055i00000AUxQHAA1",
+        "status": "ACTIVE"
+      },
+      "output": {}
+    }
+  ],
+  "testUpdate": [
+    {
+      "description": "Update Existing Item",
+      "input": {
+        "externalUserId": "0055i00000AUxQHAA1",
+        "accessToken": "updatedAccessToken",
+        "refreshToken": "updatedRefreshToken"
+      },
+      "output": {}
+    }
+  ],
+  "testUpdateWithNullAttributes": [
+    {
+      "description": "Skip Null Attributes During Update",
+      "input": {
+        "externalUserId": "0055i00000AUxQHAA1",
+        "accessToken": "newAccessToken",
+        "idToken": null
+      },
+      "output": {}
+    }
+  ]
+}
