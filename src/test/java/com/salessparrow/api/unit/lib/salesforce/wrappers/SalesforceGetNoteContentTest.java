@@ -62,7 +62,7 @@ public class SalesforceGetNoteContentTest {
 	}
 
 	@Test
-	public void testGetNoteContent_ErrorScenario() {
+	public void testGetNoteContentErrorScenario() {
 		String noteId = "note123";
 		String salesforceUserId = "user123";
 

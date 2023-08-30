@@ -37,7 +37,7 @@ public class SalesforceRequestTest {
 	}
 
 	@Test
-	public void testMakeRequest_Success() {
+	public void testMakeRequestSuccess() {
 
 		SalesforceOauthToken sfOAuthToken = new SalesforceOauthToken();
 		sfOAuthToken.setAccessToken("access_token");
@@ -63,7 +63,7 @@ public class SalesforceRequestTest {
 	}
 
 	@Test
-	public void testMakeRequest_WebClientResponseException() {
+	public void testMakeRequestWebClientResponseException() {
 
 		SalesforceOauthToken sfOAuthToken = new SalesforceOauthToken();
 		sfOAuthToken.setAccessToken("access_token");
@@ -91,7 +91,7 @@ public class SalesforceRequestTest {
 	}
 
 	@Test
-	public void testMakeRequest_InternalServerErrorException() {
+	public void testMakeRequestInternalServerErrorException() {
 
 		SalesforceOauthToken sfOAuthToken = new SalesforceOauthToken();
 		sfOAuthToken.setAccessToken("access_token");

@@ -34,7 +34,7 @@ public class SalesforceGetIdentityTest {
 	private SalesforceConstants salesforceConstants;
 
 	@Test
-	public void testGetUserIdentity_Success() throws Exception {
+	public void testGetUserIdentitySuccess() throws Exception {
 		try (MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class)) {
 
 			String instanceUrl = "https://example.com";
@@ -62,7 +62,7 @@ public class SalesforceGetIdentityTest {
 	}
 
 	@Test
-	public void testGetUserIdentity_Exception() throws Exception {
+	public void testGetUserIdentityException() throws Exception {
 		try (MockedStatic<HttpClient> httpClientMockedStatic = Mockito.mockStatic(HttpClient.class)) {
 
 			String instanceUrl = "https://example.com";
