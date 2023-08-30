@@ -1,5 +1,7 @@
 package com.salessparrow.api.lib;
 
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -69,6 +71,7 @@ public class Util {
   }
 
   /**
+   * <<<<<<< HEAD
    * Encode plain text to base64
    * 
    * @param plainText - String to be encoded
@@ -111,6 +114,16 @@ public class Util {
     }
 
     return decodedText;
+  }
+
+  /**
+   * Get current time in date format
+   * 
+   * @return Date
+   */
+  public static Date getCurrentTimeInDateFormat() {
+    Instant currentTimestamp = Instant.now();
+    return Date.from(currentTimestamp.atOffset(ZoneOffset.UTC).toInstant());
   }
 
   /**
