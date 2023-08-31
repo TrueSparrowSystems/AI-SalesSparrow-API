@@ -16,6 +16,7 @@
 - API - Delete Task in an Account Endpoint [#59](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/59)
 - Add CHANGELOG.md [#62](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/62)
 - Add RELEASE_PROCESS.md [#63](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/63)
+- Add Sanitization Filter for Request Params, Request Body, and Headers [#87](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/87)
 
 ### Bug Fixes:
 
