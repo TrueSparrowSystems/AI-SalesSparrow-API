@@ -193,8 +193,6 @@ public class PostSalesforceConnectTest {
 				"classpath:data/functional/controllers/authController/SalesforceConnect.scenarios.json",
 				currentFunctionName);
 		for (Scenario testDataItem : testDataItems) {
-			System.out.println("testPostSalesforceConnectDisconnectedUserSignup Test description: "
-					+ testDataItem.getDescription());
 			ObjectMapper objectMapper = new ObjectMapper();
 
 			HttpResponse getTokensMockRes = new HttpResponse();
@@ -214,7 +212,6 @@ public class PostSalesforceConnectTest {
 				.contentType(MediaType.APPLICATION_JSON));
 
 			String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
-			System.out.println("actualOutput: " + actualOutput);
 
 			if (resultActions.andReturn().getResponse().getStatus() == 200) {
 				assertEquals(objectMapper.writeValueAsString(testDataItem.getOutput()), actualOutput);

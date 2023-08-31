@@ -3,6 +3,7 @@ package com.salessparrow.api.lib;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -42,7 +43,7 @@ public class GetCrmActionSuggestions {
 	 * @return
 	 */
 	public CrmActionSuggestionsFormatterDto getTaskSuggestions(String text) {
-		logger.info("Crm actions suggestions lib called");
+		logger.info("Crm actions suggestions lib called for text: " + text);
 
 		String escapedText = escapeForJson(text);
 		String payload = openAiPayloadBuilder.payloadForCrmActionsSuggestions(escapedText);
@@ -109,7 +110,15 @@ public class GetCrmActionSuggestions {
 	 * @return
 	 */
 	private String escapeForJson(String input) {
-		return input.replace("\"", "\\\"").replace("\n", "\\n");
+		return input.replace("\\", "\\\\") // Escape backslashes
+			.replace("\"", "\\\"") // Escape double quotes
+			.replace("\n", "\\n") // Escape newlines
+			.replace("\r", "\\r") // Escape carriage returns
+			.replace("\t", "\\t") // Escape tabs
+			.replace("\b", "\\b") // Escape backspace
+			.replace("\f", "\\f") // Escape form feeds
+			.replaceAll("[\u0000-\u001F]", ""); // Replace control characters with empty
+												// string
 	}
 
 }

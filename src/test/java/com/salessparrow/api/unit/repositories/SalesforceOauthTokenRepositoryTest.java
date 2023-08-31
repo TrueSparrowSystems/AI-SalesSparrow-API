@@ -202,7 +202,6 @@ public class SalesforceOauthTokenRepositoryTest {
 		List<Scenario> testDataItems = loadTestData(currentFunctionName);
 
 		for (Scenario testDataItem : testDataItems) {
-			System.out.println("Test description: " + testDataItem.getDescription());
 
 			ObjectMapper objectMapper = new ObjectMapper();
 			SalesforceOauthToken salesforceOauthToken = objectMapper.readValue(
