@@ -61,7 +61,7 @@ public class SanitizationFilter implements Filter {
 	private SanitizedRequestWrapper sanitizeRequestBody(HttpServletRequest request) {
 		String originalBody = getRequestBody(request);
 		String sanitizedBody = sanitizeHtml(originalBody);
-		
+
 		return new SanitizedRequestWrapper(request, sanitizedBody);
 	}
 
