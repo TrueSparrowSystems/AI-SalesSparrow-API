@@ -23,7 +23,7 @@ import java.util.Enumeration;
  */
 public class SanitizationFilter implements Filter {
 
-	private SanitizedRequestWrapper sanitizedRequest;
+	// private SanitizedRequestWrapper sanitizedRequest;
 
 	@Override
 	public void init(FilterConfig filterConfig) {
@@ -44,10 +44,11 @@ public class SanitizationFilter implements Filter {
 		if (!(servletRequest instanceof HttpServletRequest)) {
 			throw new ServletException("Can only process HttpServletRequest");
 		}
+
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
-		sanitizeRequestBody(request);
-		sanitizeRequestParams(request);
-		sanitizeRequestHeaders(request);
+		SanitizedRequestWrapper sanitizedRequest = sanitizeRequestBody(request);
+		sanitizeRequestParams(request, sanitizedRequest);
+		sanitizeRequestHeaders(request, sanitizedRequest);
 
 		chain.doFilter(sanitizedRequest, servletResponse);
 	}
@@ -57,21 +58,22 @@ public class SanitizationFilter implements Filter {
 	 * @param request - Servlet request object
 	 * @return void
 	 */
-	private void sanitizeRequestBody(HttpServletRequest request) {
+	private SanitizedRequestWrapper sanitizeRequestBody(HttpServletRequest request) {
 		String originalBody = getRequestBody(request);
 		String sanitizedBody = sanitizeHtml(originalBody);
-		this.sanitizedRequest = new SanitizedRequestWrapper(request, sanitizedBody);
+		
+		return new SanitizedRequestWrapper(request, sanitizedBody);
 	}
 
 	/**
 	 * Method to sanitize the request params
 	 * @return void
 	 */
-	private void sanitizeRequestParams(HttpServletRequest request) {
+	private void sanitizeRequestParams(HttpServletRequest request, SanitizedRequestWrapper sanitizedRequest) {
 		request.getParameterMap().forEach((key, values) -> {
 			for (int index = 0; index < values.length; index++) {
 				String sanitizedValue = sanitizeHtml(values[index]);
-				this.sanitizedRequest.setParameter(key, sanitizedValue);
+				sanitizedRequest.setParameter(key, sanitizedValue);
 			}
 		});
 	}
@@ -80,7 +82,7 @@ public class SanitizationFilter implements Filter {
 	 * Method to sanitize the request headers
 	 * @return void
 	 */
-	private void sanitizeRequestHeaders(HttpServletRequest request) {
+	private void sanitizeRequestHeaders(HttpServletRequest request, SanitizedRequestWrapper sanitizedRequest) {
 		Enumeration<String> headerNames = request.getHeaderNames();
 
 		while (headerNames != null && headerNames.hasMoreElements()) {
@@ -90,7 +92,7 @@ public class SanitizationFilter implements Filter {
 			while (headerValues != null && headerValues.hasMoreElements()) {
 				String headerValue = headerValues.nextElement();
 				String sanitizedValue = sanitizeHtml(headerValue);
-				this.sanitizedRequest.setHeader(headerName, sanitizedValue);
+				sanitizedRequest.setHeader(headerName, sanitizedValue);
 			}
 		}
 	}
