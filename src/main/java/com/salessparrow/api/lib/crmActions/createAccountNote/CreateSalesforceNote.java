@@ -56,16 +56,9 @@ public class CreateSalesforceNote implements CreateNoteInterface {
 
 		Util util = new Util();
 		String noteContent = note.getText();
-		logger.info("createNote noteContent: {}", noteContent);
-
 		String noteTitle = getNoteTitleFromContent(noteContent);
-		logger.info("createNote noteTitle: {}", noteTitle);
-
 		noteContent = util.replaceNewLineWithBreak(noteContent);
-		logger.info("---- noteContent after replacing \\n: {}", noteContent);
-
 		String encodedNoteContent = base64Helper.base64Encode(noteContent);
-		logger.info("---- encodedNoteContent: {}", encodedNoteContent);
 
 		Map<String, String> createNoteBody = new HashMap<String, String>();
 		createNoteBody.put("Title", noteTitle);

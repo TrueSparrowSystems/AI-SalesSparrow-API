@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication(exclude = { UserDetailsServiceAutoConfiguration.class })
 @EnableCaching // This enables caching
-// @EnableAsync // This enables asynchronous processing in Spring
+@EnableAsync // This enables asynchronous processing in Spring
 public class SalesSparrowApi {
 
 	public static void main(String[] args) {

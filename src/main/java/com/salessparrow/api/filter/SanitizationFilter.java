@@ -23,8 +23,6 @@ import java.util.Enumeration;
  */
 public class SanitizationFilter implements Filter {
 
-	// private SanitizedRequestWrapper sanitizedRequest;
-
 	@Override
 	public void init(FilterConfig filterConfig) {
 	}
