@@ -1,0 +1,428 @@
+[
+    {
+        "description": "Should return the 5 latest Notes", 
+        "input": {
+          "accountId":"0011e00000bWSxdAAG",
+          "documentId":
+          ["0691e000001WKXSAA4","0691e000001WSt7AAG","0691e000001WSuKAAW","0691e000001WSzFAAW","0691e000001WUBCAA4","0691e000001WWHCAA4","0691e000001WXlcAAG","0691e000001WXzPAAW","0691e000001WY0NAAW","0691e000001WY58AAG","0691e000001WaSzAAK","0691e000001Wc4fAAC","0691e000001Wc4pAAC","0691e000001Wl1GAAS","0691e000001WrxGAAS","0691e000001WrxpAAC","0691e000001WrxuAAC","0691e000001Ws2QAAS","0691e000001WsIxAAK","0691e000001WsJHAA0","0691e000001Wt2HAAS","0691e000001Wt5GAAS","0691e000001WtEXAA0","0691e000001WtRgAAK","0691e000001WtxrAAC","0691e000001Wu8pAAC","0691e000001WuIuAAK","0691e000001WuJ9AAK"]          
+        },
+        "mocks":{
+            "makeCompositeRequest1":{
+                "compositeResponse": [
+                    {
+                        "body": {
+                            "totalSize": 28,
+                            "done": true,
+                            "records": [
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002VEHgEAO"
+                                    },
+                                    "ContentDocumentId": "0691e000001WKXSAA4"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002i1MyEAI"
+                                    },
+                                    "ContentDocumentId": "0691e000001WSt7AAG"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002i1OpEAI"
+                                    },
+                                    "ContentDocumentId": "0691e000001WSuKAAW"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002i1bNEAQ"
+                                    },
+                                    "ContentDocumentId": "0691e000001WSzFAAW"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002i3OiEAI"
+                                    },
+                                    "ContentDocumentId": "0691e000001WUBCAA4"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002i6W6EAI"
+                                    },
+                                    "ContentDocumentId": "0691e000001WWHCAA4"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002i8obEAA"
+                                    },
+                                    "ContentDocumentId": "0691e000001WXlcAAG"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002i9E5EAI"
+                                    },
+                                    "ContentDocumentId": "0691e000001WXzPAAW"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002i9FTEAY"
+                                    },
+                                    "ContentDocumentId": "0691e000001WY0NAAW"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002i9ScEAI"
+                                    },
+                                    "ContentDocumentId": "0691e000001WY58AAG"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002iD9mEAE"
+                                    },
+                                    "ContentDocumentId": "0691e000001WaSzAAK"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002iFVoEAM"
+                                    },
+                                    "ContentDocumentId": "0691e000001Wc4fAAC"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002iFWDEA2"
+                                    },
+                                    "ContentDocumentId": "0691e000001Wc4pAAC"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002rL4sEAE"
+                                    },
+                                    "ContentDocumentId": "0691e000001Wl1GAAS"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002s544EAA"
+                                    },
+                                    "ContentDocumentId": "0691e000001WrxGAAS"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002s54rEAA"
+                                    },
+                                    "ContentDocumentId": "0691e000001WrxpAAC"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002s54xEAA"
+                                    },
+                                    "ContentDocumentId": "0691e000001WrxuAAC"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002s5AQEAY"
+                                    },
+                                    "ContentDocumentId": "0691e000001Ws2QAAS"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002s5VeEAI"
+                                    },
+                                    "ContentDocumentId": "0691e000001WsIxAAK"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002s5W3EAI"
+                                    },
+                                    "ContentDocumentId": "0691e000001WsJHAA0"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002s6WnEAI"
+                                    },
+                                    "ContentDocumentId": "0691e000001Wt2HAAS"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002s6bTEAQ"
+                                    },
+                                    "ContentDocumentId": "0691e000001Wt5GAAS"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002s6orEAA"
+                                    },
+                                    "ContentDocumentId": "0691e000001WtEXAA0"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002s76UEAQ"
+                                    },
+                                    "ContentDocumentId": "0691e000001WtRgAAK"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002s7xBEAQ"
+                                    },
+                                    "ContentDocumentId": "0691e000001WtxrAAC"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002s8CpEAI"
+                                    },
+                                    "ContentDocumentId": "0691e000001Wu8pAAC"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002s8QnEAI"
+                                    },
+                                    "ContentDocumentId": "0691e000001WuIuAAK"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentDocumentLink",
+                                        "url": "/services/data/v58.0/sobjects/ContentDocumentLink/06A1e000002s8R7EAI"
+                                    },
+                                    "ContentDocumentId": "0691e000001WuJ9AAK"
+                                }
+                            ]
+                        },
+                        "httpHeaders": {},
+                        "httpStatusCode": 200,
+                        "referenceId": "ContentDocument"
+                    }
+                ]
+            },
+            "makeCompositeRequest2":{
+                "compositeResponse": [
+                    {
+                        "body": {
+                            "totalSize": 5,
+                            "done": true,
+                            "records": [
+                                {
+                                    "attributes": {
+                                        "type": "ContentNote",
+                                        "url": "/services/data/v58.0/sobjects/ContentNote/0691e000001WuJ9AAK"
+                                    },
+                                    "Id": "0691e000001WuJ9AAK",
+                                    "Title": "Test",
+                                    "TextPreview": "Test",
+                                    "CreatedBy": {
+                                        "attributes": {
+                                            "type": "User",
+                                            "url": "/services/data/v58.0/sobjects/User/0055i00000AUxQHAA1"
+                                        },
+                                        "Name": "Ashfaq Bhojani"
+                                    },
+                                    "LastModifiedDate": "2023-08-17T13:39:30.000+0000"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentNote",
+                                        "url": "/services/data/v58.0/sobjects/ContentNote/0691e000001WuIuAAK"
+                                    },
+                                    "Id": "0691e000001WuIuAAK",
+                                    "Title": "Sunils test from Alpeshs account",
+                                    "TextPreview": "Sunils test from Alpeshs account",
+                                    "CreatedBy": {
+                                        "attributes": {
+                                            "type": "User",
+                                            "url": "/services/data/v58.0/sobjects/User/0055i00000AUxQHAA1"
+                                        },
+                                        "Name": "Ashfaq Bhojani"
+                                    },
+                                    "LastModifiedDate": "2023-08-17T13:37:13.000+0000"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentNote",
+                                        "url": "/services/data/v58.0/sobjects/ContentNote/0691e000001Wu8pAAC"
+                                    },
+                                    "Id": "0691e000001Wu8pAAC",
+                                    "Title": "New note here for kiran",
+                                    "TextPreview": "New note here for kiran",
+                                    "CreatedBy": {
+                                        "attributes": {
+                                            "type": "User",
+                                            "url": "/services/data/v58.0/sobjects/User/0055i00000AUxQHAA1"
+                                        },
+                                        "Name": "Ashfaq Bhojani"
+                                    },
+                                    "LastModifiedDate": "2023-08-17T12:24:13.000+0000"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentNote",
+                                        "url": "/services/data/v58.0/sobjects/ContentNote/0691e000001WtxrAAC"
+                                    },
+                                    "Id": "0691e000001WtxrAAC",
+                                    "Title": "Testing note creation 2222",
+                                    "TextPreview": "Testing note creation 2222",
+                                    "CreatedBy": {
+                                        "attributes": {
+                                            "type": "User",
+                                            "url": "/services/data/v58.0/sobjects/User/0055i00000AUxQHAA1"
+                                        },
+                                        "Name": "Ashfaq Bhojani"
+                                    },
+                                    "LastModifiedDate": "2023-08-17T10:52:50.000+0000"
+                                },
+                                {
+                                    "attributes": {
+                                        "type": "ContentNote",
+                                        "url": "/services/data/v58.0/sobjects/ContentNote/0691e000001WtRgAAK"
+                                    },
+                                    "Id": "0691e000001WtRgAAK",
+                                    "Title": "Testing note creation 2222",
+                                    "TextPreview": "Testing note creation 2222",
+                                    "CreatedBy": {
+                                        "attributes": {
+                                            "type": "User",
+                                            "url": "/services/data/v58.0/sobjects/User/0055i00000AUxQHAA1"
+                                        },
+                                        "Name": "Ashfaq Bhojani"
+                                    },
+                                    "LastModifiedDate": "2023-08-17T07:43:02.000+0000"
+                                }
+                            ]
+                        },
+                        "httpHeaders": {},
+                        "httpStatusCode": 200,
+                        "referenceId": "Note"
+                    }
+                ]
+            }
+        },
+        "output": {
+            "note_ids": [
+                "0691e000001WuJ9AAK",
+                "0691e000001WuIuAAK",
+                "0691e000001Wu8pAAC",
+                "0691e000001WtxrAAC",
+                "0691e000001WtRgAAK"
+            ],
+            "note_map_by_id": {
+                "0691e000001WtRgAAK": {
+                    "id": "0691e000001WtRgAAK",
+                    "creator": "Ashfaq Bhojani",
+                    "text_preview": "Testing note creation 2222",
+                    "last_modified_time": "2023-08-17T07:43:02.000+00:00"
+                },
+                "0691e000001WuJ9AAK": {
+                    "id": "0691e000001WuJ9AAK",
+                    "creator": "Ashfaq Bhojani",
+                    "text_preview": "Test",
+                    "last_modified_time": "2023-08-17T13:39:30.000+00:00"
+                },
+                "0691e000001WuIuAAK": {
+                    "id": "0691e000001WuIuAAK",
+                    "creator": "Ashfaq Bhojani",
+                    "text_preview": "Sunils test from Alpeshs account",
+                    "last_modified_time": "2023-08-17T13:37:13.000+00:00"
+                },
+                "0691e000001Wu8pAAC": {
+                    "id": "0691e000001Wu8pAAC",
+                    "creator": "Ashfaq Bhojani",
+                    "text_preview": "New note here for kiran",
+                    "last_modified_time": "2023-08-17T12:24:13.000+00:00"
+                },
+                "0691e000001WtxrAAC": {
+                    "id": "0691e000001WtxrAAC",
+                    "creator": "Ashfaq Bhojani",
+                    "text_preview": "Testing note creation 2222",
+                    "last_modified_time": "2023-08-17T10:52:50.000+00:00"
+                }
+            }
+        }
+    },
+    {
+        "description": "should return empty response when no notes are present",
+        "input": {
+            "account_id": "0011e00000bWSxdAAG",
+            "document_id":[]
+        },
+        "mocks":{
+            "makeCompositeRequest1":{
+                "compositeResponse": [
+                    {
+                        "body": {
+                            "totalSize": 0,
+                            "done": true,
+                            "records": []
+                        },
+                        "httpHeaders": {},
+                        "httpStatusCode": 200,
+                        "referenceId": "ContentDocument"
+                    }
+                ]
+            },
+            "makeCompositeRequest2":{
+
+            }
+        },
+        "output": {
+            "note_ids": [],
+            "note_map_by_id": {}
+        }
+    },
+    {
+        "description": "should return error response when account id is invalid",
+        "input": {
+            "account_id": "0011e00000bWSxdAAG",
+            "document_id":[]
+        },
+        "mocks":{
+            "makeCompositeRequest1":{
+                "compositeResponse": [
+                    {
+                        "body": [
+                            {
+                                "message": "invalid parameter value",
+                                "errorCode": "UNKNOWN_EXCEPTION"
+                            }
+                        ],
+                        "httpHeaders": {},
+                        "httpStatusCode": 500,
+                        "referenceId": "ContentDocument"
+                    }
+                ]
+            },
+            "makeCompositeRequest2":{
+
+            }
+        },
+        "output": {
+            "http_code": 500,
+            "message": "Something went wrong.",
+            "code": "INTERNAL_SERVER_ERROR",
+            "internal_error_identifier": "l_c_gnl_gsnl_1",
+            "param_errors": []
+        }
+    }
+]

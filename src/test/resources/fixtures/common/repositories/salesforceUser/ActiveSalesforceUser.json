@@ -1,0 +1,11 @@
+{
+  "externalUserId": "0055i00000AUxQHAA1",
+  "identityUrl": "https://test.salesforce.com/id/000Org-id/0055i00000AUxQHAA1",
+  "externalOrganizationId": "000Org-id",
+  "name": "Test User",
+  "email": "test@test.com",
+  "userKind": "SALESFORCE",
+  "cookieToken": "oGzc1IRNmu45Oe73KBYipqDSsgC4n5vepVt3P9+jJiX0wr39SVb0J8ontP277D3NdkHnyL0HPDFuwTSQxNz2gSUHaTMfe0oebcxl9AMUpIw=",
+  "encryptionSalt": "Qc8x8AZvWZBqnYJ9Xk6+CbyHmHi29DvL8vzwFZULsquHGICDip9rPMpzG+LVtUOh",
+  "status": "ACTIVE"
+}

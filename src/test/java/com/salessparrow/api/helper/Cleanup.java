@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.cache.CacheManager;
 
 /**
  * This class is used to clean the setup after each test.
@@ -11,34 +12,39 @@ import org.springframework.boot.test.context.TestConfiguration;
 @TestConfiguration
 public class Cleanup {
 
-  Logger logger = LoggerFactory.getLogger(Cleanup.class);
+	Logger logger = LoggerFactory.getLogger(Cleanup.class);
 
-  @Autowired
-  private DropTables dropTables;
+	@Autowired
+	private DropTables dropTables;
 
-  /**
-   * Clean the setup after each test.
-   * - Flush the cache
-   * - Drop dynamodb tables
-   */
-  public void perform() {
-    logger.info("Cleaning setup");
+	@Autowired
+	private CacheManager cacheManager;
 
-    flushCache();
-    dropTables();
-  }
+	/**
+	 * Clean the setup after each test. - Flush the cache - Drop dynamodb tables
+	 */
+	public void perform() {
+		logger.info("Cleaning setup");
 
-  /**
-   * Flush the cache.
-   */
-  private void flushCache(){
-    logger.info("Cleanup: Flushing cache");
-  }
+		flushCache();
+		dropTables();
+	}
 
-  /**
-   * Drop the tables.
-   */
-  private void dropTables() {
-    dropTables.perform();
-  }
+	/**
+	 * Flush the cache.
+	 */
+	private void flushCache() {
+		logger.info("Setup: Flushing cache");
+		cacheManager.getCacheNames().stream().forEach(cacheName -> {
+			cacheManager.getCache(cacheName).clear();
+		});
+	}
+
+	/**
+	 * Drop the tables.
+	 */
+	private void dropTables() {
+		dropTables.perform();
+	}
+
 }

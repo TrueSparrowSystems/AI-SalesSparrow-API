@@ -13,19 +13,23 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class NoteEntity {
-    private String id;
-    private String creator;
-    private String textPreview;
-    private Date lastModifiedTime;
 
-    public NoteEntity() {
-    }
+	private String id;
 
-    public NoteEntity(String id, String creator, String text_preview, Date last_modified_time) {
-        this.id = id;
-        this.creator = creator;
-        this.textPreview = text_preview;
-        this.lastModifiedTime = last_modified_time;
-    }
+	private String creator;
+
+	private String textPreview;
+
+	private Date lastModifiedTime;
+
+	public NoteEntity() {
+	}
+
+	public NoteEntity(String id, String creator, String text_preview, Date last_modified_time) {
+		this.id = id;
+		this.creator = creator;
+		this.textPreview = text_preview;
+		this.lastModifiedTime = last_modified_time;
+	}
 
 }

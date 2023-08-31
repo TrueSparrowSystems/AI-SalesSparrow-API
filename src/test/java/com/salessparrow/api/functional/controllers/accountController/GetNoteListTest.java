@@ -9,6 +9,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -38,6 +39,8 @@ import com.salessparrow.api.helper.LoadFixture;
 import com.salessparrow.api.helper.Scenario;
 import com.salessparrow.api.helper.Setup;
 import com.salessparrow.api.lib.globalConstants.CookieConstants;
+import com.salessparrow.api.helper.Constants;
+
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
 import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
@@ -52,104 +55,113 @@ import jakarta.servlet.http.Cookie;
 @WebAppConfiguration
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
 public class GetNoteListTest {
-  @Autowired
-  private MockMvc mockMvc;
 
-  @Autowired
-  private Setup setup;
+	@Autowired
+	private MockMvc mockMvc;
 
-  @Autowired
-  private Cleanup cleanup;
+	@Autowired
+	private Setup setup;
 
-  @Autowired
-  private Common common;
+	@Autowired
+	private Cleanup cleanup;
 
-  @Autowired
-  private LoadFixture loadFixture;
+	@Autowired
+	private Common common;
 
-  @MockBean
-  private MakeCompositeRequest makeCompositeRequestMock;
+	@Autowired
+	private LoadFixture loadFixture;
 
-  @MockBean
-  private SalesforceRequest salesforceOauthRequestMock;
+	@MockBean
+	private MakeCompositeRequest makeCompositeRequestMock;
 
-  @BeforeEach
-  public void setUp() throws DynamobeeException, IOException {
-    setup.perform();
-  }
+	@MockBean
+	private SalesforceRequest salesforceOauthRequestMock;
 
-  @AfterEach
-  public void tearDown() {
-    cleanup.perform();
-  }
+	@BeforeEach
+	public void setUp() throws DynamobeeException, IOException {
+		setup.perform();
+	}
 
-  @ParameterizedTest
-  @MethodSource("testScenariosProvider")
-  public void getNoteList(Scenario testScenario) throws Exception{
-    String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
-    FixtureData fixtureData = common.loadFixture(
-      "classpath:fixtures/controllers/accountController/getNotesList.fixtures.json",
-      currentFunctionName
-    );
-    loadFixture.perform(fixtureData);
+	@AfterEach
+	public void tearDown() {
+		cleanup.perform();
+	}
 
-    ObjectMapper objectMapper = new ObjectMapper();
+	@ParameterizedTest
+	@MethodSource("testScenariosProvider")
+	public void getNoteList(Scenario testScenario) throws Exception {
+		String currentFunctionName = new Object() {
+		}.getClass().getEnclosingMethod().getName();
+		FixtureData fixtureData = common.loadFixture(
+				"classpath:fixtures/functional/controllers/accountController/getNotesList.fixtures.json",
+				currentFunctionName);
+		loadFixture.perform(fixtureData);
 
-    String cookieValue = (String) testScenario.getInput().get("cookie");
-    String accountId = (String) testScenario.getInput().get("accountId");
-    List<String> documentIds = (List<String>) testScenario.getInput().get("documentId");
+		ObjectMapper objectMapper = new ObjectMapper();
 
-    if(documentIds == null) {
-      documentIds = new ArrayList<String>();
-    }
+		String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
+		String accountId = (String) testScenario.getInput().get("accountId");
+		List<String> documentIds = (List<String>) testScenario.getInput().get("documentId");
 
-    // Mocking the CompositeRequests of the salesforce oauth request
-    SalesforceQueryBuilder salesforceLib = new SalesforceQueryBuilder();
-    String documentIdsQuery = salesforceLib.getContentDocumentIdUrl(accountId);
-    String documentIdsUrl = new SalesforceConstants().queryUrlPath() + documentIdsQuery;
-    CompositeRequestDto documentIdsCompositeReq = new CompositeRequestDto("GET", documentIdsUrl, "GetContentDocumentId");
-    List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
-    compositeRequests.add(documentIdsCompositeReq);
+		if (documentIds == null) {
+			documentIds = new ArrayList<String>();
+		}
 
+		// Mocking the CompositeRequests of the salesforce oauth request
+		SalesforceQueryBuilder salesforceLib = new SalesforceQueryBuilder();
+		String documentIdsQuery = salesforceLib.getContentDocumentIdUrl(accountId);
+		String documentIdsUrl = new SalesforceConstants().queryUrlPath() + documentIdsQuery;
+		CompositeRequestDto documentIdsCompositeReq = new CompositeRequestDto("GET", documentIdsUrl,
+				"GetContentDocumentId");
+		List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
+		compositeRequests.add(documentIdsCompositeReq);
 
-    HttpResponse getNotesListIdMockResponse = new HttpResponse();
-    getNotesListIdMockResponse.setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeCompositeRequest1")));
+		HttpResponse getNotesListIdMockResponse = new HttpResponse();
+		getNotesListIdMockResponse
+			.setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeCompositeRequest1")));
 
-    when(makeCompositeRequestMock.makePostRequest(eq(compositeRequests), any())).thenReturn(getNotesListIdMockResponse);
-    
-    // Mocking the CompositeRequests of the salesforce notes list request
-    String notesQuery = salesforceLib.getNoteListIdUrl(documentIds);
-    String notesUrl = new SalesforceConstants().queryUrlPath() + notesQuery;
-    CompositeRequestDto noteCompositeRequest = new CompositeRequestDto("GET", notesUrl, "GetNotesList");
-    List<CompositeRequestDto> noteCompositeRequests = new ArrayList<CompositeRequestDto>();
-    noteCompositeRequests.add(noteCompositeRequest);
-    
-    
-    HttpResponse getNotesListMockResponse = new HttpResponse();
-    getNotesListMockResponse.setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeCompositeRequest2")));
-    
-    when(makeCompositeRequestMock.makePostRequest(eq(noteCompositeRequests), any())).thenReturn(getNotesListMockResponse);
+		when(makeCompositeRequestMock.makePostRequest(eq(compositeRequests), any()))
+			.thenReturn(getNotesListIdMockResponse);
 
-    String url = "/api/v1/accounts/" + accountId + "/notes";
-    ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(url)
-      .cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
-      .contentType(MediaType.APPLICATION_JSON));
+		// Mocking the CompositeRequests of the salesforce notes list request
+		String notesQuery = salesforceLib.getNoteListIdUrl(documentIds);
+		String notesUrl = new SalesforceConstants().queryUrlPath() + notesQuery;
+		CompositeRequestDto noteCompositeRequest = new CompositeRequestDto("GET", notesUrl, "GetNotesList");
+		List<CompositeRequestDto> noteCompositeRequests = new ArrayList<CompositeRequestDto>();
+		noteCompositeRequests.add(noteCompositeRequest);
 
-    String expectedOutput = objectMapper.writeValueAsString(testScenario.getOutput());
-    
-    String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
-      assertEquals(expectedOutput, actualOutput);
-  }
+		HttpResponse getNotesListMockResponse = new HttpResponse();
+		getNotesListMockResponse
+			.setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeCompositeRequest2")));
 
-  static Stream<Scenario> testScenariosProvider() throws IOException {
-    List<Scenario> testScenarios = loadScenarios();
-    return testScenarios.stream();
-  }
+		when(makeCompositeRequestMock.makePostRequest(eq(noteCompositeRequests), any()))
+			.thenReturn(getNotesListMockResponse);
 
-  public static List<Scenario> loadScenarios() throws IOException {
-    String scenariosPath = "classpath:data/controllers/accountController/getNotesList.scenarios.json";
-    Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
-    ObjectMapper objectMapper = new ObjectMapper();
-    return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});
-  }
+		String url = "/api/v1/accounts/" + accountId + "/notes";
+		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(url)
+			.cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
+			.contentType(MediaType.APPLICATION_JSON));
+
+		String expectedOutput = objectMapper.writeValueAsString(testScenario.getOutput());
+
+		String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
+		assertEquals(expectedOutput, actualOutput);
+	}
+
+	static Stream<Scenario> testScenariosProvider() throws IOException {
+		List<Scenario> testScenarios = loadScenarios();
+		return testScenarios.stream();
+	}
+
+	private static List<Scenario> loadScenarios() throws IOException {
+		String scenariosPath = "classpath:data/functional/controllers/accountController/getNotesList.scenarios.json";
+		Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		try (InputStream inputStream = resource.getInputStream()) {
+			return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {
+			});
+		}
+	}
+
 }

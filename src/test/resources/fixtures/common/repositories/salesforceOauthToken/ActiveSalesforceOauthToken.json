@@ -1,0 +1,13 @@
+{
+  "accessToken": "AQICAHh8THF/Dummy=",
+  "refreshToken":"T2Fybjphd3M6a21zOid1cy1lYXN0LTEnOicxMTExMjIyMjMzMzMnOmtleS9iYzQzNjQ4NS01MDkyLTQyYjgtOTJhMy0wYWE4YjkzNTM2ZGMAAAAAh3q5+k3TUhmtkD6iwMI5nBJf6PZbNXb44fj0amxIBWDvK4Gd/M38cMpwG4Mg",
+  "updatedAt": "2023-08-17T09:53:08.331Z",
+  "signature": "FCGHH2fMCTciwY6zwcrBin10xO8hYwp/FLavAQ8U=",
+  "instanceUrl": "https://salesforce.com",
+  "idToken": "dummy--ee",
+  "createdAt": "2023-08-17T09:53:08.331Z",
+  "identityUrl": "https://salesforce.com/id/000Org-id/0055i00000AUxQHAA1",
+  "issuedAt": "1692265987212",
+  "externalUserId": "0055i00000AUxQHAA1",
+  "status": "ACTIVE"
+}

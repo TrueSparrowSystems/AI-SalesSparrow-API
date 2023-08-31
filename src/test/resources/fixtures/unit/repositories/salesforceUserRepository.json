@@ -1,0 +1,9 @@
+{
+  "testValidGetSalesforceUserByExternalUserId": {
+    "salesforce_users": [
+      { 
+        "filepath": "classpath:fixtures/common/repositories/salesforceUser/ActiveSalesforceUser.json"
+      }
+    ]
+  }
+}

@@ -16,36 +16,35 @@ import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 @Service
 public class RedirectUrlService {
 
-  @Autowired
-  private SalesforceConstants salesforceConstants;
+	@Autowired
+	private SalesforceConstants salesforceConstants;
 
-  Logger logger = LoggerFactory.getLogger(RedirectUrlService.class);
+	Logger logger = LoggerFactory.getLogger(RedirectUrlService.class);
 
-  /**
-   * Get the redirect url for the oauth2 flow
-   * @param salesforceRedirectUrlDto
-   * 
-   * @return RedirectUrlFormatterDto
-   **/
-  public RedirectUrlFormatterDto getSalesforceOauthUrl(SalesforceRedirectUrlDto salesforceRedirectUrlDto) {
+	/**
+	 * Get the redirect url for the oauth2 flow
+	 * @param salesforceRedirectUrlDto
+	 * @return RedirectUrlFormatterDto
+	 **/
+	public RedirectUrlFormatterDto getSalesforceOauthUrl(SalesforceRedirectUrlDto salesforceRedirectUrlDto) {
 
-    String redirectUri = salesforceRedirectUrlDto.getRedirect_uri();
-    String state = salesforceRedirectUrlDto.getState();
+		String redirectUri = salesforceRedirectUrlDto.getRedirect_uri();
+		String state = salesforceRedirectUrlDto.getState();
 
-    String salesforceLoginUrl = salesforceConstants.oauth2AuthorizeUrl();
-    String salesforceClientId = CoreConstants.salesforceClientId();
+		String salesforceLoginUrl = salesforceConstants.oauth2AuthorizeUrl();
+		String salesforceClientId = CoreConstants.salesforceClientId();
 
-    String salesforceOauthUrl = salesforceLoginUrl + "?response_type=code" +
-        "&client_id=" + salesforceClientId +
-        "&redirect_uri=" + redirectUri;
+		String salesforceOauthUrl = salesforceLoginUrl + "?response_type=code" + "&client_id=" + salesforceClientId
+				+ "&redirect_uri=" + redirectUri;
 
-    if (state != null && !state.isEmpty()) {
-      salesforceOauthUrl += "&state=" + state;
-    }
+		if (state != null && !state.isEmpty()) {
+			salesforceOauthUrl += "&state=" + state;
+		}
 
-    RedirectUrlFormatterDto redirectUrlFormatterDto = new RedirectUrlFormatterDto();
-    redirectUrlFormatterDto.setUrl(salesforceOauthUrl);
+		RedirectUrlFormatterDto redirectUrlFormatterDto = new RedirectUrlFormatterDto();
+		redirectUrlFormatterDto.setUrl(salesforceOauthUrl);
 
-    return redirectUrlFormatterDto;
-  }
+		return redirectUrlFormatterDto;
+	}
+
 }

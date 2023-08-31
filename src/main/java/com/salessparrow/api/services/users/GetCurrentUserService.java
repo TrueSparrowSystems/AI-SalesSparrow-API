@@ -13,14 +13,15 @@ import jakarta.servlet.http.HttpServletRequest;
 @Service
 public class GetCurrentUserService {
 
-  public CurrentUserEntityDto getCurrentUser(HttpServletRequest request) {
-    User currentUser = (User) request.getAttribute("current_user");
+	public CurrentUserEntityDto getCurrentUser(HttpServletRequest request) {
+		User currentUser = (User) request.getAttribute("current_user");
 
-    CurrentUserEntityDto currentUserEntityDto = new CurrentUserEntityDto();
-    currentUserEntityDto.setId(currentUser.getExternalUserId());
-    currentUserEntityDto.setName(currentUser.getName());
-    currentUserEntityDto.setEmail(currentUser.getEmail());
+		CurrentUserEntityDto currentUserEntityDto = new CurrentUserEntityDto();
+		currentUserEntityDto.setId(currentUser.getExternalUserId());
+		currentUserEntityDto.setName(currentUser.getName());
+		currentUserEntityDto.setEmail(currentUser.getEmail());
 
-    return currentUserEntityDto;
-  }
+		return currentUserEntityDto;
+	}
+
 }

@@ -25,284 +25,310 @@ import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
 import com.salessparrow.api.lib.salesforce.dto.SalesforceGetIdentityDto;
 import com.salessparrow.api.lib.salesforce.dto.SalesforceGetTokensDto;
 import com.salessparrow.api.lib.salesforce.wrappers.SalesforceGetIdentity;
-import com.salessparrow.api.lib.salesforce.wrappers.SalesforceGetTokens;
+import com.salessparrow.api.lib.salesforce.wrappers.SalesforceTokens;
 import com.salessparrow.api.repositories.SalesforceOauthTokenRepository;
 import com.salessparrow.api.repositories.SalesforceOrganizationRepository;
 import com.salessparrow.api.repositories.SalesforceUserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class AuthService {
 
-  private String code;
-  private String redirectUri;
+	private String reqApiSource;
 
-  private SalesforceGetTokensDto tokensData;
-  private SalesforceGetIdentityDto userData;
-  private SalesforceOauthToken salesforceOauthToken;
-  private SalesforceUser salesforceUser;
-  private String decryptedSalt;
-  private Boolean isNewUser;
+	private String code;
 
-  Logger logger = LoggerFactory.getLogger(AuthService.class);
+	private String redirectUri;
 
-  @Autowired
-  private AwsKms awsKms;
+	private SalesforceGetTokensDto tokensData;
 
-  @Autowired
-  private Util util;
+	private SalesforceGetIdentityDto userData;
 
-  @Autowired
-  private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
+	private SalesforceOauthToken salesforceOauthToken;
 
-  @Autowired
-  private SalesforceUserRepository salesforceUserRepository;
+	private SalesforceUser salesforceUser;
 
-  @Autowired
-  private SalesforceOrganizationRepository salesforceOrganizationRepository;
+	private String decryptedSalt;
 
-  @Autowired
-  private LocalCipher localCipher;
+	private Boolean isNewUser;
 
-  @Autowired
-  private CookieHelper cookieHelper;
+	Logger logger = LoggerFactory.getLogger(AuthService.class);
 
-  @Autowired
-  private SalesforceGetTokens salesforceGetTokens;
+	@Autowired
+	private AwsKms awsKms;
 
-  @Autowired
-  private SalesforceGetIdentity salesforceGetIdentity;
+	@Autowired
+	private Util util;
 
-  /**
-   * Connect to Salesforce and create user if not exists.
-   * 
-   * @param params
-   * 
-   * @return AuthServiceDto
-   */
-  public AuthServiceDto connectToSalesforce(SalesforceConnectDto params) {
-    this.isNewUser = true; // setting default value true to this variable, this will be updated based on conditions in further processing
+	@Autowired
+	private SalesforceUserRepository salesforceUserRepository;
 
-    code = params.getCode();
-    redirectUri = params.getRedirect_uri();
+	@Autowired
+	private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
 
-    fetchOauthTokensFromSalesforce();
+	@Autowired
+	private SalesforceOrganizationRepository salesforceOrganizationRepository;
 
-    validateAndUpsertSalesforceOrganization();
+	@Autowired
+	private LocalCipher localCipher;
 
-    upsertSalesforceOAuthTokens();
+	@Autowired
+	private CookieHelper cookieHelper;
 
-    verifyExistingSalesforceUser();
+	@Autowired
+	private SalesforceTokens salesforceTokens;
 
-    if (this.isNewUser) {
-      fetchUserInfoFromSalesforce();
-      createSalesforceUser();
-    }
+	@Autowired
+	private SalesforceGetIdentity salesforceGetIdentity;
 
-    return prepareResponse();
-  }
+	/**
+	 * Connect to Salesforce and create user if not exists.
+	 * @param params
+	 * @param request
+	 * @return AuthServiceDto
+	 */
+	public AuthServiceDto connectToSalesforce(SalesforceConnectDto params, HttpServletRequest request) {
+		this.reqApiSource = (String) request.getAttribute("api_source");
 
-  /**
-   * Call Salesforce oauth token endpoint and fetch tokens.
-   * 
-   * @return void
-   */
-  private void fetchOauthTokensFromSalesforce() {
-    logger.info("Fetching OAuth Tokens from Salesforce");
+		this.isNewUser = true; // setting default value true to this variable, this will
+								// be updated based on conditions in further processing
 
-    HttpResponse response = salesforceGetTokens.getTokens(this.code, this.redirectUri);
+		code = params.getCode();
+		redirectUri = params.getRedirect_uri();
 
-    JsonNode jsonNode = util.getJsonNode(response.getResponseBody());
+		fetchOauthTokensFromSalesforce();
 
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-    SalesforceGetTokensDto salesforceGetTokensDto = mapper.convertValue(jsonNode,
-        SalesforceGetTokensDto.class);
+		validateAndSaveSalesforceOrganization();
 
-    this.tokensData = salesforceGetTokensDto;
-  }
+		upsertSalesforceOAuthTokens();
 
-  /**
-   * Validate and upsert Salesforce Organization in DB.
-   * 
-   * @return void
-   */
-  private void validateAndUpsertSalesforceOrganization() {
-    logger.info("Validating Salesforce Organization");
+		verifyExistingSalesforceUser();
 
-    String salesforceOrganizationId = this.tokensData.getSalesforceOrganizationId();
+		if (this.isNewUser) {
+			fetchUserInfoFromSalesforce();
+			createSalesforceUser();
+		}
 
-    SalesforceOrganization existingOrganizationData = salesforceOrganizationRepository
-        .getSalesforceOrganizationByExternalOrganizationId(salesforceOrganizationId);
+		return prepareResponse();
+	}
 
-    if (existingOrganizationData != null) {
-      logger.info("Salesforce Organization already exists");
+	/**
+	 * Call Salesforce oauth token endpoint and fetch tokens.
+	 * @return void
+	 */
+	private void fetchOauthTokensFromSalesforce() {
+		logger.info("Fetching OAuth Tokens from Salesforce");
 
-      if (existingOrganizationData.getStatus() != SalesforceOrganization.Status.ACTIVE) {
-        logger.info("Salesforce Organization is not active.");
-        throw new CustomException(
-            new ErrorObject(
-                "s_s_as_vauso_1",
-                "forbidden_api_request",
-                "Salesforce Organization is not active."));
-      }
-    }
+		HttpResponse response = salesforceTokens.getTokens(this.code, this.redirectUri);
 
-    logger.info("Upserting Salesforce Organization in DB");
-    SalesforceOrganization salesforceOrganization = new SalesforceOrganization();
-    salesforceOrganization.setExternalOrganizationId(salesforceOrganizationId);
-    salesforceOrganization.setStatus(SalesforceOrganization.Status.ACTIVE);
+		JsonNode jsonNode = util.getJsonNode(response.getResponseBody());
 
-    salesforceOrganizationRepository
-        .saveSalesforceOrganization(salesforceOrganization);
-  }
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		SalesforceGetTokensDto salesforceGetTokensDto = mapper.convertValue(jsonNode, SalesforceGetTokensDto.class);
 
-  /**
-   * Upsert Salesforce Oauth Token in DB.
-   * 
-   * @return void
-   */
-  private void upsertSalesforceOAuthTokens() {
+		this.tokensData = salesforceGetTokensDto;
+	}
 
-    logger.info("Upserting Salesforce OAuth Tokens in DB");
+	/**
+	 * Validate and save Salesforce Organization in DB.
+	 * @return void
+	 */
+	private void validateAndSaveSalesforceOrganization() {
+		logger.info("Validating Salesforce Organization");
 
-    long currentTime = System.currentTimeMillis();
-    String encryptedAccessToken = awsKms.encryptToken(this.tokensData.getAccessToken());
+		String salesforceOrganizationId = this.tokensData.getSalesforceOrganizationId();
 
-    logger.info("Time in ms for encryption : " + (System.currentTimeMillis() - currentTime));
+		SalesforceOrganization existingOrganizationData = salesforceOrganizationRepository
+			.getSalesforceOrganizationByExternalOrganizationId(salesforceOrganizationId);
 
-    String encryptedRefreshToken = awsKms.encryptToken(this.tokensData.getRefreshToken());
-    String salesforceUserId = this.tokensData.getSalesforceUserId();
+		if (existingOrganizationData != null) {
+			logger.info("Salesforce Organization already exists");
 
-    SalesforceOauthToken salesforceOauthToken = new SalesforceOauthToken();
-    // Todo: use salesforceconnect res entity object
-    salesforceOauthToken.setExternalUserId(salesforceUserId);
-    salesforceOauthToken.setIdentityUrl(this.tokensData.getId());
-    salesforceOauthToken.setAccessToken(encryptedAccessToken);
-    salesforceOauthToken.setRefreshToken(encryptedRefreshToken);
-    salesforceOauthToken.setSignature(this.tokensData.getSignature());
-    salesforceOauthToken.setIdToken(this.tokensData.getIdToken());
-    salesforceOauthToken.setInstanceUrl(this.tokensData.getInstanceUrl());
-    salesforceOauthToken.setStatus(SalesforceOauthToken.Status.ACTIVE);
-    salesforceOauthToken.setIssuedAt(Long.parseLong(this.tokensData.getIssuedAt()));
+			if (existingOrganizationData.getStatus() != SalesforceOrganization.Status.ACTIVE) {
+				logger.info("Salesforce Organization is not active.");
+				throw new CustomException(new ErrorObject("s_s_as_vauso_1", "forbidden_api_request",
+						"Salesforce Organization is not active."));
+			}
+			return;
+		}
 
-    this.salesforceOauthToken = salesforceOauthTokenRepository
-        .saveSalesforceOauthToken(salesforceOauthToken);
-  }
+		logger.info("Creating Salesforce Organization in DB");
+		SalesforceOrganization salesforceOrganization = new SalesforceOrganization();
+		salesforceOrganization.setExternalOrganizationId(salesforceOrganizationId);
+		salesforceOrganizationRepository.createSalesforceOrganization(salesforceOrganization);
+	}
 
-  /**
-   * Verify if Salesforce User already exists.
-   * 
-   * @return void
-   */
-  private void verifyExistingSalesforceUser() {
-    String salesforceUserId = this.tokensData.getSalesforceUserId();
-    SalesforceUser salesforceUser = salesforceUserRepository.getSalesforceUserByExternalUserId(salesforceUserId);
+	/**
+	 * Upsert Salesforce Oauth Token in DB.
+	 * @return void
+	 */
+	private void upsertSalesforceOAuthTokens() {
 
-    if (salesforceUser != null) {
-      logger.info("Salesforce User already exists");
-      this.salesforceUser = salesforceUser;
-      this.isNewUser = false;
-      this.decryptedSalt = localCipher.decrypt(CoreConstants.encryptionKey(), salesforceUser.getEncryptionSalt());
-    }
-  }
+		logger.info("Upserting Salesforce OAuth Tokens in DB");
 
-  /**
-   * Fetch user info from Salesforce Identity API.
-   * 
-   * @return void
-   */
-  private void fetchUserInfoFromSalesforce() {
+		long currentTime = System.currentTimeMillis();
+		String encryptedAccessToken = awsKms.encryptToken(this.tokensData.getAccessToken());
+		logger.info("Time in ms for encryption : " + (System.currentTimeMillis() - currentTime));
 
-    logger.info("Calling Salesforce Identity API");
+		String encryptedRefreshToken = awsKms.encryptToken(this.tokensData.getRefreshToken());
+		String salesforceUserId = this.tokensData.getSalesforceUserId();
 
-    HttpResponse response = salesforceGetIdentity.getUserIdentity(salesforceOauthToken.getInstanceUrl(),
-        this.tokensData.getAccessToken());
-    JsonNode jsonNode = util.getJsonNode(response.getResponseBody());
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-    SalesforceGetIdentityDto salesforceGetIdentityDto = mapper.convertValue(jsonNode,
-        SalesforceGetIdentityDto.class);
+		SalesforceOauthToken existingSalesforceOauthToken = salesforceOauthTokenRepository
+			.getSalesforceOauthTokenByExternalUserId(salesforceUserId);
 
-    this.userData = salesforceGetIdentityDto;
-  }
+		SalesforceOauthToken salesforceOauthToken = new SalesforceOauthToken();
+		salesforceOauthToken.setExternalUserId(salesforceUserId);
+		salesforceOauthToken.setIdentityUrl(this.tokensData.getId());
+		salesforceOauthToken.setAccessToken(encryptedAccessToken);
+		salesforceOauthToken.setRefreshToken(encryptedRefreshToken);
+		salesforceOauthToken.setSignature(this.tokensData.getSignature());
+		salesforceOauthToken.setIdToken(this.tokensData.getIdToken());
+		salesforceOauthToken.setInstanceUrl(this.tokensData.getInstanceUrl());
+		salesforceOauthToken.setIssuedAt(Long.parseLong(this.tokensData.getIssuedAt()));
 
-  /**
-   * Create Salesforce User in DB.
-   * 
-   * @return void
-   */
-  private void createSalesforceUser() {
-    logger.info("Creating Salesforce User");
+		if (existingSalesforceOauthToken != null) {
+			logger.info("Salesforce OAuth Token already exists");
+			this.salesforceOauthToken = salesforceOauthTokenRepository.updateSalesforceOauthToken(salesforceOauthToken);
+		}
+		else {
+			logger.info("Salesforce OAuth Token does not exists. Creating new one.");
+			this.salesforceOauthToken = salesforceOauthTokenRepository.createSalesforceOauthToken(salesforceOauthToken);
+		}
 
-    String decryptedSalt = localCipher.generateRandomSalt();
-    String cookieToken = localCipher.generateRandomIv(32);
+	}
 
-    String encryptedSalt = localCipher.encrypt(CoreConstants.encryptionKey(), decryptedSalt);
-    String encryptedCookieToken = localCipher.encrypt(decryptedSalt, cookieToken);
+	/**
+	 * Verify if Salesforce User already exists.
+	 * @return void
+	 */
+	private void verifyExistingSalesforceUser() {
+		String salesforceUserId = this.tokensData.getSalesforceUserId();
+		SalesforceUser salesforceUser = salesforceUserRepository.getSalesforceUserByExternalUserId(salesforceUserId);
 
-    SalesforceUser salesforceUser = new SalesforceUser();
-    salesforceUser.setExternalUserId(this.userData.getUserId());
-    salesforceUser.setIdentityUrl(this.userData.getSub());
-    salesforceUser.setExternalOrganizationId(this.userData.getOrganizationId());
-    salesforceUser.setName(this.userData.getName());
-    salesforceUser.setEmail(this.userData.getEmail());
-    salesforceUser.setUserKind(UserConstants.SALESFORCE_USER_KIND);
-    salesforceUser.setCookieToken(encryptedCookieToken);
-    salesforceUser.setEncryptionSalt(encryptedSalt);
-    salesforceUser.setStatus(SalesforceUser.Status.ACTIVE);
+		if (salesforceUser != null) {
+			logger.info("Salesforce User already exists");
+			this.salesforceUser = salesforceUser;
 
-    this.salesforceUser = salesforceUserRepository.saveSalesforceUser(salesforceUser);
-    this.decryptedSalt = decryptedSalt;
-  }
+			if (salesforceUser.getStatus() == SalesforceUser.Status.ACTIVE) {
+				logger.info("Salesforce User is active");
+				this.isNewUser = false;
+				this.decryptedSalt = localCipher.decrypt(CoreConstants.encryptionKey(),
+						salesforceUser.getEncryptionSalt());
+			}
+		}
+	}
 
-  /**
-   * Prepare service response.
-   * 
-   * @return AuthServiceDto
-   */
-  private AuthServiceDto prepareResponse() {
-    logger.info("Preparing response");
-    AuthServiceDto authServiceDto = new AuthServiceDto();
+	/**
+	 * Fetch user info from Salesforce Identity API.
+	 * @return void
+	 */
+	private void fetchUserInfoFromSalesforce() {
 
-    CurrentUserEntityDto currentUserEntityDto = new CurrentUserEntityDto();
-    currentUserEntityDto.setId(this.salesforceUser.getId(this.salesforceUser.getExternalUserId()));
-    currentUserEntityDto.setName(this.salesforceUser.getName());
-    currentUserEntityDto.setEmail(this.salesforceUser.getEmail());
+		logger.info("Calling Salesforce Identity API");
 
-    String userLoginCookieValue = cookieHelper.getCookieValue(this.salesforceUser,
-        UserConstants.SALESFORCE_USER_KIND,
-        this.decryptedSalt);
+		HttpResponse response = salesforceGetIdentity.getUserIdentity(salesforceOauthToken.getInstanceUrl(),
+				this.tokensData.getAccessToken());
+		JsonNode jsonNode = util.getJsonNode(response.getResponseBody());
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		SalesforceGetIdentityDto salesforceGetIdentityDto = mapper.convertValue(jsonNode,
+				SalesforceGetIdentityDto.class);
 
-    authServiceDto.setCurrentUser(currentUserEntityDto);
-    authServiceDto.setCurrentUserLoginCookie(userLoginCookieValue);
-    return authServiceDto;
-  }
+		this.userData = salesforceGetIdentityDto;
+	}
 
-  /**
-   * DTO for AuthService.
-   * 
-   * @return AuthServiceDto
-   */
-  public class AuthServiceDto {
+	/**
+	 * Create Salesforce User in DB.
+	 * @return void
+	 */
+	private void createSalesforceUser() {
 
-    private CurrentUserEntityDto currentUser;
-    private String currentUserLoginCookie;
+		String decryptedSalt = localCipher.generateRandomSalt();
+		String cookieToken = localCipher.generateRandomIv(32);
 
-    public CurrentUserEntityDto getCurrentUser() {
-      return currentUser;
-    }
+		String encryptedSalt = localCipher.encrypt(CoreConstants.encryptionKey(), decryptedSalt);
+		String encryptedCookieToken = localCipher.encrypt(decryptedSalt, cookieToken);
 
-    public void setCurrentUser(CurrentUserEntityDto currentUser) {
-      this.currentUser = currentUser;
-    }
+		if (this.salesforceUser != null && this.salesforceUser.getStatus() == SalesforceUser.Status.DELETED) {
+			logger.info("Updating Salesforce User");
+			this.salesforceUser.setIdentityUrl(this.userData.getSub());
+			this.salesforceUser.setExternalOrganizationId(this.userData.getOrganizationId());
+			this.salesforceUser.setName(this.userData.getName());
+			this.salesforceUser.setEmail(this.userData.getEmail());
+			this.salesforceUser.setUserKind(UserConstants.SALESFORCE_USER_KIND);
+			this.salesforceUser.setCookieToken(encryptedCookieToken);
+			this.salesforceUser.setEncryptionSalt(encryptedSalt);
+			this.salesforceUser.setStatus(SalesforceUser.Status.ACTIVE);
 
-    public String getCurrentUserLoginCookie() {
-      return currentUserLoginCookie;
-    }
+			this.salesforceUser = salesforceUserRepository.updateSalesforceUser(this.salesforceUser);
+			this.decryptedSalt = decryptedSalt;
+			return;
+		}
 
-    public void setCurrentUserLoginCookie(String currentUserLoginCookie) {
-      this.currentUserLoginCookie = currentUserLoginCookie;
-    }
+		logger.info("Creating Salesforce User");
+		SalesforceUser salesforceUser = new SalesforceUser();
+		salesforceUser.setExternalUserId(this.userData.getUserId());
+		salesforceUser.setIdentityUrl(this.userData.getSub());
+		salesforceUser.setExternalOrganizationId(this.userData.getOrganizationId());
+		salesforceUser.setName(this.userData.getName());
+		salesforceUser.setEmail(this.userData.getEmail());
+		salesforceUser.setUserKind(UserConstants.SALESFORCE_USER_KIND);
+		salesforceUser.setCookieToken(encryptedCookieToken);
+		salesforceUser.setEncryptionSalt(encryptedSalt);
 
-  }
+		this.salesforceUser = salesforceUserRepository.createSalesforceUser(salesforceUser);
+		this.decryptedSalt = decryptedSalt;
+	}
+
+	/**
+	 * Prepare service response.
+	 * @return AuthServiceDto
+	 */
+	private AuthServiceDto prepareResponse() {
+		logger.info("Preparing response");
+		AuthServiceDto authServiceDto = new AuthServiceDto();
+
+		CurrentUserEntityDto currentUserEntityDto = new CurrentUserEntityDto();
+		currentUserEntityDto.setId(this.salesforceUser.getId(this.salesforceUser.getExternalUserId()));
+		currentUserEntityDto.setName(this.salesforceUser.getName());
+		currentUserEntityDto.setEmail(this.salesforceUser.getEmail());
+
+		String userLoginCookieValue = cookieHelper.getCookieValue(this.salesforceUser,
+				UserConstants.SALESFORCE_USER_KIND, this.decryptedSalt, reqApiSource);
+
+		authServiceDto.setCurrentUser(currentUserEntityDto);
+		authServiceDto.setCurrentUserLoginCookie(userLoginCookieValue);
+		return authServiceDto;
+	}
+
+	/**
+	 * DTO for AuthService.
+	 *
+	 * @return AuthServiceDto
+	 */
+	public class AuthServiceDto {
+
+		private CurrentUserEntityDto currentUser;
+
+		private String currentUserLoginCookie;
+
+		public CurrentUserEntityDto getCurrentUser() {
+			return currentUser;
+		}
+
+		public void setCurrentUser(CurrentUserEntityDto currentUser) {
+			this.currentUser = currentUser;
+		}
+
+		public String getCurrentUserLoginCookie() {
+			return currentUserLoginCookie;
+		}
+
+		public void setCurrentUserLoginCookie(String currentUserLoginCookie) {
+			this.currentUserLoginCookie = currentUserLoginCookie;
+		}
+
+	}
+
 }
