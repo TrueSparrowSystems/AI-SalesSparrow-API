@@ -49,7 +49,7 @@ public class CreateSalesforceAccountTask implements CreateAccountTask {
 	public CreateTaskFormatterDto createAccountTask(User User, String accountId, CreateAccountTaskDto task) {
 		String salesforceUserId = User.getExternalUserId();
 
-		logger.info("createAccountTask task description: ", task.getDescription());
+		logger.info("createAccountTask task description: {}", task.getDescription());
 		Util util = new Util();
 		String unEscapedTaskDescription = util.unEscapeSpecialCharactersForPlainText(task.getDescription());
 		String taskSubject = getTaskSubjectFromDescription(unEscapedTaskDescription);

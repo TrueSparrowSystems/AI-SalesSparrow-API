@@ -33,7 +33,7 @@ public class SanitizedRequestWrapper extends HttpServletRequestWrapper {
 
 	public SanitizedRequestWrapper(HttpServletRequest request, String sanitizedBody) {
 		super(request);
-		logger.info("SanitizedRequestWrapper sanitizedBody: ", sanitizedBody);
+		logger.info("SanitizedRequestWrapper sanitizedBody: {}", sanitizedBody);
 		this.sanitizedBody = sanitizedBody;
 		this.sanitizedParams = new HashMap<>();
 		this.sanitizedHeaders = new HashMap<>();

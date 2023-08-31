@@ -54,7 +54,7 @@ public class CreateSalesforceNote implements CreateNoteInterface {
 	public CreateNoteFormatterDto createNote(SalesforceUser user, String accountId, NoteDto note) {
 		String salesforceUserId = user.getExternalUserId();
 
-		logger.info("createNote note text: ", note.getText());
+		logger.info("createNote note text: {}", note.getText());
 		String noteTitle = getNoteTitleFromContent(note);
 		String encodedNoteContent = base64Helper.base64Encode(note.getText());
 
