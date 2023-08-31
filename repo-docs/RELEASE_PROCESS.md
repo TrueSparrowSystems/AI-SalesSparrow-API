@@ -53,7 +53,6 @@
 ### **3.1 Merging**
 
 - Once the release candidate is deemed stable, merge the `release/vX.Y.Z` branch (or the `milestone` branch) into the `main` branch.
-- Create a tagged commit on the main branch with the version number.
 
 ### **3.2 GitHub Release**
 
