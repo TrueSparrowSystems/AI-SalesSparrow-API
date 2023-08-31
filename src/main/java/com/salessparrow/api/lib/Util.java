@@ -177,4 +177,8 @@ public class Util {
 		return input.replace("&amp;", "&");
 	}
 
+	public String replaceNewLineWithBreak(String input) {
+		return input.replace("\n", "<br>");
+	}
+
 }
