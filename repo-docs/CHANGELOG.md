@@ -20,7 +20,6 @@
 ### Bug Fixes:
 
 - Bug: DynamoDB Upsert Behavior Updates All Fields Instead of Specific Ones [#41](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/41)
-- Fix: Updated status enum values [#27](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/pull/27)
 
 ### Miscellaneous:
 
@@ -46,6 +45,7 @@
 - API - Search Accounts Endpoint [#15](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/15)
 - API - Create Note Endpoint [#16](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/16)
 - API - Get Note By Id Endpoint [#17](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/17)
+- Updated status enum values [#27](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/pull/27)
 
 ---
 
