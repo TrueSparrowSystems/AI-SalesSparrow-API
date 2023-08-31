@@ -49,13 +49,16 @@ public class CreateSalesforceAccountTask implements CreateAccountTask {
 	public CreateTaskFormatterDto createAccountTask(User User, String accountId, CreateAccountTaskDto task) {
 		String salesforceUserId = User.getExternalUserId();
 
-		String taskSubject = getTaskSubjectFromDescription(task);
+		logger.info("createAccountTask task description: ", task.getDescription());
+		Util util = new Util();
+		String unEscapedTaskDescription = util.unEscapeSpecialCharactersForPlainText(task.getDescription());
+		String taskSubject = getTaskSubjectFromDescription(unEscapedTaskDescription);
 
 		logger.info("performing create task in salesforce");
 
 		Map<String, String> taskBody = new HashMap<String, String>();
 		taskBody.put("Subject", taskSubject);
-		taskBody.put("Description", task.getDescription());
+		taskBody.put("Description", unEscapedTaskDescription);
 		taskBody.put("OwnerId", task.getCrmOrganizationUserId());
 		taskBody.put("ActivityDate", task.getDueDate());
 		taskBody.put("WhatId", accountId);
@@ -109,13 +112,8 @@ public class CreateSalesforceAccountTask implements CreateAccountTask {
 	 * @param task CreateTaskDto object
 	 * @return String task subject
 	 */
-	private String getTaskSubjectFromDescription(CreateAccountTaskDto task) {
+	private String getTaskSubjectFromDescription(String taskDescription) {
 		logger.info("getting task subject from description");
-
-		String taskDescription = task.getDescription();
-
-		Util util = new Util();
-		taskDescription = util.unEscapeSpecialCharactersForPlainText(taskDescription);
 
 		if (taskDescription.length() < 60) {
 			return taskDescription;
