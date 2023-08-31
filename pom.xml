@@ -163,6 +163,12 @@
 			<version>0.0.39</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.16.1</version>
+		</dependency>
+
  </dependencies>
 
 	<build>

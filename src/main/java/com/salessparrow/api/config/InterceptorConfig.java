@@ -35,12 +35,16 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
+		/* Add logger interceptor to all the routes */
 		registry.addInterceptor(loggerInterceptor).addPathPatterns("/**");
 
+		/* Add json only interceptor to all the routes */
 		registry.addInterceptor(jsonOnlyInterceptor).addPathPatterns("/**");
 
+		/* Add v1 interceptor only to all the routes */
 		registry.addInterceptor(V1Interceptor).addPathPatterns("/api/v1/**");
 
+		/* Add user auth interceptor to all the routes except the ones below */
 		registry.addInterceptor(userAuthInterceptor)
 			.addPathPatterns("/**")
 			.excludePathPatterns("/api/v1/auth/salesforce/**")

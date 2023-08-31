@@ -54,8 +54,11 @@ public class CreateSalesforceNote implements CreateNoteInterface {
 	public CreateNoteFormatterDto createNote(SalesforceUser user, String accountId, NoteDto note) {
 		String salesforceUserId = user.getExternalUserId();
 
-		String noteTitle = getNoteTitleFromContent(note);
-		String encodedNoteContent = base64Helper.base64Encode(note.getText());
+		Util util = new Util();
+		String noteContent = note.getText();
+		String noteTitle = getNoteTitleFromContent(noteContent);
+		noteContent = util.replaceNewLineWithBreak(noteContent);
+		String encodedNoteContent = base64Helper.base64Encode(noteContent);
 
 		Map<String, String> createNoteBody = new HashMap<String, String>();
 		createNoteBody.put("Title", noteTitle);
@@ -126,12 +129,15 @@ public class CreateSalesforceNote implements CreateNoteInterface {
 	 * @param note - note dto
 	 * @return String
 	 */
-	private String getNoteTitleFromContent(NoteDto note) {
-		if (note.getText().length() < 50) {
-			return note.getText();
+	private String getNoteTitleFromContent(String noteContent) {
+		Util util = new Util();
+		noteContent = util.unEscapeSpecialCharactersForPlainText(noteContent);
+
+		if (noteContent.length() < 50) {
+			return noteContent;
 		}
 
-		return note.getText().substring(0, 50);
+		return noteContent.substring(0, 50);
 	}
 
 }
