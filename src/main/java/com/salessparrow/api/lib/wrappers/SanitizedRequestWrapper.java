@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 public class SanitizedRequestWrapper extends HttpServletRequestWrapper {
 
 	Logger logger = LoggerFactory.getLogger(SanitizedRequestWrapper.class);
-	
+
 	private final String sanitizedBody;
 
 	private Map<String, List<String>> sanitizedParams;
