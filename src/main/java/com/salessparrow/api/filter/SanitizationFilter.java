@@ -7,8 +7,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import org.owasp.html.HtmlPolicyBuilder;
-import org.owasp.html.PolicyFactory;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.safety.Safelist;
+import org.jsoup.nodes.Entities.EscapeMode;
 
 import com.salessparrow.api.lib.wrappers.SanitizedRequestWrapper;
 
@@ -22,8 +24,6 @@ import java.util.Enumeration;
 public class SanitizationFilter implements Filter {
 
 	private SanitizedRequestWrapper sanitizedRequest;
-
-	private final PolicyFactory policy = new HtmlPolicyBuilder().toFactory();
 
 	@Override
 	public void init(FilterConfig filterConfig) {
@@ -118,12 +118,34 @@ public class SanitizationFilter implements Filter {
 	}
 
 	/**
-	 * Method to sanitize the html
-	 * @param input - Input string
-	 * @return String - Sanitized string
+	 * Sanitizes a given HTML string by removing all HTML tags and attributes, leaving
+	 * only the text content. Also handles basic HTML entity escaping using the 'base'
+	 * escape mode.
+	 *
+	 * This function uses the Jsoup library's 'clean' method with a 'none' safelist, which
+	 * means no HTML tags are allowed and will be removed.
+	 *
+	 * The function also disables pretty-printing to ensure the resulting HTML is not
+	 * reformatted, and sets the escape mode to 'base' to handle basic HTML entities like
+	 * &amp; and &lt;.
+	 *
+	 * If the input is null or empty, the function returns an empty string.
+	 * @param input The original HTML string that needs to be sanitized.
+	 * @return A sanitized version of the input string, safe for display as text.
 	 */
 	private String sanitizeHtml(String input) {
-		String sanitizedInput = policy.sanitize(input);
+		if (input == null || input.isEmpty()) {
+			return "";
+		}
+
+		Safelist safelist = Safelist.none();
+
+		Document.OutputSettings outputSettings = new Document.OutputSettings();
+		outputSettings.prettyPrint(false);
+		outputSettings.escapeMode(EscapeMode.base);
+
+		String sanitizedInput = Jsoup.clean(input, "", safelist, outputSettings);
+
 		return sanitizedInput;
 	}
 

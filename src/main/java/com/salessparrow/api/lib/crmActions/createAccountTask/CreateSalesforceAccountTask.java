@@ -115,7 +115,7 @@ public class CreateSalesforceAccountTask implements CreateAccountTask {
 		String taskDescription = task.getDescription();
 
 		Util util = new Util();
-		taskDescription = util.unEscapeSpecialCharacters(taskDescription);
+		taskDescription = util.unEscapeSpecialCharactersForPlainText(taskDescription);
 
 		if (taskDescription.length() < 60) {
 			return taskDescription;

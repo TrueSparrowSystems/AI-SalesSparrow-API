@@ -64,7 +64,7 @@ public class Util {
 	}
 
 	/**
-	 * <<<<<<< HEAD Encode plain text to base64
+	 * Encode plain text to base64
 	 * @param plainText - String to be encoded
 	 * @return String - Encoded string
 	 */
@@ -161,11 +161,19 @@ public class Util {
 	}
 
 	/**
-	 * Unescape special characters in a string. Currently, only "&" is unescaped.
-	 * @param input
-	 * @return Unescaped string
+	 * Unescape special characters in a string intended for plaintext contexts only.
+	 *
+	 * This function is intended for use only with strings that will be rendered as
+	 * plaintext. It is NOT suitable for HTML strings, XML strings, or any other context
+	 * where special characters may have syntactic meaning.
+	 *
+	 * Current Implementation: - The ampersand ("&amp;") is unescaped to "&"
+	 *
+	 * Future versions may include additional un-escaping rules as needed.
+	 * @param input The original string containing escaped special characters.
+	 * @return A new string where certain special characters have been unescaped.
 	 */
-	public String unEscapeSpecialCharacters(String input) {
+	public String unEscapeSpecialCharactersForPlainText(String input) {
 		return input.replace("&amp;", "&");
 	}
 

@@ -125,7 +125,7 @@ public class CreateSalesforceNote implements CreateNoteInterface {
 		String noteText = note.getText();
 
 		Util util = new Util();
-		noteText = util.unEscapeSpecialCharacters(noteText);
+		noteText = util.unEscapeSpecialCharactersForPlainText(noteText);
 
 		if (noteText.length() < 50) {
 			return noteText;

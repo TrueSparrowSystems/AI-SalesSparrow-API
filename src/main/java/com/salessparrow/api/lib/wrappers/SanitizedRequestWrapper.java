@@ -29,7 +29,7 @@ public class SanitizedRequestWrapper extends HttpServletRequestWrapper {
 
 	public SanitizedRequestWrapper(HttpServletRequest request, String sanitizedBody) {
 		super(request);
-		this.sanitizedBody = escapeQuotes(sanitizedBody);
+		this.sanitizedBody = sanitizedBody;
 		this.sanitizedParams = new HashMap<>();
 		this.sanitizedHeaders = new HashMap<>();
 	}
@@ -185,23 +185,6 @@ public class SanitizedRequestWrapper extends HttpServletRequestWrapper {
 			return Collections.enumeration(values);
 		}
 		return Collections.enumeration(Collections.emptyList());
-	}
-
-	/**
-	 * Escapes HTML-encoded quotes in a given sanitized JSON string.
-	 *
-	 * This method is specifically designed to work on JSON strings that have been
-	 * HTML-sanitized. In the sanitization process, quotes could be converted to their
-	 * HTML-encoded form ("&#34;" for double quotes and "&#39;" for single quotes).
-	 *
-	 * This method replaces these HTML-encoded quotes back to their plain text versions ("
-	 * and ' respectively) so that the JSON can be parsed correctly.
-	 * @param input The sanitized JSON string that may contain HTML-encoded quotes.
-	 * @return A JSON string with HTML-encoded quotes replaced by their plain text
-	 * equivalents.
-	 */
-	private String escapeQuotes(String input) {
-		return input.replace("&#34;", "\"").replace("&#39;", "'");
 	}
 
 }
