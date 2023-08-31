@@ -45,6 +45,7 @@ public class OpenAiRequest {
 			return response;
 		}
 		catch (WebClientResponseException e) {
+			logger.error("Error while making request to OpenAI API: " + e.getResponseBodyAsString());
 			if (e.getStatusCode().value() == 401) {
 				throw new CustomException(
 						new ErrorObject("l_o_a_oar_mr_1", "something_went_wrong", "Invalid OpenAI API key"));
