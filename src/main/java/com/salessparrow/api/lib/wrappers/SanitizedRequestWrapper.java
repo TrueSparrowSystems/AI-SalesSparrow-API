@@ -15,12 +15,16 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Custom request wrapper to sanitize the request body
  */
 public class SanitizedRequestWrapper extends HttpServletRequestWrapper {
 
+	Logger logger = LoggerFactory.getLogger(SanitizedRequestWrapper.class);
+	
 	private final String sanitizedBody;
 
 	private Map<String, List<String>> sanitizedParams;
@@ -29,6 +33,7 @@ public class SanitizedRequestWrapper extends HttpServletRequestWrapper {
 
 	public SanitizedRequestWrapper(HttpServletRequest request, String sanitizedBody) {
 		super(request);
+		logger.info("SanitizedRequestWrapper sanitizedBody: ", sanitizedBody);
 		this.sanitizedBody = sanitizedBody;
 		this.sanitizedParams = new HashMap<>();
 		this.sanitizedHeaders = new HashMap<>();
