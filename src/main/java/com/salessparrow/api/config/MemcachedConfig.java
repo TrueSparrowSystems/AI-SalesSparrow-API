@@ -59,10 +59,10 @@ public class MemcachedConfig implements CachingConfigurer {
 	private Collection<Memcached> internalCaches(MemcachedClient cache) {
 		final Collection<Memcached> caches = new ArrayList<>();
 
-		caches.add(new Memcached(CacheConstants.SS_SALESFORCE_USER_CACHE, CacheConstants.SS_SALESFORCE_USER_CACHE_EXP,
-				cache));
-		caches.add(new Memcached(CacheConstants.SS_SALESFORCE_OAUTH_TOKEN_CACHE,
-				CacheConstants.SS_SALESFORCE_OAUTH_TOKEN_CACHE_EXP, cache));
+		caches
+			.add(new Memcached(CacheConstants.SALESFORCE_USER_CACHE, CacheConstants.SALESFORCE_USER_CACHE_EXP, cache));
+		caches.add(new Memcached(CacheConstants.SALESFORCE_OAUTH_TOKEN_CACHE,
+				CacheConstants.SALESFORCE_OAUTH_TOKEN_CACHE_EXP, cache));
 		return caches;
 	}
 

@@ -29,7 +29,8 @@ public class SalesforceUserRepository {
 	 * @param salesforceUser
 	 * @return SalesforceUser
 	 */
-	@CacheEvict(value = CacheConstants.SS_SALESFORCE_USER_CACHE, key = "#salesforceUser.externalUserId")
+	@CacheEvict(value = CacheConstants.SALESFORCE_USER_CACHE,
+			key = "T(com.salessparrow.api.lib.globalConstants.CacheConstants).CACHE_PREFIX + #salesforceUser.externalUserId")
 	public SalesforceUser createSalesforceUser(SalesforceUser salesforceUser) {
 		// Create a row with status active and created at as current time
 		salesforceUser.setStatus(SalesforceUser.Status.ACTIVE);
@@ -49,7 +50,8 @@ public class SalesforceUserRepository {
 	 * @param salesforceUser
 	 * @return SalesforceUser
 	 */
-	@CacheEvict(value = CacheConstants.SS_SALESFORCE_USER_CACHE, key = "#salesforceUser.externalUserId")
+	@CacheEvict(value = CacheConstants.SALESFORCE_USER_CACHE,
+			key = "T(com.salessparrow.api.lib.globalConstants.CacheConstants).CACHE_PREFIX + #salesforceUser.externalUserId")
 	public SalesforceUser updateSalesforceUser(SalesforceUser salesforceUser) {
 		try {
 			dynamoDBMapper.save(salesforceUser);
@@ -66,7 +68,8 @@ public class SalesforceUserRepository {
 	 * @param id
 	 * @return SalesforceUser
 	 */
-	@Cacheable(value = CacheConstants.SS_SALESFORCE_USER_CACHE, key = "#externalUserId")
+	@Cacheable(value = CacheConstants.SALESFORCE_USER_CACHE,
+			key = "T(com.salessparrow.api.lib.globalConstants.CacheConstants).CACHE_PREFIX + #externalUserId")
 	public SalesforceUser getSalesforceUserByExternalUserId(String externalUserId) {
 		try {
 			return dynamoDBMapper.load(SalesforceUser.class, externalUserId);
@@ -76,7 +79,8 @@ public class SalesforceUserRepository {
 		}
 	}
 
-	@CacheEvict(value = CacheConstants.SS_SALESFORCE_USER_CACHE, key = "#externalUserId")
+	@CacheEvict(value = CacheConstants.SALESFORCE_USER_CACHE,
+			key = "T(com.salessparrow.api.lib.globalConstants.CacheConstants).CACHE_PREFIX + #externalUserId")
 	public void removeSalesforceUserData(String externalUserId) {
 		SalesforceUser salesforceUser = getSalesforceUserByExternalUserId(externalUserId);
 		salesforceUser.setIdentityUrl(null);

@@ -25,6 +25,14 @@ public class CoreConstants {
 		return environment().equals("local-test");
 	}
 
+	public static Boolean isStagingEnvironment() {
+		return environment().equals("staging");
+	}
+
+	public static Boolean isProductionEnvironment() {
+		return environment().equals("production");
+	}
+
 	/* End: Env variables required before spring application context is initialized */
 
 	public static String cookieDomain() {
