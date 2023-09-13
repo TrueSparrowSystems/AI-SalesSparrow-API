@@ -6,23 +6,23 @@ import com.salessparrow.api.config.CoreConstants;
 @Component
 public class CacheConstants {
 
-	public static final String CACHE_PREFIX;
+	public static final String CACHE_SUFFIX;
 
 	static {
 		if (CoreConstants.isProductionEnvironment()) {
-			CACHE_PREFIX = "prod_";
+			CACHE_SUFFIX = "_prod";
 		}
 		else if (CoreConstants.isStagingEnvironment()) {
-			CACHE_PREFIX = "stag_";
+			CACHE_SUFFIX = "_stag";
 		}
 		else if (CoreConstants.isTestEnvironment()) {
-			CACHE_PREFIX = "test_";
+			CACHE_SUFFIX = "_test";
 		}
 		else if (CoreConstants.isLocalTestEnvironment()) {
-			CACHE_PREFIX = "ltest_";
+			CACHE_SUFFIX = "_ltest";
 		}
 		else {
-			CACHE_PREFIX = "dev_";
+			CACHE_SUFFIX = "_dev";
 		}
 	}
 
