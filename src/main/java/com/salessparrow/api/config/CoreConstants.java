@@ -79,6 +79,10 @@ public class CoreConstants {
 		return SecretConstants.defaultTestUserPassword();
 	}
 
+	public static String defaultTestUserCode() {
+		return "test_12341234";
+	}
+
 	/**
 	 * This method returns the memcached address that is going to be used for locals
 	 * @return String

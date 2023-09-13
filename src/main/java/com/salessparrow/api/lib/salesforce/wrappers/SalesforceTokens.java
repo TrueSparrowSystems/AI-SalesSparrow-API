@@ -38,15 +38,16 @@ public class SalesforceTokens {
 		String requestBody;
 
 		if (!isTestUser) {
-			requestBody = "grant_type=" + salesforceConstants.authorizationCodeGrantType() + "&client_id="
-					+ CoreConstants.salesforceClientId() + "&client_secret=" + CoreConstants.salesforceClientSecret()
-					+ "&code=" + code + "&redirect_uri=" + redirectUri;
+			requestBody = String.format("grant_type=%s&client_id=%s&client_secret=%s&code=%s&redirect_uri=%s",
+					salesforceConstants.authorizationCodeGrantType(), CoreConstants.salesforceClientId(),
+					CoreConstants.salesforceClientSecret(), code, redirectUri);
 		}
 		else {
-			requestBody = "grant_type=" + salesforceConstants.passwordGrantType() + "&client_id="
-					+ CoreConstants.salesforceClientId() + "&client_secret=" + CoreConstants.salesforceClientSecret()
-					+ "&username=" + CoreConstants.defaultTestUser() + "&password="
-					+ CoreConstants.defaultTestUserPassword() + "&redirect_uri=" + redirectUri;
+			requestBody = String.format(
+					"grant_type=%s&client_id=%s&client_secret=%s&username=%s&password=%s&redirect_uri=%s",
+					salesforceConstants.passwordGrantType(), CoreConstants.salesforceClientId(),
+					CoreConstants.salesforceClientSecret(), CoreConstants.defaultTestUser(),
+					CoreConstants.defaultTestUserPassword(), redirectUri);
 		}
 
 		Map<String, String> headers = new HashMap<>();

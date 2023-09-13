@@ -30,7 +30,6 @@ import com.salessparrow.api.repositories.SalesforceOauthTokenRepository;
 import com.salessparrow.api.repositories.SalesforceOrganizationRepository;
 import com.salessparrow.api.repositories.SalesforceUserRepository;
 import jakarta.servlet.http.HttpServletRequest;
-import software.amazon.awssdk.services.secretsmanager.endpoints.internal.Value.Bool;
 
 @Service
 public class AuthService {
@@ -94,7 +93,7 @@ public class AuthService {
 		this.isNewUser = true; // setting default value true to this variable, this will
 								// be updated based on conditions in further processing
 
-		String testUserCode = "test_12341234";
+		String testUserCode = CoreConstants.defaultTestUserCode();
 		Boolean isTestUser = false;
 
 		code = params.getCode();
