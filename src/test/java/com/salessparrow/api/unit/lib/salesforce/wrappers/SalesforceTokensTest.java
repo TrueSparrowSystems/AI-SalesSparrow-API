@@ -88,7 +88,7 @@ public class SalesforceTokensTest {
 			httpClientMockedStatic.when(() -> HttpClient.makePostRequest(anyString(), anyMap(), anyString(), anyInt()))
 				.thenReturn(mockResponse);
 
-			HttpResponse actualResponse = salesforceTokens.getTokens(code, redirectUri);
+			HttpResponse actualResponse = salesforceTokens.getTokens(code, redirectUri, false);
 
 			// Assertions
 			assertEquals(mockResponse.getResponseBody(), actualResponse.getResponseBody());
@@ -116,7 +116,7 @@ public class SalesforceTokensTest {
 				.thenThrow(new RuntimeException("Some error occurred"));
 
 			CustomException exception = assertThrows(CustomException.class, () -> {
-				salesforceTokens.getTokens(code, redirectUri);
+				salesforceTokens.getTokens(code, redirectUri, false);
 			});
 
 			// Assertions

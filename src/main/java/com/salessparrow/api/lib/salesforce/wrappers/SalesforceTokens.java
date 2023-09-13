@@ -31,13 +31,24 @@ public class SalesforceTokens {
 	 * @param redirectUri
 	 * @return HttpResponse
 	 */
-	public HttpResponse getTokens(String code, String redirectUri) {
+	public HttpResponse getTokens(String code, String redirectUri, Boolean isTestUser) {
 
 		String salesforceOAuthEndpoint = salesforceConstants.oauth2Url();
 
-		String requestBody = "grant_type=" + salesforceConstants.authorizationCodeGrantType() + "&client_id="
-				+ CoreConstants.salesforceClientId() + "&client_secret=" + CoreConstants.salesforceClientSecret()
-				+ "&code=" + code + "&redirect_uri=" + redirectUri;
+		String requestBody;
+
+		if (!isTestUser) {
+			requestBody = String.format("grant_type=%s&client_id=%s&client_secret=%s&code=%s&redirect_uri=%s",
+					salesforceConstants.authorizationCodeGrantType(), CoreConstants.salesforceClientId(),
+					CoreConstants.salesforceClientSecret(), code, redirectUri);
+		}
+		else {
+			requestBody = String.format(
+					"grant_type=%s&client_id=%s&client_secret=%s&username=%s&password=%s&redirect_uri=%s",
+					salesforceConstants.passwordGrantType(), CoreConstants.salesforceClientId(),
+					CoreConstants.salesforceClientSecret(), CoreConstants.defaultTestUser(),
+					CoreConstants.defaultTestUserPassword(), redirectUri);
+		}
 
 		Map<String, String> headers = new HashMap<>();
 		headers.put("content-type", "application/x-www-form-urlencoded");

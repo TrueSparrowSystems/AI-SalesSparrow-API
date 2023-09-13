@@ -7,7 +7,6 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import com.salessparrow.api.domain.SalesforceOauthToken;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
-import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.repositories.SalesforceOauthTokenRepository;
 
 import org.slf4j.Logger;

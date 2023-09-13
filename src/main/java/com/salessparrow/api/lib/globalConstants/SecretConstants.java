@@ -140,6 +140,14 @@ public class SecretConstants {
 		return getSecret("LOCAL_KMS_ENDPOINT");
 	}
 
+	public static String defaultTestUser() {
+		return getSecret("DEFAULT_TEST_USER");
+	}
+
+	public static String defaultTestUserPassword() {
+		return getSecret("DEFAULT_TEST_USER_PASSWORD");
+	}
+
 	/* Secrets end */
 
 	/**

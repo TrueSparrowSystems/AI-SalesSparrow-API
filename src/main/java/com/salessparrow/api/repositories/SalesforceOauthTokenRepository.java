@@ -28,7 +28,8 @@ public class SalesforceOauthTokenRepository {
 	 * @param salesforceOauthToken
 	 * @return SalesforceOauthToken
 	 */
-	@CacheEvict(value = CacheConstants.SS_SALESFORCE_OAUTH_TOKEN_CACHE, key = "#salesforceOauthToken.externalUserId")
+	@CacheEvict(value = CacheConstants.SALESFORCE_OAUTH_TOKEN_CACHE,
+			key = "#salesforceOauthToken.externalUserId + T(com.salessparrow.api.lib.globalConstants.CacheConstants).CACHE_SUFFIX")
 	public SalesforceOauthToken createSalesforceOauthToken(SalesforceOauthToken salesforceOauthToken) {
 		// Create a row with status active and created at as current time
 		salesforceOauthToken.setStatus(SalesforceOauthToken.Status.ACTIVE);
@@ -48,7 +49,8 @@ public class SalesforceOauthTokenRepository {
 	 * @param salesforceOauthToken
 	 * @return SalesforceOauthToken
 	 */
-	@CacheEvict(value = CacheConstants.SS_SALESFORCE_OAUTH_TOKEN_CACHE, key = "#salesforceOauthToken.externalUserId")
+	@CacheEvict(value = CacheConstants.SALESFORCE_OAUTH_TOKEN_CACHE,
+			key = "#salesforceOauthToken.externalUserId + T(com.salessparrow.api.lib.globalConstants.CacheConstants).CACHE_SUFFIX")
 	public SalesforceOauthToken updateSalesforceOauthToken(SalesforceOauthToken salesforceOauthToken) {
 		try {
 			dynamoDBMapper.save(salesforceOauthToken);
@@ -65,7 +67,8 @@ public class SalesforceOauthTokenRepository {
 	 * @param externalUserId
 	 * @return SalesforceOauthToken
 	 */
-	@Cacheable(value = CacheConstants.SS_SALESFORCE_OAUTH_TOKEN_CACHE, key = "#externalUserId")
+	@Cacheable(value = CacheConstants.SALESFORCE_OAUTH_TOKEN_CACHE,
+			key = "#externalUserId + T(com.salessparrow.api.lib.globalConstants.CacheConstants).CACHE_SUFFIX")
 	public SalesforceOauthToken getSalesforceOauthTokenByExternalUserId(String externalUserId) {
 		try {
 			return dynamoDBMapper.load(SalesforceOauthToken.class, externalUserId);
@@ -81,7 +84,8 @@ public class SalesforceOauthTokenRepository {
 	 * @param salesforceOauthToken
 	 * @return void
 	 */
-	@CacheEvict(value = CacheConstants.SS_SALESFORCE_OAUTH_TOKEN_CACHE, key = "#salesforceOauthToken.externalUserId")
+	@CacheEvict(value = CacheConstants.SALESFORCE_OAUTH_TOKEN_CACHE,
+			key = "#salesforceOauthToken.externalUserId + T(com.salessparrow.api.lib.globalConstants.CacheConstants).CACHE_SUFFIX")
 	public void deleteSalesforceOauthTokenBySalesforceOauthToken(SalesforceOauthToken salesforceOauthToken) {
 		try {
 			dynamoDBMapper.delete(salesforceOauthToken);

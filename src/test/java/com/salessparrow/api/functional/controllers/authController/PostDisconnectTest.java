@@ -1,6 +1,7 @@
 package com.salessparrow.api.functional.controllers.authController;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -92,7 +93,7 @@ public class PostDisconnectTest {
 			getTokensMockRes
 				.setResponseBody(objectMapper.writeValueAsString(testDataItem.getMocks().get("revokeTokens")));
 
-			when(mockGetTokens.getTokens(anyString(), anyString())).thenReturn(getTokensMockRes);
+			when(mockGetTokens.getTokens(anyString(), anyString(), anyBoolean())).thenReturn(getTokensMockRes);
 
 			ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/disconnect")
 				.cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
@@ -129,7 +130,7 @@ public class PostDisconnectTest {
 			getTokensMockRes
 				.setResponseBody(objectMapper.writeValueAsString(testDataItem.getMocks().get("revokeTokens")));
 
-			when(mockGetTokens.getTokens(anyString(), anyString())).thenReturn(getTokensMockRes);
+			when(mockGetTokens.getTokens(anyString(), anyString(), anyBoolean())).thenReturn(getTokensMockRes);
 
 			ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/disconnect")
 				.cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))

@@ -54,6 +54,10 @@ public class SalesforceConstants {
 		return "authorization_code";
 	}
 
+	public String passwordGrantType() {
+		return "password";
+	}
+
 	public String refreshTokenGrantType() {
 		return "refresh_token";
 	}
