@@ -71,6 +71,14 @@ public class CoreConstants {
 		return SecretConstants.localKmsEndpoint();
 	}
 
+	public static String defaultTestUser() {
+		return SecretConstants.defaultTestUser();
+	}
+
+	public static String defaultTestUserPassword() {
+		return SecretConstants.defaultTestUserPassword();
+	}
+
 	/**
 	 * This method returns the memcached address that is going to be used for locals
 	 * @return String

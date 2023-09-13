@@ -30,6 +30,7 @@ import com.salessparrow.api.repositories.SalesforceOauthTokenRepository;
 import com.salessparrow.api.repositories.SalesforceOrganizationRepository;
 import com.salessparrow.api.repositories.SalesforceUserRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import software.amazon.awssdk.services.secretsmanager.endpoints.internal.Value.Bool;
 
 @Service
 public class AuthService {
@@ -93,10 +94,17 @@ public class AuthService {
 		this.isNewUser = true; // setting default value true to this variable, this will
 								// be updated based on conditions in further processing
 
+		String testUserCode = "test_12341234";
+		Boolean isTestUser = false;
+
 		code = params.getCode();
+		if (code.equals(testUserCode)) {
+			isTestUser = true;
+		}
+
 		redirectUri = params.getRedirect_uri();
 
-		fetchOauthTokensFromSalesforce();
+		fetchOauthTokensFromSalesforce(isTestUser);
 
 		validateAndSaveSalesforceOrganization();
 
@@ -116,10 +124,11 @@ public class AuthService {
 	 * Call Salesforce oauth token endpoint and fetch tokens.
 	 * @return void
 	 */
-	private void fetchOauthTokensFromSalesforce() {
+	private void fetchOauthTokensFromSalesforce(Boolean isTestUser) {
 		logger.info("Fetching OAuth Tokens from Salesforce");
 
-		HttpResponse response = salesforceTokens.getTokens(this.code, this.redirectUri);
+		// TODO - Raj (Call below with diff params as per screenshot shared)
+		HttpResponse response = salesforceTokens.getTokens(this.code, this.redirectUri, isTestUser);
 
 		JsonNode jsonNode = util.getJsonNode(response.getResponseBody());
 

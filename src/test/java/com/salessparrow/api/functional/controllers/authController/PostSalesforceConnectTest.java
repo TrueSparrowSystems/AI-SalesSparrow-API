@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -108,7 +109,7 @@ public class PostSalesforceConnectTest {
 			getIdentityMockRes
 				.setResponseBody(objectMapper.writeValueAsString(testDataItem.getMocks().get("getIdentity")));
 
-			when(mockGetTokens.getTokens(anyString(), anyString())).thenReturn(getTokensMockRes);
+			when(mockGetTokens.getTokens(anyString(), anyString(), anyBoolean())).thenReturn(getTokensMockRes);
 			when(mockGetIdentity.getUserIdentity(anyString(), anyString())).thenReturn(getIdentityMockRes);
 
 			ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/salesforce/connect")
@@ -153,7 +154,7 @@ public class PostSalesforceConnectTest {
 			HttpResponse getTokensMockRes = new HttpResponse();
 			getTokensMockRes.setResponseBody(objectMapper.writeValueAsString(testDataItem.getMocks().get("getTokens")));
 
-			when(mockGetTokens.getTokens(anyString(), anyString())).thenReturn(getTokensMockRes);
+			when(mockGetTokens.getTokens(anyString(), anyString(), anyBoolean())).thenReturn(getTokensMockRes);
 
 			ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/salesforce/connect")
 				.content(objectMapper.writeValueAsString(testDataItem.getInput().get("body")))
@@ -165,7 +166,7 @@ public class PostSalesforceConnectTest {
 
 			if (resultActions.andReturn().getResponse().getStatus() == 200) {
 				assertEquals(objectMapper.writeValueAsString(testDataItem.getOutput()), actualOutput);
-				verify(mockGetTokens, times(1)).getTokens(anyString(), anyString());
+				verify(mockGetTokens, times(1)).getTokens(anyString(), anyString(), anyBoolean());
 				verify(mockGetIdentity, times(0)).getUserIdentity(anyString(), anyString());
 			}
 			else if (resultActions.andReturn().getResponse().getStatus() == 400) {
@@ -202,7 +203,7 @@ public class PostSalesforceConnectTest {
 			getIdentityMockRes
 				.setResponseBody(objectMapper.writeValueAsString(testDataItem.getMocks().get("getIdentity")));
 
-			when(mockGetTokens.getTokens(anyString(), anyString())).thenReturn(getTokensMockRes);
+			when(mockGetTokens.getTokens(anyString(), anyString(), anyBoolean())).thenReturn(getTokensMockRes);
 			when(mockGetIdentity.getUserIdentity(anyString(), anyString())).thenReturn(getIdentityMockRes);
 
 			ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/auth/salesforce/connect")
