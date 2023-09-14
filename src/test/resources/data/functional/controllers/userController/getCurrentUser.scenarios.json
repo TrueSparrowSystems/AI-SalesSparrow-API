@@ -1,0 +1,43 @@
+[
+  {
+    "description": "Should return current user",
+    "input": {
+      "cookie": "1:0055i00000AUxQHAA1:SALESFORCE:app:1692878227:a2xOxjcPChK/YsKCWRuY50J3gH21/tqcGlv7sWU/aPw3/UFVFPbvWn2LLzY5B5kVPXjj1gELRqa4B4ds6uuqIw=="
+    },
+    "output": {
+      "current_user": {
+        "id": "0055i00000AUxQHAA1",
+        "name": "Test User",
+        "email": "test@test.com"
+      }
+    }
+  },
+  {
+    "description": "Should return error if invalid cookie",
+    "input": {
+      "cookie": "1:0055i00000AUxQHAA1:SALESFORCE:app:1899000000:invalid"
+    },
+    "output": {
+      "http_code": 401,
+      "code": "UNAUTHORIZED"
+    }
+  },
+  {
+    "description": "Should return error if no cookie",
+    "input": {},
+    "output": {
+      "http_code": 401,
+      "code": "UNAUTHORIZED"
+    }
+  },
+  {
+    "description": "Should return error if expired cookie",
+    "input": {
+      "cookie": "1:0055i00000AUxQHAA1:SALESFORCE:app:1592189876:IbFOqqub193hajGqMDwrF41iUiKl8KJKWpmPl7oqX4eesrydP9cSx483f86OFK+dtSNAukoy+Tr7pRYsD3yVNw=="
+    },
+    "output": {
+      "http_code": 401,
+      "code": "UNAUTHORIZED"
+    }
+  }
+]

@@ -8,17 +8,17 @@ import lombok.Data;
 
 /**
  * Salesforce connect formatter DTO.
- * 
+ *
  * @param current_user
- * 
  * @return SalesforceConnectFormatterDto
  */
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class SalesforceConnectFormatterDto {
-  public SalesforceConnectFormatterDto() {
-  }
 
-  private CurrentUserEntityDto currentUser;
+	public SalesforceConnectFormatterDto() {
+	}
+
+	private CurrentUserEntityDto currentUser;
 
 }

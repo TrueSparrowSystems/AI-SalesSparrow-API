@@ -14,6 +14,11 @@
     "code": "NOT_FOUND",
     "message": "Resource not found. Please check if the resource identifier passed in the URL is valid and try again."
   },
+  "unsupported_media_type": {
+    "httpCode": "415",
+    "code": "UNSUPPORTED_MEDIA_TYPE",
+    "message": "Unsupported Media Type. Content-Type header should be application/json."
+  },
   "something_went_wrong": {
     "httpCode": "500",
     "code": "INTERNAL_SERVER_ERROR",
@@ -39,9 +44,14 @@
     "code": "INVALID_PARAMS",
     "message": "At least one parameter is invalid or missing."
   },
-    "forbidden_api_request": {
-      "httpCode": "403",
-      "code": "FORBIDDEN",
-      "message": "Forbidden API request. You do not have the necessary permissions."
-    }
+  "forbidden_api_request": {
+    "httpCode": "403",
+    "code": "FORBIDDEN",
+    "message": "Forbidden API request. You do not have the necessary permissions."
+  },
+  "pagination_identifier_parsing_error": {
+    "httpCode": "400",
+    "code": "PAGINATION_IDENTIFIER_PARSING_ERROR",
+    "message": "Error parsing pagination identifier."
+  }
 }

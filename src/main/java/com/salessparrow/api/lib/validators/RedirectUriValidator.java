@@ -13,11 +13,11 @@ import com.salessparrow.api.config.CoreConstants;
 
 public class RedirectUriValidator implements ConstraintValidator<ValidRedirectUri, String> {
 
-  private List<String> ALLOWED_URIS = new ArrayList<>(
-      Arrays.asList(CoreConstants.getWhitelistedRedirectUris()));
+	private List<String> ALLOWED_URIS = new ArrayList<>(Arrays.asList(CoreConstants.getWhitelistedRedirectUris()));
 
-  @Override
-  public boolean isValid(String value, ConstraintValidatorContext context) {
-    return value != null && ALLOWED_URIS.contains(value);
-  }
+	@Override
+	public boolean isValid(String value, ConstraintValidatorContext context) {
+		return value != null && ALLOWED_URIS.contains(value);
+	}
+
 }

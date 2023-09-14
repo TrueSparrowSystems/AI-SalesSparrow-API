@@ -11,5 +11,7 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CreateNoteFormatterDto {
-    private String noteId;
+
+	private String noteId;
+
 }

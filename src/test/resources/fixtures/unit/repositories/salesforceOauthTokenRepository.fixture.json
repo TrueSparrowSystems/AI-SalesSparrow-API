@@ -1,0 +1,23 @@
+{
+  "testUpdate": {
+    "salesforce_oauth_tokens": [
+      {
+        "filepath": "classpath:fixtures/common/repositories/salesforceOauthToken/ActiveSalesforceOauthToken.json"
+      }
+    ]
+  },
+  "testUpdateWithNullAttributes": {
+    "salesforce_oauth_tokens": [
+      {
+        "filepath": "classpath:fixtures/common/repositories/salesforceOauthToken/ActiveSalesforceOauthToken.json"
+      }
+    ]
+  },
+  "testValidGetSalesforceOauthTokenByExternalUserId": {
+    "salesforce_oauth_tokens": [
+      { 
+        "filepath": "classpath:fixtures/common/repositories/salesforceOauthToken/ActiveSalesforceOauthToken.json"
+      }
+    ]
+  }
+}

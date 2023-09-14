@@ -9,52 +9,52 @@ import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.repositories.SalesforceOauthTokenRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * SalesforceRequest is a class for making a request to the Salesforce API.
  */
 @Component
 public class SalesforceRequest {
 
-  @Autowired
-  private SalesforceOAuthToken getAccessTokenService;
+	@Autowired
+	private SalesforceOAuthToken getAccessTokenService;
 
-  @Autowired
-  private SalesforceOauthTokenRepository sfOauthTokenRepository;
+	@Autowired
+	private SalesforceOauthTokenRepository salesforceOauthTokenRepository;
 
-  /**
-   * Make a request to the Salesforce API.
-   * 
-   * @param salesforceUserId
-   * @param request
-   * 
-   * @return T
-   */
-  public <T> T makeRequest(String salesforceUserId, SalesforceRequestInterface<T> request) {
-    SalesforceOauthToken sfOAuthToken = sfOauthTokenRepository
-        .getSalesforceOauthTokenByExternalUserId(salesforceUserId);
+	Logger logger = LoggerFactory.getLogger(SalesforceRequest.class);
 
-    String decryptedAccessToken = getAccessTokenService.fetchAccessToken(sfOAuthToken);
+	/**
+	 * Make a request to the Salesforce API.
+	 * @param salesforceUserId
+	 * @param request
+	 * @return T
+	 */
+	public <T> T makeRequest(String salesforceUserId, SalesforceRequestInterface<T> request) {
+		SalesforceOauthToken sfOAuthToken = salesforceOauthTokenRepository
+			.getSalesforceOauthTokenByExternalUserId(salesforceUserId);
 
-    try {
-      return request.execute(decryptedAccessToken, sfOAuthToken.getInstanceUrl());
-    } catch (WebClientResponseException e) {
-      if(e.getStatusCode().value() == 401) {
-        try {
-          decryptedAccessToken = getAccessTokenService.updateAndGetRefreshedAccessToken(sfOAuthToken);
-          return request.execute(decryptedAccessToken, sfOAuthToken.getInstanceUrl());
-        } catch (Exception e1) {
-          throw new CustomException(
-            new ErrorObject(
-              "l_s_h_sr_mr_1",
-              "something_went_wrong",
-              e.getMessage()));
-        }
-      }
-      throw new CustomException(
-        new ErrorObject(
-          "l_s_h_sr_mr_2",
-          "something_went_wrong",
-          e.getMessage()));
-    }
-  }
+		String decryptedAccessToken = getAccessTokenService.fetchAccessToken(sfOAuthToken);
+
+		try {
+			return request.execute(decryptedAccessToken, sfOAuthToken.getInstanceUrl());
+		}
+		catch (WebClientResponseException e) {
+			if (e.getStatusCode().value() == 401) {
+				try {
+					decryptedAccessToken = getAccessTokenService.updateAndGetRefreshedAccessToken(sfOAuthToken);
+					return request.execute(decryptedAccessToken, sfOAuthToken.getInstanceUrl());
+				}
+				catch (Exception e1) {
+					logger.error("Error while refreshing access token {}", e1);
+					throw new CustomException(new ErrorObject("l_s_h_sr_mr_1", "something_went_wrong", e.getMessage()));
+				}
+			}
+			logger.error("Error while making request to salesforce {}", e);
+			throw new CustomException(new ErrorObject("l_s_h_sr_mr_2", "something_went_wrong", e.getMessage()));
+		}
+	}
+
 }

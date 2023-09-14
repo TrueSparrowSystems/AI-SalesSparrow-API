@@ -5,16 +5,16 @@ package com.salessparrow.api.domain;
  */
 public interface User {
 
-  String getExternalUserId();
+	String getExternalUserId();
 
-  String getEmail();
+	String getEmail();
 
-  String getName();
+	String getName();
 
-  String getUserKind();
+	String getUserKind();
 
-  String getCookieToken();
+	String getCookieToken();
 
-  String getEncryptionSalt();
+	String getEncryptionSalt();
 
 }

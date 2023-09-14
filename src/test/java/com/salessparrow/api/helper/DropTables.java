@@ -17,38 +17,39 @@ import com.salessparrow.api.config.CoreConstants;
  */
 @TestConfiguration
 public class DropTables {
-  Logger logger = LoggerFactory.getLogger(DropTables.class);
 
-  @Autowired
-  private AmazonDynamoDB dynamoDB;
+	Logger logger = LoggerFactory.getLogger(DropTables.class);
 
-  /**
-   * This method is used to drop the tables.
-   */
-  public void perform() {
-    if (!CoreConstants.environment().equals("test")) {
-      throw new RuntimeException("Cannot drop tables in non test environment");
-    }
+	@Autowired
+	private AmazonDynamoDB dynamoDB;
 
-    List<String> tableList = getAllTableList();
-    String envPrefix = CoreConstants.environment() + "_";
+	/**
+	 * This method is used to drop the tables.
+	 */
+	public void perform() {
+		if (!CoreConstants.isTestEnvironment() && !CoreConstants.isLocalTestEnvironment()) {
+			throw new RuntimeException("Cannot drop tables in non test environment");
+		}
 
-    for (String tableName : tableList) {
-      if (tableName.startsWith(envPrefix)) {
-        dynamoDB.deleteTable(tableName);
-      }
-    }
-  }
+		List<String> tableList = getAllTableList();
+		String envPrefix = CoreConstants.environment() + "_";
 
-  /**
-   * This method is used to get all the table list.
-   * 
-   * @return List of table names
-   */
-  private List<String> getAllTableList() {
-    ListTablesRequest listTablesRequest = new ListTablesRequest();
-    ListTablesResult listTablesResult = dynamoDB.listTables(listTablesRequest);
-    
-    return listTablesResult.getTableNames();
-  }
+		for (String tableName : tableList) {
+			if (tableName.startsWith(envPrefix)) {
+				dynamoDB.deleteTable(tableName);
+			}
+		}
+	}
+
+	/**
+	 * This method is used to get all the table list.
+	 * @return List of table names
+	 */
+	private List<String> getAllTableList() {
+		ListTablesRequest listTablesRequest = new ListTablesRequest();
+		ListTablesResult listTablesResult = dynamoDB.listTables(listTablesRequest);
+
+		return listTablesResult.getTableNames();
+	}
+
 }

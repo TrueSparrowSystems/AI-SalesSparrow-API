@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -30,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dynamobee.exception.DynamobeeException;
 import com.salessparrow.api.helper.Cleanup;
 import com.salessparrow.api.helper.Common;
+import com.salessparrow.api.helper.Constants;
 import com.salessparrow.api.helper.FixtureData;
 import com.salessparrow.api.helper.LoadFixture;
 import com.salessparrow.api.helper.Scenario;
@@ -46,73 +48,92 @@ import jakarta.servlet.http.Cookie;
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
 public class CreateNoteTest {
 
-  @Autowired
-  private MockMvc mockMvc;
-  @Autowired
-  private Common common;
-  @Autowired
-  private LoadFixture loadFixture;
-  @Autowired
-  private Setup setup;
-  @Autowired
-  private Cleanup cleanup;
+	@Autowired
+	private MockMvc mockMvc;
 
-  @MockBean
-  private MakeCompositeRequest makeCompositeRequestMock;
+	@Autowired
+	private Common common;
 
-  @BeforeEach
-  public void setUp() throws DynamobeeException {
-    setup.perform();
-  }
+	@Autowired
+	private LoadFixture loadFixture;
 
-  @AfterEach
-  public void tearDown() {
-    cleanup.perform();
-  }
+	@Autowired
+	private Setup setup;
 
-  @ParameterizedTest
-  @MethodSource("testScenariosProvider")
-  public void createNote(Scenario testScenario) throws Exception {
+	@Autowired
+	private Cleanup cleanup;
 
-    // Load fixture data
-    String currentFunctionName = new Object(){}.getClass().getEnclosingMethod().getName();
-    FixtureData fixtureData = common.loadFixture("classpath:fixtures/controllers/accountController/createNote.fixtures.json", currentFunctionName);
-    loadFixture.perform(fixtureData);
+	@MockBean
+	private MakeCompositeRequest makeCompositeRequestMock;
 
-    // Read data from the scenario
-    ObjectMapper objectMapper = new ObjectMapper();
-    String cookieValue = (String) testScenario.getInput().get("cookie");
-    String accountId = (String) testScenario.getInput().get("accountId");
+	@BeforeEach
+	public void setUp() throws DynamobeeException {
+		setup.perform();
+	}
 
-    // Prepare mock responses
-    HttpResponse createNoteMockResponse = new HttpResponse();
-    createNoteMockResponse.setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeCompositeRequest")));
-    when(makeCompositeRequestMock.makePostRequest(any(), any())).thenReturn(createNoteMockResponse);
+	@AfterEach
+	public void tearDown() {
+		cleanup.perform();
+	}
 
-    // Perform the request
-    String requestBody = objectMapper.writeValueAsString(testScenario.getInput().get("body"));
-    String url = "/api/v1/accounts/" + accountId + "/notes";
+	@ParameterizedTest
+	@MethodSource("testScenariosProvider")
+	public void createNote(Scenario testScenario) throws Exception {
 
-    ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(url)
-            .cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
-            .content(requestBody)
-            .contentType(MediaType.APPLICATION_JSON));
+		// Load fixture data
+		String currentFunctionName = new Object() {
+		}.getClass().getEnclosingMethod().getName();
+		FixtureData fixtureData = common.loadFixture(
+				"classpath:fixtures/functional/controllers/accountController/createNote.fixtures.json",
+				currentFunctionName);
+		loadFixture.perform(fixtureData);
 
-    // Check the response
-    String expectedOutput = objectMapper.writeValueAsString(testScenario.getOutput());
-    String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
-    assertEquals(expectedOutput, actualOutput);
-  }
+		// Read data from the scenario
+		ObjectMapper objectMapper = new ObjectMapper();
+		String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
+		String accountId = (String) testScenario.getInput().get("accountId");
 
-  static Stream<Scenario> testScenariosProvider() throws IOException {
-    List<Scenario> testScenarios = loadScenarios();
-    return testScenarios.stream();
-  }
+		// Prepare mock responses
+		HttpResponse createNoteMockResponse = new HttpResponse();
+		createNoteMockResponse
+			.setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeCompositeRequest")));
+		when(makeCompositeRequestMock.makePostRequest(any(), any())).thenReturn(createNoteMockResponse);
 
-  private static List<Scenario> loadScenarios() throws IOException {
-    String scenariosPath = "classpath:data/controllers/accountController/createNote.scenarios.json";
-    Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
-    ObjectMapper objectMapper = new ObjectMapper();
-    return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {});
-  }
+		// Perform the request
+		String requestBody = objectMapper.writeValueAsString(testScenario.getInput().get("body"));
+		String url = "/api/v1/accounts/" + accountId + "/notes";
+
+		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(url)
+			.cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
+			.content(requestBody)
+			.contentType(MediaType.APPLICATION_JSON));
+
+		// Check the response
+		String expectedOutput = objectMapper.writeValueAsString(testScenario.getOutput());
+		String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
+
+		if (resultActions.andReturn().getResponse().getStatus() == 200) {
+			assertEquals(expectedOutput, actualOutput);
+		}
+		else {
+			common.compareErrors(testScenario, actualOutput);
+		}
+	}
+
+	static Stream<Scenario> testScenariosProvider() throws IOException {
+		List<Scenario> testScenarios = loadScenarios();
+		return testScenarios.stream();
+	}
+
+	private static List<Scenario> loadScenarios() throws IOException {
+		String scenariosPath = "classpath:data/functional/controllers/accountController/createNote.scenarios.json";
+		Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		try (InputStream inputStream = resource.getInputStream()) {
+			return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {
+			});
+		}
+	}
+
 }

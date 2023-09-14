@@ -1,0 +1,17 @@
+# This file is used to seed the local KMS instance with keys and aliases.
+# The keys and aliases defined here will be created when the KMS instance is
+# first started.  If the keys or aliases already exist, they will not be
+# modified.
+# This is for testing purposes only.
+
+Keys:
+  Symmetric:
+    Aes:
+      - Metadata:
+          KeyId: bc436485-5092-42b8-92a3-0aa8b93536dc
+        BackingKeys:
+          - 5cdaead27fe7da2de47945d73cd6d79e36494e73802f3cd3869f1d2cb0b5d7a9
+
+Aliases:
+  - AliasName: alias/testing
+    TargetKeyId: bc436485-5092-42b8-92a3-0aa8b93536dc
