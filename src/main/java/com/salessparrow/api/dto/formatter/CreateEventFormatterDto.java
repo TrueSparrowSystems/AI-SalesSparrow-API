@@ -11,5 +11,7 @@ import lombok.Data;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CreateEventFormatterDto {
-  private String eventId;
+
+	private String eventId;
+
 }

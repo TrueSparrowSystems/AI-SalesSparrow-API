@@ -7,9 +7,11 @@ import lombok.Data;
  */
 @Data
 public class SalesforceCreateEventDto {
-  String id;
 
-  String success;
-  
-  String[] errors;
+	String id;
+
+	String success;
+
+	String[] errors;
+
 }

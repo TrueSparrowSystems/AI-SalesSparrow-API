@@ -38,9 +38,9 @@ public class SalesforceConstants {
 		return sObjectsPath() + "/ContentNote";
 	}
 
-  public String salesforceCreateEventUrl() {
-    return sObjectsPath() + "/Event";
-  }
+	public String salesforceCreateEventUrl() {
+		return sObjectsPath() + "/Event";
+	}
 
 	public String salesforceDeleteNoteUrl(String noteId) {
 		return sObjectsPath() + "/ContentNote/" + noteId;

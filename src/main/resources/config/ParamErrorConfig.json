@@ -58,5 +58,15 @@
         "parameter": "account_id",
         "param_error_identifier": "invalid_account_id",
         "message": "The account id you sent is incorrect. Please double check and try again."
+    },
+    "invalid_start_datetime": {
+      "parameter": "start_datetime",
+      "param_error_identifier": "invalid_start_datetime",
+      "message": "Invalid start datetime. Please double check and try again."
+    },
+    "invalid_end_datetime": {
+      "parameter": "end_datetime",
+      "param_error_identifier": "invalid_end_datetime",
+      "message": "Invalid end datetime. Please double check and try again."
     }
 }

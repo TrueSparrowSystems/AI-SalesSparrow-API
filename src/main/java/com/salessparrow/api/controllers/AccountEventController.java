@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.salessparrow.api.dto.formatter.CreateEventFormatterDto;
-import com.salessparrow.api.dto.requestMapper.CreateEventDto;
-import com.salessparrow.api.services.events.CreateEventService;
+import com.salessparrow.api.dto.requestMapper.CreateAccountEventDto;
+import com.salessparrow.api.services.accountEvents.CreateAccountEventService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -21,22 +21,21 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/v1/accounts/{account_id}/events")
 @Validated
 public class AccountEventController {
-  private Logger logger = org.slf4j.LoggerFactory.getLogger(AccountEventController.class);
 
-  @Autowired
-  private CreateEventService createEventService;
+	private Logger logger = org.slf4j.LoggerFactory.getLogger(AccountEventController.class);
 
-  @PostMapping("")
-  public ResponseEntity<CreateEventFormatterDto> createEvent(
-    HttpServletRequest request,
-    @PathVariable("account_id") String accountId, 
-    @Valid @RequestBody CreateEventDto createEventDto
-  ) {
-    logger.info("Create Event Request received");
+	@Autowired
+	private CreateAccountEventService createEventService;
 
-    CreateEventFormatterDto createEventFormatterDto = createEventService.createEvent(request, accountId, createEventDto);
+	@PostMapping("")
+	public ResponseEntity<CreateEventFormatterDto> createEvent(HttpServletRequest request,
+			@PathVariable("account_id") String accountId, @Valid @RequestBody CreateAccountEventDto createEventDto) {
+		logger.info("Create Event Request received");
 
-    return ResponseEntity.ok().body(createEventFormatterDto);
-  }
+		CreateEventFormatterDto createEventFormatterDto = createEventService.createEvent(request, accountId,
+				createEventDto);
+
+		return ResponseEntity.ok().body(createEventFormatterDto);
+	}
 
 }
