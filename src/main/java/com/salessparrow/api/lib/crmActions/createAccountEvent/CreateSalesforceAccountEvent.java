@@ -91,7 +91,7 @@ public class CreateSalesforceAccountEvent implements CreateAccountEventInterface
 		if (createEventStatusCode != 200 && createEventStatusCode != 201) {
 			String errorBody = createEventCompositeResponse.get("body").asText();
 
-			throw new CustomException(new ErrorObject("l_ca_ce_cse_pr_1", "internal_server_error", errorBody));
+			throw new CustomException(new ErrorObject("l_ca_cae_csae_pr_1", "internal_server_error", errorBody));
 		}
 
 		JsonNode createEventNodeResponseBody = rootNode.get("compositeResponse").get(0).get("body");

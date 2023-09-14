@@ -2,6 +2,7 @@ package com.salessparrow.api.controllers;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +36,7 @@ public class AccountEventController {
 		CreateEventFormatterDto createEventFormatterDto = createEventService.createEvent(request, accountId,
 				createEventDto);
 
-		return ResponseEntity.ok().body(createEventFormatterDto);
+		return ResponseEntity.status(HttpStatus.CREATED).body(createEventFormatterDto);
 	}
 
 }

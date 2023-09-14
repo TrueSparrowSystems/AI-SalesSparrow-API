@@ -14,7 +14,7 @@ import lombok.Data;
 public class CreateAccountEventDto {
 
 	@NotBlank(message = "missing_description")
-  @Size(max = 32000, message = "description_too_long")
+	@Size(max = 32000, message = "description_too_long")
 	private String description;
 
 	@NotNull(message = "missing_start_datetime")
