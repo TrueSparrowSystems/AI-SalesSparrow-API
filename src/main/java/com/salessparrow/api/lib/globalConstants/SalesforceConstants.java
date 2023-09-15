@@ -82,4 +82,8 @@ public class SalesforceConstants {
 		return sObjectsPath() + "/Task/" + taskId;
 	}
 
+	public String salesforceDeleteAccountEventUrl(String eventId) {
+		return sObjectsPath() + "/Event/" + eventId;
+	}
+
 }
