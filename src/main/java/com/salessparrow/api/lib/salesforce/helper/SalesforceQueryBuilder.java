@@ -115,4 +115,17 @@ public class SalesforceQueryBuilder {
 		return Util.urlEncoder(query);
 	}
 
+	/**
+	 * Get the list of events for a given account
+	 * @param accountId
+	 * @return String
+	 */
+	public String getAccountEventsQuery(String accountId) {
+		accountId = Util.escapeSpecialChars(accountId);
+
+		return Util.urlEncoder(
+				"SELECT Id, Description, CreatedBy.Name, StartDateTime, EndDateTime, LastModifiedDate FROM Event WHERE WhatId='"
+						+ accountId + "' ORDER BY LastModifiedDate DESC LIMIT 5");
+	}
+
 }
