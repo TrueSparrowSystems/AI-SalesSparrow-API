@@ -81,10 +81,10 @@ public class DeleteSalesforceAccountEvent implements DeleteAccountEvent {
 			if (deleteEventStatusCode == 400 || deleteEventStatusCode == 404) {
 
 				throw new CustomException(
-						new ParamErrorObject("l_ca_dat_dsat_pr_1", errorBody, Arrays.asList("invalid_event_id")));
+						new ParamErrorObject("l_ca_dae_dsae_pr_1", errorBody, Arrays.asList("invalid_event_id")));
 			}
 			else {
-				throw new CustomException(new ErrorObject("l_ca_dat_dsat_pr_2", "something_went_wrong", errorBody));
+				throw new CustomException(new ErrorObject("l_ca_dae_dsae_pr_2", "something_went_wrong", errorBody));
 			}
 		}
 	}

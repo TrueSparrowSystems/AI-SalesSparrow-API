@@ -1,9 +1,9 @@
 [
     {
-      "description": "Should successfully delete the task for given task id", 
+      "description": "Should successfully delete the event for given event id", 
       "input": {
         "accountId": "0011e00000bWSxdAAG",
-        "taskId":"0691e000001X1yTAAS"
+        "eventId":"0691e000001X1yTAAS"
       },
       "mocks": {
         "makeCompositeRequest": {
@@ -12,7 +12,7 @@
               "body": null,
               "httpHeaders": {},
               "httpStatusCode": 204,
-              "referenceId": "DeleteTask"
+              "referenceId": "DeleteEvent"
             }
           ]
         }
@@ -20,10 +20,10 @@
       "output": {}
     },
     {
-      "description": "should return error response when task id is invalid", 
+      "description": "should return error response when event id is invalid", 
       "input": {
         "accountId": "0011e00000bWSxdAAG",
-        "taskId":"invalidTaskId"
+        "eventId":"invalidEventId"
       },
       "mocks": {
         "makeCompositeRequest": {
@@ -32,12 +32,12 @@
             "body": [
               {
                 "errorCode": "NOT_FOUND",
-                "message": "Provided external ID field does not exist or is not accessible: INVALID_TASK_ID"
+                "message": "Provided external ID field does not exist or is not accessible: INVALID_EVENT_ID"
               }
             ],
             "httpHeaders": {},
             "httpStatusCode": 404,
-            "referenceId": "DeleteTask"
+            "referenceId": "DeleteEvent"
           }
         ]
       }
@@ -46,9 +46,9 @@
         "http_code": 400,
         "message": "At least one parameter is invalid or missing.",
         "code": "INVALID_PARAMS",
-        "internal_error_identifier": "l_ca_dat_dsat_pr_1",
+        "internal_error_identifier": "l_ca_dae_dsae_pr_1",
         "param_errors": [
-            "invalid_task_id"
+          "invalid_event_id"
         ]
       }
     }
