@@ -80,7 +80,7 @@ public class CoreConstants {
 	}
 
 	public static String defaultTestUserCode() {
-		return "test_12341234";
+		return SecretConstants.defaultTestUserCode();
 	}
 
 	/**

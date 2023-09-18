@@ -148,6 +148,10 @@ public class SecretConstants {
 		return getSecret("DEFAULT_TEST_USER_PASSWORD");
 	}
 
+	public static String defaultTestUserCode() {
+		return getSecret("DEFAULT_TEST_USER_CODE");
+	}
+
 	/* Secrets end */
 
 	/**
