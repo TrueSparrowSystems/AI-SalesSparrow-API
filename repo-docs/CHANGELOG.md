@@ -1,5 +1,21 @@
 # SalesSparrow APIs
 
+## 0.2.2
+
+### Enhancements:
+
+- Update Default Test User Login to use token from Environment [#92](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/92)
+
+## 0.2.1
+
+### New Features and Enhancements:
+
+- Default Test User Login in Connect Flow [#90](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/90)
+
+### Bug Fixes:
+
+- Use Environment based Naming as Suffix in Cache Names [#91](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/91)
+
 ## 0.2.0
 
 ### New Features and Enhancements:
