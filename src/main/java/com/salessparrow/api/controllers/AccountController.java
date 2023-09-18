@@ -35,7 +35,7 @@ public class AccountController {
 	@GetMapping("")
 	public ResponseEntity<GetAccountListResponseDto> getAccounts(HttpServletRequest request,
 			@Valid @ModelAttribute GetAccountsDto getAccountsDto) {
-		logger.info("Request received");
+		logger.info("Get Accounts Request received");
 
 		GetAccountListResponseDto getAccountsResponse = getAccountListService.getAccounts(request, getAccountsDto);
 
@@ -45,7 +45,7 @@ public class AccountController {
 	@GetMapping("/feed")
 	public ResponseEntity<GetAccountsFeedResponseDto> getFeed(HttpServletRequest request,
 			@Valid @ModelAttribute GetAccountsFeedDto getAccountsFeedDto) {
-		logger.info("Request received");
+		logger.info("Get Account Feed Request received");
 
 		GetAccountsFeedResponseDto getAccountsFeedResponse = getAccountsFeedService.getAccountsFeed(request,
 				getAccountsFeedDto);

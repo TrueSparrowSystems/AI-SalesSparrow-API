@@ -140,12 +140,16 @@ public class SecretConstants {
 		return getSecret("LOCAL_KMS_ENDPOINT");
 	}
 
-	public static String defaultTestUser() {
-		return getSecret("DEFAULT_TEST_USER");
+	public static String appStoreTesterLoginUser() {
+		return getSecret("APP_STORE_TESTER_LOGIN_USER");
 	}
 
-	public static String defaultTestUserPassword() {
-		return getSecret("DEFAULT_TEST_USER_PASSWORD");
+	public static String appStoreTesterLoginPassword() {
+		return getSecret("APP_STORE_TESTER_LOGIN_PASSWORD");
+	}
+
+	public static String appStoreTesterLoginToken() {
+		return getSecret("APP_STORE_TESTER_LOGIN_TOKEN");
 	}
 
 	/* Secrets end */

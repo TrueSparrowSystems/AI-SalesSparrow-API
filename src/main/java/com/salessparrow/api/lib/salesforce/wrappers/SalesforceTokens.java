@@ -46,8 +46,8 @@ public class SalesforceTokens {
 			requestBody = String.format(
 					"grant_type=%s&client_id=%s&client_secret=%s&username=%s&password=%s&redirect_uri=%s",
 					salesforceConstants.passwordGrantType(), CoreConstants.salesforceClientId(),
-					CoreConstants.salesforceClientSecret(), CoreConstants.defaultTestUser(),
-					CoreConstants.defaultTestUserPassword(), redirectUri);
+					CoreConstants.salesforceClientSecret(), CoreConstants.appStoreTesterLoginUser(),
+					CoreConstants.appStoreTesterLoginPassword(), redirectUri);
 		}
 
 		Map<String, String> headers = new HashMap<>();
