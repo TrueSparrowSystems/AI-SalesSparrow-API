@@ -93,11 +93,11 @@ public class AuthService {
 		this.isNewUser = true; // setting default value true to this variable, this will
 								// be updated based on conditions in further processing
 
-		String testUserCode = CoreConstants.defaultTestUserCode();
+		String appStoreTesterLoginToken = CoreConstants.appStoreTesterLoginToken();
 		Boolean isTestUser = false;
 
 		code = params.getCode();
-		if (code.equals(testUserCode)) {
+		if (code.equals(appStoreTesterLoginToken)) {
 			isTestUser = true;
 		}
 

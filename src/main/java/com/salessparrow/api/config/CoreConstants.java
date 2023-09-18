@@ -71,16 +71,16 @@ public class CoreConstants {
 		return SecretConstants.localKmsEndpoint();
 	}
 
-	public static String defaultTestUser() {
-		return SecretConstants.defaultTestUser();
+	public static String appStoreTesterLoginUser() {
+		return SecretConstants.appStoreTesterLoginUser();
 	}
 
-	public static String defaultTestUserPassword() {
-		return SecretConstants.defaultTestUserPassword();
+	public static String appStoreTesterLoginPassword() {
+		return SecretConstants.appStoreTesterLoginPassword();
 	}
 
-	public static String defaultTestUserCode() {
-		return SecretConstants.defaultTestUserCode();
+	public static String appStoreTesterLoginToken() {
+		return SecretConstants.appStoreTesterLoginToken();
 	}
 
 	/**
