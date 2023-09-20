@@ -63,36 +63,40 @@ public class GetCrmActionSuggestions {
 
 		try {
 			Util util = new Util();
+
 			JsonNode rootNode = util.getJsonNode(responseBody);
-			JsonNode argumentsNode = rootNode.get("choices")
-				.get(0)
-				.get("message")
-				.get("function_call")
-				.get("arguments");
 
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-			String argumentsJson = objectMapper.convertValue(argumentsNode, String.class);
-
-			Map<String, List<AddTaskSuggestionEntityDto>> arguments = objectMapper.readValue(argumentsJson,
-					new TypeReference<Map<String, List<AddTaskSuggestionEntityDto>>>() {
-					});
-			List<AddTaskSuggestionEntityDto> addTaskList = arguments.get("add_task");
+			JsonNode functionNode = rootNode.get("choices").get(0).get("message").get("function_call");
 
 			List<AddTaskSuggestionEntityDto> formattedTaskSuggestionEntityDtos = new ArrayList<>();
-			if (addTaskList != null) {
-				for (AddTaskSuggestionEntityDto addTask : addTaskList) {
-					AddTaskSuggestionEntityDto addTaskSuggestionEntityDto = new AddTaskSuggestionEntityDto();
-					addTaskSuggestionEntityDto.setDescription(addTask.getDescription());
 
-					// Format the response check if duedate format is YYYY-MM-DD else
-					// remove duedate
-					String dueDate = addTask.getDueDate();
-					if (dateFormatValidator.isValid(dueDate, null)) {
-						addTaskSuggestionEntityDto.setDueDate(dueDate);
+			if (functionNode != null) {
+
+				JsonNode argumentsNode = functionNode.get("arguments");
+
+				ObjectMapper objectMapper = new ObjectMapper();
+				objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+				String argumentsJson = objectMapper.convertValue(argumentsNode, String.class);
+
+				Map<String, List<AddTaskSuggestionEntityDto>> arguments = objectMapper.readValue(argumentsJson,
+						new TypeReference<Map<String, List<AddTaskSuggestionEntityDto>>>() {
+						});
+				List<AddTaskSuggestionEntityDto> addTaskList = arguments.get("add_task");
+
+				if (addTaskList != null) {
+					for (AddTaskSuggestionEntityDto addTask : addTaskList) {
+						AddTaskSuggestionEntityDto addTaskSuggestionEntityDto = new AddTaskSuggestionEntityDto();
+						addTaskSuggestionEntityDto.setDescription(addTask.getDescription());
+
+						// Format the response check if duedate format is YYYY-MM-DD else
+						// remove duedate
+						String dueDate = addTask.getDueDate();
+						if (dateFormatValidator.isValid(dueDate, null)) {
+							addTaskSuggestionEntityDto.setDueDate(dueDate);
+						}
+
+						formattedTaskSuggestionEntityDtos.add(addTaskSuggestionEntityDto);
 					}
-
-					formattedTaskSuggestionEntityDtos.add(addTaskSuggestionEntityDto);
 				}
 			}
 
