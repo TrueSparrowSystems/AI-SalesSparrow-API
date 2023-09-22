@@ -1,5 +1,11 @@
 # SalesSparrow APIs
 
+## 0.2.3
+
+### Enhancements:
+
+- Improve Task Suggestion to show correct Due Date and empty description if no task found [#94](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/94)
+
 ## 0.2.2
 
 ### Enhancements:
