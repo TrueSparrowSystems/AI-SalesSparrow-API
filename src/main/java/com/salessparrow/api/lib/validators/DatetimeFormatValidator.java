@@ -31,9 +31,20 @@ public class DatetimeFormatValidator implements ConstraintValidator<ValidDatetim
 		sdf.setLenient(false);
 
 		try {
+			// Attempt to parse the input date string
 			Date parsedDate = sdf.parse(value);
-			String dateString = sdf.format(parsedDate);
-			return dateString.equals(value.toString());
+
+			// Check if the parsed date is not null
+			if (parsedDate != null) {
+				// Format the parsed date back into a string
+				String formattedDate = sdf.format(parsedDate);
+
+				// Compare the formatted date with the input value
+				return formattedDate.equals(value);
+			}
+			else {
+				return false;
+			}
 		}
 		catch (Exception ex) {
 			return false;

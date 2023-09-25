@@ -2,13 +2,13 @@
   {
     "description": "Should return correct suggestions for a given text",
     "input": {
-      "text": "We reviewed the tasks that the team has completed since the last meeting and discussed additional projects.\n\nHere are the main topics we discussed:\n\nJoe updated us on the calendar for editorial, advertorial and social media content.\n"
+      "text": "Had a call with product team. They need a pitch desk by tomorrow and need to setup another call for next week."
     },
     "mocks":{
       "makeRequest":{
-        "id": "chatcmpl-0000",
+        "id": "chatcmpl-82Yb6OZk8wrZ1W91BDwmSi1O2spzr",
         "object": "chat.completion",
-        "created": 1692945329,
+        "created": 1695620340,
         "model": "gpt-3.5-turbo-0613",
         "choices": [
           {
@@ -18,24 +18,31 @@
               "content": null,
               "function_call": {
                 "name": "suggest_actions",
-                "arguments": "{\n  \"add_task\": [\n    {\n      \"description\": \"Review calendar for editorial, advertorial, and social media content\",\n      \"due_date\": \"2023-08-30\"\n    }\n  ]\n}"
+                "arguments": "{\n  \"add_task\": [\n    {\n      \"description\": \"Create pitch deck\",\n      \"due_date\": \"2023-09-26\"\n    }\n  ],\n  \"add_event\": [\n    {\n      \"description\": \"Call with product team\",\n      \"start_datetime\": \"2023-10-02T00:00:00.000+0000\"\n,\n      \"end_datetime\": \"2023-10-02T01:00:00.000+0000\"\n    }\n  ]\n}"
               }
             },
             "finish_reason": "function_call"
           }
         ],
         "usage": {
-          "prompt_tokens": 168,
-          "completion_tokens": 52,
-          "total_tokens": 220
+          "prompt_tokens": 485,
+          "completion_tokens": 89,
+          "total_tokens": 574
         }
       }
     },
     "output": {
       "add_task_suggestions": [
         {
-          "description": "Review calendar for editorial, advertorial, and social media content",
-          "due_date": "2023-08-30"
+          "description": "Create pitch deck",
+          "due_date": "2023-09-26"
+        }
+      ],
+      "add_event_suggestions": [
+        {
+          "description": "Call with product team",
+          "start_datetime": "2023-10-02T00:00:00.000+0000",
+          "end_datetime": "2023-10-02T01:00:00.000+0000"
         }
       ]
     }
@@ -59,7 +66,7 @@
               "content": null,
               "function_call": {
                 "name": "suggest_actions",
-                "arguments": "{\n  \"add_task\": []\n}"
+                "arguments": "{\n  \"add_task\": []\n,\"add_event\": []\n}"
               }
             },
             "finish_reason": "function_call"
@@ -73,7 +80,8 @@
       }
     },
     "output": {
-      "add_task_suggestions": []
+      "add_task_suggestions": [],
+      "add_event_suggestions": []
     }
   },
   {
@@ -114,7 +122,8 @@
           "description": "Review calendar for editorial, advertorial, and social media content",
           "due_date": null
         }
-      ]
+      ],
+      "add_event_suggestions": []
     }
   },
   {
