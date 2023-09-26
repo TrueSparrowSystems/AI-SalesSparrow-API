@@ -45,7 +45,7 @@ import jakarta.servlet.http.Cookie;
 @AutoConfigureMockMvc
 @WebAppConfiguration
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
-public class DeleteAccountEventTest {
+public class UpdateAccountEventTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -77,13 +77,13 @@ public class DeleteAccountEventTest {
 
 	@ParameterizedTest
 	@MethodSource("testScenariosProvider")
-	public void deleteAccountEvent(Scenario testScenario) throws Exception {
+	public void updateAccountEvent(Scenario testScenario) throws Exception {
 
 		// Load fixture data
 		String currentFunctionName = new Object() {
 		}.getClass().getEnclosingMethod().getName();
 		FixtureData fixtureData = common.loadFixture(
-				"classpath:fixtures/functional/controllers/accountEventController/deleteAccountEvent.fixtures.json",
+				"classpath:fixtures/functional/controllers/accountEventController/updateAccountEvent.fixtures.json",
 				currentFunctionName);
 		loadFixture.perform(fixtureData);
 
@@ -103,7 +103,7 @@ public class DeleteAccountEventTest {
 		String requestBody = objectMapper.writeValueAsString(testScenario.getInput().get("body"));
 		String url = "/api/v1/accounts/" + accountId + "/events/" + eventId;
 
-		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete(url)
+		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put(url)
 			.cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
 			.content(requestBody)
 			.contentType(MediaType.APPLICATION_JSON));
@@ -112,7 +112,7 @@ public class DeleteAccountEventTest {
 		String expectedOutput = objectMapper.writeValueAsString(testScenario.getOutput());
 		String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
 
-		if (resultActions.andReturn().getResponse().getStatus() == 204) {
+		if (resultActions.andReturn().getResponse().getStatus() == 200) {
 			if (expectedOutput.equals("{}")) {
 				expectedOutput = "";
 			}
@@ -129,7 +129,7 @@ public class DeleteAccountEventTest {
 	}
 
 	private static List<Scenario> loadScenarios() throws IOException {
-		String scenariosPath = "classpath:data/functional/controllers/accountEventController/deleteAccountEvent.scenarios.json";
+		String scenariosPath = "classpath:data/functional/controllers/accountEventController/updateAccountEvent.scenarios.json";
 		Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
 		ObjectMapper objectMapper = new ObjectMapper();
 		return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {
