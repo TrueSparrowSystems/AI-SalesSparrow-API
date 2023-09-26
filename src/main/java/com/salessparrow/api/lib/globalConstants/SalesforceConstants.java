@@ -42,6 +42,10 @@ public class SalesforceConstants {
 		return sObjectsPath() + "/Event";
 	}
 
+	public String salesforceUpdateEventUrl(String eventId) {
+		return sObjectsPath() + "/Event/" + eventId;
+	}
+
 	public String salesforceDeleteNoteUrl(String noteId) {
 		return sObjectsPath() + "/ContentNote/" + noteId;
 	}
@@ -68,6 +72,10 @@ public class SalesforceConstants {
 
 	public Integer timeoutMillis() {
 		return 10000;
+	}
+
+	public Integer salesforceSubjectLength() {
+		return 60;
 	}
 
 	public String salesforceNotesContentUrl(String urlPrefix, String noteId) {

@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.salessparrow.api.domain.SalesforceUser;
+import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.formatter.CreateEventFormatterDto;
 import com.salessparrow.api.dto.requestMapper.CreateAccountEventDto;
 import com.salessparrow.api.exception.CustomException;
@@ -28,8 +28,7 @@ public class CreateAccountEventFactory {
 	 * @param accountId
 	 * @return CreateEventFormatterDto
 	 **/
-	public CreateEventFormatterDto createEvent(SalesforceUser user, String accountId,
-			CreateAccountEventDto createEventDto) {
+	public CreateEventFormatterDto createEvent(User user, String accountId, CreateAccountEventDto createEventDto) {
 		logger.info("Create Event Factory started");
 
 		switch (user.getUserKind()) {

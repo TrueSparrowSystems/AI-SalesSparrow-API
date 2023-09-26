@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,9 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.salessparrow.api.dto.formatter.CreateEventFormatterDto;
 import com.salessparrow.api.dto.formatter.GetEventsListFormatterDto;
 import com.salessparrow.api.dto.requestMapper.CreateAccountEventDto;
+import com.salessparrow.api.dto.requestMapper.UpdateAccountEventDto;
 import com.salessparrow.api.services.accountEvents.CreateAccountEventService;
-import com.salessparrow.api.services.accountEvents.DeleteEventService;
+import com.salessparrow.api.services.accountEvents.DeleteAccountEventService;
 import com.salessparrow.api.services.accountEvents.GetAccountEventsListService;
+import com.salessparrow.api.services.accountEvents.UpdateAccountEventService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -37,7 +40,10 @@ public class AccountEventController {
 	private GetAccountEventsListService getAccountEventsListService;
 
 	@Autowired
-	private DeleteEventService deleteEventService;
+	private DeleteAccountEventService deleteEventService;
+
+	@Autowired
+	private UpdateAccountEventService updateEventService;
 
 	@PostMapping("")
 	public ResponseEntity<CreateEventFormatterDto> createEvent(HttpServletRequest request,
@@ -68,6 +74,16 @@ public class AccountEventController {
 		deleteEventService.deleteAccountEvent(request, accountId, eventId);
 
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	@PutMapping("/{event_id}")
+	public ResponseEntity<Void> updateEvent(HttpServletRequest request, @PathVariable("account_id") String accountId,
+			@PathVariable("event_id") String eventId, @Valid @RequestBody UpdateAccountEventDto updateEventDto) {
+		logger.info("Update event request received");
+
+		updateEventService.updateAccountEvent(request, accountId, eventId, updateEventDto);
+
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 }

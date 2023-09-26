@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.salessparrow.api.domain.SalesforceUser;
+import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.formatter.CreateEventFormatterDto;
 import com.salessparrow.api.dto.requestMapper.CreateAccountEventDto;
 import com.salessparrow.api.exception.CustomException;
@@ -46,15 +46,14 @@ public class CreateSalesforceAccountEvent implements CreateAccountEventInterface
 	 * @param createEventDto
 	 * @return CreateEventFormatterDto
 	 */
-	public CreateEventFormatterDto createEvent(SalesforceUser user, String accountId,
-			CreateAccountEventDto createEventDto) {
+	public CreateEventFormatterDto createEvent(User user, String accountId, CreateAccountEventDto createEventDto) {
 		logger.info("Create Salesforce Event started");
 
 		String salesforceUserId = user.getExternalUserId();
 
 		Util util = new Util();
 		String eventDescription = util.unEscapeSpecialCharactersForPlainText(createEventDto.getDescription());
-		String eventSubject = getEventSubjectFromDescription(eventDescription);
+		String eventSubject = util.getTrimmedString(eventDescription, salesforceConstants.salesforceSubjectLength());
 
 		Map<String, String> createEventBody = new HashMap<String, String>();
 		createEventBody.put("Subject", eventSubject);
@@ -105,19 +104,6 @@ public class CreateSalesforceAccountEvent implements CreateAccountEventInterface
 		createEventFormatterDto.setEventId(salesforceCreateEventDto.getId());
 
 		return createEventFormatterDto;
-	}
-
-	/**
-	 * Get the first 60 characters of the event description.
-	 * @param createEventDto
-	 * @return String
-	 */
-	private String getEventSubjectFromDescription(String eventDescription) {
-		if (eventDescription.length() < 60) {
-			return eventDescription;
-		}
-
-		return eventDescription.substring(0, 60);
 	}
 
 }

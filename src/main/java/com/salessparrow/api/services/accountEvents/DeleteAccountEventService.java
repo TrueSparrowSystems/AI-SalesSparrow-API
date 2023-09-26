@@ -11,13 +11,13 @@ import com.salessparrow.api.lib.crmActions.deleteAccountEvent.DeleteAccountEvent
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
- * DeleteEventService is a service class that handles the deleting of an event in an
- * account.
+ * DeleteAccountEventService is a service class that handles the deleting of an event in
+ * an account.
  */
 @Service
-public class DeleteEventService {
+public class DeleteAccountEventService {
 
-	Logger logger = LoggerFactory.getLogger(DeleteEventService.class);
+	Logger logger = LoggerFactory.getLogger(DeleteAccountEventService.class);
 
 	@Autowired
 	private DeleteAccountEventFactory deleteAccountEventFactory;

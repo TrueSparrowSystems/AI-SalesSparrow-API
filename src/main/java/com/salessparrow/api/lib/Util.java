@@ -181,4 +181,18 @@ public class Util {
 		return input.replace("\n", "<br>");
 	}
 
+	/**
+	 * Get a trimmed string of a given length.
+	 * @param input
+	 * @param length
+	 * @return String
+	 */
+	public String getTrimmedString(String input, Integer length) {
+		if (input.length() < length) {
+			return input;
+		}
+
+		return input.substring(0, length);
+	}
+
 }

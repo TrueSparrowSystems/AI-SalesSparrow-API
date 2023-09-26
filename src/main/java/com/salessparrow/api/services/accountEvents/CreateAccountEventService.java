@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.salessparrow.api.domain.SalesforceUser;
+import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.formatter.CreateEventFormatterDto;
 import com.salessparrow.api.dto.requestMapper.CreateAccountEventDto;
 import com.salessparrow.api.lib.crmActions.createAccountEvent.CreateAccountEventFactory;
@@ -34,7 +34,7 @@ public class CreateAccountEventService {
 			CreateAccountEventDto createEventDto) {
 		logger.info("Create Account Event Service started");
 
-		SalesforceUser currentUser = (SalesforceUser) request.getAttribute("current_user");
+		User currentUser = (User) request.getAttribute("current_user");
 
 		return createAccountEventFactory.createEvent(currentUser, accountId, createEventDto);
 	}
