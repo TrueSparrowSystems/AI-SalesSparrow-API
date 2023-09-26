@@ -1,6 +1,7 @@
 package com.salessparrow.api.lib.crmActions.updateAccountEvent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import com.salessparrow.api.dto.requestMapper.UpdateAccountEventDto;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.Util;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
+import com.salessparrow.api.lib.errorLib.ParamErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
@@ -85,7 +87,15 @@ public class UpdateSalesforceAccountEvent implements UpdateAccountEventInterface
 		if (updateEventStatusCode != 200 && updateEventStatusCode != 201 && updateEventStatusCode != 204) {
 			String errorBody = updateEventCompositeResponse.get("body").asText();
 
-			throw new CustomException(new ErrorObject("l_ua_uae_usae_pr_1", "internal_server_error", errorBody));
+			// MALFORMED_ID or NOT_FOUND
+			if (updateEventStatusCode == 400 || updateEventStatusCode == 404) {
+
+				throw new CustomException(
+						new ParamErrorObject("l_ua_uae_usae_pr_1", errorBody, Arrays.asList("invalid_event_id")));
+			}
+			else {
+				throw new CustomException(new ErrorObject("l_ua_uae_usae_pr_2", "something_went_wrong", errorBody));
+			}
 		}
 	}
 
