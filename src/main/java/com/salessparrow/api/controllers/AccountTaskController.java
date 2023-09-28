@@ -83,7 +83,7 @@ public class AccountTaskController {
 
 		updateTaskService.updateAccountTask(request, accountId, taskId, updateTaskDto);
 
-		return ResponseEntity.status(HttpStatus.OK).build();
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 }
