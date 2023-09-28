@@ -46,6 +46,10 @@ public class SalesforceConstants {
 		return sObjectsPath() + "/Event/" + eventId;
 	}
 
+	public String salesforceUpdateTaskUrl(String taskId) {
+		return sObjectsPath() + "/Task/" + taskId;
+	}
+
 	public String salesforceDeleteNoteUrl(String noteId) {
 		return sObjectsPath() + "/ContentNote/" + noteId;
 	}

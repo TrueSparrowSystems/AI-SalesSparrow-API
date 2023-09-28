@@ -128,4 +128,12 @@ public class SalesforceQueryBuilder {
 						+ accountId + "' ORDER BY LastModifiedDate DESC LIMIT 5");
 	}
 
+	public String getAccountEventDetailsUrl(String eventId) {
+		eventId = Util.escapeSpecialChars(eventId);
+
+		return Util.urlEncoder(
+				"SELECT Id, Description, CreatedBy.Name, StartDateTime, EndDateTime, LastModifiedDate FROM Event WHERE Id = '"
+						+ eventId + "'");
+	}
+
 }

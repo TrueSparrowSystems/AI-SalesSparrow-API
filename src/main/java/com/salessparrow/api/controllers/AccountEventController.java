@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.salessparrow.api.dto.formatter.CreateEventFormatterDto;
+import com.salessparrow.api.dto.formatter.GetEventDetailsFormatterDto;
 import com.salessparrow.api.dto.formatter.GetEventsListFormatterDto;
 import com.salessparrow.api.dto.requestMapper.CreateAccountEventDto;
 import com.salessparrow.api.dto.requestMapper.UpdateAccountEventDto;
 import com.salessparrow.api.services.accountEvents.CreateAccountEventService;
 import com.salessparrow.api.services.accountEvents.DeleteAccountEventService;
+import com.salessparrow.api.services.accountEvents.GetAccountEventDetailsService;
 import com.salessparrow.api.services.accountEvents.GetAccountEventsListService;
 import com.salessparrow.api.services.accountEvents.UpdateAccountEventService;
 
@@ -44,6 +46,9 @@ public class AccountEventController {
 
 	@Autowired
 	private UpdateAccountEventService updateEventService;
+
+	@Autowired
+	private GetAccountEventDetailsService getAccountEventDetailsService;
 
 	@PostMapping("")
 	public ResponseEntity<CreateEventFormatterDto> createEvent(HttpServletRequest request,
@@ -84,6 +89,17 @@ public class AccountEventController {
 		updateEventService.updateAccountEvent(request, accountId, eventId, updateEventDto);
 
 		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+
+	@GetMapping("/{event_id}")
+	public ResponseEntity<GetEventDetailsFormatterDto> getEventFromAccount(HttpServletRequest request,
+			@PathVariable("account_id") String accountId, @PathVariable("event_id") String eventId) {
+		logger.info("Get Event request received");
+
+		GetEventDetailsFormatterDto getEventDetailsResponse = getAccountEventDetailsService.getEventDetails(request,
+				eventId);
+
+		return ResponseEntity.ok().body(getEventDetailsResponse);
 	}
 
 }

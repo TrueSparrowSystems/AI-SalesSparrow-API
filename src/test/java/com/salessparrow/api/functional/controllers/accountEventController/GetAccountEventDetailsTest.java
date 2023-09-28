@@ -30,12 +30,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dynamobee.exception.DynamobeeException;
 import com.salessparrow.api.helper.Cleanup;
 import com.salessparrow.api.helper.Common;
-import com.salessparrow.api.helper.Constants;
 import com.salessparrow.api.helper.FixtureData;
 import com.salessparrow.api.helper.LoadFixture;
 import com.salessparrow.api.helper.Scenario;
 import com.salessparrow.api.helper.Setup;
 import com.salessparrow.api.lib.globalConstants.CookieConstants;
+import com.salessparrow.api.helper.Constants;
+
 import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 
@@ -45,7 +46,7 @@ import jakarta.servlet.http.Cookie;
 @AutoConfigureMockMvc
 @WebAppConfiguration
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
-public class CreateAccountEventTest {
+public class GetAccountEventDetailsTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -66,7 +67,7 @@ public class CreateAccountEventTest {
 	private MakeCompositeRequest makeCompositeRequestMock;
 
 	@BeforeEach
-	public void setUp() throws DynamobeeException {
+	public void setUp() throws DynamobeeException, IOException {
 		setup.perform();
 	}
 
@@ -77,13 +78,12 @@ public class CreateAccountEventTest {
 
 	@ParameterizedTest
 	@MethodSource("testScenariosProvider")
-	public void createAccountEvent(Scenario testScenario) throws Exception {
-
+	public void getAccountEventDetails(Scenario testScenario) throws Exception {
 		// Load fixture data
 		String currentFunctionName = new Object() {
 		}.getClass().getEnclosingMethod().getName();
 		FixtureData fixtureData = common.loadFixture(
-				"classpath:fixtures/functional/controllers/accountEventController/createAccountEvent.fixtures.json",
+				"classpath:fixtures/functional/controllers/accountEventController/getAccountEventDetails.fixtures.json",
 				currentFunctionName);
 		loadFixture.perform(fixtureData);
 
@@ -91,27 +91,29 @@ public class CreateAccountEventTest {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
 		String accountId = (String) testScenario.getInput().get("accountId");
+		String eventId = (String) testScenario.getInput().get("eventId");
 
 		// Prepare mock responses
-		HttpResponse createEventMockResponse = new HttpResponse();
-		createEventMockResponse
+		HttpResponse getEventsListMockResponse = new HttpResponse();
+		getEventsListMockResponse
 			.setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeCompositeRequest")));
-		when(makeCompositeRequestMock.makePostRequest(any(), any())).thenReturn(createEventMockResponse);
+		when(makeCompositeRequestMock.makePostRequest(any(), any())).thenReturn(getEventsListMockResponse);
 
 		// Perform the request
-		String requestBody = objectMapper.writeValueAsString(testScenario.getInput().get("body"));
-		String url = "/api/v1/accounts/" + accountId + "/events";
+		String url = "/api/v1/accounts/" + accountId + "/events/" + eventId;
 
-		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(url)
+		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(url)
 			.cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
-			.content(requestBody)
 			.contentType(MediaType.APPLICATION_JSON));
 
 		// Check the response
 		String expectedOutput = objectMapper.writeValueAsString(testScenario.getOutput());
 		String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
 
-		if (resultActions.andReturn().getResponse().getStatus() == 201) {
+		if (resultActions.andReturn().getResponse().getStatus() == 200) {
+			if (expectedOutput.equals("{}")) {
+				expectedOutput = "";
+			}
 			assertEquals(expectedOutput, actualOutput);
 		}
 		else {
@@ -125,7 +127,7 @@ public class CreateAccountEventTest {
 	}
 
 	private static List<Scenario> loadScenarios() throws IOException {
-		String scenariosPath = "classpath:data/functional/controllers/accountEventController/createAccountEvent.scenarios.json";
+		String scenariosPath = "classpath:data/functional/controllers/accountEventController/getAccountEventDetails.scenarios.json";
 		Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
 		ObjectMapper objectMapper = new ObjectMapper();
 		return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {

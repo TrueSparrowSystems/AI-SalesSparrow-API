@@ -1,0 +1,88 @@
+[
+  {
+    "description": "Should return the event details for a given event id",
+    "input": {
+      "accountId": "0011e00000bWSxdAAG",
+      "eventId": "00T1e000007mGYaEAA"
+    },
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
+          {
+            "body": {
+                "totalSize": 1,
+                "done": true,
+                "records": [
+                {
+                  "attributes": {
+                    "type": "Event",
+                    "url": "/services/data/v58.0/sobjects/Event/00U1e000003UPzbEAG"
+                  },
+                  "Id": "00U1e000003UPzbEAG",
+                  "WhatId": "0011e00000bWSxdAAG",
+                  "StartDateTime": "2023-09-16T06:49:00.000+0000",
+                  "EndDateTime": "2023-09-16T07:49:00.000+0000",
+                  "Description": "Event Description",
+                  "CreatedBy": {
+                    "attributes": {
+                      "type": "User",
+                      "url": "/services/data/v58.0/sobjects/User/0055i00000AUxQHAA1"
+                    },
+                    "Name": "Ashfaq Bhojani"
+                  },
+                  "LastModifiedDate": "2023-09-28T04:55:12.000+0000"
+                }
+              ]
+            },
+            "httpHeaders": {},
+            "httpStatusCode": 200,
+            "referenceId": "getEvent"
+          }
+        ]
+      }
+    },
+    "output": {
+      "event_detail": {
+        "id": "00U1e000003UPzbEAG",
+        "creator_name": "Ashfaq Bhojani",
+        "description": "Event Description",
+        "start_datetime": "2023-09-16T06:49:00.000+0000",
+        "end_datetime": "2023-09-16T07:49:00.000+0000",
+        "last_modified_time": "2023-09-28T04:55:12.000+00:00"
+      }
+    }
+  },
+  {
+		"description": "should return error response when event id is invalid",
+		"input": {
+			"account_id": "0011e00000bWSxdAAG",
+			"event_id": "invalid_event_id"
+		},
+		"mocks":{
+			"makeCompositeRequest":{
+        "compositeResponse": [
+          {
+            "body": [
+              {
+                "message": "\nLastModifiedDate FROM Event WHERE Id='invalid_event_id'\n                                  ^\nERROR at Row:1:Column:105\ninvalid ID field: invalid_event_id",
+                "errorCode": "INVALID_QUERY_FILTER_OPERATOR"
+              }
+            ],
+            "httpHeaders": {},
+            "httpStatusCode": 400,
+            "referenceId": "getEvent"
+          }
+        ]
+      }
+		},
+		"output": {
+      "http_code": 400,
+      "message": "At least one parameter is invalid or missing.",
+      "code": "INVALID_PARAMS",
+      "internal_error_identifier": "l_ca_gaed_gsaed_pr_1",
+      "param_errors": [
+        "invalid_account_id"
+      ]
+    }
+	}
+]
