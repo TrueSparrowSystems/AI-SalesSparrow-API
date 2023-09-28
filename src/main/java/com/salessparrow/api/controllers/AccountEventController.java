@@ -88,7 +88,7 @@ public class AccountEventController {
 
 		updateEventService.updateAccountEvent(request, accountId, eventId, updateEventDto);
 
-		return ResponseEntity.status(HttpStatus.OK).build();
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 	@GetMapping("/{event_id}")
