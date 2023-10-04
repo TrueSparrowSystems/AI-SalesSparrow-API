@@ -39,6 +39,8 @@ public class SalesforceGetTasksListDto {
 
 		private String name;
 
+		private String id;
+
 	}
 
 	public TaskEntity taskEntity() {
@@ -49,6 +51,7 @@ public class SalesforceGetTasksListDto {
 		taskEntity.setCreatorName(this.createdBy.name);
 		taskEntity.setDescription(this.description);
 		taskEntity.setCrmOrganizationUserName(this.owner.name);
+		taskEntity.setCrmOrganizationUserId(this.owner.id);
 		taskEntity.setLastModifiedTime(this.lastModifiedDate);
 
 		String dueDate = util.getDateFormatFromDatetime(this.activityDate);

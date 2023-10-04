@@ -91,10 +91,10 @@ public class UpdateSalesforceAccountTask implements UpdateAccountTaskInterface {
 			if (statusCode == 400 || statusCode == 404) {
 
 				throw new CustomException(
-						new ParamErrorObject("l_ua_uae_usae_pr_1", errorBody, Arrays.asList("invalid_task_id")));
+						new ParamErrorObject("l_ua_uat_usat_pr_1", errorBody, Arrays.asList("invalid_task_id")));
 			}
 			else {
-				throw new CustomException(new ErrorObject("l_ua_uae_usae_pr_2", "something_went_wrong", errorBody));
+				throw new CustomException(new ErrorObject("l_ua_uat_usat_pr_2", "something_went_wrong", errorBody));
 			}
 		}
 	}

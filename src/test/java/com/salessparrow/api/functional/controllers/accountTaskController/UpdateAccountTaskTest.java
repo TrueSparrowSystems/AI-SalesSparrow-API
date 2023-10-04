@@ -1,4 +1,4 @@
-package com.salessparrow.api.functional.controllers.accountEventController;
+package com.salessparrow.api.functional.controllers.accountTaskController;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -45,7 +45,7 @@ import jakarta.servlet.http.Cookie;
 @AutoConfigureMockMvc
 @WebAppConfiguration
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
-public class UpdateAccountEventTest {
+public class UpdateAccountTaskTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -77,13 +77,13 @@ public class UpdateAccountEventTest {
 
 	@ParameterizedTest
 	@MethodSource("testScenariosProvider")
-	public void updateAccountEvent(Scenario testScenario) throws Exception {
+	public void updateAccountTask(Scenario testScenario) throws Exception {
 
 		// Load fixture data
 		String currentFunctionName = new Object() {
 		}.getClass().getEnclosingMethod().getName();
 		FixtureData fixtureData = common.loadFixture(
-				"classpath:fixtures/functional/controllers/accountEventController/updateAccountEvent.fixtures.json",
+				"classpath:fixtures/functional/controllers/accountTaskController/updateAccountTask.fixtures.json",
 				currentFunctionName);
 		loadFixture.perform(fixtureData);
 
@@ -91,7 +91,7 @@ public class UpdateAccountEventTest {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
 		String accountId = (String) testScenario.getInput().get("accountId");
-		String eventId = (String) testScenario.getInput().get("eventId");
+		String taskId = (String) testScenario.getInput().get("taskId");
 
 		// Prepare mock responses
 		HttpResponse mockResponse = new HttpResponse();
@@ -101,7 +101,7 @@ public class UpdateAccountEventTest {
 
 		// Perform the request
 		String requestBody = objectMapper.writeValueAsString(testScenario.getInput().get("body"));
-		String url = "/api/v1/accounts/" + accountId + "/events/" + eventId;
+		String url = "/api/v1/accounts/" + accountId + "/tasks/" + taskId;
 
 		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put(url)
 			.cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
@@ -131,7 +131,7 @@ public class UpdateAccountEventTest {
 	}
 
 	private static List<Scenario> loadScenarios() throws IOException {
-		String scenariosPath = "classpath:data/functional/controllers/accountEventController/updateAccountEvent.scenarios.json";
+		String scenariosPath = "classpath:data/functional/controllers/accountTaskController/updateAccountTask.scenarios.json";
 		Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
 		ObjectMapper objectMapper = new ObjectMapper();
 		return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {

@@ -1,4 +1,4 @@
-package com.salessparrow.api.functional.controllers.accountEventController;
+package com.salessparrow.api.functional.controllers.accountTaskController;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,12 +30,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dynamobee.exception.DynamobeeException;
 import com.salessparrow.api.helper.Cleanup;
 import com.salessparrow.api.helper.Common;
-import com.salessparrow.api.helper.Constants;
 import com.salessparrow.api.helper.FixtureData;
 import com.salessparrow.api.helper.LoadFixture;
 import com.salessparrow.api.helper.Scenario;
 import com.salessparrow.api.helper.Setup;
 import com.salessparrow.api.lib.globalConstants.CookieConstants;
+import com.salessparrow.api.helper.Constants;
+
 import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 
@@ -45,7 +46,7 @@ import jakarta.servlet.http.Cookie;
 @AutoConfigureMockMvc
 @WebAppConfiguration
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
-public class UpdateAccountEventTest {
+public class GetAccountTaskDetailsTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -66,7 +67,7 @@ public class UpdateAccountEventTest {
 	private MakeCompositeRequest makeCompositeRequestMock;
 
 	@BeforeEach
-	public void setUp() throws DynamobeeException {
+	public void setUp() throws DynamobeeException, IOException {
 		setup.perform();
 	}
 
@@ -77,13 +78,12 @@ public class UpdateAccountEventTest {
 
 	@ParameterizedTest
 	@MethodSource("testScenariosProvider")
-	public void updateAccountEvent(Scenario testScenario) throws Exception {
-
+	public void getAccountTaskDetails(Scenario testScenario) throws Exception {
 		// Load fixture data
 		String currentFunctionName = new Object() {
 		}.getClass().getEnclosingMethod().getName();
 		FixtureData fixtureData = common.loadFixture(
-				"classpath:fixtures/functional/controllers/accountEventController/updateAccountEvent.fixtures.json",
+				"classpath:fixtures/functional/controllers/accountTaskController/getAccountTaskDetails.fixtures.json",
 				currentFunctionName);
 		loadFixture.perform(fixtureData);
 
@@ -91,30 +91,26 @@ public class UpdateAccountEventTest {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String cookieValue = Constants.SALESFORCE_ACTIVE_USER_COOKIE_VALUE;
 		String accountId = (String) testScenario.getInput().get("accountId");
-		String eventId = (String) testScenario.getInput().get("eventId");
+		String taskId = (String) testScenario.getInput().get("taskId");
 
 		// Prepare mock responses
-		HttpResponse mockResponse = new HttpResponse();
-		mockResponse
+		HttpResponse getTasksListMockResponse = new HttpResponse();
+		getTasksListMockResponse
 			.setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeCompositeRequest")));
-		when(makeCompositeRequestMock.makePostRequest(any(), any())).thenReturn(mockResponse);
+		when(makeCompositeRequestMock.makePostRequest(any(), any())).thenReturn(getTasksListMockResponse);
 
 		// Perform the request
-		String requestBody = objectMapper.writeValueAsString(testScenario.getInput().get("body"));
-		String url = "/api/v1/accounts/" + accountId + "/events/" + eventId;
+		String url = "/api/v1/accounts/" + accountId + "/tasks/" + taskId;
 
-		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put(url)
+		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(url)
 			.cookie(new Cookie(CookieConstants.USER_LOGIN_COOKIE_NAME, cookieValue))
-			.content(requestBody)
 			.contentType(MediaType.APPLICATION_JSON));
 
 		// Check the response
 		String expectedOutput = objectMapper.writeValueAsString(testScenario.getOutput());
 		String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
 
-		Integer responseStatus = resultActions.andReturn().getResponse().getStatus();
-
-		if (responseStatus == 200 || responseStatus == 201 || responseStatus == 204) {
+		if (resultActions.andReturn().getResponse().getStatus() == 200) {
 			if (expectedOutput.equals("{}")) {
 				expectedOutput = "";
 			}
@@ -131,7 +127,7 @@ public class UpdateAccountEventTest {
 	}
 
 	private static List<Scenario> loadScenarios() throws IOException {
-		String scenariosPath = "classpath:data/functional/controllers/accountEventController/updateAccountEvent.scenarios.json";
+		String scenariosPath = "classpath:data/functional/controllers/accountTaskController/getAccountTaskDetails.scenarios.json";
 		Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
 		ObjectMapper objectMapper = new ObjectMapper();
 		return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {

@@ -55,8 +55,8 @@
   {
 		"description": "should return error response when event id is invalid",
 		"input": {
-			"account_id": "0011e00000bWSxdAAG",
-			"event_id": "invalid_event_id"
+			"accountId": "0011e00000bWSxdAAG",
+			"eventId": "invalid_event_id"
 		},
 		"mocks":{
 			"makeCompositeRequest":{

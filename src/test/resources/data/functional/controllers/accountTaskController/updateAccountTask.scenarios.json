@@ -1,0 +1,65 @@
+[
+    {
+      "description": "Should successfully update the task for given task id", 
+      "input": {
+        "body": {
+          "crm_organization_user_id":"0011e00000bWSxdAA1",
+          "description":"Update remaining documentations",
+          "due_date":"2023-12-01"
+        },
+        "accountId": "0011e00000bWSxdAAG",
+        "taskId":"0691e000001X1yTAAS"
+      },
+      "mocks": {
+        "makeCompositeRequest": {
+          "compositeResponse": [
+            {
+              "body": null,
+              "httpHeaders": {},
+              "httpStatusCode": 200,
+              "referenceId": "UpdateTask"
+            }
+          ]
+        }
+      },
+      "output": {}
+    },
+    {
+      "description": "should return error response when task id is invalid", 
+      "input": {
+        "body": {
+          "crm_organization_user_id":"0011e00000bWSxdAA1",
+          "description":"Update remaining documentations",
+          "due_date":"2023-12-01"
+        },
+        "accountId": "0011e00000bWSxdAAG",
+        "taskId":"invalidTaskId"
+      },
+      "mocks": {
+        "makeCompositeRequest": {
+          "compositeResponse": [
+          {
+            "body": [
+              {
+                "errorCode": "NOT_FOUND",
+                "message": "Provided external ID field does not exist or is not accessible: INVALID_TASK_ID"
+              }
+            ],
+            "httpHeaders": {},
+            "httpStatusCode": 404,
+            "referenceId": "UpdateTask"
+          }
+        ]
+      }
+      },
+      "output": {
+        "http_code": 400,
+        "message": "At least one parameter is invalid or missing.",
+        "code": "INVALID_PARAMS",
+        "internal_error_identifier": "l_ua_uat_usat_pr_1",
+        "param_errors": [
+          "invalid_task_id"
+        ]
+      }
+    }
+  ]

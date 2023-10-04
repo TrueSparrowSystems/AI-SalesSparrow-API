@@ -54,7 +54,7 @@ public class SalesforceQueryBuilder {
 		accountId = Util.escapeSpecialChars(accountId);
 
 		return Util.urlEncoder(
-				"SELECT Id, Description, ActivityDate, CreatedBy.Name, Owner.Name, LastModifiedDate FROM Task WHERE WhatId='"
+				"SELECT Id, Description, ActivityDate, CreatedBy.Name, Owner.Name, Owner.Id, LastModifiedDate FROM Task WHERE WhatId='"
 						+ accountId + "' ORDER BY LastModifiedDate DESC LIMIT 5");
 	}
 
@@ -134,6 +134,14 @@ public class SalesforceQueryBuilder {
 		return Util.urlEncoder(
 				"SELECT Id, Description, CreatedBy.Name, StartDateTime, EndDateTime, LastModifiedDate FROM Event WHERE Id = '"
 						+ eventId + "'");
+	}
+
+	public String getAccountTaskDetailsUrl(String taskId) {
+		taskId = Util.escapeSpecialChars(taskId);
+
+		return Util.urlEncoder(
+				"SELECT Id, Description, ActivityDate, CreatedBy.Name, Owner.Name, Owner.Id, LastModifiedDate FROM Task WHERE Id = '"
+						+ taskId + "'");
 	}
 
 }

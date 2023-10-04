@@ -24,6 +24,8 @@ public class TaskEntity {
 
 	private String crmOrganizationUserName;
 
+	private String crmOrganizationUserId;
+
 	private Date lastModifiedTime;
 
 }
