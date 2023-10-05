@@ -53,7 +53,8 @@ public class CreateSalesforceAccountEvent implements CreateAccountEventInterface
 
 		Util util = new Util();
 		String eventDescription = util.unEscapeSpecialCharactersForPlainText(createEventDto.getDescription());
-		String eventSubject = util.getTrimmedString(eventDescription, salesforceConstants.salesforceSubjectLength());
+		String eventSubject = util.getTrimmedString(eventDescription,
+				salesforceConstants.salesforceEventSubjectLength());
 
 		Map<String, String> createEventBody = new HashMap<String, String>();
 		createEventBody.put("Subject", eventSubject);

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.salessparrow.api.domain.SalesforceUser;
 import com.salessparrow.api.dto.formatter.CreateNoteFormatterDto;
-import com.salessparrow.api.dto.requestMapper.NoteDto;
+import com.salessparrow.api.dto.requestMapper.AccountNoteDto;
 import com.salessparrow.api.lib.crmActions.createAccountNote.CreateNoteFactory;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +25,7 @@ public class CreateAccountNoteService {
 	 * @param accountId
 	 * @return CreateNoteFormatterDto
 	 */
-	public CreateNoteFormatterDto createNote(HttpServletRequest request, String accountId, NoteDto note) {
+	public CreateNoteFormatterDto createNote(HttpServletRequest request, String accountId, AccountNoteDto note) {
 
 		SalesforceUser currentUser = (SalesforceUser) request.getAttribute("current_user");
 

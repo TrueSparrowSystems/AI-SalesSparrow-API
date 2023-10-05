@@ -2,9 +2,12 @@ package com.salessparrow.api.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy;
 
@@ -17,7 +20,10 @@ public class SecurityConfig {
 
 		http
 			// disable authorization for all routes
-			.authorizeHttpRequests(authorizeRequests -> authorizeRequests.anyRequest().permitAll())
+			.authorizeHttpRequests(authorizeRequests -> authorizeRequests.requestMatchers("/api/v1/**")
+				.permitAll()
+				.anyRequest()
+				.authenticated())
 			// Disable authentication for all routes
 			.httpBasic(httpBasic -> httpBasic.disable())
 			// Disable form login
@@ -70,11 +76,20 @@ public class SecurityConfig {
 						hsts -> hsts.includeSubDomains(true).preload(true).maxAgeInSeconds(31536000))
 				.xssProtection(xss -> xss.headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK))
 				.referrerPolicy(referrer -> referrer.policy(ReferrerPolicy.SAME_ORIGIN)));
+		// .exceptionHandling(
+		// exceptionHandling ->
+		// exceptionHandling.authenticationEntryPoint(authenticationEntryPoint()));
 
 		// http redirect to https is handled by the reverse proxy server (nginx). So no
 		// need to handle it here.
 
 		return http.build();
+	}
+
+	@Bean
+	public AuthenticationEntryPoint authenticationEntryPoint() {
+		// Use HttpStatusEntryPoint to return a 404 response for invalid routes
+		return new HttpStatusEntryPoint(HttpStatus.NOT_FOUND);
 	}
 
 }

@@ -36,7 +36,7 @@ public class UpdateAccountTaskFactory {
 				return;
 			default:
 				throw new CustomException(
-						new ErrorObject("l_ua_uae_uaef_uae_1", "something_went_wrong", "Invalid user kind."));
+						new ErrorObject("l_ua_uat_uatf_uat_1", "something_went_wrong", "Invalid user kind."));
 		}
 	}
 

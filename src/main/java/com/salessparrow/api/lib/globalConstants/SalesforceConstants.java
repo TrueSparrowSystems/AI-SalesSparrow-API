@@ -50,6 +50,10 @@ public class SalesforceConstants {
 		return sObjectsPath() + "/Task/" + taskId;
 	}
 
+	public String salesforceUpdateNoteUrl(String noteId) {
+		return sObjectsPath() + "/ContentNote/" + noteId;
+	}
+
 	public String salesforceDeleteNoteUrl(String noteId) {
 		return sObjectsPath() + "/ContentNote/" + noteId;
 	}
@@ -78,8 +82,16 @@ public class SalesforceConstants {
 		return 10000;
 	}
 
-	public Integer salesforceSubjectLength() {
+	public Integer salesforceEventSubjectLength() {
 		return 60;
+	}
+
+	public Integer salesforceTaskSubjectLength() {
+		return 60;
+	}
+
+	public Integer salesforceContentNoteTitleLength() {
+		return 50;
 	}
 
 	public String salesforceNotesContentUrl(String urlPrefix, String noteId) {

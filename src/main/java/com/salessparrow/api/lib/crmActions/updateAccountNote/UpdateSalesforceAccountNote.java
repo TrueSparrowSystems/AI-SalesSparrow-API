@@ -1,4 +1,4 @@
-package com.salessparrow.api.lib.crmActions.updateAccountTask;
+package com.salessparrow.api.lib.crmActions.updateAccountNote;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,8 +12,9 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salessparrow.api.domain.User;
-import com.salessparrow.api.dto.requestMapper.UpdateAccountTaskDto;
+import com.salessparrow.api.dto.requestMapper.AccountNoteDto;
 import com.salessparrow.api.exception.CustomException;
+import com.salessparrow.api.lib.Base64Helper;
 import com.salessparrow.api.lib.Util;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.errorLib.ParamErrorObject;
@@ -23,13 +24,13 @@ import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 
 /**
- * UpdateSalesforceAccountTask is a class that updates a task for an account in
+ * UpdateSalesforceAccountNote is a class that updates a note for an account in
  * Salesforce.
  */
 @Component
-public class UpdateSalesforceAccountTask implements UpdateAccountTaskInterface {
+public class UpdateSalesforceAccountNote implements UpdateAccountNoteInterface {
 
-	private Logger logger = org.slf4j.LoggerFactory.getLogger(UpdateSalesforceAccountTask.class);
+	private Logger logger = org.slf4j.LoggerFactory.getLogger(UpdateSalesforceAccountNote.class);
 
 	@Autowired
 	private SalesforceConstants salesforceConstants;
@@ -37,33 +38,40 @@ public class UpdateSalesforceAccountTask implements UpdateAccountTaskInterface {
 	@Autowired
 	private MakeCompositeRequest makeCompositeRequest;
 
+	@Autowired
+	private Base64Helper base64Helper;
+
 	/**
-	 * Update a task for a given account.
+	 * Update a note for a given account.
 	 * @param user
 	 * @param accountId
-	 * @param updateTaskDto
+	 * @param accountNoteDto
+	 * @param noteId
 	 * @return void
 	 */
-	public void updateTask(User user, String accountId, String taskId, UpdateAccountTaskDto updateTaskDto) {
-		logger.info("Update Salesforce Task started");
-
+	public void updateNote(User user, String accountId, String noteId, AccountNoteDto accountNoteDto) {
+		logger.info("Update Salesforce Note started");
 		String salesforceUserId = user.getExternalUserId();
 
 		Util util = new Util();
-		String taskDescription = util.unEscapeSpecialCharactersForPlainText(updateTaskDto.getDescription());
-		String taskSubject = util.getTrimmedString(taskDescription, salesforceConstants.salesforceTaskSubjectLength());
 
-		Map<String, String> updateTaskBody = new HashMap<String, String>();
-		updateTaskBody.put("Subject", taskSubject);
-		updateTaskBody.put("Description", taskDescription);
-		updateTaskBody.put("OwnerId", updateTaskDto.getCrmOrganizationUserId());
-		updateTaskBody.put("ActivityDate", updateTaskDto.getDueDate());
+		String noteContent = accountNoteDto.getText();
+		String unEscapeNoteContent = util.unEscapeSpecialCharactersForPlainText(noteContent);
+		String noteTitle = util.getTrimmedString(unEscapeNoteContent,
+				salesforceConstants.salesforceContentNoteTitleLength());
 
-		CompositeRequestDto updateTaskCompositeRequestDto = new CompositeRequestDto("PATCH",
-				salesforceConstants.salesforceUpdateTaskUrl(taskId), "UpdateTask", updateTaskBody);
+		noteContent = util.replaceNewLineWithBreak(noteContent);
+		String encodedNoteContent = base64Helper.base64Encode(noteContent);
+
+		Map<String, String> updateNoteBody = new HashMap<String, String>();
+		updateNoteBody.put("Title", noteTitle);
+		updateNoteBody.put("Content", encodedNoteContent);
+
+		CompositeRequestDto updateNoteCompositeRequestDto = new CompositeRequestDto("PATCH",
+				salesforceConstants.salesforceUpdateNoteUrl(noteId), "UpdateNote", updateNoteBody);
 
 		List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
-		compositeRequests.add(updateTaskCompositeRequestDto);
+		compositeRequests.add(updateNoteCompositeRequestDto);
 
 		HttpClient.HttpResponse response = makeCompositeRequest.makePostRequest(compositeRequests, salesforceUserId);
 
@@ -72,14 +80,14 @@ public class UpdateSalesforceAccountTask implements UpdateAccountTaskInterface {
 
 	/**
 	 * Parse the response from Salesforce.
-	 * @param updateTaskResponse
+	 * @param updateNoteResponse
 	 * @return void
 	 */
-	private void parseResponse(String updateTaskResponse) {
+	private void parseResponse(String updateNoteResponse) {
 		logger.info("Parsing the response from Salesforce");
 
 		Util util = new Util();
-		JsonNode rootNode = util.getJsonNode(updateTaskResponse);
+		JsonNode rootNode = util.getJsonNode(updateNoteResponse);
 
 		JsonNode compositeResponse = rootNode.get("compositeResponse").get(0);
 		Integer statusCode = compositeResponse.get("httpStatusCode").asInt();
@@ -91,10 +99,10 @@ public class UpdateSalesforceAccountTask implements UpdateAccountTaskInterface {
 			if (statusCode == 400 || statusCode == 404) {
 
 				throw new CustomException(
-						new ParamErrorObject("l_ua_uat_usat_pr_1", errorBody, Arrays.asList("invalid_task_id")));
+						new ParamErrorObject("l_ua_uan_usan_pr_1", errorBody, Arrays.asList("invalid_note_id")));
 			}
 			else {
-				throw new CustomException(new ErrorObject("l_ua_uat_usat_pr_2", "something_went_wrong", errorBody));
+				throw new CustomException(new ErrorObject("l_ua_uan_usan_pr_2", "something_went_wrong", errorBody));
 			}
 		}
 	}
