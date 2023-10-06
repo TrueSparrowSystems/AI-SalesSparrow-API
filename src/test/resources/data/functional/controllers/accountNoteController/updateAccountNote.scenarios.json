@@ -1,0 +1,61 @@
+[
+    {
+      "description": "Should successfully update the note for given note id", 
+      "input": {
+        "body": {
+          "text": "Updated Test note"
+        },
+        "accountId": "0011e00000bWSxdAAG",
+        "noteId":"0691e000001X1yTAAS"
+      },
+      "mocks": {
+        "makeCompositeRequest": {
+          "compositeResponse": [
+            {
+              "body": null,
+              "httpHeaders": {},
+              "httpStatusCode": 200,
+              "referenceId": "UpdateNote"
+            }
+          ]
+        }
+      },
+      "output": {}
+    },
+    {
+      "description": "should return error response when note id is invalid", 
+      "input": {
+        "body": {
+          "text": "Updated Test note"
+        },
+        "accountId": "0011e00000bWSxdAAG",
+        "noteId":"invalidNoteId"
+      },
+      "mocks": {
+        "makeCompositeRequest": {
+          "compositeResponse": [
+          {
+            "body": [
+              {
+                "errorCode": "NOT_FOUND",
+                "message": "Provided external ID field does not exist or is not accessible: INVALID_NOTE_ID"
+              }
+            ],
+            "httpHeaders": {},
+            "httpStatusCode": 404,
+            "referenceId": "UpdateNote"
+          }
+        ]
+      }
+      },
+      "output": {
+        "http_code": 400,
+        "message": "At least one parameter is invalid or missing.",
+        "code": "INVALID_PARAMS",
+        "internal_error_identifier": "l_ua_uan_usan_pr_1",
+        "param_errors": [
+          "invalid_note_id"
+        ]
+      }
+    }
+  ]
