@@ -17,10 +17,7 @@ public class SecurityConfig {
 
 		http
 			// disable authorization for all routes
-			.authorizeHttpRequests(authorizeRequests -> authorizeRequests.requestMatchers("/api/v1/**")
-				.permitAll()
-				.anyRequest()
-				.authenticated())
+			.authorizeHttpRequests(authorizeRequests -> authorizeRequests.anyRequest().permitAll())
 			// Disable authentication for all routes
 			.httpBasic(httpBasic -> httpBasic.disable())
 			// Disable form login
