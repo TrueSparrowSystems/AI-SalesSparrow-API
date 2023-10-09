@@ -8,7 +8,7 @@ import com.salessparrow.api.dto.formatter.CreateNoteFormatterDto;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.globalConstants.UserConstants;
-import com.salessparrow.api.dto.requestMapper.NoteDto;
+import com.salessparrow.api.dto.requestMapper.AccountNoteDto;
 
 /**
  * CreateNoteFactory is a factory class for the create note action for the CRM.
@@ -25,7 +25,7 @@ public class CreateNoteFactory {
 	 * @param accountId
 	 * @return CreateNoteFormatterDto
 	 **/
-	public CreateNoteFormatterDto createNote(SalesforceUser user, String accountId, NoteDto note) {
+	public CreateNoteFormatterDto createNote(SalesforceUser user, String accountId, AccountNoteDto note) {
 
 		switch (user.getUserKind()) {
 			case UserConstants.SALESFORCE_USER_KIND:

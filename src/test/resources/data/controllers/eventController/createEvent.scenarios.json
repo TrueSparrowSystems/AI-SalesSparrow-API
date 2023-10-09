@@ -1,0 +1,244 @@
+[
+  {
+    "description": "Should successfully create the event", 
+    "input": {
+      "body": {
+        "description": "Here the event description will go and it is a long description with length of more than 100 characters",
+        "start_datetime": "2023-07-21T13:12:17.000+0000",
+        "end_datetime": "2023-07-21T14:12:17.000+0000"
+      },
+      "accountId": "0011e00000bWSxdAAG"
+    },
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
+          {
+            "body": {
+              "id": "00U1e000003ToABEA0",
+              "success": true,
+              "errors": []
+            },
+            "httpHeaders": {
+              "Location": "/services/data/v58.0/sobjects/Event/00U1e000003ToABEA0"
+            },
+            "httpStatusCode": 201,
+            "referenceId": "createEvent"
+          }
+        ]
+      }
+    },
+    "output": {
+      "event_id": "00U1e000003ToABEA0"
+    }
+  },
+  {
+    "description": "Should fail when the event description is empty", 
+    "input": {
+      "body": {
+        "description": "",
+        "start_datetime": "2023-07-21T13:12:17.000+0000",
+        "end_datetime": "2023-07-21T14:12:17.000+0000"
+      },
+      "accountId": "0011e00000bWSxdAAG"
+    },
+    "mocks": {},
+    "output": {
+      "http_code": 400,
+      "message": "At least one parameter is invalid or missing.",
+      "code": "INVALID_PARAMS",
+      "internal_error_identifier": "b_2",
+      "param_errors": [
+        {
+          "parameter": "description",
+          "param_error_identifier": "missing_description",
+          "message": "description is required parameter. Please provide description."
+        }
+      ]
+    }
+  },
+  {
+    "description": "Should fail when the event description is not provided", 
+    "input": {
+      "body": {
+        "start_datetime": "2023-07-21T13:12:17.000+0000",
+        "end_datetime": "2023-07-21T14:12:17.000+0000"
+      },
+      "accountId": "0011e00000bWSxdAAG"
+    },
+    "mocks": {},
+    "output": {
+      "http_code": 400,
+      "message": "At least one parameter is invalid or missing.",
+      "code": "INVALID_PARAMS",
+      "internal_error_identifier": "b_2",
+      "param_errors": [
+        {
+          "parameter": "description",
+          "param_error_identifier": "missing_description",
+          "message": "description is required parameter. Please provide description."
+        }
+      ]
+    }
+  },
+  {
+    "description": "Should fail when the event start_datetime is not provided", 
+    "input": {
+      "body": {
+        "description":"Test Description",
+        "end_datetime": "2023-07-21T14:12:17.000+0000"
+      },
+      "accountId": "0011e00000bWSxdAAG"
+    },
+    "mocks": {},
+    "output": {
+      "http_code": 400,
+      "message": "At least one parameter is invalid or missing.",
+      "code": "INVALID_PARAMS",
+      "internal_error_identifier": "b_2",
+      "param_errors": [
+        {
+          "parameter": "description",
+          "param_error_identifier": "missing_description",
+          "message": "description is required parameter. Please provide description."
+        }
+      ]
+    }
+  },
+  {
+    "description": "Should fail when the event end_datetime is not provided", 
+    "input": {
+      "body": {
+        "description":"Test Description",
+        "start_datetime": "2023-07-21T13:12:17.000+0000"
+      },
+      "accountId": "0011e00000bWSxdAAG"
+    },
+    "mocks": {},
+    "output": {
+      "http_code": 400,
+      "message": "At least one parameter is invalid or missing.",
+      "code": "INVALID_PARAMS",
+      "internal_error_identifier": "b_2",
+      "param_errors": [
+        {
+          "parameter": "description",
+          "param_error_identifier": "missing_description",
+          "message": "description is required parameter. Please provide description."
+        }
+      ]
+    }
+  },
+  {
+    "description": "Should fail when incorrect start_datetime format is provided", 
+    "input": {
+      "body": {
+        "description":"Test Description",
+        "start_datetime": "07-2023-21T13:12:17.000+0000",
+        "end_datetime": "2023-07-21T14:12:17.000+0000"
+      },
+      "accountId": "0011e00000bWSxdAAG"
+    },
+    "mocks": {},
+    "output": {
+      "http_code": 400,
+      "message": "Invalid datetime format.",
+      "code": "INVALID_PARAMS",
+      "internal_error_identifier": "b_2",
+      "param_errors": [
+        {
+          "parameter": "start_datetime",
+          "param_error_identifier": "invalid_datetime_format",
+          "message": "start_datetime is invalid. Please provide valid datetime format."
+        }
+      ]
+    }
+  },
+  {
+    "description": "Should fail when incorrect end_datetime format is provided", 
+    "input": {
+      "body": {
+        "description":"Test Description",
+        "start_datetime": "2023-07-21T14:12:17.000+0000",
+        "end_datetime": "07-2023-21T13:12:17.000+0000"
+      },
+      "accountId": "0011e00000bWSxdAAG"
+    },
+    "mocks": {},
+    "output": {
+      "http_code": 400,
+      "message": "Invalid datetime format.",
+      "code": "INVALID_PARAMS",
+      "internal_error_identifier": "b_2",
+      "param_errors": [
+        {
+          "parameter": "end_datetime",
+          "param_error_identifier": "invalid_datetime_format",
+          "message": "Please provide valid datetime format."
+        }
+      ]
+    }
+  },
+  {
+    "description": "Should fail when the account id invalid", 
+    "input": {
+      "body": {
+        "description": "Here the event description will go and it is a long description with length of more than 100 characters",
+        "start_datetime": "2023-07-21T13:12:17.000+0000",
+        "end_datetime": "2023-07-21T14:12:17.000+0000"
+      },
+      "accountId": "invalid"
+    },
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
+          {
+            "body": [
+              {
+                "message": "Related To ID: id value of incorrect type: invalid",
+                "errorCode": "MALFORMED_ID",
+                "fields": [
+                  "WhatId"
+                ]
+              }
+            ],
+            "httpHeaders": {},
+            "httpStatusCode": 400,
+            "referenceId": "createEvent"
+          }
+        ]
+      }
+    },
+    "output": {
+      "http_code": 500,
+      "message": "Something went wrong.",
+      "code": "INTERNAL_SERVER_ERROR",
+      "internal_error_identifier": "l_ca_ce_cse_pr_1",
+      "param_errors": []
+    }
+  },
+  {
+    "description": "Should fail when description length is greater than 32000 characters", 
+    "input": {
+      "body": {
+        "description":"Test Description to be extended in code upto more than 32000 characters",
+        "start_datetime": "2023-07-21T14:12:17.000+0000",
+        "end_datetime": "2023-07-21T14:12:17.000+0000"
+      },
+      "accountId": "0011e00000bWSxdAAG"
+    },
+    "mocks": {},
+    "output": {
+      "http_code": 400,
+      "message": "Invalid datetime format.",
+      "code": "INVALID_PARAMS",
+      "internal_error_identifier": "b_2",
+      "param_errors": [
+        {
+          "parameter": "end_datetime",
+          "param_error_identifier": "invalid_datetime_format",
+          "message": "Please provide valid datetime format."
+        }
+      ]
+    }
+  }
+]

@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salessparrow.api.controllers.SuggestionsController;
+import com.salessparrow.api.dto.entities.AddEventSuggestionEntityDto;
 import com.salessparrow.api.dto.entities.AddTaskSuggestionEntityDto;
 import com.salessparrow.api.dto.formatter.CrmActionSuggestionsFormatterDto;
 import com.salessparrow.api.exception.CustomException;
@@ -20,6 +21,7 @@ import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.openAi.OpenAiPayloadBuilder;
 import com.salessparrow.api.lib.openAi.OpenAiRequest;
 import com.salessparrow.api.lib.validators.DateFormatValidator;
+import com.salessparrow.api.lib.validators.DatetimeFormatValidator;
 
 /**
  * GetCrmActionSuggestions is a class for getting the crm action suggestions.
@@ -34,6 +36,8 @@ public class GetCrmActionSuggestions {
 	private OpenAiPayloadBuilder openAiPayloadBuilder;
 
 	private DateFormatValidator dateFormatValidator = new DateFormatValidator();
+
+	private DatetimeFormatValidator datetimeFormatValidator = new DatetimeFormatValidator();
 
 	private Logger logger = org.slf4j.LoggerFactory.getLogger(SuggestionsController.class);
 
@@ -63,40 +67,76 @@ public class GetCrmActionSuggestions {
 
 		try {
 			Util util = new Util();
+
 			JsonNode rootNode = util.getJsonNode(responseBody);
-			JsonNode argumentsNode = rootNode.get("choices")
-				.get(0)
-				.get("message")
-				.get("function_call")
-				.get("arguments");
 
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-			String argumentsJson = objectMapper.convertValue(argumentsNode, String.class);
-
-			Map<String, List<AddTaskSuggestionEntityDto>> arguments = objectMapper.readValue(argumentsJson,
-					new TypeReference<Map<String, List<AddTaskSuggestionEntityDto>>>() {
-					});
-			List<AddTaskSuggestionEntityDto> addTaskList = arguments.get("add_task");
+			JsonNode functionNode = rootNode.get("choices").get(0).get("message").get("function_call");
 
 			List<AddTaskSuggestionEntityDto> formattedTaskSuggestionEntityDtos = new ArrayList<>();
-			if (addTaskList != null) {
-				for (AddTaskSuggestionEntityDto addTask : addTaskList) {
-					AddTaskSuggestionEntityDto addTaskSuggestionEntityDto = new AddTaskSuggestionEntityDto();
-					addTaskSuggestionEntityDto.setDescription(addTask.getDescription());
+			List<AddEventSuggestionEntityDto> formattedEventSuggestionEntityDtos = new ArrayList<>();
 
-					// Format the response check if duedate format is YYYY-MM-DD else
-					// remove duedate
-					String dueDate = addTask.getDueDate();
-					if (dateFormatValidator.isValid(dueDate, null)) {
-						addTaskSuggestionEntityDto.setDueDate(dueDate);
+			if (functionNode != null) {
+
+				JsonNode argumentsNode = functionNode.get("arguments");
+
+				ObjectMapper objectMapper = new ObjectMapper();
+				objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+				String argumentsJson = objectMapper.convertValue(argumentsNode, String.class);
+
+				Map<String, List<Object>> arguments = objectMapper.readValue(argumentsJson,
+						new TypeReference<Map<String, List<Object>>>() {
+						});
+
+				List<Object> addTaskList = arguments.get("add_task");
+				List<Object> addEventList = arguments.get("add_event");
+
+				List<AddTaskSuggestionEntityDto> typedAddTaskList = objectMapper.convertValue(addTaskList,
+						new TypeReference<List<AddTaskSuggestionEntityDto>>() {
+						});
+
+				List<AddEventSuggestionEntityDto> typedAddEventList = objectMapper.convertValue(addEventList,
+						new TypeReference<List<AddEventSuggestionEntityDto>>() {
+						});
+
+				if (typedAddTaskList != null) {
+					for (AddTaskSuggestionEntityDto addTask : typedAddTaskList) {
+						AddTaskSuggestionEntityDto addTaskSuggestionEntityDto = new AddTaskSuggestionEntityDto();
+						addTaskSuggestionEntityDto.setDescription(addTask.getDescription());
+
+						// Format the response check if duedate format is YYYY-MM-DD else
+						// remove duedate
+						String dueDate = addTask.getDueDate();
+						if (dateFormatValidator.isValid(dueDate, null)) {
+							addTaskSuggestionEntityDto.setDueDate(dueDate);
+						}
+
+						formattedTaskSuggestionEntityDtos.add(addTaskSuggestionEntityDto);
 					}
+				}
 
-					formattedTaskSuggestionEntityDtos.add(addTaskSuggestionEntityDto);
+				if (typedAddEventList != null) {
+					for (AddEventSuggestionEntityDto addEvent : typedAddEventList) {
+						AddEventSuggestionEntityDto addEventSuggestionEntityDto = new AddEventSuggestionEntityDto();
+						addEventSuggestionEntityDto.setDescription(addEvent.getDescription());
+
+						// Format the response check if datetime format is
+						// yyyy-MM-dd'T'HH:mm:ss.SSSZ else
+						// remove datetime
+						if (datetimeFormatValidator.isValid(addEvent.getStartDatetime(), null)) {
+							addEventSuggestionEntityDto.setStartDatetime(addEvent.getStartDatetime());
+						}
+
+						if (datetimeFormatValidator.isValid(addEvent.getEndDatetime(), null)) {
+							addEventSuggestionEntityDto.setEndDatetime(addEvent.getEndDatetime());
+						}
+
+						formattedEventSuggestionEntityDtos.add(addEventSuggestionEntityDto);
+					}
 				}
 			}
 
 			crmActionSuggestionsFormatterDto.setAddTaskSuggestions(formattedTaskSuggestionEntityDtos);
+			crmActionSuggestionsFormatterDto.setAddEventSuggestions(formattedEventSuggestionEntityDtos);
 			return crmActionSuggestionsFormatterDto;
 		}
 		catch (Exception e) {

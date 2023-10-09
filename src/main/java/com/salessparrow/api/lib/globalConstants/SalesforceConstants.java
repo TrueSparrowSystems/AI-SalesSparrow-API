@@ -38,6 +38,22 @@ public class SalesforceConstants {
 		return sObjectsPath() + "/ContentNote";
 	}
 
+	public String salesforceCreateEventUrl() {
+		return sObjectsPath() + "/Event";
+	}
+
+	public String salesforceUpdateEventUrl(String eventId) {
+		return sObjectsPath() + "/Event/" + eventId;
+	}
+
+	public String salesforceUpdateTaskUrl(String taskId) {
+		return sObjectsPath() + "/Task/" + taskId;
+	}
+
+	public String salesforceUpdateNoteUrl(String noteId) {
+		return sObjectsPath() + "/ContentNote/" + noteId;
+	}
+
 	public String salesforceDeleteNoteUrl(String noteId) {
 		return sObjectsPath() + "/ContentNote/" + noteId;
 	}
@@ -66,6 +82,18 @@ public class SalesforceConstants {
 		return 10000;
 	}
 
+	public Integer salesforceEventSubjectLength() {
+		return 60;
+	}
+
+	public Integer salesforceTaskSubjectLength() {
+		return 60;
+	}
+
+	public Integer salesforceContentNoteTitleLength() {
+		return 50;
+	}
+
 	public String salesforceNotesContentUrl(String urlPrefix, String noteId) {
 		return urlPrefix + "/services/data/v58.0/sobjects/ContentNote/" + noteId + "/Content";
 	}
@@ -76,6 +104,10 @@ public class SalesforceConstants {
 
 	public String salesforceDeleteAccountTaskUrl(String taskId) {
 		return sObjectsPath() + "/Task/" + taskId;
+	}
+
+	public String salesforceDeleteAccountEventUrl(String eventId) {
+		return sObjectsPath() + "/Event/" + eventId;
 	}
 
 }

@@ -1,5 +1,41 @@
 # SalesSparrow APIs
 
+## 0.3.0
+
+### New Features and Enhancements:
+
+- API - Edit Note Endpoint [#18](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/18)
+- API - Get a list of Events in an account [#29](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/29)
+- API - Create Event for an Account [#30](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/30)
+- API - Edit Event in an Account Endpoint [#31](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/31)
+- API - Delete Event in an Account Endpoint [#32](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/32)
+- API - Edit Task in an Account Endpoint [#36](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/36)
+- API - Get Event By Id Endpoint [#101](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/101)
+- API - Get Task By Id Endpoint [#102](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/102)
+- Add Event Suggestion Prompt [#103](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/103)
+
+## 0.2.3
+
+### Enhancements:
+
+- Improve Task Suggestion to show correct Due Date and empty description if no task found [#94](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/94)
+
+## 0.2.2
+
+### Enhancements:
+
+- Update Default Test User Login to use token from Environment [#92](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/92)
+
+## 0.2.1
+
+### New Features and Enhancements:
+
+- Default Test User Login in Connect Flow [#90](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/90)
+
+### Bug Fixes:
+
+- Use Environment based Naming as Suffix in Cache Names [#91](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/91)
+
 ## 0.2.0
 
 ### New Features and Enhancements:

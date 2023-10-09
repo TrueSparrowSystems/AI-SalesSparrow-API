@@ -70,21 +70,21 @@ public class DeleteSalesforceAccountTask implements DeleteAccountTask {
 		Util util = new Util();
 		JsonNode rootNode = util.getJsonNode(responseBody);
 
-		JsonNode deleteNoteCompositeResponse = rootNode.get("compositeResponse").get(0);
-		Integer deleteNoteStatusCode = deleteNoteCompositeResponse.get("httpStatusCode").asInt();
+		JsonNode deleteTaskCompositeResponse = rootNode.get("compositeResponse").get(0);
+		Integer deleteTaskStatusCode = deleteTaskCompositeResponse.get("httpStatusCode").asInt();
 
-		if (deleteNoteStatusCode != 200 && deleteNoteStatusCode != 201 && deleteNoteStatusCode != 204) {
-			logger.error("Error in deleting task in salesforce:{}", deleteNoteCompositeResponse);
-			String errorBody = deleteNoteCompositeResponse.get("body").asText();
+		if (deleteTaskStatusCode != 200 && deleteTaskStatusCode != 201 && deleteTaskStatusCode != 204) {
+			logger.error("Error in deleting task in salesforce:{}", deleteTaskCompositeResponse);
+			String errorBody = deleteTaskCompositeResponse.get("body").asText();
 
 			// MALFORMED_ID or NOT_FOUND
-			if (deleteNoteStatusCode == 400 || deleteNoteStatusCode == 404) {
+			if (deleteTaskStatusCode == 400 || deleteTaskStatusCode == 404) {
 
 				throw new CustomException(
-						new ParamErrorObject("l_ca_dan_dasn_pr_1", errorBody, Arrays.asList("invalid_task_id")));
+						new ParamErrorObject("l_ca_dat_dsat_pr_1", errorBody, Arrays.asList("invalid_task_id")));
 			}
 			else {
-				throw new CustomException(new ErrorObject("l_ca_dan_dasn_pr_2", "something_went_wrong", errorBody));
+				throw new CustomException(new ErrorObject("l_ca_dat_dsat_pr_2", "something_went_wrong", errorBody));
 			}
 		}
 	}

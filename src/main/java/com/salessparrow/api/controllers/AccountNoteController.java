@@ -2,12 +2,14 @@ package com.salessparrow.api.controllers;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,11 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.salessparrow.api.dto.formatter.CreateNoteFormatterDto;
 import com.salessparrow.api.dto.formatter.GetNoteDetailsFormatterDto;
 import com.salessparrow.api.dto.formatter.GetNotesListFormatterDto;
-import com.salessparrow.api.dto.requestMapper.NoteDto;
+import com.salessparrow.api.dto.requestMapper.AccountNoteDto;
 import com.salessparrow.api.services.accountNotes.CreateAccountNoteService;
 import com.salessparrow.api.services.accountNotes.DeleteAccountNoteService;
 import com.salessparrow.api.services.accountNotes.GetAccountNoteDetailsService;
 import com.salessparrow.api.services.accountNotes.GetAccountNotesListService;
+import com.salessparrow.api.services.accountNotes.UpdateAccountNoteService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -43,9 +46,12 @@ public class AccountNoteController {
 	@Autowired
 	private DeleteAccountNoteService deleteAccountNoteService;
 
+	@Autowired
+	private UpdateAccountNoteService updateNoteService;
+
 	@PostMapping("")
 	public ResponseEntity<CreateNoteFormatterDto> addNoteToAccount(HttpServletRequest request,
-			@PathVariable("account_id") String accountId, @Valid @RequestBody NoteDto note) {
+			@PathVariable("account_id") String accountId, @Valid @RequestBody AccountNoteDto note) {
 		logger.info("Create Note request received");
 
 		CreateNoteFormatterDto createNoteFormatterDto = createNoteService.createNote(request, accountId, note);
@@ -81,6 +87,16 @@ public class AccountNoteController {
 		deleteAccountNoteService.deleteAccountNote(request, accountId, noteId);
 
 		return ResponseEntity.noContent().build();
+	}
+
+	@PutMapping("/{note_id}")
+	public ResponseEntity<Void> updateNote(HttpServletRequest request, @PathVariable("account_id") String accountId,
+			@PathVariable("note_id") String noteId, @Valid @RequestBody AccountNoteDto accountNoteDto) {
+		logger.info("Update note request received");
+
+		updateNoteService.updateAccountNote(request, accountId, noteId, accountNoteDto);
+
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 }

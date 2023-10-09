@@ -46,7 +46,7 @@
         "http_code": 400,
         "message": "At least one parameter is invalid or missing.",
         "code": "INVALID_PARAMS",
-        "internal_error_identifier": "l_ca_dan_dasn_pr_1",
+        "internal_error_identifier": "l_ca_dat_dsat_pr_1",
         "param_errors": [
             "invalid_task_id"
         ]
