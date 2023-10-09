@@ -1,5 +1,19 @@
 # SalesSparrow APIs
 
+## 0.3.0
+
+### New Features and Enhancements:
+
+- API - Edit Note Endpoint [#18](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/18)
+- API - Get a list of Events in an account [#29](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/29)
+- API - Create Event for an Account [#30](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/30)
+- API - Edit Event in an Account Endpoint [#31](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/31)
+- API - Delete Event in an Account Endpoint [#32](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/32)
+- API - Edit Task in an Account Endpoint [#36](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/36)
+- API - Get Event By Id Endpoint [#101](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/101)
+- API - Get Task By Id Endpoint [#102](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/102)
+- Add Event Suggestion Prompt [#103](https://github.com/TrueSparrowSystems/AI-SalesSparrow-API/issues/103)
+
 ## 0.2.3
 
 ### Enhancements:
