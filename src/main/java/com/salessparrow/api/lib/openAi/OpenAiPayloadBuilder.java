@@ -46,7 +46,7 @@ public class OpenAiPayloadBuilder {
 				+ "                  \"description\": \"Description for the event to add.\"\n" + "                },\n"
 				+ "                \"start_datetime\": {\n" + "                  \"type\": \"string\",\n"
 				+ "                  \"description\": \"Start Datetime for the event in yyyy-MM-dd'T'HH:mm:ss.SSS+0000 format.\"\n"
-				+ "                },\n" + "                \"start_datetime\": {\n"
+				+ "                },\n" + "                \"end_datetime\": {\n"
 				+ "                  \"type\": \"string\",\n"
 				+ "                  \"description\": \"End Datetime for the event in yyyy-MM-dd'T'HH:mm:ss.SSS+0000 format.\"\n"
 				+ "                }\n" + "              }\n" + "            }\n" + "          }\n" + "        }\n"
