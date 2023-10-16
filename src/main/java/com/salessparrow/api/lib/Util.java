@@ -188,6 +188,10 @@ public class Util {
 	 * @return String
 	 */
 	public String getTrimmedString(String input, Integer length) {
+    if (input == null) {
+      return null;
+    }
+
 		if (input.length() < length) {
 			return input;
 		}
