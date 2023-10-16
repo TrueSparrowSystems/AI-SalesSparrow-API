@@ -29,7 +29,7 @@ import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 @Component
 public class UpdateSalesforceAccountTask implements UpdateAccountTaskInterface {
 
-	private Logger logger = org.slf4j.LoggerFactory.getLogger(UpdateSalesforceAccountTask.class);
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(UpdateSalesforceAccountTask.class);
 
 	@Autowired
 	private SalesforceConstants salesforceConstants;

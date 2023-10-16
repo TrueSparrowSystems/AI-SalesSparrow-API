@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Service
 public class DeleteAccountNoteService {
 
-	private Logger logger = org.slf4j.LoggerFactory.getLogger(DeleteAccountNoteService.class);
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(DeleteAccountNoteService.class);
 
 	@Autowired
 	private DeleteAccountNoteFactory deleteAccountNoteFactory;

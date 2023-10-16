@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Service
 public class CreateAccountEventService {
 
-	private Logger logger = org.slf4j.LoggerFactory.getLogger(CreateAccountEventService.class);
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(CreateAccountEventService.class);
 
 	@Autowired
 	private CreateAccountEventFactory createAccountEventFactory;

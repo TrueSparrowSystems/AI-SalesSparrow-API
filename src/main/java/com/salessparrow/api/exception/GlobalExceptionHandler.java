@@ -26,7 +26,7 @@ import com.salessparrow.api.lib.errorLib.ParamErrorObject;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-	private Logger logger = org.slf4j.LoggerFactory.getLogger(GlobalExceptionHandler.class);
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
 	@Autowired
 	private ErrorResponse er;

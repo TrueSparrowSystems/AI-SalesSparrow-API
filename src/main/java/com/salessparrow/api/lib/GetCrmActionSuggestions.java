@@ -39,7 +39,7 @@ public class GetCrmActionSuggestions {
 
 	private DatetimeFormatValidator datetimeFormatValidator = new DatetimeFormatValidator();
 
-	private Logger logger = org.slf4j.LoggerFactory.getLogger(SuggestionsController.class);
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(SuggestionsController.class);
 
 	/**
 	 * Get the crm action suggestions.

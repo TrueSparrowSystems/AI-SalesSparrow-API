@@ -31,7 +31,7 @@ import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 @Component
 public class CreateSalesforceAccountEvent implements CreateAccountEventInterface {
 
-	private Logger logger = org.slf4j.LoggerFactory.getLogger(CreateSalesforceAccountEvent.class);
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(CreateSalesforceAccountEvent.class);
 
 	@Autowired
 	private SalesforceConstants salesforceConstants;

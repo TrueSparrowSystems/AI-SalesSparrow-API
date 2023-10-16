@@ -32,7 +32,7 @@ import jakarta.validation.Valid;
 @Validated
 public class AccountNoteController {
 
-	private Logger logger = org.slf4j.LoggerFactory.getLogger(AccountNoteController.class);
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(AccountNoteController.class);
 
 	@Autowired
 	private GetAccountNotesListService getNotesListService;

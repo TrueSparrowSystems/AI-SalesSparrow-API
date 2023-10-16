@@ -30,7 +30,7 @@ import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 @Component
 public class UpdateSalesforceAccountNote implements UpdateAccountNoteInterface {
 
-	private Logger logger = org.slf4j.LoggerFactory.getLogger(UpdateSalesforceAccountNote.class);
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(UpdateSalesforceAccountNote.class);
 
 	@Autowired
 	private SalesforceConstants salesforceConstants;

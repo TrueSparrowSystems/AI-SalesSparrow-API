@@ -29,7 +29,7 @@ import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 @Component
 public class UpdateSalesforceAccountEvent implements UpdateAccountEventInterface {
 
-	private Logger logger = org.slf4j.LoggerFactory.getLogger(UpdateSalesforceAccountEvent.class);
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(UpdateSalesforceAccountEvent.class);
 
 	@Autowired
 	private SalesforceConstants salesforceConstants;
