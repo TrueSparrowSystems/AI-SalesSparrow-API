@@ -19,6 +19,7 @@ public class OpenAiPayloadBuilder {
 	public String payloadForCrmActionsSuggestions(String text) {
 		String todayDate = getTodaysDate();
 
+    // TODO - Use Jackson Library to build this JSON
 		String payload = "{\n" + "  \"model\": \"gpt-3.5-turbo-0613\",\n" + "  \"messages\": [\n" + "    {\n"
 				+ "      \"role\": \"system\",\n"
 				+ "      \"content\": \"You are an AI assistant that provides suggestions for creating tasks and events in CRM based solely on the content of the input message. The content of the task or event, if any found, should only be from the input message. If no task or event suggestions are found in the input message, return empty data. Suggestions can either be both task and event list or only tasks or only events or empty. If task suggestions are found, they should include description and due date. Due Date format should be YYYY-MM-DD. If event suggestions are found, they should include description and start datetime and end datetime. If end datetime not provided it should be start datetime + 1 hour. Start datetime and end datetime format is yyyy-MM-dd'T'HH:mm:ss.SSS+0000. Today's date is "
