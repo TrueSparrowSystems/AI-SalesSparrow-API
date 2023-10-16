@@ -98,7 +98,6 @@ public class GetSalesforceAccountEventsList {
 		}
 
 		JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");
-		;
 
 		for (JsonNode recordNode : recordsNode) {
 			ObjectMapper mapper = new ObjectMapper();

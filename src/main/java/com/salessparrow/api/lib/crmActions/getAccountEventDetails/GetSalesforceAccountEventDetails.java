@@ -91,15 +91,16 @@ public class GetSalesforceAccountEventDetails implements GetAccountEventDetails 
 		}
 
 		JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");
-		;
 
 		EventEntity eventEntity = new EventEntity();
-		for (JsonNode recordNode : recordsNode) {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-			SalesforceGetEventsListDto salesforceGetEventsListDto = mapper.convertValue(recordNode,
-					SalesforceGetEventsListDto.class);
-			eventEntity = salesforceGetEventsListDto.eventEntity();
+		if (recordsNode.size() > 0) {
+			for (JsonNode recordNode : recordsNode) {
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+				SalesforceGetEventsListDto salesforceGetEventsListDto = mapper.convertValue(recordNode,
+						SalesforceGetEventsListDto.class);
+				eventEntity = salesforceGetEventsListDto.eventEntity();
+			}
 		}
 
 		GetEventDetailsFormatterDto getEventDetailsFormatterDto = new GetEventDetailsFormatterDto();
