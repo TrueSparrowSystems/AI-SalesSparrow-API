@@ -53,14 +53,12 @@ public class UpdateSalesforceAccountNote implements UpdateAccountNoteInterface {
 		logger.info("Update Salesforce Note started");
 		String salesforceUserId = user.getExternalUserId();
 
-		Util util = new Util();
-
 		String noteContent = accountNoteDto.getText();
-		String unEscapeNoteContent = util.unEscapeSpecialCharactersForPlainText(noteContent);
+		String unEscapeNoteContent = Util.unEscapeSpecialCharactersForPlainText(noteContent);
 		String noteTitle = Util.getTrimmedString(unEscapeNoteContent,
 				salesforceConstants.salesforceContentNoteTitleLength());
 
-		noteContent = util.replaceNewLineWithBreak(noteContent);
+		noteContent = Util.replaceNewLineWithBreak(noteContent);
 		String encodedNoteContent = base64Helper.base64Encode(noteContent);
 
 		Map<String, String> updateNoteBody = new HashMap<String, String>();

@@ -51,8 +51,7 @@ public class CreateSalesforceAccountEvent implements CreateAccountEventInterface
 
 		String salesforceUserId = user.getExternalUserId();
 
-		Util util = new Util();
-		String eventDescription = util.unEscapeSpecialCharactersForPlainText(createEventDto.getDescription());
+		String eventDescription = Util.unEscapeSpecialCharactersForPlainText(createEventDto.getDescription());
 		String eventSubject = Util.getTrimmedString(eventDescription,
 				salesforceConstants.salesforceEventSubjectLength());
 

@@ -34,7 +34,7 @@ import jakarta.validation.Valid;
 @Validated
 public class AccountTaskController {
 
-  // TODO: Use Lombok's @Slf4j annotation instead of the following:
+	// TODO: Use Lombok's @Slf4j annotation instead of the following:
 	Logger logger = LoggerFactory.getLogger(AccountTaskController.class);
 
 	@Autowired

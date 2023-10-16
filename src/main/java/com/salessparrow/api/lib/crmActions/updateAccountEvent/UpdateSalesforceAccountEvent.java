@@ -49,8 +49,7 @@ public class UpdateSalesforceAccountEvent implements UpdateAccountEventInterface
 
 		String salesforceUserId = user.getExternalUserId();
 
-		Util util = new Util();
-		String eventDescription = util.unEscapeSpecialCharactersForPlainText(updateEventDto.getDescription());
+		String eventDescription = Util.unEscapeSpecialCharactersForPlainText(updateEventDto.getDescription());
 		String eventSubject = Util.getTrimmedString(eventDescription,
 				salesforceConstants.salesforceEventSubjectLength());
 
