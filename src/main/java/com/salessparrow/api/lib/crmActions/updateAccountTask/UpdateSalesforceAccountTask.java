@@ -51,7 +51,7 @@ public class UpdateSalesforceAccountTask implements UpdateAccountTaskInterface {
 
 		Util util = new Util();
 		String taskDescription = util.unEscapeSpecialCharactersForPlainText(updateTaskDto.getDescription());
-		String taskSubject = util.getTrimmedString(taskDescription, salesforceConstants.salesforceTaskSubjectLength());
+		String taskSubject = Util.getTrimmedString(taskDescription, salesforceConstants.salesforceTaskSubjectLength());
 
 		Map<String, String> updateTaskBody = new HashMap<String, String>();
 		updateTaskBody.put("Subject", taskSubject);

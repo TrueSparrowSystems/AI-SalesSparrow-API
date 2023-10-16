@@ -187,10 +187,10 @@ public class Util {
 	 * @param length
 	 * @return String
 	 */
-	public String getTrimmedString(String input, Integer length) {
-    if (input == null) {
-      return null;
-    }
+	public static String getTrimmedString(String input, Integer length) {
+		if (input == null) {
+			return null;
+		}
 
 		if (input.length() < length) {
 			return input;

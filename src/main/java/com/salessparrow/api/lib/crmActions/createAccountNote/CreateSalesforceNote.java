@@ -57,7 +57,7 @@ public class CreateSalesforceNote implements CreateNoteInterface {
 		Util util = new Util();
 		String noteContent = note.getText();
 		String unEscapeNoteContent = util.unEscapeSpecialCharactersForPlainText(noteContent);
-		String noteTitle = util.getTrimmedString(unEscapeNoteContent,
+		String noteTitle = Util.getTrimmedString(unEscapeNoteContent,
 				salesforceConstants.salesforceContentNoteTitleLength());
 
 		noteContent = util.replaceNewLineWithBreak(noteContent);

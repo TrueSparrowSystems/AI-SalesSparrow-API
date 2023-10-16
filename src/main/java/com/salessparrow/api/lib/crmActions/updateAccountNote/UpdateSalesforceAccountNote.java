@@ -57,7 +57,7 @@ public class UpdateSalesforceAccountNote implements UpdateAccountNoteInterface {
 
 		String noteContent = accountNoteDto.getText();
 		String unEscapeNoteContent = util.unEscapeSpecialCharactersForPlainText(noteContent);
-		String noteTitle = util.getTrimmedString(unEscapeNoteContent,
+		String noteTitle = Util.getTrimmedString(unEscapeNoteContent,
 				salesforceConstants.salesforceContentNoteTitleLength());
 
 		noteContent = util.replaceNewLineWithBreak(noteContent);
