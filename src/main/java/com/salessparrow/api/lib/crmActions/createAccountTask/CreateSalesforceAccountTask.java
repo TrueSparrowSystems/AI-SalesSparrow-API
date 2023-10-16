@@ -29,7 +29,7 @@ import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
  * CreateSalesforceTask class is responsible for creating a task in Salesforce
  */
 @Component
-public class CreateSalesforceAccountTask implements CreateAccountTask {
+public class CreateSalesforceAccountTask implements CreateAccountTaskInterface {
 
 	Logger logger = LoggerFactory.getLogger(CreateSalesforceAccountTask.class);
 

@@ -7,10 +7,10 @@ import com.salessparrow.api.dto.formatter.CreateTaskFormatterDto;
 import com.salessparrow.api.dto.requestMapper.CreateAccountTaskDto;
 
 /**
- * CreateTask interface is interface for createTask for various CRM services
+ * CreateAccountTaskInterface interface is interface for createTask for various CRM services
  */
 @Component
-public interface CreateAccountTask {
+public interface CreateAccountTaskInterface {
 
 	public CreateTaskFormatterDto createAccountTask(User User, String accountId, CreateAccountTaskDto task);
 

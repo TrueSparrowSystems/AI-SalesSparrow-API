@@ -25,7 +25,7 @@ import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
  * account for salesforce.
  */
 @Component
-public class DeleteSalesforceAccountEvent implements DeleteAccountEvent {
+public class DeleteSalesforceAccountEvent implements DeleteAccountEventInterface {
 
 	Logger logger = LoggerFactory.getLogger(DeleteSalesforceAccountEvent.class);
 
