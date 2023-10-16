@@ -91,15 +91,16 @@ public class GetSalesforceAccountTaskDetails implements GetAccountTaskDetails {
 		}
 
 		JsonNode recordsNode = rootNode.get("compositeResponse").get(0).get("body").get("records");
-		;
 
 		TaskEntity taskEntity = new TaskEntity();
-		for (JsonNode recordNode : recordsNode) {
+		if (recordsNode.size() > 0) {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-			SalesforceGetTasksListDto salesforceGetTasksListDto = mapper.convertValue(recordNode,
-					SalesforceGetTasksListDto.class);
-			taskEntity = salesforceGetTasksListDto.taskEntity();
+			for (JsonNode recordNode : recordsNode) {
+				SalesforceGetTasksListDto salesforceGetTasksListDto = mapper.convertValue(recordNode,
+						SalesforceGetTasksListDto.class);
+				taskEntity = salesforceGetTasksListDto.taskEntity();
+			}
 		}
 
 		GetTaskDetailsFormatterDto getTaskDetailsFormatterDto = new GetTaskDetailsFormatterDto();

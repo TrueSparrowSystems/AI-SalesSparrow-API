@@ -33,7 +33,7 @@ import jakarta.validation.Valid;
 @Validated
 public class AccountEventController {
 
-	private Logger logger = org.slf4j.LoggerFactory.getLogger(AccountEventController.class);
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(AccountEventController.class);
 
 	@Autowired
 	private CreateAccountEventService createEventService;

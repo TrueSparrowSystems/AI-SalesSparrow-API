@@ -32,14 +32,6 @@ public class SalesforceGetEventsListDto {
 
 	}
 
-	@Data
-	@JsonNaming(PropertyNamingStrategies.UpperCamelCaseStrategy.class)
-	private class Owner {
-
-		private String name;
-
-	}
-
 	public EventEntity eventEntity() {
 
 		EventEntity eventEntity = new EventEntity();

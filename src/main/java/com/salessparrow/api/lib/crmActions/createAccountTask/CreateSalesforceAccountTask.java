@@ -29,7 +29,7 @@ import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
  * CreateSalesforceTask class is responsible for creating a task in Salesforce
  */
 @Component
-public class CreateSalesforceAccountTask implements CreateAccountTask {
+public class CreateSalesforceAccountTask implements CreateAccountTaskInterface {
 
 	Logger logger = LoggerFactory.getLogger(CreateSalesforceAccountTask.class);
 
@@ -50,8 +50,8 @@ public class CreateSalesforceAccountTask implements CreateAccountTask {
 		String salesforceUserId = User.getExternalUserId();
 
 		logger.info("createAccountTask task description: {}", task.getDescription());
-		Util util = new Util();
-		String unEscapedTaskDescription = util.unEscapeSpecialCharactersForPlainText(task.getDescription());
+
+		String unEscapedTaskDescription = Util.unEscapeSpecialCharactersForPlainText(task.getDescription());
 		String taskSubject = getTaskSubjectFromDescription(unEscapedTaskDescription);
 
 		logger.info("performing create task in salesforce");

@@ -16,7 +16,7 @@ import com.salessparrow.api.lib.globalConstants.UserConstants;
 @Component
 public class UpdateAccountNoteFactory {
 
-	private Logger logger = org.slf4j.LoggerFactory.getLogger(UpdateAccountNoteFactory.class);
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(UpdateAccountNoteFactory.class);
 
 	@Autowired
 	private UpdateSalesforceAccountNote updateSalesforceNote;

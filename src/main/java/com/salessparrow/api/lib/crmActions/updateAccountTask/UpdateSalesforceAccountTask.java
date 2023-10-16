@@ -29,7 +29,7 @@ import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 @Component
 public class UpdateSalesforceAccountTask implements UpdateAccountTaskInterface {
 
-	private Logger logger = org.slf4j.LoggerFactory.getLogger(UpdateSalesforceAccountTask.class);
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(UpdateSalesforceAccountTask.class);
 
 	@Autowired
 	private SalesforceConstants salesforceConstants;
@@ -49,9 +49,8 @@ public class UpdateSalesforceAccountTask implements UpdateAccountTaskInterface {
 
 		String salesforceUserId = user.getExternalUserId();
 
-		Util util = new Util();
-		String taskDescription = util.unEscapeSpecialCharactersForPlainText(updateTaskDto.getDescription());
-		String taskSubject = util.getTrimmedString(taskDescription, salesforceConstants.salesforceTaskSubjectLength());
+		String taskDescription = Util.unEscapeSpecialCharactersForPlainText(updateTaskDto.getDescription());
+		String taskSubject = Util.getTrimmedString(taskDescription, salesforceConstants.salesforceTaskSubjectLength());
 
 		Map<String, String> updateTaskBody = new HashMap<String, String>();
 		updateTaskBody.put("Subject", taskSubject);

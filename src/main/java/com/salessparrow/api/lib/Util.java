@@ -173,11 +173,11 @@ public class Util {
 	 * @param input The original string containing escaped special characters.
 	 * @return A new string where certain special characters have been unescaped.
 	 */
-	public String unEscapeSpecialCharactersForPlainText(String input) {
+	public static String unEscapeSpecialCharactersForPlainText(String input) {
 		return input.replace("&amp;", "&");
 	}
 
-	public String replaceNewLineWithBreak(String input) {
+	public static String replaceNewLineWithBreak(String input) {
 		return input.replace("\n", "<br>");
 	}
 
@@ -187,7 +187,11 @@ public class Util {
 	 * @param length
 	 * @return String
 	 */
-	public String getTrimmedString(String input, Integer length) {
+	public static String getTrimmedString(String input, Integer length) {
+		if (input == null) {
+			return null;
+		}
+
 		if (input.length() < length) {
 			return input;
 		}

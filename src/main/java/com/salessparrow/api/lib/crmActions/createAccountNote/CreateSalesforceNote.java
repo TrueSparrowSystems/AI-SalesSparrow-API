@@ -54,13 +54,12 @@ public class CreateSalesforceNote implements CreateNoteInterface {
 	public CreateNoteFormatterDto createNote(SalesforceUser user, String accountId, AccountNoteDto note) {
 		String salesforceUserId = user.getExternalUserId();
 
-		Util util = new Util();
 		String noteContent = note.getText();
-		String unEscapeNoteContent = util.unEscapeSpecialCharactersForPlainText(noteContent);
-		String noteTitle = util.getTrimmedString(unEscapeNoteContent,
+		String unEscapeNoteContent = Util.unEscapeSpecialCharactersForPlainText(noteContent);
+		String noteTitle = Util.getTrimmedString(unEscapeNoteContent,
 				salesforceConstants.salesforceContentNoteTitleLength());
 
-		noteContent = util.replaceNewLineWithBreak(noteContent);
+		noteContent = Util.replaceNewLineWithBreak(noteContent);
 		String encodedNoteContent = base64Helper.base64Encode(noteContent);
 
 		Map<String, String> createNoteBody = new HashMap<String, String>();

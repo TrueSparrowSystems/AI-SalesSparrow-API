@@ -18,7 +18,7 @@ public class CrmActionsSuggestionsService {
 	@Autowired
 	private GetCrmActionSuggestions getCrmActionSuggestions;
 
-	private Logger logger = org.slf4j.LoggerFactory.getLogger(SuggestionsController.class);
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(SuggestionsController.class);
 
 	public CrmActionSuggestionsFormatterDto getSuggestions(CrmActionsSuggestionsDto crmActionsSuggestionsDto) {
 		logger.info("Crm actions service called");

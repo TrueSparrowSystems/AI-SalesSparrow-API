@@ -29,7 +29,7 @@ import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 @Component
 public class UpdateSalesforceAccountEvent implements UpdateAccountEventInterface {
 
-	private Logger logger = org.slf4j.LoggerFactory.getLogger(UpdateSalesforceAccountEvent.class);
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(UpdateSalesforceAccountEvent.class);
 
 	@Autowired
 	private SalesforceConstants salesforceConstants;
@@ -49,9 +49,8 @@ public class UpdateSalesforceAccountEvent implements UpdateAccountEventInterface
 
 		String salesforceUserId = user.getExternalUserId();
 
-		Util util = new Util();
-		String eventDescription = util.unEscapeSpecialCharactersForPlainText(updateEventDto.getDescription());
-		String eventSubject = util.getTrimmedString(eventDescription,
+		String eventDescription = Util.unEscapeSpecialCharactersForPlainText(updateEventDto.getDescription());
+		String eventSubject = Util.getTrimmedString(eventDescription,
 				salesforceConstants.salesforceEventSubjectLength());
 
 		Map<String, String> updateEventBody = new HashMap<String, String>();

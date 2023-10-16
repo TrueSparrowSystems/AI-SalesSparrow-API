@@ -31,7 +31,7 @@ import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 @Component
 public class CreateSalesforceAccountEvent implements CreateAccountEventInterface {
 
-	private Logger logger = org.slf4j.LoggerFactory.getLogger(CreateSalesforceAccountEvent.class);
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(CreateSalesforceAccountEvent.class);
 
 	@Autowired
 	private SalesforceConstants salesforceConstants;
@@ -51,9 +51,8 @@ public class CreateSalesforceAccountEvent implements CreateAccountEventInterface
 
 		String salesforceUserId = user.getExternalUserId();
 
-		Util util = new Util();
-		String eventDescription = util.unEscapeSpecialCharactersForPlainText(createEventDto.getDescription());
-		String eventSubject = util.getTrimmedString(eventDescription,
+		String eventDescription = Util.unEscapeSpecialCharactersForPlainText(createEventDto.getDescription());
+		String eventSubject = Util.getTrimmedString(eventDescription,
 				salesforceConstants.salesforceEventSubjectLength());
 
 		Map<String, String> createEventBody = new HashMap<String, String>();
