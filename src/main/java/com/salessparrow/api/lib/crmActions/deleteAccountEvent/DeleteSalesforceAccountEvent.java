@@ -27,6 +27,8 @@ import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 @Component
 public class DeleteSalesforceAccountEvent implements DeleteAccountEventInterface {
 
+	private final Util util = new Util();
+
 	Logger logger = LoggerFactory.getLogger(DeleteSalesforceAccountEvent.class);
 
 	@Autowired
@@ -67,7 +69,6 @@ public class DeleteSalesforceAccountEvent implements DeleteAccountEventInterface
 	 */
 	private void parseResponse(String responseBody) {
 		logger.info("Parsing response body");
-		Util util = new Util();
 		JsonNode rootNode = util.getJsonNode(responseBody);
 
 		JsonNode deleteEventCompositeResponse = rootNode.get("compositeResponse").get(0);
