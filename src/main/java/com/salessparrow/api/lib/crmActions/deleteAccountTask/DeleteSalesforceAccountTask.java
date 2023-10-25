@@ -18,7 +18,9 @@ import com.salessparrow.api.lib.errorLib.ParamErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
+import com.salessparrow.api.lib.salesforce.dto.SalesforceErrorObject;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
+import com.salessparrow.api.lib.salesforce.helper.SalesforceCompositeResponseHelper;
 
 /**
  * DeleteSalesforceAccountTask is a class that handles the deleting a task in an account
@@ -34,6 +36,9 @@ public class DeleteSalesforceAccountTask implements DeleteAccountTask {
 
 	@Autowired
 	private MakeCompositeRequest makeCompositeRequest;
+
+	@Autowired
+	private SalesforceCompositeResponseHelper salesforceCompositeResponseHelper;
 
 	/**
 	 * Deletes a task in an account for salesforce.
@@ -70,21 +75,18 @@ public class DeleteSalesforceAccountTask implements DeleteAccountTask {
 		Util util = new Util();
 		JsonNode rootNode = util.getJsonNode(responseBody);
 
-		JsonNode deleteTaskCompositeResponse = rootNode.get("compositeResponse").get(0);
-		Integer deleteTaskStatusCode = deleteTaskCompositeResponse.get("httpStatusCode").asInt();
+		SalesforceErrorObject errorObject = salesforceCompositeResponseHelper
+			.getErrorObjectFromCompositeResponse(rootNode);
 
-		if (deleteTaskStatusCode != 200 && deleteTaskStatusCode != 201 && deleteTaskStatusCode != 204) {
-			logger.error("Error in deleting task in salesforce:{}", deleteTaskCompositeResponse);
-			String errorBody = deleteTaskCompositeResponse.get("body").asText();
+		if (!errorObject.isSuccess()) {
 
-			// MALFORMED_ID or NOT_FOUND
-			if (deleteTaskStatusCode == 400 || deleteTaskStatusCode == 404) {
-
-				throw new CustomException(
-						new ParamErrorObject("l_ca_dat_dsat_pr_1", errorBody, Arrays.asList("invalid_task_id")));
+			if (errorObject.getErrorCode().equals("invalid_params")) {
+				throw new CustomException(new ParamErrorObject("l_ca_dat_dsat_pr_1", errorObject.getErrorCode(),
+						Arrays.asList("invalid_task_id")));
 			}
 			else {
-				throw new CustomException(new ErrorObject("l_ca_dat_dsat_pr_2", "something_went_wrong", errorBody));
+				throw new CustomException(
+						new ErrorObject("l_ca_dat_dsat_pr_2", errorObject.getErrorCode(), errorObject.getMessage()));
 			}
 		}
 	}

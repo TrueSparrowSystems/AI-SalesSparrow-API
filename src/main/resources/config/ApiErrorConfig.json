@@ -53,5 +53,15 @@
     "httpCode": "400",
     "code": "PAGINATION_IDENTIFIER_PARSING_ERROR",
     "message": "Error parsing pagination identifier."
+  },
+  "salesforce_resource_not_found": {
+    "httpCode": "404",
+    "code": "NOT_FOUND",
+    "message": "Resource not found from salesforce. Please check if the resource identifier passed in the URL is valid and try again."
+  },
+  "salesforce_forbidden_api_request":{
+    "httpCode": "403",
+    "code": "FORBIDDEN",
+    "message": "Forbidden API request. You do not have necessary permission to take that action in salesforce."
   }
 }

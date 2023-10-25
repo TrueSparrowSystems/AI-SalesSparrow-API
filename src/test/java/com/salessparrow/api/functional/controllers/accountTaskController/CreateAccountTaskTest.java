@@ -45,7 +45,7 @@ import jakarta.servlet.http.Cookie;
 @AutoConfigureMockMvc
 @WebAppConfiguration
 @Import({ Setup.class, Cleanup.class, Common.class, LoadFixture.class })
-public class CreateTaskTest {
+public class CreateAccountTaskTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -77,13 +77,13 @@ public class CreateTaskTest {
 
 	@ParameterizedTest
 	@MethodSource("testScenariosProvider")
-	public void createTask(Scenario testScenario) throws Exception {
+	public void createAccountTask(Scenario testScenario) throws Exception {
 
 		// Load fixture data
 		String currentFunctionName = new Object() {
 		}.getClass().getEnclosingMethod().getName();
 		FixtureData fixtureData = common.loadFixture(
-				"classpath:fixtures/functional/controllers/accountTaskController/createTask.fixtures.json",
+				"classpath:fixtures/functional/controllers/accountTaskController/createAccountTask.fixtures.json",
 				currentFunctionName);
 		loadFixture.perform(fixtureData);
 
@@ -125,7 +125,7 @@ public class CreateTaskTest {
 	}
 
 	private static List<Scenario> loadScenarios() throws IOException {
-		String scenariosPath = "classpath:data/functional/controllers/accountTaskController/createTask.scenarios.json";
+		String scenariosPath = "classpath:data/functional/controllers/accountTaskController/createAccountTask.scenarios.json";
 		Resource resource = new DefaultResourceLoader().getResource(scenariosPath);
 		ObjectMapper objectMapper = new ObjectMapper();
 		return objectMapper.readValue(resource.getInputStream(), new TypeReference<List<Scenario>>() {

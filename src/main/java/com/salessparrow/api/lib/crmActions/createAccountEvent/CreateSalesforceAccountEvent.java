@@ -1,6 +1,7 @@
 package com.salessparrow.api.lib.crmActions.createAccountEvent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,11 +19,14 @@ import com.salessparrow.api.dto.requestMapper.CreateAccountEventDto;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.Util;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
+import com.salessparrow.api.lib.errorLib.ParamErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
 import com.salessparrow.api.lib.salesforce.dto.SalesforceCreateEventDto;
+import com.salessparrow.api.lib.salesforce.dto.SalesforceErrorObject;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
+import com.salessparrow.api.lib.salesforce.helper.SalesforceCompositeResponseHelper;
 
 /**
  * CreateSalesforceAccountEvent is a class that creates an event for an account in
@@ -38,6 +42,9 @@ public class CreateSalesforceAccountEvent implements CreateAccountEventInterface
 
 	@Autowired
 	private MakeCompositeRequest makeCompositeRequest;
+
+	@Autowired
+	private SalesforceCompositeResponseHelper salesforceCompositeResponseHelper;
 
 	/**
 	 * Create an event for a given account.
@@ -84,13 +91,19 @@ public class CreateSalesforceAccountEvent implements CreateAccountEventInterface
 		Util util = new Util();
 		JsonNode rootNode = util.getJsonNode(createEventResponse);
 
-		JsonNode createEventCompositeResponse = rootNode.get("compositeResponse").get(0);
-		Integer createEventStatusCode = createEventCompositeResponse.get("httpStatusCode").asInt();
+		SalesforceErrorObject errorObject = salesforceCompositeResponseHelper
+			.getErrorObjectFromCompositeResponse(rootNode);
 
-		if (createEventStatusCode != 200 && createEventStatusCode != 201) {
-			String errorBody = createEventCompositeResponse.get("body").asText();
+		if (!errorObject.isSuccess()) {
 
-			throw new CustomException(new ErrorObject("l_ca_cae_csae_pr_1", "internal_server_error", errorBody));
+			if (errorObject.getErrorCode().equals("invalid_params")) {
+				throw new CustomException(new ParamErrorObject("l_ca_cae_csae_pr_1", errorObject.getErrorCode(),
+						Arrays.asList("invalid_account_id")));
+			}
+			else {
+				throw new CustomException(
+						new ErrorObject("l_ca_cae_csae_pr_2", errorObject.getErrorCode(), errorObject.getMessage()));
+			}
 		}
 
 		JsonNode createEventNodeResponseBody = rootNode.get("compositeResponse").get(0).get("body");

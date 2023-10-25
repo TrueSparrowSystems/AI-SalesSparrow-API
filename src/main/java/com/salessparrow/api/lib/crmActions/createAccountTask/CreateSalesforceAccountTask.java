@@ -1,6 +1,7 @@
 package com.salessparrow.api.lib.crmActions.createAccountTask;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,11 +20,14 @@ import com.salessparrow.api.dto.requestMapper.CreateAccountTaskDto;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.Util;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
+import com.salessparrow.api.lib.errorLib.ParamErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
 import com.salessparrow.api.lib.salesforce.dto.SalesforceCreateTaskDto;
+import com.salessparrow.api.lib.salesforce.dto.SalesforceErrorObject;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
+import com.salessparrow.api.lib.salesforce.helper.SalesforceCompositeResponseHelper;
 
 /**
  * CreateSalesforceTask class is responsible for creating a task in Salesforce
@@ -38,6 +42,9 @@ public class CreateSalesforceAccountTask implements CreateAccountTaskInterface {
 
 	@Autowired
 	private MakeCompositeRequest makeCompositeRequest;
+
+	@Autowired
+	private SalesforceCompositeResponseHelper salesforceCompositeResponseHelper;
 
 	/**
 	 * Create a task in Salesforce
@@ -81,17 +88,23 @@ public class CreateSalesforceAccountTask implements CreateAccountTaskInterface {
 	 */
 	private CreateTaskFormatterDto parseResponse(String createTaskResponse) {
 		Util util = new Util();
-		JsonNode rootNode = util.getJsonNode(createTaskResponse);
-
 		logger.info("parsing response from salesforce");
 
-		JsonNode createTaskCompositeResponse = rootNode.get("compositeResponse").get(0);
-		String createTaskStatusCode = createTaskCompositeResponse.get("httpStatusCode").asText();
+		JsonNode rootNode = util.getJsonNode(createTaskResponse);
 
-		if (!createTaskStatusCode.equals("200") && !createTaskStatusCode.equals("201")) {
-			String errorBody = createTaskCompositeResponse.get("body").asText();
+		SalesforceErrorObject errorObject = salesforceCompositeResponseHelper
+			.getErrorObjectFromCompositeResponse(rootNode);
 
-			throw new CustomException(new ErrorObject("l_ca_ct_cst_1", "internal_server_error", errorBody));
+		if (!errorObject.isSuccess()) {
+
+			if (errorObject.getErrorCode().equals("invalid_params")) {
+				throw new CustomException(new ParamErrorObject("l_ca_cat_csat_pr_1", errorObject.getErrorCode(),
+						Arrays.asList("invalid_account_id", "invalid_crm_organization_user_id")));
+			}
+			else {
+				throw new CustomException(
+						new ErrorObject("l_ca_cat_csat_pr_2", errorObject.getErrorCode(), errorObject.getMessage()));
+			}
 		}
 
 		JsonNode createTaskNodeResponseBody = rootNode.get("compositeResponse").get(0).get("body");
