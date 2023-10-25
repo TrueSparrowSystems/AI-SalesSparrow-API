@@ -18,7 +18,9 @@ import com.salessparrow.api.lib.errorLib.ParamErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
+import com.salessparrow.api.lib.salesforce.dto.SalesforceErrorObject;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
+import com.salessparrow.api.lib.salesforce.helper.SalesforceCompositeResponseHelper;
 
 /**
  * DeleteSalesforceAccountEvent is a class that handles the deleting of an event in an
@@ -36,6 +38,9 @@ public class DeleteSalesforceAccountEvent implements DeleteAccountEventInterface
 
 	@Autowired
 	private MakeCompositeRequest makeCompositeRequest;
+
+	@Autowired
+	private SalesforceCompositeResponseHelper salesforceCompositeResponseHelper;
 
 	/**
 	 * Deletes an event in an account for salesforce.
@@ -71,21 +76,18 @@ public class DeleteSalesforceAccountEvent implements DeleteAccountEventInterface
 		logger.info("Parsing response body");
 		JsonNode rootNode = util.getJsonNode(responseBody);
 
-		JsonNode deleteEventCompositeResponse = rootNode.get("compositeResponse").get(0);
-		Integer deleteEventStatusCode = deleteEventCompositeResponse.get("httpStatusCode").asInt();
+		SalesforceErrorObject errorObject = salesforceCompositeResponseHelper
+			.getErrorObjectFromCompositeResponse(rootNode);
 
-		if (deleteEventStatusCode != 200 && deleteEventStatusCode != 201 && deleteEventStatusCode != 204) {
-			logger.error("Error in deleting event in salesforce:{}", deleteEventCompositeResponse);
-			String errorBody = deleteEventCompositeResponse.get("body").asText();
+		if (!errorObject.isSuccess()) {
 
-			// MALFORMED_ID or NOT_FOUND
-			if (deleteEventStatusCode == 400 || deleteEventStatusCode == 404) {
-
-				throw new CustomException(
-						new ParamErrorObject("l_ca_dae_dsae_pr_1", errorBody, Arrays.asList("invalid_event_id")));
+			if (errorObject.getErrorCode().equals("invalid_params")) {
+				throw new CustomException(new ParamErrorObject("l_ca_dae_dsae_pr_1", errorObject.getErrorCode(),
+						Arrays.asList("invalid_event_id")));
 			}
 			else {
-				throw new CustomException(new ErrorObject("l_ca_dae_dsae_pr_2", "something_went_wrong", errorBody));
+				throw new CustomException(
+						new ErrorObject("l_ca_dae_dsae_pr_2", errorObject.getErrorCode(), errorObject.getMessage()));
 			}
 		}
 	}

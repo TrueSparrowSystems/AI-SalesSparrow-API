@@ -41,15 +41,12 @@
           }
         ]
       }
-      },
-      "output": {
-        "http_code": 400,
-        "message": "At least one parameter is invalid or missing.",
-        "code": "INVALID_PARAMS",
-        "internal_error_identifier": "l_ca_dae_dsae_pr_1",
-        "param_errors": [
-          "invalid_event_id"
-        ]
-      }
+    },
+    "output": {
+      "http_code": 404,
+      "message": "Resource not found from salesforce. Please check if the resource identifier passed in the URL is valid and try again.",
+      "code": "NOT_FOUND",
+      "internal_error_identifier": "l_ca_dae_dsae_pr_2"
     }
-  ]
+  }
+]

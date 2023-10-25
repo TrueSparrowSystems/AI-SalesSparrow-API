@@ -1,5 +1,6 @@
 package com.salessparrow.api.functional.controllers.accountNoteController;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -108,7 +109,13 @@ public class DeleteAccountNoteTest {
 		// Check the response
 		String expectedOutput = objectMapper.writeValueAsString(testScenario.getOutput());
 		String actualOutput = resultActions.andReturn().getResponse().getContentAsString();
-		common.assertCustomEquals(expectedOutput, actualOutput);
+
+		if (resultActions.andReturn().getResponse().getStatus() == 204) {
+			common.assertCustomEquals(expectedOutput, actualOutput);
+		}
+		else {
+			common.compareErrors(testScenario, actualOutput);
+		}
 	}
 
 	static Stream<Scenario> testScenariosProvider() throws IOException {

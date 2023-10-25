@@ -43,17 +43,10 @@
     }
     },
     "output": {
-      "http_code": 400,
-      "message": "At least one parameter is invalid or missing.",
-      "code": "INVALID_PARAMS",
-      "internal_error_identifier": "l_ca_dan_dasn_pr_1",
-      "param_errors": [
-        {
-          "parameter": "note_id",
-          "param_error_identifier": "invalid_note_id",
-          "message": "The note id you sent is incorrect. Please double check and try again."
-        }
-      ]
+      "http_code": 404,
+      "message": "Resource not found from salesforce. Please check if the resource identifier passed in the URL is valid and try again.",
+      "code": "NOT_FOUND",
+      "internal_error_identifier": "l_ca_dan_dsan_pr_2"
     }
   }
 ]

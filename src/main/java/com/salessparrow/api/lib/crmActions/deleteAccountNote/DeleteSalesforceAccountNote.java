@@ -17,7 +17,9 @@ import com.salessparrow.api.lib.errorLib.ParamErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient;
 import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
+import com.salessparrow.api.lib.salesforce.dto.SalesforceErrorObject;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
+import com.salessparrow.api.lib.salesforce.helper.SalesforceCompositeResponseHelper;
 
 /**
  * DeleteAccountSalesforceNote is a class for the DeleteAccountNote service for the
@@ -33,6 +35,9 @@ public class DeleteSalesforceAccountNote implements DeleteAccountNoteInterface {
 
 	@Autowired
 	private MakeCompositeRequest makeCompositeRequest;
+
+	@Autowired
+	private SalesforceCompositeResponseHelper salesforceCompositeResponseHelper;
 
 	/**
 	 * Deletes a note from salesforce
@@ -67,20 +72,18 @@ public class DeleteSalesforceAccountNote implements DeleteAccountNoteInterface {
 		Util util = new Util();
 		JsonNode rootNode = util.getJsonNode(responseBody);
 
-		JsonNode deleteNoteCompositeResponse = rootNode.get("compositeResponse").get(0);
-		Integer deleteNoteStatusCode = deleteNoteCompositeResponse.get("httpStatusCode").asInt();
+		SalesforceErrorObject errorObject = salesforceCompositeResponseHelper
+			.getErrorObjectFromCompositeResponse(rootNode);
 
-		if (deleteNoteStatusCode != 200 && deleteNoteStatusCode != 201 && deleteNoteStatusCode != 204) {
-			logger.error("Error in deleting note in salesforce:{}", deleteNoteCompositeResponse);
-			String errorBody = deleteNoteCompositeResponse.get("body").asText();
+		if (!errorObject.isSuccess()) {
 
-			// MALFORMED_ID or NOT_FOUND
-			if (deleteNoteStatusCode == 400 || deleteNoteStatusCode == 404) {
-				throw new CustomException(
-						new ParamErrorObject("l_ca_dan_dasn_pr_1", errorBody, Arrays.asList("invalid_note_id")));
+			if (errorObject.getErrorCode().equals("invalid_params")) {
+				throw new CustomException(new ParamErrorObject("l_ca_dan_dsan_pr_1", errorObject.getErrorCode(),
+						Arrays.asList("invalid_note_id")));
 			}
 			else {
-				throw new CustomException(new ErrorObject("l_ca_dan_dasn_pr_2", "something_went_wrong", errorBody));
+				throw new CustomException(
+						new ErrorObject("l_ca_dan_dsan_pr_2", errorObject.getErrorCode(), errorObject.getMessage()));
 			}
 		}
 	}
