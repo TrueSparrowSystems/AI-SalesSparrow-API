@@ -2,6 +2,8 @@ package com.salessparrow.api.lib.salesforce.helper;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -16,6 +18,8 @@ import com.salessparrow.api.lib.salesforce.dto.SalesforceErrorObject;
  **/
 @Component
 public class SalesforceCompositeResponseHelper {
+
+  Logger logger = LoggerFactory.getLogger(SalesforceCompositeResponseHelper.class);
 
 	/**
 	 * Get error object from composite response.
@@ -47,6 +51,8 @@ public class SalesforceCompositeResponseHelper {
 					String errorCode = mapSalesforceErrorCodeToCustomErrorCode(salesforceErrorCode);
 
 					salesforceErrorObject = new SalesforceErrorObject(false, errorCode, message, referenceId);
+
+          logger.info("Salesforce error object: " + salesforceErrorObject.toString());
 
 					return salesforceErrorObject;
 				}
