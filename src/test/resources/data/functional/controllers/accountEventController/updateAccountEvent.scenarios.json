@@ -1,43 +1,105 @@
 [
-    {
-      "description": "Should successfully update the event for given event id", 
-      "input": {
-        "body": {
-          "description":"Create Event",
-          "start_datetime": "2023-07-21T13:12:17.000+0000",
-          "end_datetime": "2023-07-22T13:12:17.000+0000"
-        },
-        "accountId": "0011e00000bWSxdAAG",
-        "eventId":"0691e000001X1yTAAS"
+  {
+    "description": "Should successfully update the event for given event id", 
+    "input": {
+      "body": {
+        "description":"Create Event",
+        "start_datetime": "2023-07-21T13:12:17.000+0000",
+        "end_datetime": "2023-07-22T13:12:17.000+0000"
       },
-      "mocks": {
-        "makeCompositeRequest": {
-          "compositeResponse": [
-            {
-              "body": null,
-              "httpHeaders": {},
-              "httpStatusCode": 200,
-              "referenceId": "UpdateEvent"
-            }
-          ]
-        }
-      },
-      "output": {}
+      "accountId": "0011e00000bWSxdAAG",
+      "eventId":"0691e000001X1yTAAS"
     },
-    {
-      "description": "should return error response when event id is invalid", 
-      "input": {
-        "body": {
-          "description":"Create Event",
-          "start_datetime": "2023-07-21T13:12:17.000+0000",
-          "end_datetime": "2023-07-22T13:12:17.000+0000"
-        },
-        "accountId": "0011e00000bWSxdAAG",
-        "eventId":"invalidEventId"
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
+          {
+            "body": null,
+            "httpHeaders": {},
+            "httpStatusCode": 200,
+            "referenceId": "UpdateEvent"
+          }
+        ]
+      }
+    },
+    "output": {}
+  },
+  {
+    "description": "Should fail when event task description is not provided", 
+    "input": {
+      "body": {
+        "start_datetime": "2023-07-21T13:12:17.000+0000",
+        "end_datetime": "2023-07-22T13:12:17.000+0000"
       },
-      "mocks": {
-        "makeCompositeRequest": {
-          "compositeResponse": [
+      "accountId": "0011e00000bWSxdAAG"
+    },
+    "mocks": {},
+    "output": {
+      "http_code": 400,
+      "message": "At least one parameter is invalid or missing.",
+      "code": "INVALID_PARAMS",
+      "internal_error_identifier": "b_2",
+      "param_errors": [
+        "missing_description"
+      ]
+    }
+  },
+  {
+    "description": "Should fail when the event start_datetime is invalid", 
+    "input": {
+      "body": {
+        "description":"Create Event",
+        "start_datetime": "2023-07-21",
+        "end_datetime": "2023-07-22T13:12:17.000+0000"
+      },
+      "accountId": "0011e00000bWSxdAAG"
+    },
+    "mocks": {},
+    "output": {
+      "http_code": 400,
+      "message": "At least one parameter is invalid or missing.",
+      "code": "INVALID_PARAMS",
+      "internal_error_identifier": "b_2",
+      "param_errors": [
+        "invalid_start_datetime"
+      ]
+    }
+  },
+  {
+    "description": "Should fail when the event end_datetime is invalid", 
+    "input": {
+      "body": {
+        "description":"Create Event",
+        "start_datetime": "2023-07-22T13:12:17.000+0000",
+        "end_datetime": "2023-07-22T13:12.000+0000"
+      },
+      "accountId": "0011e00000bWSxdAAG"
+    },
+    "mocks": {},
+    "output": {
+      "http_code": 400,
+      "message": "At least one parameter is invalid or missing.",
+      "code": "INVALID_PARAMS",
+      "internal_error_identifier": "b_2",
+      "param_errors": [
+        "invalid_end_datetime"
+      ]
+    }
+  },
+  {
+    "description": "should return error response when event id is invalid", 
+    "input": {
+      "body": {
+        "description":"Create Event",
+        "start_datetime": "2023-07-21T13:12:17.000+0000",
+        "end_datetime": "2023-07-22T13:12:17.000+0000"
+      },
+      "accountId": "0011e00000bWSxdAAG",
+      "eventId":"invalidEventId"
+    },
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
           {
             "body": [
               {
@@ -51,15 +113,15 @@
           }
         ]
       }
-      },
-      "output": {
-        "http_code": 400,
-        "message": "At least one parameter is invalid or missing.",
-        "code": "INVALID_PARAMS",
-        "internal_error_identifier": "l_ua_uae_usae_pr_1",
-        "param_errors": [
-          "invalid_event_id"
-        ]
-      }
+    },
+    "output": {
+      "http_code": 400,
+      "message": "At least one parameter is invalid or missing.",
+      "code": "INVALID_PARAMS",
+      "internal_error_identifier": "l_ua_uae_usae_pr_1",
+      "param_errors": [
+        "invalid_event_id"
+      ]
     }
-  ]
+  }
+]
