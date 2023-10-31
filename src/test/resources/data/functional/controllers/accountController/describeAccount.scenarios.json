@@ -1,0 +1,265 @@
+[
+  {
+    "description": "Should return the accounts field description",
+    "input": {},
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
+          {
+            "body": {
+              "fields": [
+                {
+                  "label": "Account Name",
+                  "length": 255,
+                  "name": "Name",
+                  "type": "string"
+                },
+                {
+                  "label": "Website",
+                  "length": 255,
+                  "name": "Website",
+                  "type": "url"
+                },
+                {
+                  "label": "Establishment Year",
+                  "length": 255,
+                  "name": "Establishment_Year__c",
+                  "picklistValues": [
+                    {
+                      "active": true,
+                      "defaultValue": false,
+                      "label": "2023",
+                      "validFor": null,
+                      "value": "2023"
+                    },
+                    {
+                      "active": true,
+                      "defaultValue": false,
+                      "label": "2022",
+                      "validFor": null,
+                      "value": "2022"
+                    },
+                    {
+                      "active": true,
+                      "defaultValue": false,
+                      "label": "2021",
+                      "validFor": null,
+                      "value": "2021"
+                    },
+                    {
+                      "active": true,
+                      "defaultValue": false,
+                      "label": "2020",
+                      "validFor": null,
+                      "value": "2020"
+                    },
+                    {
+                      "active": true,
+                      "defaultValue": false,
+                      "label": "Before 2020",
+                      "validFor": null,
+                      "value": "Before 2020"
+                    }
+                  ],
+                  "type": "picklist"
+                },
+                {
+                  "defaultValue": "Ready To Inspect",
+                  "label": "Status",
+                  "length": 255,
+                  "name": "Status__c",
+                  "picklistValues": [
+                    {
+                      "active": true,
+                      "defaultValue": true,
+                      "label": "Ready To Inspect",
+                      "validFor": null,
+                      "value": "Ready To Inspect"
+                    },
+                    {
+                      "active": true,
+                      "defaultValue": false,
+                      "label": "Ready For Outreach",
+                      "validFor": null,
+                      "value": "Ready For Outreach"
+                    },
+                    {
+                      "active": true,
+                      "defaultValue": false,
+                      "label": "First Outreach Done",
+                      "validFor": null,
+                      "value": "First Outreach Done"
+                    },
+                    {
+                      "active": true,
+                      "defaultValue": false,
+                      "label": "Second Outreach Done",
+                      "validFor": null,
+                      "value": "Second Outreach Done"
+                    },
+                    {
+                      "active": true,
+                      "defaultValue": false,
+                      "label": "Third Outreach Done",
+                      "validFor": null,
+                      "value": "Third Outreach Done"
+                    },
+                    {
+                      "active": true,
+                      "defaultValue": false,
+                      "label": "Connected",
+                      "validFor": null,
+                      "value": "Connected"
+                    },
+                    {
+                      "active": true,
+                      "defaultValue": false,
+                      "label": "Call Scheduled",
+                      "validFor": null,
+                      "value": "Call Scheduled"
+                    },
+                    {
+                      "active": true,
+                      "defaultValue": false,
+                      "label": "Rejected",
+                      "validFor": null,
+                      "value": "Rejected"
+                    },
+                    {
+                      "active": true,
+                      "defaultValue": false,
+                      "label": "Unsubscribed",
+                      "validFor": null,
+                      "value": "Unsubscribed"
+                    }
+                  ],
+                  "type": "picklist"
+                },
+                {
+                  "label": "PPT URL",
+                  "length": 255,
+                  "name": "PPT_URL__c",
+                  "type": "url"
+                }
+              ]
+            },
+            "httpHeaders": {
+              "ETag": "\"3944ffb9\"",
+              "Last-Modified": "Mon, 30 Oct 2023 06:25:17 GMT"
+            },
+            "httpStatusCode": 200,
+            "referenceId": "describeAccount"
+          }
+        ]
+      }
+    },
+    "output": {
+      "fields": [
+          {
+            "label": "Account Name",
+            "name": "Name",
+            "length": "255",
+            "type": "string",
+            "defaultValue": null,
+            "picklistValues": null
+          },
+          {
+            "label": "Website",
+            "name": "Website",
+            "length": "255",
+            "type": "url",
+            "defaultValue": null,
+            "picklistValues": null
+          },
+          {
+            "label": "Establishment Year",
+            "name": "Establishment_Year__c",
+            "length": "255",
+            "type": "picklist",
+            "defaultValue": null,
+            "picklistValues": [
+              {
+                "label": "2023",
+                "value": "2023",
+                "active": "true"
+              },
+              {
+                "label": "2022",
+                "value": "2022",
+                "active": "true"
+              },
+              {
+                "label": "2021",
+                "value": "2021",
+                "active": "true"
+              },
+              {
+                "label": "2020",
+                "value": "2020",
+                "active": "true"
+              },
+              {
+                "label": "Before 2020",
+                "value": "Before 2020",
+                "active": "true"
+              }
+            ]
+          },
+        {
+          "label": "Status",
+          "name": "Status__c",
+          "length": "255",
+          "type": "picklist",
+          "defaultValue": "Ready To Inspect",
+          "picklistValues": [
+            {
+              "label": "Ready To Inspect",
+              "value": "Ready To Inspect",
+              "active": "true"
+            },
+            {
+              "label": "Ready For Outreach",
+              "value": "Ready For Outreach",
+              "active": "true"
+            },
+            {
+              "label": "First Outreach Done",
+              "value": "First Outreach Done",
+              "active": "true"
+            },
+            {
+              "label": "Second Outreach Done",
+              "value": "Second Outreach Done",
+              "active": "true"
+            },
+            {
+              "label": "Third Outreach Done",
+              "value": "Third Outreach Done",
+              "active": "true"
+            },
+            {
+              "label": "Connected",
+              "value": "Connected",
+              "active": "true"
+            },
+            {
+              "label": "Call Scheduled",
+              "value": "Call Scheduled",
+              "active": "true"
+            },
+            {
+              "label": "Rejected",
+              "value": "Rejected",
+              "active": "true"
+            },
+            {
+              "label": "Unsubscribed",
+              "value": "Unsubscribed",
+              "active": "true"
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

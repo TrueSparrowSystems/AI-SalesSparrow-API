@@ -16,7 +16,7 @@ import com.salessparrow.api.lib.globalConstants.UserConstants;
 @Component
 public class DescribeAccountFactory {
 
-  private static final Logger logger = org.slf4j.LoggerFactory.getLogger(DescribeAccountFactory.class);
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(DescribeAccountFactory.class);
 
 	@Autowired
 	private DescribeSalesforceAccount describeSalesforceAccount;
@@ -27,7 +27,7 @@ public class DescribeAccountFactory {
 	 * @return DescribeAccountFormatterDto
 	 **/
 	public DescribeAccountFormatterDto describeAccount(User user) {
-    logger.info("Describe Account Factory called");
+		logger.info("Describe Account Factory called");
 
 		switch (user.getUserKind()) {
 			case UserConstants.SALESFORCE_USER_KIND:

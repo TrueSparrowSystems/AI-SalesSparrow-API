@@ -96,9 +96,9 @@ public class DescribeSalesforceAccount implements DescribeAccountInterface {
 			SalesforceDescribeAccountDto salesforceDescribeAccountDto = salesforceDescribeAccountDtos[i];
 			DescribeAccountFieldEntity describeAccountFieldEntity = salesforceDescribeAccountDto
 				.describeAccountFieldEntity();
-        
+
 			Map<String, Boolean> fields = accountFields();
-			
+
 			if (fields.containsKey(describeAccountFieldEntity.getLabel())) {
 				describeAccountFieldEntitiess.add(describeAccountFieldEntity);
 			}
