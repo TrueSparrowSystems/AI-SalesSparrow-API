@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.salessparrow.api.dto.formatter.DescribeAccountFormatterDto;
 import com.salessparrow.api.dto.requestMapper.GetAccountsDto;
 import com.salessparrow.api.dto.requestMapper.GetAccountsFeedDto;
 import com.salessparrow.api.dto.responseMapper.GetAccountListResponseDto;
 import com.salessparrow.api.dto.responseMapper.GetAccountsFeedResponseDto;
+import com.salessparrow.api.services.accounts.DescribeAccountService;
 import com.salessparrow.api.services.accounts.GetAccountListService;
 import com.salessparrow.api.services.accounts.GetAccountsFeedService;
 
@@ -31,6 +33,9 @@ public class AccountController {
 
 	@Autowired
 	private GetAccountsFeedService getAccountsFeedService;
+
+	@Autowired
+	private DescribeAccountService describeAccountService;
 
 	@GetMapping("")
 	public ResponseEntity<GetAccountListResponseDto> getAccounts(HttpServletRequest request,
@@ -51,6 +56,15 @@ public class AccountController {
 				getAccountsFeedDto);
 
 		return ResponseEntity.ok().body(getAccountsFeedResponse);
+	}
+
+	@GetMapping("/describe")
+	public ResponseEntity<DescribeAccountFormatterDto> describeAccounts(HttpServletRequest request) {
+		logger.info("Get Account Describe Request received");
+
+		DescribeAccountFormatterDto describeAccountFormatterDto = describeAccountService.describeAccount(request);
+
+		return ResponseEntity.ok().body(describeAccountFormatterDto);
 	}
 
 }

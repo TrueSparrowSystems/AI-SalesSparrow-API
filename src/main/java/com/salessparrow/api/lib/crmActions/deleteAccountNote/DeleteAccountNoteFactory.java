@@ -19,9 +19,6 @@ public class DeleteAccountNoteFactory {
 	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(DeleteAccountNoteFactory.class);
 
 	@Autowired
-	DeleteSalesforceAccountNote getSalesforceNoteDetails;
-
-	@Autowired
 	DeleteSalesforceAccountNote deleteAccountSalesforceNote;
 
 	/**

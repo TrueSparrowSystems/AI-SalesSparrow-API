@@ -34,6 +34,10 @@ public class SalesforceConstants {
 		return "/services/oauth2/revoke";
 	}
 
+	public String describeAccountPath() {
+		return sObjectsPath() + "/Account/describe";
+	}
+
 	public String salesforceCreateNoteUrl() {
 		return sObjectsPath() + "/ContentNote";
 	}
