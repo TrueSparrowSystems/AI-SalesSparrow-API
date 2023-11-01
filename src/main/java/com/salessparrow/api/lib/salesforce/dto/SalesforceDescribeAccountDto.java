@@ -20,6 +20,10 @@ public class SalesforceDescribeAccountDto {
 
 	private String defaultValue;
 
+	private Boolean nillable;
+
+	private Boolean createable;
+
 	private PicklistValues[] picklistValues;
 
 	@Data

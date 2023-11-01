@@ -12,13 +12,18 @@
                   "label": "Account Name",
                   "length": 255,
                   "name": "Name",
-                  "type": "string"
+                  "type": "string",
+                  "nillable": false,
+                  "createable": true
+
                 },
                 {
                   "label": "Website",
                   "length": 255,
                   "name": "Website",
-                  "type": "url"
+                  "type": "url",
+                  "nillable": false,
+                  "createable": true
                 },
                 {
                   "label": "Establishment Year",
@@ -61,7 +66,9 @@
                       "value": "Before 2020"
                     }
                   ],
-                  "type": "picklist"
+                  "type": "picklist",
+                  "nillable": false,
+                  "createable": true
                 },
                 {
                   "defaultValue": "Ready To Inspect",
@@ -133,13 +140,17 @@
                       "value": "Unsubscribed"
                     }
                   ],
-                  "type": "picklist"
+                  "type": "picklist",
+                  "nillable": false,
+                  "createable": true
                 },
                 {
                   "label": "PPT URL",
                   "length": 255,
                   "name": "PPT_URL__c",
-                  "type": "url"
+                  "type": "url",
+                  "nillable": true,
+                  "createable": false
                 }
               ]
             },

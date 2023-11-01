@@ -1,9 +1,7 @@
 package com.salessparrow.api.lib.crmActions.describeAccount;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,36 +88,25 @@ public class DescribeSalesforceAccount implements DescribeAccountInterface {
 		SalesforceDescribeAccountDto[] salesforceDescribeAccountDtos = mapper.convertValue(describeAccountResponseBody,
 				SalesforceDescribeAccountDto[].class);
 
-		List<DescribeAccountFieldEntity> describeAccountFieldEntitiess = new ArrayList<DescribeAccountFieldEntity>();
+		List<DescribeAccountFieldEntity> describeAccountFieldEntities = new ArrayList<DescribeAccountFieldEntity>();
 
 		for (int i = 0; i < salesforceDescribeAccountDtos.length; i++) {
 			SalesforceDescribeAccountDto salesforceDescribeAccountDto = salesforceDescribeAccountDtos[i];
-			DescribeAccountFieldEntity describeAccountFieldEntity = salesforceDescribeAccountDto
-				.describeAccountFieldEntity();
 
-			Map<String, Boolean> fields = accountFields();
+			if (!salesforceDescribeAccountDto.getNillable() && salesforceDescribeAccountDto.getCreateable()
+					&& !salesforceDescribeAccountDto.getName().equals("OwnerId")) {
+				DescribeAccountFieldEntity describeAccountFieldEntity = salesforceDescribeAccountDto
+					.describeAccountFieldEntity();
 
-			if (fields.containsKey(describeAccountFieldEntity.getLabel())) {
-				describeAccountFieldEntitiess.add(describeAccountFieldEntity);
+				describeAccountFieldEntities.add(describeAccountFieldEntity);
 			}
 		}
 
 		DescribeAccountFormatterDto describeAccountFormatterDto = new DescribeAccountFormatterDto();
-		describeAccountFormatterDto.setFields(describeAccountFieldEntitiess
-			.toArray(new DescribeAccountFieldEntity[describeAccountFieldEntitiess.size()]));
+		describeAccountFormatterDto.setFields(describeAccountFieldEntities
+			.toArray(new DescribeAccountFieldEntity[describeAccountFieldEntities.size()]));
 
 		return describeAccountFormatterDto;
-	}
-
-	public Map<String, Boolean> accountFields() {
-		Map<String, Boolean> fieldMap = new HashMap<>();
-
-		fieldMap.put("Account Name", true);
-		fieldMap.put("Status", true);
-		fieldMap.put("Website", true);
-		fieldMap.put("Establishment Year", true);
-
-		return fieldMap;
 	}
 
 }
