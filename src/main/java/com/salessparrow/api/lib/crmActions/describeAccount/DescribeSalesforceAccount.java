@@ -50,7 +50,7 @@ public class DescribeSalesforceAccount implements DescribeAccountInterface {
 	 **/
 	public DescribeAccountFormatterDto describeAccount(User user) {
 		String salesforceUserId = user.getExternalUserId();
-		String url = salesforceConstants.describeAccountPath();
+		String url = salesforceConstants.describeAccountLayoutPath();
 
 		CompositeRequestDto compositeReq = new CompositeRequestDto("GET", url, "describeAccount");
 
@@ -81,23 +81,35 @@ public class DescribeSalesforceAccount implements DescribeAccountInterface {
 					new ErrorObject("l_ca_da_dsa_pr_1", errorObject.getErrorCode(), errorObject.getMessage()));
 		}
 
-		JsonNode describeAccountResponseBody = rootNode.get("compositeResponse").get(0).get("body").get("fields");
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-
-		SalesforceDescribeAccountDto[] salesforceDescribeAccountDtos = mapper.convertValue(describeAccountResponseBody,
-				SalesforceDescribeAccountDto[].class);
+		JsonNode describeAccountResponseBody = rootNode.get("compositeResponse")
+			.get(0)
+			.get("body")
+			.get("layouts")
+			.get(0)
+			.get("detailLayoutSections")
+			.get(0)
+			.get("layoutRows");
 
 		List<DescribeAccountFieldEntity> describeAccountFieldEntities = new ArrayList<DescribeAccountFieldEntity>();
+		for (JsonNode node : describeAccountResponseBody) {
+			JsonNode layoutItems = node.get("layoutItems");
+			JsonNode layoutItem = layoutItems.get(0);
 
-		for (int i = 0; i < salesforceDescribeAccountDtos.length; i++) {
-			SalesforceDescribeAccountDto salesforceDescribeAccountDto = salesforceDescribeAccountDtos[i];
+			Boolean isRequired = layoutItem.get("required").asBoolean();
+			if (!isRequired) {
+				continue;
+			}
 
-			if (!salesforceDescribeAccountDto.getNillable() && salesforceDescribeAccountDto.getCreateable()
-					&& !salesforceDescribeAccountDto.getName().equals("OwnerId")) {
+			JsonNode details = layoutItem.get("layoutComponents").get(0).get("details");
+
+			if (details != null) {
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+				SalesforceDescribeAccountDto salesforceDescribeAccountDto = mapper.convertValue(details,
+						SalesforceDescribeAccountDto.class);
+
 				DescribeAccountFieldEntity describeAccountFieldEntity = salesforceDescribeAccountDto
 					.describeAccountFieldEntity();
-
 				describeAccountFieldEntities.add(describeAccountFieldEntity);
 			}
 		}
