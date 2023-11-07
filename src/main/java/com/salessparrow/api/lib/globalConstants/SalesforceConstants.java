@@ -46,6 +46,10 @@ public class SalesforceConstants {
 		return sObjectsPath() + "/Event";
 	}
 
+	public String salesforceCreateAccountUrl() {
+		return sObjectsPath() + "/Account";
+	}
+
 	public String salesforceUpdateEventUrl(String eventId) {
 		return sObjectsPath() + "/Event/" + eventId;
 	}

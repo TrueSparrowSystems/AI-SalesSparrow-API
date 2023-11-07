@@ -24,6 +24,10 @@ public class SalesforceDescribeAccountDto {
 
 	private Boolean createable;
 
+	private Number precision;
+
+	private Number scale;
+
 	private PicklistValues[] picklistValues;
 
 	@Data
@@ -46,6 +50,8 @@ public class SalesforceDescribeAccountDto {
 		entity.setLength(this.length);
 		entity.setType(this.type);
 		entity.setDefaultValue(this.defaultValue);
+		entity.setPrecision(this.precision);
+		entity.setScale(this.scale);
 
 		if (this.picklistValues != null) {
 			DescribeAccountFieldEntity.PicklistValues[] picklistValues = new DescribeAccountFieldEntity.PicklistValues[this.picklistValues.length];

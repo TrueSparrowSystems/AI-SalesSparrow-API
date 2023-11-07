@@ -1,19 +1,25 @@
 package com.salessparrow.api.controllers;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.salessparrow.api.dto.formatter.CreateAccountFormatterDto;
 import com.salessparrow.api.dto.formatter.DescribeAccountFormatterDto;
 import com.salessparrow.api.dto.requestMapper.GetAccountsDto;
 import com.salessparrow.api.dto.requestMapper.GetAccountsFeedDto;
 import com.salessparrow.api.dto.responseMapper.GetAccountListResponseDto;
 import com.salessparrow.api.dto.responseMapper.GetAccountsFeedResponseDto;
+import com.salessparrow.api.services.accounts.CreateAccountService;
 import com.salessparrow.api.services.accounts.DescribeAccountService;
 import com.salessparrow.api.services.accounts.GetAccountListService;
 import com.salessparrow.api.services.accounts.GetAccountsFeedService;
@@ -37,6 +43,9 @@ public class AccountController {
 	@Autowired
 	private DescribeAccountService describeAccountService;
 
+	@Autowired
+	private CreateAccountService createAccountService;
+
 	@GetMapping("")
 	public ResponseEntity<GetAccountListResponseDto> getAccounts(HttpServletRequest request,
 			@Valid @ModelAttribute GetAccountsDto getAccountsDto) {
@@ -45,6 +54,18 @@ public class AccountController {
 		GetAccountListResponseDto getAccountsResponse = getAccountListService.getAccounts(request, getAccountsDto);
 
 		return ResponseEntity.ok().body(getAccountsResponse);
+	}
+
+	@PostMapping("")
+	public ResponseEntity<CreateAccountFormatterDto> createAccount(HttpServletRequest request,
+			@Valid @RequestBody Map<String, String> createAccountDto) {
+		logger.info("Create Account Request received");
+
+		CreateAccountFormatterDto createAccountFormatterDto = createAccountService.createAccount(request,
+				createAccountDto);
+
+		return ResponseEntity.ok().body(createAccountFormatterDto);
+
 	}
 
 	@GetMapping("/feed")

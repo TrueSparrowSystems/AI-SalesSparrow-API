@@ -18,6 +18,10 @@ public class DescribeAccountFieldEntity {
 
 	private String defaultValue;
 
+	private Number precision;
+
+	private Number scale;
+
 	private PicklistValues[] picklistValues;
 
 	@Data
