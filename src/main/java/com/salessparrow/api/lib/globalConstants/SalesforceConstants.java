@@ -50,6 +50,10 @@ public class SalesforceConstants {
 		return sObjectsPath() + "/Account";
 	}
 
+	public String salesforceAccountByIdUrl(String accountId) {
+		return sObjectsPath() + "/Account/" + accountId;
+	}
+
 	public String salesforceUpdateEventUrl(String eventId) {
 		return sObjectsPath() + "/Event/" + eventId;
 	}

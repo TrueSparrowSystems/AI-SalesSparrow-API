@@ -46,6 +46,17 @@ public class SalesforceQueryBuilder {
 	}
 
 	/**
+	 * Get the contacts for a given account
+	 * @param accountId
+	 * @return String
+	 */
+	public String getAccountContactsQuery(String accountId) {
+		accountId = Util.escapeSpecialChars(accountId);
+
+		return Util.urlEncoder("SELECT Id, Name, Title, Email, Phone FROM Contact WHERE AccountId='" + accountId + "'");
+	}
+
+	/**
 	 * Get the list of tasks for a given account
 	 * @param accountId
 	 * @return String

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,12 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.salessparrow.api.dto.formatter.CreateAccountFormatterDto;
 import com.salessparrow.api.dto.formatter.DescribeAccountFormatterDto;
+import com.salessparrow.api.dto.formatter.GetAccountDetailsFormatterDto;
 import com.salessparrow.api.dto.requestMapper.GetAccountsDto;
 import com.salessparrow.api.dto.requestMapper.GetAccountsFeedDto;
 import com.salessparrow.api.dto.responseMapper.GetAccountListResponseDto;
 import com.salessparrow.api.dto.responseMapper.GetAccountsFeedResponseDto;
 import com.salessparrow.api.services.accounts.CreateAccountService;
 import com.salessparrow.api.services.accounts.DescribeAccountService;
+import com.salessparrow.api.services.accounts.GetAccountDetailsService;
 import com.salessparrow.api.services.accounts.GetAccountListService;
 import com.salessparrow.api.services.accounts.GetAccountsFeedService;
 
@@ -45,6 +48,9 @@ public class AccountController {
 
 	@Autowired
 	private CreateAccountService createAccountService;
+
+	@Autowired
+	private GetAccountDetailsService getAccountDetailsService;
 
 	@GetMapping("")
 	public ResponseEntity<GetAccountListResponseDto> getAccounts(HttpServletRequest request,
@@ -86,6 +92,17 @@ public class AccountController {
 		DescribeAccountFormatterDto describeAccountFormatterDto = describeAccountService.describeAccount(request);
 
 		return ResponseEntity.ok().body(describeAccountFormatterDto);
+	}
+
+	@GetMapping("/{account_id}")
+	public ResponseEntity<GetAccountDetailsFormatterDto> getAccountById(HttpServletRequest request,
+			@PathVariable("account_id") String accountId) {
+		logger.info("Get Account request received");
+
+		GetAccountDetailsFormatterDto getAccountDetailsFormatterDto = getAccountDetailsService
+			.getAccountDetails(request, accountId);
+
+		return ResponseEntity.ok().body(getAccountDetailsFormatterDto);
 	}
 
 }
