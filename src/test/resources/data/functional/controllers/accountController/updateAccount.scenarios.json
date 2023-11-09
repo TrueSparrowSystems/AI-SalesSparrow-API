@@ -1,0 +1,70 @@
+[
+  {
+    "description": "Should successfully update the account", 
+    "input": {
+      "body": {
+        "Name": "Test Data",
+        "Website": "abc",
+        "Status__c": "Ready To Inspect",
+        "Establishment_Year__c": "2023"
+      },
+      "accountId": "0011e00000bWSxdAAG"
+    },
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
+          {
+            "body": {
+              "id": "00T1e000007mDA7EAM",
+              "success": true,
+              "errors": []
+            },
+            "httpHeaders": {
+              "Location": "/services/data/v58.0/sobjects/Account/00T1e000007mDA7EAM"
+            },
+            "httpStatusCode": 201,
+            "referenceId": "CreateAccount"
+          }
+        ]
+      }
+    },
+    "output": {}
+  },
+  {
+    "description": "Should fail when the request object key is incorrect", 
+    "input": {
+      "body": {
+        "Name": "Test Data",
+        "Website": "abc",
+        "Status": "Ready To Inspect",
+        "Establishment_Year__c": "2023"
+      }
+    },
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
+          {
+            "body": [
+              {
+                "message": "No such column 'Status' on sobject of type Account",
+                "errorCode": "INVALID_FIELD"
+              }
+            ],
+            "httpHeaders": {},
+            "httpStatusCode": 400,
+            "referenceId": "CreateAccount"
+          }
+        ]
+      }
+    },
+    "output": {
+      "http_code": 400,
+      "message": "At least one parameter is invalid or missing.",
+      "code": "INVALID_PARAMS",
+      "internal_error_identifier": "l_ca_ca_csa_pr_1",
+      "param_errors": [
+        "invalid_account_data"
+      ]
+    }
+  }
+]
