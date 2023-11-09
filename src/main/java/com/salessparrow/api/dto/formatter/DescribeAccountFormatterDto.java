@@ -1,5 +1,7 @@
 package com.salessparrow.api.dto.formatter;
 
+import java.util.Map;
+
 import com.salessparrow.api.dto.entities.DescribeAccountFieldEntity;
 
 import lombok.Data;
@@ -10,6 +12,6 @@ import lombok.Data;
 @Data
 public class DescribeAccountFormatterDto {
 
-	private DescribeAccountFieldEntity[] fields;
+	private Map<String, DescribeAccountFieldEntity> fields;
 
 }

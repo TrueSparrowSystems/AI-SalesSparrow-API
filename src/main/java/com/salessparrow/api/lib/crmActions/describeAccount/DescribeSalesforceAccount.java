@@ -1,7 +1,9 @@
 package com.salessparrow.api.lib.crmActions.describeAccount;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,7 +92,7 @@ public class DescribeSalesforceAccount implements DescribeAccountInterface {
 			.get(0)
 			.get("layoutRows");
 
-		List<DescribeAccountFieldEntity> describeAccountFieldEntities = new ArrayList<DescribeAccountFieldEntity>();
+		Map<String, DescribeAccountFieldEntity> describeAccountFieldEntityMap = new HashMap<String, DescribeAccountFieldEntity>();
 		for (JsonNode node : describeAccountResponseBody) {
 			JsonNode layoutItems = node.get("layoutItems");
 			JsonNode layoutItem = layoutItems.get(0);
@@ -110,13 +112,14 @@ public class DescribeSalesforceAccount implements DescribeAccountInterface {
 
 				DescribeAccountFieldEntity describeAccountFieldEntity = salesforceDescribeAccountDto
 					.describeAccountFieldEntity();
-				describeAccountFieldEntities.add(describeAccountFieldEntity);
+
+				describeAccountFieldEntityMap.put(describeAccountFieldEntity.getName(), describeAccountFieldEntity);
 			}
 		}
 
 		DescribeAccountFormatterDto describeAccountFormatterDto = new DescribeAccountFormatterDto();
-		describeAccountFormatterDto.setFields(describeAccountFieldEntities
-			.toArray(new DescribeAccountFieldEntity[describeAccountFieldEntities.size()]));
+
+		describeAccountFormatterDto.setFields(describeAccountFieldEntityMap);
 
 		return describeAccountFormatterDto;
 	}
