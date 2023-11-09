@@ -31,7 +31,7 @@ public class DescribeAccountFieldEntity {
 
 		private String value;
 
-		private String active;
+		private Boolean active;
 
 	}
 

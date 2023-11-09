@@ -37,7 +37,7 @@ public class SalesforceDescribeAccountDto {
 
 		private String value;
 
-		private String active;
+		private Boolean active;
 
 	}
 
