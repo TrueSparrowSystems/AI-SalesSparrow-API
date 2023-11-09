@@ -195,13 +195,13 @@ public class GetSalesforceAccountDetails implements GetAccountDetails {
 
 			Map<String, Object> additionalFields = new HashMap<String, Object>();
 			if (!recordNode.get("Title").isNull()) {
-				additionalFields.put("Title", recordNode.get("Title").asText());
+				additionalFields.put("title", recordNode.get("Title").asText());
 			}
 			if (!recordNode.get("Email").isNull()) {
-				additionalFields.put("Email", recordNode.get("Email").asText());
+				additionalFields.put("email", recordNode.get("Email").asText());
 			}
 			if (!recordNode.get("Phone").isNull()) {
-				additionalFields.put("Phone", recordNode.get("Phone").asText());
+				additionalFields.put("phone", recordNode.get("Phone").asText());
 			}
 
 			contactEntity.setAdditionalFields(additionalFields);
