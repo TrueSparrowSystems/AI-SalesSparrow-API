@@ -101,6 +101,12 @@ public class ErrorResponse {
 			}
 			else {
 				paramErrorConfig = paramErrorDataMap.get(paramErrorIdentifier);
+
+				// For handling dynamic error messages for account creation and update
+				if (paramErrorIdentifier.equals("invalid_account_data")) {
+					paramErrorConfig.setMessage(message);
+				}
+
 				if (paramErrorConfig != null) {
 					paramErrorConfigList.add(paramErrorConfig);
 				}

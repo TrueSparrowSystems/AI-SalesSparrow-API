@@ -83,8 +83,8 @@ public class CreateSalesforceAccount implements CreateAccountInterface {
 		if (!errorObject.isSuccess()) {
 
 			if (errorObject.getErrorCode().equals("invalid_params")) {
-				throw new CustomException(new ParamErrorObject("l_ca_ca_csa_pr_1", errorObject.getErrorCode(),
-						Arrays.asList("invalid_account_id")));
+				throw new CustomException(new ParamErrorObject("l_ca_ca_csa_pr_1", errorObject.getMessage(),
+						Arrays.asList("invalid_account_data")));
 			}
 			else {
 				throw new CustomException(

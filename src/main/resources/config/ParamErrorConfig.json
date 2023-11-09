@@ -78,5 +78,10 @@
     "parameter": "crm_organization_user_id",
     "param_error_identifier": "invalid_crm_organization_user_id",
     "message": "The crm organization user id you sent is incorrect. Please double check and try again."
+  },
+  "invalid_account_data": {
+    "parameter": "account_data",
+    "param_error_identifier": "invalid_account_data",
+    "message": "The account data you sent is incorrect. Please double check and try again."
   }
 }

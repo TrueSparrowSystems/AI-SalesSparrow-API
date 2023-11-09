@@ -74,6 +74,10 @@ public class SalesforceCompositeResponseHelper {
 			case "INVALID_QUERY_FILTER_OPERATOR":
 			case "INVALID_FIELD":
 			case "INVALID_CROSS_REFERENCE_KEY":
+			case "INVALID_OR_NULL_FOR_RESTRICTED_PICKLIST":
+			case "NUMBER_OUTSIDE_VALID_RANGE":
+			case "INVALID_EMAIL_ADDRESS":
+			case "JSON_PARSER_ERROR":
 				return "invalid_params";
 
 			case "NOT_FOUND":
