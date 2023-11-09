@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class NoteDto {
+public class AccountNoteDto {
 
 	@NotBlank(message = "missing_text")
 	@Length(max = 12000, message = "text_too_long")

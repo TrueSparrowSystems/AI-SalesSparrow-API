@@ -24,7 +24,7 @@ import jakarta.validation.Valid;
 @Validated
 public class AccountController {
 
-	private Logger logger = org.slf4j.LoggerFactory.getLogger(AccountController.class);
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(AccountController.class);
 
 	@Autowired
 	private GetAccountListService getAccountListService;

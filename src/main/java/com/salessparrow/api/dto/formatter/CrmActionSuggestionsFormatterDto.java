@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.salessparrow.api.dto.entities.AddEventSuggestionEntityDto;
 import com.salessparrow.api.dto.entities.AddTaskSuggestionEntityDto;
 
 import lombok.Data;
@@ -17,5 +18,7 @@ import lombok.Data;
 public class CrmActionSuggestionsFormatterDto {
 
 	private List<AddTaskSuggestionEntityDto> addTaskSuggestions;
+
+	private List<AddEventSuggestionEntityDto> addEventSuggestions;
 
 }

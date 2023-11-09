@@ -24,7 +24,7 @@ public class OpenAiRequest {
 	@Autowired
 	private OpenAiConstants openAiConstants;
 
-	private Logger logger = org.slf4j.LoggerFactory.getLogger(SuggestionsController.class);
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(SuggestionsController.class);
 
 	/**
 	 * Make a request to the OpenAI API.

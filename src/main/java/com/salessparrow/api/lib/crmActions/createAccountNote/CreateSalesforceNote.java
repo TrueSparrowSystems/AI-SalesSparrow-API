@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salessparrow.api.domain.SalesforceUser;
 import com.salessparrow.api.dto.formatter.CreateNoteFormatterDto;
 import com.salessparrow.api.exception.CustomException;
-import com.salessparrow.api.dto.requestMapper.NoteDto;
+import com.salessparrow.api.dto.requestMapper.AccountNoteDto;
 import com.salessparrow.api.lib.Base64Helper;
 import com.salessparrow.api.lib.Util;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
@@ -51,13 +51,15 @@ public class CreateSalesforceNote implements CreateNoteInterface {
 	 * @param note
 	 * @return CreateNoteFormatterDto
 	 */
-	public CreateNoteFormatterDto createNote(SalesforceUser user, String accountId, NoteDto note) {
+	public CreateNoteFormatterDto createNote(SalesforceUser user, String accountId, AccountNoteDto note) {
 		String salesforceUserId = user.getExternalUserId();
 
-		Util util = new Util();
 		String noteContent = note.getText();
-		String noteTitle = getNoteTitleFromContent(noteContent);
-		noteContent = util.replaceNewLineWithBreak(noteContent);
+		String unEscapeNoteContent = Util.unEscapeSpecialCharactersForPlainText(noteContent);
+		String noteTitle = Util.getTrimmedString(unEscapeNoteContent,
+				salesforceConstants.salesforceContentNoteTitleLength());
+
+		noteContent = Util.replaceNewLineWithBreak(noteContent);
 		String encodedNoteContent = base64Helper.base64Encode(noteContent);
 
 		Map<String, String> createNoteBody = new HashMap<String, String>();
@@ -122,22 +124,6 @@ public class CreateSalesforceNote implements CreateNoteInterface {
 		createNoteFormatterDto.setNoteId(salesforceCreateNoteDto.getId());
 
 		return createNoteFormatterDto;
-	}
-
-	/**
-	 * Get the first 50 characters of the note content.
-	 * @param note - note dto
-	 * @return String
-	 */
-	private String getNoteTitleFromContent(String noteContent) {
-		Util util = new Util();
-		noteContent = util.unEscapeSpecialCharactersForPlainText(noteContent);
-
-		if (noteContent.length() < 50) {
-			return noteContent;
-		}
-
-		return noteContent.substring(0, 50);
 	}
 
 }

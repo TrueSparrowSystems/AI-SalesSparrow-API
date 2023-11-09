@@ -1,0 +1,228 @@
+[
+  {
+    "description": "Should return the 5 latest Notes",
+    "input": {
+      "accountId": "0011e00000bWSxdAAG"
+    },
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
+          {
+            "body": {
+              "totalSize": 5,
+              "done": true,
+              "records": [
+                {
+                  "attributes": {
+                    "type": "Event",
+                    "url": "/services/data/v58.0/sobjects/Event/00T1e000007mGYaEAA"
+                  },
+                  "Id": "00T1e000007mGYaEAA",
+                  "Description": "Description 1",
+                  "CreatedBy": {
+                    "attributes": {
+                      "type": "User",
+                      "url": "/services/data/v58.0/sobjects/User/0055i00000AUxQHAA1"
+                    },
+                    "Name": "Name1"
+                  },
+                  "LastModifiedDate": "2023-08-24T12:09:51.000+00:00",
+                  "StartDateTime": "2023-08-24T12:16:05.000+0000",
+                  "EndDateTime": "2023-08-24T13:16:05.000+0000"
+                },
+                {
+                  "attributes": {
+                    "type": "Event",
+                    "url": "/services/data/v58.0/sobjects/Event/00T1e000007mGYaEAB"
+                  },
+                  "Id": "00T1e000007mGYaEAB",
+                  "Description": "Description 2",
+                  "CreatedBy": {
+                    "attributes": {
+                      "type": "User",
+                      "url": "/services/data/v58.0/sobjects/User/0055i00000AUxQHAA1"
+                    },
+                    "Name": "Name2"
+                  },
+                  "LastModifiedDate": "2023-08-24T12:09:51.000+00:00",
+                  "StartDateTime": "2023-08-24T12:16:05.000+0000",
+                  "EndDateTime": "2023-08-24T13:16:05.000+0000"
+                },
+                {
+                  "attributes": {
+                    "type": "Event",
+                    "url": "/services/data/v58.0/sobjects/Event/00T1e000007mGYaEAC"
+                  },
+                  "Id": "00T1e000007mGYaEAC",
+                  "Description": "Description 3",
+                  "CreatedBy": {
+                    "attributes": {
+                      "type": "User",
+                      "url": "/services/data/v58.0/sobjects/User/0055i00000AUxQHAA1"
+                    },
+                    "Name": "Name3"
+                  },
+                  "LastModifiedDate": "2023-08-24T12:09:51.000+00:00",
+                  "StartDateTime": "2023-08-24T12:16:05.000+0000",
+                  "EndDateTime": "2023-08-24T13:16:05.000+0000"
+                },
+                {
+                  "attributes": {
+                    "type": "Event",
+                    "url": "/services/data/v58.0/sobjects/Event/00T1e000007mGYaEAD"
+                  },
+                  "Id": "00T1e000007mGYaEAD",
+                  "Description": "Description 4",
+                  "CreatedBy": {
+                    "attributes": {
+                      "type": "User",
+                      "url": "/services/data/v58.0/sobjects/User/0055i00000AUxQHAA1"
+                    },
+                    "Name": "Name4"
+                  },
+                  "LastModifiedDate": "2023-08-24T12:09:51.000+00:00",
+                  "StartDateTime": "2023-08-24T12:16:05.000+0000",
+                  "EndDateTime": "2023-08-24T13:16:05.000+0000"
+                },
+                {
+                  "attributes": {
+                    "type": "Event",
+                    "url": "/services/data/v58.0/sobjects/Event/00T1e000007mGYaEAE"
+                  },
+                  "Id": "00T1e000007mGYaEAE",
+                  "Description": "Description 5",
+                  "CreatedBy": {
+                    "attributes": {
+                      "type": "User",
+                      "url": "/services/data/v58.0/sobjects/User/0055i00000AUxQHAA1"
+                    },
+                    "Name": "Name5"
+                  },
+                  "LastModifiedDate": "2023-08-24T12:09:51.000+00:00",
+                  "StartDateTime": "2023-08-24T12:16:05.000+0000",
+                  "EndDateTime": "2023-08-24T13:16:05.000+0000"
+                }
+              ]
+            },
+            "httpHeaders": {},
+            "httpStatusCode": 200,
+            "referenceId": "GetEventsList"
+          }
+        ]
+      } 
+    },
+    "output": {
+      "event_ids": [
+        "00T1e000007mGYaEAA",
+        "00T1e000007mGYaEAB",
+        "00T1e000007mGYaEAC",
+        "00T1e000007mGYaEAD",
+        "00T1e000007mGYaEAE"
+      ],
+      "event_map_by_id": {
+        "00T1e000007mGYaEAE": {
+          "id": "00T1e000007mGYaEAE",
+          "creator_name": "Name5",
+          "description": "Description 5",
+          "start_datetime": "2023-08-24T12:16:05.000+0000",
+          "end_datetime": "2023-08-24T13:16:05.000+0000",
+          "last_modified_time": "2023-08-24T12:09:51.000+00:00"
+        },
+        "00T1e000007mGYaEAD": {
+          "id": "00T1e000007mGYaEAD",
+          "creator_name": "Name4",
+          "description": "Description 4",
+          "start_datetime": "2023-08-24T12:16:05.000+0000",
+          "end_datetime": "2023-08-24T13:16:05.000+0000",
+          "last_modified_time": "2023-08-24T12:09:51.000+00:00"
+        },
+        "00T1e000007mGYaEAC": {
+          "id": "00T1e000007mGYaEAC",
+          "creator_name": "Name3",
+          "description": "Description 3",
+          "start_datetime": "2023-08-24T12:16:05.000+0000",
+          "end_datetime": "2023-08-24T13:16:05.000+0000",
+          "last_modified_time": "2023-08-24T12:09:51.000+00:00"
+        },
+        "00T1e000007mGYaEAB": {
+          "id": "00T1e000007mGYaEAB",
+          "creator_name": "Name2",
+          "description": "Description 2",
+          "start_datetime": "2023-08-24T12:16:05.000+0000",
+          "end_datetime": "2023-08-24T13:16:05.000+0000",
+          "last_modified_time": "2023-08-24T12:09:51.000+00:00"
+        },
+        "00T1e000007mGYaEAA": {
+          "id": "00T1e000007mGYaEAA",
+          "creator_name": "Name1",
+          "description": "Description 1",
+          "start_datetime": "2023-08-24T12:16:05.000+0000",
+          "end_datetime": "2023-08-24T13:16:05.000+0000",
+          "last_modified_time": "2023-08-24T12:09:51.000+00:00"
+        }
+      }
+    }
+  },
+  {
+    "description": "should return empty response when no events are present",
+    "input": {
+      "accountId": "0011e00000bWSxdAAG"
+    },
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
+          {
+            "body": {
+              "totalSize": 0,
+              "done": true,
+              "records": []
+            },
+            "httpHeaders": {},
+            "httpStatusCode": 200,
+            "referenceId": "GetEventsList"
+          }
+        ]
+      }
+    },
+    "output": {
+      "event_ids": [],
+      "event_map_by_id": {}
+    }
+  },
+  {
+    "description": "should return error response when account id is invalid",
+    "input": {
+      "accountId": "invalid"
+    },
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
+          {
+            "body": [
+              {
+                "message": "\nLastModifiedDate FROM Event WHERE WhatId='invalid' ORDER BY LastModifiedDate\n                                 ^\nERROR at Row:1:Column:109\ninvalid ID field: abcd",
+                "errorCode": "INVALID_QUERY_FILTER_OPERATOR"
+              }
+            ],
+            "httpHeaders": {},
+            "httpStatusCode": 400,
+            "referenceId": "GetEventsList"
+          }
+        ]
+      }
+    },
+    "output": {
+      "http_code": 400,
+      "message": "At least one parameter is invalid or missing.",
+      "code": "INVALID_PARAMS",
+      "internal_error_identifier": "l_ca_gael_gsael_pr_1",
+      "param_errors": [
+        {
+          "parameter": "account_id",
+          "param_error_identifier": "invalid_account_id",
+          "message": "The account id you sent is incorrect. Please double check and try again."
+        }
+      ]
+    }
+  }
+]

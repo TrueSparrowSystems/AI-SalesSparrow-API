@@ -16,7 +16,7 @@ import com.salessparrow.api.lib.globalConstants.UserConstants;
 @Component
 public class DeleteAccountNoteFactory {
 
-	private Logger logger = org.slf4j.LoggerFactory.getLogger(DeleteAccountNoteFactory.class);
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(DeleteAccountNoteFactory.class);
 
 	@Autowired
 	DeleteSalesforceAccountNote getSalesforceNoteDetails;

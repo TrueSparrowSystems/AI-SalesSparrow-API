@@ -19,7 +19,7 @@ import jakarta.validation.Valid;
 @Validated
 public class SuggestionsController {
 
-	private Logger logger = org.slf4j.LoggerFactory.getLogger(SuggestionsController.class);
+	private static final Logger logger = org.slf4j.LoggerFactory.getLogger(SuggestionsController.class);
 
 	@Autowired
 	private CrmActionsSuggestionsService crmActionsSuggestionsService;

@@ -1,0 +1,95 @@
+[
+  {
+    "description": "Should return the task details for a given task id",
+    "input": {
+      "accountId": "0011e00000bWSxdAAG",
+      "taskId": "00T1e000007mGYaEAM"
+    },
+    "mocks": {
+      "makeCompositeRequest": {
+        "compositeResponse": [
+          {
+            "body": {
+              "totalSize": 1,
+              "done": true,
+              "records": [
+                {
+                  "attributes": {
+                    "type": "Task",
+                    "url": "/services/data/v58.0/sobjects/Task/00T1e000007mGYaEAM"
+                  },
+                  "Id": "00T1e000007mGYaEAM",
+                  "Description": "Task documentation",
+                  "ActivityDate": "2023-12-01",
+                  "CreatedBy": {
+                    "attributes": {
+                      "type": "User",
+                      "url": "/services/data/v58.0/sobjects/User/0055i00000AUxQHAA1"
+                    },
+                    "Name": "Name2"
+                  },
+                  "Owner": {
+                    "attributes": {
+                      "type": "Name",
+                      "url": "/services/data/v58.0/sobjects/User/0051e0000047G03AAE"
+                    },
+                    "Name": "Name1",
+                    "Id":"0055i00000AUxQHAA1"
+                  },
+                  "LastModifiedDate": "2023-08-24T12:16:05.000+0000"
+                }
+              ]
+            },
+            "httpHeaders": {},
+            "httpStatusCode": 200,
+            "referenceId": "getTaskDetails"
+          }
+        ]
+      }
+    },
+    "output": {
+      "task_detail": {
+        "id": "00T1e000007mGYaEAM",
+        "creator_name": "Name2",
+        "description": "Task documentation",
+        "due_date": "2023-12-01",
+        "crm_organization_user_name": "Name1",
+        "crm_organization_user_id": "0055i00000AUxQHAA1",
+        "last_modified_time": "2023-08-24T12:16:05.000+00:00"
+      }
+    }
+  },
+  {
+		"description": "should return error response when task id is invalid",
+		"input": {
+			"account_id": "0011e00000bWSxdAAG",
+			"task_id": "invalid_task_id"
+		},
+		"mocks":{
+			"makeCompositeRequest":{
+        "compositeResponse": [
+          {
+            "body": [
+              {
+                "message": "\nLastModifiedDate FROM Task WHERE Id='invalid_task_id'\n                                  ^\nERROR at Row:1:Column:105\ninvalid ID field: invalid_task_id",
+                "errorCode": "INVALID_QUERY_FILTER_OPERATOR"
+              }
+            ],
+            "httpHeaders": {},
+            "httpStatusCode": 400,
+            "referenceId": "GetTaskDetails"
+          }
+        ]
+      }
+		},
+		"output": {
+      "http_code": 400,
+      "message": "At least one parameter is invalid or missing.",
+      "code": "INVALID_PARAMS",
+      "internal_error_identifier": "l_ca_gatd_gsatd_pr_1",
+      "param_errors": [
+        "invalid_account_id"
+      ]
+    }
+	}
+]

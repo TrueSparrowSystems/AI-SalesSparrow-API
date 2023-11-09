@@ -1,0 +1,167 @@
+[
+    {
+      "description": "Should successfully update the task for given task id", 
+      "input": {
+        "body": {
+          "crm_organization_user_id":"0011e00000bWSxdAA1",
+          "description":"Update remaining documentations",
+          "due_date":"2023-12-01"
+        },
+        "accountId": "0011e00000bWSxdAAG",
+        "taskId":"0691e000001X1yTAAS"
+      },
+      "mocks": {
+        "makeCompositeRequest": {
+          "compositeResponse": [
+            {
+              "body": null,
+              "httpHeaders": {},
+              "httpStatusCode": 200,
+              "referenceId": "UpdateTask"
+            }
+          ]
+        }
+      },
+      "output": {}
+    },
+    {
+      "description": "Should fail when the task description is empty", 
+      "input": {
+        "body": {
+            "crm_organization_user_id":"0011e00000bWSxdAA1",
+            "description":"",
+            "due_date":"2023-12-01"
+        },
+        "accountId": "0011e00000bWSxdAAG"
+      },
+      "mocks": {},
+      "output": {
+        "http_code": 400,
+        "message": "At least one parameter is invalid or missing.",
+        "code": "INVALID_PARAMS",
+        "internal_error_identifier": "b_2",
+        "param_errors": [
+          "missing_description"
+        ]
+      }
+    },
+    {
+      "description": "Should fail when the task description is not provided", 
+      "input": {
+        "body": {
+            "crm_organization_user_id":"0011e00000bWSxdAA1",
+            "due_date":"2023-12-01"
+        },
+        "accountId": "0011e00000bWSxdAAG"
+      },
+      "mocks": {},
+      "output": {
+        "http_code": 400,
+        "message": "At least one parameter is invalid or missing.",
+        "code": "INVALID_PARAMS",
+        "internal_error_identifier": "b_2",
+        "param_errors": [
+          "missing_description"
+        ]
+      }
+    },
+    {
+      "description": "Should fail when the task due_date is not provided", 
+      "input": {
+        "body": {
+            "crm_organization_user_id":"0011e00000bWSxdAA1",
+            "description":"Update remaining documentations"
+        },
+        "accountId": "0011e00000bWSxdAAG"
+      },
+      "mocks": {},
+      "output": {
+        "http_code": 400,
+        "message": "At least one parameter is invalid or missing.",
+        "code": "INVALID_PARAMS",
+        "internal_error_identifier": "b_2",
+        "param_errors": [
+          "invalid_due_date"
+        ]
+      }
+    },
+    {
+      "description": "Should fail when the task crm_organization_user_id is not provided", 
+      "input": {
+        "body": {
+            "description":"Update remaining documentations",
+            "due_date":"2023-12-01"
+        },
+        "accountId": "0011e00000bWSxdAAG"
+      },
+      "mocks": {},
+      "output": {
+        "http_code": 400,
+        "message": "At least one parameter is invalid or missing.",
+        "code": "INVALID_PARAMS",
+        "internal_error_identifier": "b_2",
+        "param_errors": [
+          "missing_crm_organization_user_id"
+        ]
+      }
+    },
+    {
+      "description": "Should fail when the task Due is not valid", 
+      "input": {
+        "body": {
+            "crm_organization_user_id":"0011e00000bWSxdAA1",
+            "description":"Update remaining documentations",
+            "due_date":"2023-120-01"
+        },
+        "accountId": "0011e00000bWSxdAAG"
+      },
+      "mocks": {},
+      "output": {
+        "http_code": 400,
+        "message": "At least one parameter is invalid or missing.",
+        "code": "INVALID_PARAMS",
+        "internal_error_identifier": "b_2",
+        "param_errors": [
+          "invalid_due_date"
+        ]
+      }
+    },
+    {
+      "description": "should return error response when task id is invalid", 
+      "input": {
+        "body": {
+          "crm_organization_user_id":"0011e00000bWSxdAA1",
+          "description":"Update remaining documentations",
+          "due_date":"2023-12-01"
+        },
+        "accountId": "0011e00000bWSxdAAG",
+        "taskId":"invalidTaskId"
+      },
+      "mocks": {
+        "makeCompositeRequest": {
+          "compositeResponse": [
+          {
+            "body": [
+              {
+                "errorCode": "NOT_FOUND",
+                "message": "Provided external ID field does not exist or is not accessible: INVALID_TASK_ID"
+              }
+            ],
+            "httpHeaders": {},
+            "httpStatusCode": 404,
+            "referenceId": "UpdateTask"
+          }
+        ]
+      }
+      },
+      "output": {
+        "http_code": 400,
+        "message": "At least one parameter is invalid or missing.",
+        "code": "INVALID_PARAMS",
+        "internal_error_identifier": "l_ua_uat_usat_pr_1",
+        "param_errors": [
+          "invalid_task_id"
+        ]
+      }
+    }
+  ]
