@@ -76,7 +76,7 @@ public class AccountController {
 		CreateAccountFormatterDto createAccountFormatterDto = createAccountService.createAccount(request,
 				createAccountDto);
 
-		return ResponseEntity.ok().body(createAccountFormatterDto);
+		return ResponseEntity.status(HttpStatus.CREATED).body(createAccountFormatterDto);
 
 	}
 
