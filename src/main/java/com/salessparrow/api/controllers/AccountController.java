@@ -4,12 +4,14 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +28,7 @@ import com.salessparrow.api.services.accounts.DescribeAccountService;
 import com.salessparrow.api.services.accounts.GetAccountDetailsService;
 import com.salessparrow.api.services.accounts.GetAccountListService;
 import com.salessparrow.api.services.accounts.GetAccountsFeedService;
+import com.salessparrow.api.services.accounts.UpdateAccountService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -51,6 +54,9 @@ public class AccountController {
 
 	@Autowired
 	private GetAccountDetailsService getAccountDetailsService;
+
+	@Autowired
+	private UpdateAccountService updateAccountService;
 
 	@GetMapping("")
 	public ResponseEntity<GetAccountListResponseDto> getAccounts(HttpServletRequest request,
@@ -103,6 +109,16 @@ public class AccountController {
 			.getAccountDetails(request, accountId);
 
 		return ResponseEntity.ok().body(getAccountDetailsFormatterDto);
+	}
+
+	@PutMapping("/{account_id}")
+	public ResponseEntity<Void> updateAccount(HttpServletRequest request, @PathVariable("account_id") String accountId,
+			@Valid @RequestBody Map<String, String> updateAccountDto) {
+		logger.info("Update account request received");
+
+		updateAccountService.updateAccount(request, accountId, updateAccountDto);
+
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 }
