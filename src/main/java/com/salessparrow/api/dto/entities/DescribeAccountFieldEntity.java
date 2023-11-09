@@ -12,15 +12,15 @@ public class DescribeAccountFieldEntity {
 
 	private String name;
 
-	private String length;
+	private Integer length;
 
 	private String type;
 
 	private String defaultValue;
 
-	private Number precision;
+	private Integer precision;
 
-	private Number scale;
+	private Integer scale;
 
 	private PicklistValues[] picklistValues;
 

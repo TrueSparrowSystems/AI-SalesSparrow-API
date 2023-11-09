@@ -14,7 +14,7 @@ public class SalesforceDescribeAccountDto {
 
 	private String name;
 
-	private String length;
+	private Integer length;
 
 	private String type;
 
@@ -24,9 +24,9 @@ public class SalesforceDescribeAccountDto {
 
 	private Boolean createable;
 
-	private Number precision;
+	private Integer precision;
 
-	private Number scale;
+	private Integer scale;
 
 	private PicklistValues[] picklistValues;
 
