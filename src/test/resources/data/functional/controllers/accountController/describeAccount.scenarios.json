@@ -960,112 +960,120 @@
       }
     },
     "output": {
-      "fields": [
-          {
-            "label": "Account Name",
-            "name": "Name",
-            "length": "255",
-            "type": "string",
-            "defaultValue": null,
-            "picklistValues": []
-          },
-          {
-            "label": "Website",
-            "name": "Website",
-            "length": "255",
-            "type": "url",
-            "defaultValue": null,
-            "picklistValues": []
-          },
-          {
-            "label": "Establishment Year",
-            "name": "Establishment_Year__c",
-            "length": "255",
-            "type": "picklist",
-            "defaultValue": null,
-            "picklistValues": [
-              {
-                "label": "2023",
-                "value": "2023",
-                "active": "true"
-              },
-              {
-                "label": "2022",
-                "value": "2022",
-                "active": "true"
-              },
-              {
-                "label": "2021",
-                "value": "2021",
-                "active": "true"
-              },
-              {
-                "label": "2020",
-                "value": "2020",
-                "active": "true"
-              },
-              {
-                "label": "Before 2020",
-                "value": "Before 2020",
-                "active": "true"
-              }
-            ]
-          },
-        {
+      "fields": {
+        "Website": {
+          "label": "Website",
+          "name": "Website",
+          "length": 255,
+          "type": "url",
+          "defaultValue": null,
+          "precision": 0,
+          "scale": 0,
+          "picklistValues": []
+        },
+        "Establishment_Year__c": {
+          "label": "Establishment Year",
+          "name": "Establishment_Year__c",
+          "length": 255,
+          "type": "picklist",
+          "defaultValue": null,
+          "precision": 0,
+          "scale": 0,
+          "picklistValues": [
+            {
+              "label": "2023",
+              "value": "2023",
+              "active": true
+            },
+            {
+              "label": "2022",
+              "value": "2022",
+              "active": true
+            },
+            {
+              "label": "2021",
+              "value": "2021",
+              "active": true
+            },
+            {
+              "label": "2020",
+              "value": "2020",
+              "active": true
+            },
+            {
+              "label": "Before 2020",
+              "value": "Before 2020",
+              "active": true
+            }
+          ]
+        },
+        "Status__c": {
           "label": "Status",
           "name": "Status__c",
-          "length": "255",
+          "length": 255,
           "type": "picklist",
           "defaultValue": "Ready To Inspect",
+          "precision": 0,
+          "scale": 0,
           "picklistValues": [
             {
               "label": "Ready To Inspect",
               "value": "Ready To Inspect",
-              "active": "true"
+              "active": true
             },
             {
               "label": "Ready For Outreach",
               "value": "Ready For Outreach",
-              "active": "true"
+              "active": true
             },
             {
               "label": "First Outreach Done",
               "value": "First Outreach Done",
-              "active": "true"
+              "active": true
             },
             {
               "label": "Second Outreach Done",
               "value": "Second Outreach Done",
-              "active": "true"
+              "active": true
             },
             {
               "label": "Third Outreach Done",
               "value": "Third Outreach Done",
-              "active": "true"
+              "active": true
             },
             {
               "label": "Connected",
               "value": "Connected",
-              "active": "true"
+              "active": true
             },
             {
               "label": "Call Scheduled",
               "value": "Call Scheduled",
-              "active": "true"
+              "active": true
             },
             {
               "label": "Rejected",
               "value": "Rejected",
-              "active": "true"
+              "active": true
             },
             {
               "label": "Unsubscribed",
               "value": "Unsubscribed",
-              "active": "true"
+              "active": true
             }
           ]
+        },
+        "Name": {
+          "label": "Account Name",
+          "name": "Name",
+          "length": 255,
+          "type": "string",
+          "defaultValue": null,
+          "precision": 0,
+          "scale": 0,
+          "picklistValues": []
         }
-      ]
+      }
     }
   }
 ]
