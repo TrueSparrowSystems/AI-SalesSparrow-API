@@ -11,8 +11,10 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.salessparrow.api.domain.User;
+import com.salessparrow.api.dto.formatter.DescribeAccountFormatterDto;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.Util;
+import com.salessparrow.api.lib.crmActions.describeAccount.DescribeSalesforceAccount;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.errorLib.ParamErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
@@ -21,6 +23,7 @@ import com.salessparrow.api.lib.salesforce.dto.CompositeRequestDto;
 import com.salessparrow.api.lib.salesforce.dto.SalesforceErrorObject;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 import com.salessparrow.api.lib.salesforce.helper.SalesforceCompositeResponseHelper;
+import com.salessparrow.api.lib.salesforce.helper.ValidateSalesforceAccountFields;
 
 /**
  * UpdateSalesforceAccount is a class that updates an account in Salesforce.
@@ -39,20 +42,29 @@ public class UpdateSalesforceAccount implements UpdateAccountInterface {
 	@Autowired
 	private SalesforceCompositeResponseHelper salesforceCompositeResponseHelper;
 
+	@Autowired
+	private DescribeSalesforceAccount describeSalesforceAccount;
+
+	@Autowired
+	private ValidateSalesforceAccountFields validateSalesforceAccountFields;
+
 	/**
 	 * Update an account for a given account id.
 	 * @param user
 	 * @param accountId
-	 * @param updateAccountDto
+	 * @param updateAccountBody
 	 * @return void
 	 */
-	public void updateAccount(User user, String accountId, Map<String, String> updateAccountDto) {
+	public void updateAccount(User user, String accountId, Map<String, String> updateAccountBody) {
 		logger.info("Update Salesforce Account started");
+
+		DescribeAccountFormatterDto describeAccountDto = describeSalesforceAccount.describeAccount(user);
+		validateSalesforceAccountFields.validateAccountRequestBody(updateAccountBody, describeAccountDto);
 
 		String salesforceUserId = user.getExternalUserId();
 
 		CompositeRequestDto updateAccountCompositeRequestDto = new CompositeRequestDto("PATCH",
-				salesforceConstants.salesforceAccountByIdUrl(accountId), "UpdateAccount", updateAccountDto);
+				salesforceConstants.salesforceAccountByIdUrl(accountId), "UpdateAccount", updateAccountBody);
 
 		List<CompositeRequestDto> compositeRequests = new ArrayList<CompositeRequestDto>();
 		compositeRequests.add(updateAccountCompositeRequestDto);

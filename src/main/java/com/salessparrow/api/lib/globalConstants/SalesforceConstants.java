@@ -106,6 +106,14 @@ public class SalesforceConstants {
 		return 50;
 	}
 
+	public String InvalidAccountFieldMessage() {
+		return "Invalid Account Field";
+	}
+
+	public String InvalidAccountValueMessage() {
+		return "Invalid Account Value";
+	}
+
 	public String salesforceNotesContentUrl(String urlPrefix, String noteId) {
 		return urlPrefix + "/services/data/v58.0/sobjects/ContentNote/" + noteId + "/Content";
 	}

@@ -14,8 +14,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salessparrow.api.domain.User;
 import com.salessparrow.api.dto.formatter.CreateAccountFormatterDto;
+import com.salessparrow.api.dto.formatter.DescribeAccountFormatterDto;
 import com.salessparrow.api.exception.CustomException;
 import com.salessparrow.api.lib.Util;
+import com.salessparrow.api.lib.crmActions.describeAccount.DescribeSalesforceAccount;
 import com.salessparrow.api.lib.errorLib.ErrorObject;
 import com.salessparrow.api.lib.errorLib.ParamErrorObject;
 import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
@@ -25,6 +27,7 @@ import com.salessparrow.api.lib.salesforce.dto.SalesforceCreateAccountDto;
 import com.salessparrow.api.lib.salesforce.dto.SalesforceErrorObject;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
 import com.salessparrow.api.lib.salesforce.helper.SalesforceCompositeResponseHelper;
+import com.salessparrow.api.lib.salesforce.helper.ValidateSalesforceAccountFields;
 
 /**
  * CreateSalesforceAccount is a class that creates an account in Salesforce.
@@ -43,6 +46,12 @@ public class CreateSalesforceAccount implements CreateAccountInterface {
 	@Autowired
 	private SalesforceCompositeResponseHelper salesforceCompositeResponseHelper;
 
+	@Autowired
+	private DescribeSalesforceAccount describeSalesforceAccount;
+
+	@Autowired
+	private ValidateSalesforceAccountFields validateSalesforceAccountFields;
+
 	/**
 	 * Create an account in Salesforce.
 	 * @param user
@@ -52,6 +61,9 @@ public class CreateSalesforceAccount implements CreateAccountInterface {
 	 */
 	public CreateAccountFormatterDto createAccount(User user, Map<String, String> createAccountBody) {
 		logger.info("Create Salesforce Account started");
+
+		DescribeAccountFormatterDto describeAccountDto = describeSalesforceAccount.describeAccount(user);
+		validateSalesforceAccountFields.validateAccountRequestBody(createAccountBody, describeAccountDto);
 
 		String salesforceUserId = user.getExternalUserId();
 

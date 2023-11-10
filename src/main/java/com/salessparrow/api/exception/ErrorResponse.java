@@ -17,12 +17,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.salessparrow.api.lib.errorLib.ErrorConfig;
 import com.salessparrow.api.lib.errorLib.ErrorResponseObject;
 import com.salessparrow.api.lib.errorLib.ParamErrorConfig;
+import com.salessparrow.api.lib.globalConstants.SalesforceConstants;
 
 @Component
 public class ErrorResponse {
 
 	@Autowired
 	private ResourceLoader resourceLoader;
+
+	@Autowired
+	private SalesforceConstants salesforceConstants;
 
 	/**
 	 * Get error response
@@ -96,6 +100,24 @@ public class ErrorResponse {
 				String paramName = matcher.group(1);
 				String messageString = paramName + " is required parameter. Please provide " + paramName + ".";
 
+				paramErrorConfig = new ParamErrorConfig(paramName, paramErrorIdentifier, messageString);
+				paramErrorConfigList.add(paramErrorConfig);
+			}
+			else if (message.equals(salesforceConstants.InvalidAccountFieldMessage())) {
+				String paramName = "";
+				if (paramErrorIdentifier != null && paramErrorIdentifier.startsWith("invalid_")) {
+					paramName = paramErrorIdentifier.substring("invalid_".length());
+				}
+				String messageString = paramName + " is an invalid parameter. Please provide correct parameters.";
+				paramErrorConfig = new ParamErrorConfig(paramName, paramErrorIdentifier, messageString);
+				paramErrorConfigList.add(paramErrorConfig);
+			}
+			else if (message.equals(salesforceConstants.InvalidAccountValueMessage())) {
+				String paramName = "";
+				if (paramErrorIdentifier != null && paramErrorIdentifier.startsWith("invalid_")) {
+					paramName = paramErrorIdentifier.substring("invalid_".length());
+				}
+				String messageString = paramName + " has an empty or incorrect value. Please provide correct value.";
 				paramErrorConfig = new ParamErrorConfig(paramName, paramErrorIdentifier, messageString);
 				paramErrorConfigList.add(paramErrorConfig);
 			}
