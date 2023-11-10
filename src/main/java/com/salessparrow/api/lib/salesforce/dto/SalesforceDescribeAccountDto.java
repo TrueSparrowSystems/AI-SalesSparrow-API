@@ -57,7 +57,7 @@ public class SalesforceDescribeAccountDto {
 			DescribeAccountFieldEntity.PicklistValues[] picklistValues = new DescribeAccountFieldEntity.PicklistValues[this.picklistValues.length];
 
 			for (int i = 0; i < this.picklistValues.length; i++) {
-				DescribeAccountFieldEntity.PicklistValues entityPicklistValue = new DescribeAccountFieldEntity().new PicklistValues();
+				DescribeAccountFieldEntity.PicklistValues entityPicklistValue = new DescribeAccountFieldEntity.PicklistValues();
 
 				entityPicklistValue.setLabel(this.picklistValues[i].label);
 				entityPicklistValue.setValue(this.picklistValues[i].value);

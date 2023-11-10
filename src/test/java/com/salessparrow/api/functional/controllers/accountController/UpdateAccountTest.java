@@ -2,6 +2,7 @@ package com.salessparrow.api.functional.controllers.accountController;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -28,6 +29,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.dynamobee.exception.DynamobeeException;
+import com.salessparrow.api.dto.formatter.DescribeAccountFormatterDto;
 import com.salessparrow.api.helper.Cleanup;
 import com.salessparrow.api.helper.Common;
 import com.salessparrow.api.helper.Constants;
@@ -35,9 +37,11 @@ import com.salessparrow.api.helper.FixtureData;
 import com.salessparrow.api.helper.LoadFixture;
 import com.salessparrow.api.helper.Scenario;
 import com.salessparrow.api.helper.Setup;
+import com.salessparrow.api.lib.crmActions.describeAccount.DescribeSalesforceAccount;
 import com.salessparrow.api.lib.globalConstants.CookieConstants;
 import com.salessparrow.api.lib.httpLib.HttpClient.HttpResponse;
 import com.salessparrow.api.lib.salesforce.helper.MakeCompositeRequest;
+import com.salessparrow.api.lib.salesforce.helper.ValidateSalesforceAccountFields;
 
 import jakarta.servlet.http.Cookie;
 
@@ -64,6 +68,12 @@ public class UpdateAccountTest {
 
 	@MockBean
 	private MakeCompositeRequest makeCompositeRequestMock;
+
+	@MockBean
+	private DescribeSalesforceAccount describeSalesforceAccountMock;
+
+	@MockBean
+	private ValidateSalesforceAccountFields validateSalesforceAccountFieldsMock;
 
 	@BeforeEach
 	public void setUp() throws DynamobeeException {
@@ -97,6 +107,14 @@ public class UpdateAccountTest {
 		mockResponse
 			.setResponseBody(objectMapper.writeValueAsString(testScenario.getMocks().get("makeCompositeRequest")));
 		when(makeCompositeRequestMock.makePostRequest(any(), any())).thenReturn(mockResponse);
+
+		String describeAccountFormatterData = objectMapper
+			.writeValueAsString(testScenario.getMocks().get("describeAccountFormatterDto"));
+		DescribeAccountFormatterDto describeAccountFormatterDto = objectMapper.readValue(describeAccountFormatterData,
+				DescribeAccountFormatterDto.class);
+		when(describeSalesforceAccountMock.describeAccount(any())).thenReturn(describeAccountFormatterDto);
+
+		doNothing().when(validateSalesforceAccountFieldsMock).validateAccountRequestBody(any(), any());
 
 		// Perform the request
 		String requestBody = objectMapper.writeValueAsString(testScenario.getInput().get("body"));

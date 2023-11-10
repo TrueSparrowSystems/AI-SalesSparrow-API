@@ -25,7 +25,7 @@ public class DescribeAccountFieldEntity {
 	private PicklistValues[] picklistValues;
 
 	@Data
-	public class PicklistValues {
+	public static class PicklistValues {
 
 		private String label;
 
